@@ -2,7 +2,6 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import javax.persistence.*;
 import java.util.Set;
-import java.util.concurrent.LinkedBlockingQueue;
 
 @Entity
 public class Storage {
@@ -10,7 +9,7 @@ public class Storage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @OneToMany
-    private Set<Item> items; //is not stored in table, only in entity
+    private Set<Item> items;
 
     public Storage(Set<Item> items) {
         this.items = items;
