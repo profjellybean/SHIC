@@ -16,7 +16,7 @@ public class UserRepository {
         user = new ApplicationUser("username", passwordEncoder.encode("password"));
     }
 
-    public ApplicationUser findUserByEmail(String username) {
+    public ApplicationUser findUserByUsername(String username) {
         if (username.equals(user.getUsername())) {
             return user;
         }
