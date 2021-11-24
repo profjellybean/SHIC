@@ -1,27 +1,42 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-//TODO: replace this class with a correct ApplicationUser Entity implementation
+import javax.persistence.*;
+
+@Entity
 public class ApplicationUser {
 
-    private String email;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, name = "username")
+    private String username;
+
+    @Column(nullable = false, name = "password")
     private String password;
-    private Boolean admin;
 
     public ApplicationUser() {
     }
 
-    public ApplicationUser(String email, String password, Boolean admin) {
-        this.email = email;
+    public ApplicationUser(String username, String password) {
+        this.username = username;
         this.password = password;
-        this.admin = admin;
     }
 
-    public String getEmail() {
-        return email;
+    public Long getId() {
+        return id;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -32,11 +47,4 @@ public class ApplicationUser {
         this.password = password;
     }
 
-    public Boolean getAdmin() {
-        return admin;
-    }
-
-    public void setAdmin(Boolean admin) {
-        this.admin = admin;
-    }
 }
