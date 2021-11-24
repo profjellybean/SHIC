@@ -42,13 +42,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             user = new ObjectMapper().readValue(request.getInputStream(), UserLoginDto.class);
             //Compares the user with CustomUserDetailService#loadUserByUsername and check if the credentials are correct
             return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                user.getEmail(),
+                user.getUsername(),
                 user.getPassword()));
         } catch (IOException e) {
             throw new BadCredentialsException("Wrong API request or JSON schema", e);
         } catch (BadCredentialsException e) {
-            if (user != null && user.getEmail() != null) {
-                LOGGER.error("Unsuccessful authentication attempt for user {}", user.getEmail());
+            if (user != null && user.getUsername() != null) {
+                LOGGER.error("Unsuccessful authentication attempt for user {}", user.getUsername());
             }
             throw e;
         }

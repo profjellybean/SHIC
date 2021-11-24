@@ -15,6 +15,7 @@ public class ApplicationUser {
     @Column(nullable = false, name = "password")
     private String password;
 
+
     public ApplicationUser() {
     }
 
