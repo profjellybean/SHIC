@@ -1,6 +1,9 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
+import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.UnitOfQuantity;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -13,7 +16,7 @@ import java.util.Date;
 public class Item {
     @Id
     @Column(name = "Id")
-    private int id;
+    private Long id;
 
     @Column(name = "Notes")
     private String notes;
@@ -27,8 +30,32 @@ public class Item {
     @Column(name = "Amount")
     private int amount;
 
-    public int getId() {
+    @Column(name = "LocationTag")
+    private Location locationTag;
+
+    @Column(name = "Quantity")
+    private UnitOfQuantity quantity;
+
+
+
+    public Long getId() {
         return id;
+    }
+
+    public Location getLocationTag() {
+        return locationTag;
+    }
+
+    public void setLocationTag(Location locationTag) {
+        this.locationTag = locationTag;
+    }
+
+    public UnitOfQuantity getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(UnitOfQuantity quantity) {
+        this.quantity = quantity;
     }
 
     public String getNotes() {
