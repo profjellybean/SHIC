@@ -189,7 +189,7 @@
                 <executions>
                     <execution>
                         <id>validate</id>
-                        <phase>none</phase> <!-- TODO: remove when finished-->
+                        <phase>validate</phase> <!-- TODO: remove when finished-->
                         <goals>
                             <goal>check</goal>
                         </goals>
