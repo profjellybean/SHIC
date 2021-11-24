@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import javax.persistence.*;
+import java.util.Set;
 import java.util.concurrent.LinkedBlockingQueue;
 
 @Entity
@@ -8,10 +9,10 @@ public class Storage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToOne
-    private LinkedBlockingQueue<Item> items;
+    @OneToMany
+    private Set<Item> items; //is not stored in table, only in entity
 
-    public Storage(LinkedBlockingQueue<Item> items) {
+    public Storage(Set<Item> items) {
         this.items = items;
     }
 
@@ -26,11 +27,11 @@ public class Storage {
         this.id = id;
     }
 
-    public LinkedBlockingQueue<Item> getItems() {
+    public Set<Item> getItems() {
         return items;
     }
 
-    public void setItems(LinkedBlockingQueue<Item> items) {
+    public void setItems(Set<Item> items) {
         this.items = items;
     }
 }

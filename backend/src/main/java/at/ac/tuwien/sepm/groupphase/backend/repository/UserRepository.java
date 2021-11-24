@@ -22,6 +22,4 @@ public class UserRepository {
         }
         return null; // In this case null is returned to fake Repository behavior
     }
-
-
 }
