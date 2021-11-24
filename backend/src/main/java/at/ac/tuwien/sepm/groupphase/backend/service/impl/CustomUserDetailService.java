@@ -29,31 +29,28 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         LOGGER.debug("Load all user by email");
         try {
-            ApplicationUser applicationUser = findApplicationUserByEmail(email);
+            ApplicationUser applicationUser = findApplicationUserByUsername(username);
 
             List<GrantedAuthority> grantedAuthorities;
-            if (applicationUser.getAdmin()) {
-                grantedAuthorities = AuthorityUtils.createAuthorityList("ROLE_ADMIN", "ROLE_USER");
-            } else {
-                grantedAuthorities = AuthorityUtils.createAuthorityList("ROLE_USER");
-            }
+            grantedAuthorities = AuthorityUtils.createAuthorityList("ROLE_USER");
 
-            return new User(applicationUser.getEmail(), applicationUser.getPassword(), grantedAuthorities);
+
+            return new User(applicationUser.getUsername(), applicationUser.getPassword(), grantedAuthorities);
         } catch (NotFoundException e) {
             throw new UsernameNotFoundException(e.getMessage(), e);
         }
     }
 
     @Override
-    public ApplicationUser findApplicationUserByEmail(String email) {
-        LOGGER.debug("Find application user by email");
-        ApplicationUser applicationUser = userRepository.findUserByEmail(email);
+    public ApplicationUser findApplicationUserByUsername(String username) {
+        LOGGER.debug("Find application user by username");
+        ApplicationUser applicationUser = userRepository.findUserByUsername(username);
         if (applicationUser != null) {
             return applicationUser;
         }
-        throw new NotFoundException(String.format("Could not find the user with the email address %s", email));
+        throw new NotFoundException(String.format("Could not find the user with the username %s", username));
     }
 }
