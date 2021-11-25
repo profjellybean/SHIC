@@ -18,6 +18,9 @@ public class Item {
     @Column(name = "Id")
     private Long id;
 
+    @Column(name = "Name")
+    private String name;
+
     @Column(name = "Notes")
     private String notes;
 
@@ -88,5 +91,13 @@ public class Item {
 
     public void setAmount(int amount) {
         this.amount = amount;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 }
