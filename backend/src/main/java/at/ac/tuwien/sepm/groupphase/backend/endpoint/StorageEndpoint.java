@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
@@ -30,6 +31,7 @@ public class StorageEndpoint {
     }
 
     @PostMapping
+    @PermitAll
     @Operation(summary = "Insert a new item into the storage") //TODO: add security
     public ItemDto create(@Valid @RequestBody ItemDto itemDto) {
         LOGGER.info("POST /storage body: {}", itemDto);
@@ -37,6 +39,7 @@ public class StorageEndpoint {
     }
 
     @GetMapping
+    @PermitAll
     @Operation(summary = "Get all items from the storage") //TODO: add security
     public List<ItemDto> getAll() {
         LOGGER.info("getAll, endpoint");
