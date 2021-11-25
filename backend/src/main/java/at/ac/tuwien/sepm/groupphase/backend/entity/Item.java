@@ -14,6 +14,13 @@ import java.util.Date;
 @Entity
 @Table(name = "Item")
 public class Item {
+
+    public Item() {}
+
+    public Item(Long id) {
+        this.id = id;
+    }
+
     @Id
     @Column(name = "Id")
     private Long id;
