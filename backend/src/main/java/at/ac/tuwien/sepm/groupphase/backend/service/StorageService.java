@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.Item;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Storage;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,5 +13,5 @@ public interface StorageService {
      * @return a Spring Security user
      */
 
-    void deleteItemById(Long id);
+    Item deleteItemById(Long id);
 }
