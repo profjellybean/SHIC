@@ -45,4 +45,11 @@ public class StorageEndpoint {
         LOGGER.info("getAll, endpoint");
         return itemMapper.itemsToItemsDto(storageService.getAll());
     }
+    @GetMapping(value= "/search")
+    @PermitAll
+    @Operation(summary = "Search for items from the storage by name") //TODO: add security
+    public List<ItemDto> searchItem(@Valid @RequestBody String name) {
+        LOGGER.info("searchItem, endpoint");
+        return itemMapper.itemsToItemsDto(storageService.searchItem(name));
+    }
 }

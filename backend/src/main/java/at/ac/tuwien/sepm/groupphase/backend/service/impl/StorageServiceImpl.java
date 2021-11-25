@@ -49,4 +49,10 @@ public class StorageServiceImpl implements StorageService {
         return storageRepository.findAll();
     }
 
+    @Override
+    public List<Item> searchItem(String name){
+        LOGGER.debug("search for items");
+        return storageRepository.findAllByNameLike(name);
+    }
+
 }

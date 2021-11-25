@@ -20,4 +20,7 @@ public interface StorageService {
     Item saveItem(Item item);
 
     List<Item> getAll();
+
+    List<Item> searchItem(String name);
+
 }
