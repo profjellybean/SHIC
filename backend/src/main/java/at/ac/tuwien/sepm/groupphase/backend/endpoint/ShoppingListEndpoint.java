@@ -26,4 +26,6 @@ public class ShoppingListEndpoint {
         this.shoppingListService = shoppingListService;
         this.shoppingListMapper = shoppingListMapper;
     }
+
+
 }
