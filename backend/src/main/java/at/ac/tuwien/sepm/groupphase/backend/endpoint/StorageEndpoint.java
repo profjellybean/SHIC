@@ -33,6 +33,7 @@ public class StorageEndpoint {
     @Operation(summary = "Insert a new item into the storage") //TODO: add security
     public ItemDto saveItem(@Valid @RequestBody ItemDto itemDto) {
         LOGGER.info("POST /storage body: {}", itemDto.toString());
+
         return itemMapper.itemToItemDto(storageService.saveItem(itemMapper.itemDtoToItem(itemDto)));
     }
 

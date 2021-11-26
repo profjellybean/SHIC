@@ -9,10 +9,10 @@ public class Storage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToMany
-    private Set<Item> items = new HashSet<>();
+    @ElementCollection
+    private Set<ItemStorage> items = new HashSet<>();
 
-    public Storage(Set<Item> items) {
+    public Storage(Set<ItemStorage> items) {
         this.items = items;
     }
 
@@ -27,11 +27,11 @@ public class Storage {
         this.id = id;
     }
 
-    public Set<Item> getItems() {
+    public Set<ItemStorage> getItems() {
         return items;
     }
 
-    public void setItems(Set<Item> items) {
+    public void setItems(Set<ItemStorage> items) {
         this.items = items;
     }
 }
