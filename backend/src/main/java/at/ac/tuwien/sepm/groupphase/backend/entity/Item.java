@@ -4,10 +4,8 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.UnitOfQuantity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Arrays;
 import java.util.Date;
 
 
@@ -15,7 +13,7 @@ import java.util.Date;
 @Table(name = "Item")
 public class Item {
     @Id
-    @Column(name = "Id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "Notes")
@@ -36,7 +34,9 @@ public class Item {
     @Column(name = "Quantity")
     private UnitOfQuantity quantity;
 
+    public Item() {
 
+    }
 
     public Long getId() {
         return id;
@@ -88,5 +88,18 @@ public class Item {
 
     public void setAmount(int amount) {
         this.amount = amount;
+    }
+
+    @Override
+    public String toString() {
+        return "Item{" +
+            "id=" + id +
+            ", notes='" + notes + '\'' +
+            ", image=" + Arrays.toString(image) +
+            ", expDate=" + expDate +
+            ", amount=" + amount +
+            ", locationTag=" + locationTag +
+            ", quantity=" + quantity +
+            '}';
     }
 }
