@@ -1,12 +1,9 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.DetailedMessageDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.MessageInquiryDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ItemMapper;
 import at.ac.tuwien.sepm.groupphase.backend.service.StorageService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +27,12 @@ public class StorageEndpoint {
         this.itemMapper = itemMapper;
     }
 
+
     @PostMapping
     @PermitAll
     @Operation(summary = "Insert a new item into the storage") //TODO: add security
-    public ItemDto create(@Valid @RequestBody ItemDto itemDto) {
-        LOGGER.info("POST /storage body: {}", itemDto);
+    public ItemDto saveItem(@Valid @RequestBody ItemDto itemDto) {
+        LOGGER.info("POST /storage body: {}", itemDto.toString());
         return itemMapper.itemToItemDto(storageService.saveItem(itemMapper.itemDtoToItem(itemDto)));
     }
 

@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.UnitOfQuantity;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
+import java.util.Arrays;
 import java.util.Date;
 
 public class ItemDto {
@@ -84,5 +85,18 @@ public class ItemDto {
 
     public void setQuantity(UnitOfQuantity quantity) {
         this.quantity = quantity;
+    }
+
+    @Override
+    public String toString() {
+        return "ItemDto{" +
+            "id=" + id +
+            ", notes='" + notes + '\'' +
+            ", image=" + Arrays.toString(image) +
+            ", expDate=" + expDate +
+            ", amount=" + amount +
+            ", locationTag=" + locationTag +
+            ", quantity=" + quantity +
+            '}';
     }
 }

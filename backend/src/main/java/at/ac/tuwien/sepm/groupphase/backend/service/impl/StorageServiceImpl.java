@@ -39,7 +39,7 @@ public class StorageServiceImpl implements StorageService {
     @Override
     public Item saveItem(Item item){
         LOGGER.debug("Save item");
-        storageRepository.save(item);
+        storageRepository.saveAndFlush(item);
         return item;
     }
 
@@ -48,5 +48,4 @@ public class StorageServiceImpl implements StorageService {
         LOGGER.debug("Getting all items");
         return storageRepository.findAll();
     }
-
 }
