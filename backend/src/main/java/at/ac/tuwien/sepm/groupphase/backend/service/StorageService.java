@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.Item;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 
 import java.util.List;
@@ -15,7 +14,7 @@ public interface StorageService {
 
     ItemStorage deleteItemById(Long id);
 
-    ItemStorage saveItem(Item item);
+    ItemStorage saveItem(ItemStorage itemStorage);
 
     List<ItemStorage> getAll();
 }
