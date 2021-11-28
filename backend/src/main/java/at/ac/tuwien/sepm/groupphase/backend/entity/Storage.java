@@ -9,14 +9,15 @@ public class Storage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ElementCollection
-    private Set<ItemStorage> items = new HashSet<>();
+
+    @OneToMany
+    private Set<ItemStorage> items;
+
+    public Storage() {
+    }
 
     public Storage(Set<ItemStorage> items) {
         this.items = items;
-    }
-
-    public Storage() {
     }
 
     public Long getId() {

@@ -39,10 +39,10 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public ItemStorage saveItem(Item item){
+    public ItemStorage saveItem(ItemStorage itemStorage){
         LOGGER.debug("Save item");
-        storageRepository.saveAndFlush(new ItemStorage(item));
-        return item;
+        storageRepository.saveAndFlush(itemStorage);
+        return itemStorage;
     }
 
     @Override

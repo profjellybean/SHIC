@@ -1,7 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemDto;
-
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
