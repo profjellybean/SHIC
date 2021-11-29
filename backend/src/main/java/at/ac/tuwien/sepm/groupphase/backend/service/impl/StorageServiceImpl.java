@@ -50,4 +50,10 @@ public class StorageServiceImpl implements StorageService {
         LOGGER.debug("Getting all items");
         return storageRepository.findAll();
     }
+
+    @Override
+    public int createNewStorage() {
+        LOGGER.debug("Creating a new storage");
+        return 0;
+    }
 }
