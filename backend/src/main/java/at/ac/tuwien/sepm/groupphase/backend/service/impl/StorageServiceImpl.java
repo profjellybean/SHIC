@@ -56,4 +56,11 @@ public class StorageServiceImpl implements StorageService {
         LOGGER.debug("Creating a new storage");
         return 0;
     }
+
+    @Override
+    public List<ItemStorage> searchItem(String name){
+        LOGGER.debug("search for items");
+        return storageRepository.findAllByNameLike(name);
+    }
+
 }

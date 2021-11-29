@@ -16,6 +16,8 @@ public interface StorageService {
 
     ItemStorage saveItem(ItemStorage itemStorage);
 
+    List<ItemStorage> searchItem(String name);
+
     List<ItemStorage> getAll();
 
     int createNewStorage();
