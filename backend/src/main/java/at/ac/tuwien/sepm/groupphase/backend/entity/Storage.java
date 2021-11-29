@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @Entity
@@ -16,9 +17,6 @@ public class Storage {
     public Storage() {
     }
 
-    public Storage(Set<ItemStorage> items) {
-        this.items = items;
-    }
 
     public Long getId() {
         return id;
@@ -26,13 +24,5 @@ public class Storage {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Set<ItemStorage> getItems() {
-        return items;
-    }
-
-    public void setItems(Set<ItemStorage> items) {
-        this.items = items;
     }
 }

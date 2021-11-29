@@ -17,4 +17,6 @@ public interface StorageService {
     ItemStorage saveItem(ItemStorage itemStorage);
 
     List<ItemStorage> getAll();
+
+    int createNewStorage();
 }
