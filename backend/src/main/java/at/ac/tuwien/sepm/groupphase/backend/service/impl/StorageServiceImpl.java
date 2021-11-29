@@ -1,16 +1,18 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Item;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Storage;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.StorageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.endpoint.web.Link;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -25,10 +27,10 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public Item deleteItemById(Long id) {
+    public ItemStorage deleteItemById(Long id) {
         LOGGER.debug("Delete item by id");
         try {
-            Item itemToDelete = storageRepository.getById(id);
+            ItemStorage itemToDelete = storageRepository.getById(id);
             storageRepository.delete(itemToDelete);
             return itemToDelete;
         } catch (NotFoundException e) {
@@ -37,22 +39,21 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public Item saveItem(Item item){
+    public ItemStorage saveItem(ItemStorage itemStorage){
         LOGGER.debug("Save item");
-        storageRepository.save(item);
-        return item;
+        storageRepository.saveAndFlush(itemStorage);
+        return itemStorage;
     }
 
     @Override
-    public List<Item> getAll(){
+    public List<ItemStorage> getAll(){
         LOGGER.debug("Getting all items");
         return storageRepository.findAll();
     }
 
     @Override
-    public List<Item> searchItem(String name){
-        LOGGER.debug("search for items");
-        return storageRepository.findAllByNameLike(name);
+    public int createNewStorage() {
+        LOGGER.debug("Creating a new storage");
+        return 0;
     }
-
 }
