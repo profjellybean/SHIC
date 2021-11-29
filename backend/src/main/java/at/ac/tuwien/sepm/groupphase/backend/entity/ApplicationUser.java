@@ -3,16 +3,21 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 import javax.persistence.*;
 
 @Entity
+@Table(name="APPLICATION_USER")
+@NamedQuery(
+    name="findByName",
+    query= "SELECT c FROM ApplicationUser c WHERE c.username = :username"
+)
 public class ApplicationUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, name = "username")
+    @Column(nullable = false, name = "USERNAME")
     private String username;
 
-    @Column(nullable = false, name = "password")
+    @Column(nullable = false, name = "PASSWORD")
     private String password;
 
 

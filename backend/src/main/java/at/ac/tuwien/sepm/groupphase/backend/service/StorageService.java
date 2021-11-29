@@ -1,8 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.Storage;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
+
+import java.util.List;
 
 public interface StorageService {
     /**
@@ -12,5 +12,13 @@ public interface StorageService {
      * @return a Spring Security user
      */
 
-    void deleteItemById(Long id);
+    ItemStorage deleteItemById(Long id);
+
+    ItemStorage saveItem(ItemStorage itemStorage);
+
+    List<ItemStorage> searchItem(String name);
+
+    List<ItemStorage> getAll();
+
+    int createNewStorage();
 }

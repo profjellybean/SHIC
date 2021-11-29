@@ -13,6 +13,14 @@ public class UserLoginDto {
     @NotNull(message = "Password must not be null")
     private String password;
 
+    public UserLoginDto() {
+    }
+
+    public UserLoginDto(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -28,6 +36,8 @@ public class UserLoginDto {
     public void setPassword(String password) {
         this.password = password;
     }
+
+
 
     @Override
     public boolean equals(Object o) {
