@@ -29,25 +29,31 @@ import java.util.Optional;
 public class UserRepositoryImpl implements UserRepository {
 
     private ApplicationUser user;
+    private ApplicationUser admin;
 
     @PersistenceContext
     private final EntityManager entityManager;
     private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    public UserRepositoryImpl( EntityManager entityManager) {
+    public UserRepositoryImpl( EntityManager entityManager, PasswordEncoder passwordEncoder) {
 
         this.entityManager = entityManager;
+        user = new ApplicationUser("user@email.com", passwordEncoder.encode("password"));
+        admin = new ApplicationUser("admin@email.com", passwordEncoder.encode("password"));
        // user = new ApplicationUser("username","password");
     }
 
     @Override
     public Optional<ApplicationUser> findUserByUsername(String username) {
-        LOGGER.info("Repository: findUserbyName {}", username);
         if (username.equals(user.getUsername())) {
             return Optional.of(user);
         }
+        if (username.equals(admin.getUsername())) {
+            return Optional.of(admin);
+        }
         return Optional.empty();
+
     }
 
 

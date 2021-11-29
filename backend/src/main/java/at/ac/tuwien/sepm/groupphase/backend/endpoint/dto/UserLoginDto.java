@@ -7,7 +7,7 @@ import java.util.Objects;
 public class UserLoginDto {
 
     @NotNull(message = "Email must not be null")
-    @Email
+
     private String username;
 
     @NotNull(message = "Password must not be null")
