@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Item;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.RecipeCategory;
 
 import javax.persistence.*;
@@ -15,7 +16,7 @@ public class RecipeDto {
 
     private String description;
 
-    private Set<ItemDto> ingredients;
+    private Set<ItemStorageDto> ingredients;
 
     private Set<RecipeCategory> categories;
 
@@ -43,11 +44,11 @@ public class RecipeDto {
         this.description = description;
     }
 
-    public Set<ItemDto> getIngredients() {
+    public Set<ItemStorageDto> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(Set<ItemDto> ingredients) {
+    public void setIngredients(Set<ItemStorageDto> ingredients) {
         this.ingredients = ingredients;
     }
 

@@ -3,10 +3,12 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.RecipeCategory;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
+//@Transactional
 public class Recipe {
 
     @Id
@@ -19,7 +21,7 @@ public class Recipe {
     @Column(nullable = false, name = "description")
     private String description;
 
-    @OneToMany
+    @OneToMany//(fetch=FetchType.EAGER)
     @Column(nullable = true, name = "ingredients")
     private Set<Item> ingredients;
 

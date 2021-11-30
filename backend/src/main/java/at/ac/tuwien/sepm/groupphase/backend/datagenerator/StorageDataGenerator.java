@@ -38,7 +38,7 @@ public class StorageDataGenerator {
         } else {
             LOGGER.debug("generating {} storage entries", NUMBER_OF_STOREGES);
             for (int i = 0; i < NUMBER_OF_STOREGES; i++) {
-
+                // TODO add storages
             }
         }
     }

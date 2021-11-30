@@ -1,14 +1,18 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.*;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.ShoppingListService;
+import org.hibernate.LazyInitializationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.util.*;
 import java.util.function.Function;
@@ -31,20 +35,36 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     }
 
     @Override
+    @Transactional
     public ShoppingList planRecipe(Long recipeId, Long storageId) {
         LOGGER.debug("Service: plan Recipe {} based on storage {}.", recipeId, storageId);
-
+        Recipe recipe = null;
+        ItemStorage storage;
         // TODO: check if user has access
+
         // TODO: catch errors that might occur accessing the repository
-        Recipe recipe = recipeRepository.getById(recipeId);
-        ItemStorage storage = storageRepository.getById(storageId);
+        try {
+            recipe = recipeRepository.getById(recipeId);
+            //System.out.println("RECIPE: "+recipe); // TODO delete line
+        } catch (EntityNotFoundException e) { // TODO catch other error
+            throw new NotFoundException("Could not find recipe with id "+recipeId, e);
+        }
+
+        try {
+            storage = storageRepository.getById(storageId);
+            //System.out.println("STORAGE: "+storage); // TODO delete line
+        } catch (EntityNotFoundException e) { // TODO catch other error
+            throw new NotFoundException("Could not find storage with id "+storageId, e);
+        }
 
         ShoppingList shoppingList = new ShoppingList();
         shoppingList.setName("Ingredients required for recipe: "+recipe.getName());
         // TODO compare item sets
         // shoppingList.setItems(compareItemSets(recipe.getIngredients(), storage.getItems()));
 
-        return shoppingListRepository.save(shoppingList);
+        // TODO add items to existing list
+        return shoppingList;
+        //return shoppingListRepository.save(shoppingList);
     }
 
     /**
@@ -57,18 +77,18 @@ public class ShoppingListServiceImpl implements ShoppingListService {
      * @return Set of all Items that occur in recipeIngredients but not in storedItems
      *      OR occur in both, but the amount in recipeIngredients is bigger than the amount in storedItems
      */
-    private Set<Item> compareItemSets(Set<Item> recipeIngredients, Set<Item> storedItems) {
+    private Set<ItemStorage> compareItemSets(Set<ItemStorage> recipeIngredients, Set<ItemStorage> storedItems) {
         LOGGER.debug("Service: compareItemLists");
-        Set<Item> returnSet = new HashSet<>();
+        Set<ItemStorage> returnSet = new HashSet<>();
         // stores items from Set into Map, because one cannot get items from a Set
-        Map<Long, Item> storedItemsMap = storedItems.stream().collect(Collectors.toMap(Item::getId, Function.identity()));
-        for (Item ingredient:
+        Map<Long, ItemStorage> storedItemsMap = storedItems.stream().collect(Collectors.toMap(ItemStorage::getId, Function.identity()));
+        for (ItemStorage ingredient:
             recipeIngredients) {
             if(!storedItems.contains(ingredient)) {
                 // adds items that are not in the storage
                 returnSet.add(ingredient);
             } else {
-                Item storedItem = storedItemsMap.get(ingredient.getId());
+                ItemStorage storedItem = storedItemsMap.get(ingredient.getId());
                 if(ingredient.getQuantity().equals(storedItem.getQuantity())) {
                     // adds items if there is not enough in the storage
                     if(ingredient.getAmount() > storedItem.getAmount()) returnSet.add(ingredient);
