@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.PermitAll;
@@ -34,16 +35,15 @@ public class StorageEndpoint {
     @Operation(summary = "Insert a new item into the storage") //TODO: add security
     public ItemStorageDto saveItem(@Valid @RequestBody ItemStorageDto itemStorageDto) {
         LOGGER.info("POST /storage body: {}", itemStorageDto.toString());
-
-        return itemStorageMapper.itemStorageToItemStorageDto(storageService.saveItem(itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto)));
+        return itemStorageMapper.itemStorageToItemStorageDto(storageService.saveItem(itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto), itemStorageDto.getStorageId()));
     }
 
     @GetMapping
     @PermitAll
     @Operation(summary = "Get all items from the storage") //TODO: add security
-    public List<ItemStorageDto> getAll() {
+    public List<ItemStorageDto> getAll(@Param("id") Long id) {
         LOGGER.info("getAll, endpoint");
-        return itemStorageMapper.itemsStorageToItemsStorageDto(storageService.getAll());
+        return itemStorageMapper.itemsStorageToItemsStorageDto(storageService.getAll(id));
     }
 
     @GetMapping(value= "/search")
