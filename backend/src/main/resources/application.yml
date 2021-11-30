@@ -1,8 +1,8 @@
 logging:
   file.name: ./log/backend.log
   level:
-    root: INFO
-    org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: TRACE
+    root: INFO #DEBUG
+    org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: DEBUG #TRACE
 
 spring:
   datasource:
@@ -19,7 +19,6 @@ spring:
     # is disabled since it breaks the principle of least astonishment and leads to bad performance. The learn more,
     # follow this link: https://bit.ly/2LaX9ku
     open-in-view: false
-
 security:
   auth:
     header: Authorization
@@ -60,7 +59,9 @@ management:
     export:
       prometheus:
         enabled: true
-
+server:
+  error:
+    include-message: always
 ---
 spring:
   config:

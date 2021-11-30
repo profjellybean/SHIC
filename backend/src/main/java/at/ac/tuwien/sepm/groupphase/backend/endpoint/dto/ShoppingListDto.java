@@ -13,7 +13,7 @@ public class ShoppingListDto {
 
     private String notes;
 
-    private Set<ItemDto> items;
+    private Set<ItemStorageDto> items;
 
     // TODO: change to UserDto
     private ApplicationUser owner;
@@ -42,11 +42,11 @@ public class ShoppingListDto {
         this.notes = notes;
     }
 
-    public Set<ItemDto> getItems() {
+    public Set<ItemStorageDto> getItems() {
         return items;
     }
 
-    public void setItems(Set<ItemDto> items) {
+    public void setItems(Set<ItemStorageDto> items) {
         this.items = items;
     }
 

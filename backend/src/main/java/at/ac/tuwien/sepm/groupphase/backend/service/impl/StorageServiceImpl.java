@@ -39,10 +39,10 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public ItemStorage saveItem(Item item){
+    public ItemStorage saveItem(ItemStorage itemStorage){
         LOGGER.debug("Save item");
-        storageRepository.saveAndFlush(new ItemStorage(item));
-        return item;
+        storageRepository.saveAndFlush(itemStorage);
+        return itemStorage;
     }
 
     @Override
@@ -50,4 +50,17 @@ public class StorageServiceImpl implements StorageService {
         LOGGER.debug("Getting all items");
         return storageRepository.findAll();
     }
+
+    @Override
+    public int createNewStorage() {
+        LOGGER.debug("Creating a new storage");
+        return 0;
+    }
+
+    @Override
+    public List<ItemStorage> searchItem(String name){
+        LOGGER.debug("search for items");
+        return storageRepository.findAllByNameLike(name);
+    }
+
 }
