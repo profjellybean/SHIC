@@ -23,7 +23,7 @@ public class Recipe {
 
     @OneToMany//(fetch=FetchType.EAGER)
     @Column(nullable = true, name = "ingredients")
-    private Set<Item> ingredients;
+    private Set<ItemStorage> ingredients;
 
     //@OneToMany
     @Column(name = "categories")
@@ -57,11 +57,11 @@ public class Recipe {
         this.description = description;
     }
 
-    public Set<Item> getIngredients() {
+    public Set<ItemStorage> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(Set<Item> ingredients) {
+    public void setIngredients(Set<ItemStorage> ingredients) {
         this.ingredients = ingredients;
     }
 
@@ -101,7 +101,7 @@ public class Recipe {
         private Long id;
         private String name;
         private String description;
-        private Set<Item> ingredients;
+        private Set<ItemStorage> ingredients;
         private Set<RecipeCategory> categories;
 
         private RecipeBuilder() { }
@@ -120,7 +120,7 @@ public class Recipe {
             this.description = description;
             return this;
         }
-        public RecipeBuilder withIngredients(Set<Item> ingredients) {
+        public RecipeBuilder withIngredients(Set<ItemStorage> ingredients) {
             this.ingredients = ingredients;
             return this;
         }

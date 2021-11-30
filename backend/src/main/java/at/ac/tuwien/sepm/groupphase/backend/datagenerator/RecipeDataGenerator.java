@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Item;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.RecipeCategory;
 import at.ac.tuwien.sepm.groupphase.backend.repository.RecipeRepository;
@@ -23,7 +24,10 @@ public class RecipeDataGenerator {
     private static final int NUMBER_OF_RECIPES_TO_GENERATE = 5;
     private static final String TEST_RECIPE_NAME = "Name";
     private static final String TEST_RECIPE_DESCRIPTION = "Description of Recipe";
-    private static final Set<Item> TEST_RECIPE_INGREDIENTS = new HashSet<>(Arrays.asList(new Item(1L), new Item(2L)));
+    private static final Set<ItemStorage> TEST_RECIPE_INGREDIENTS = new HashSet<>(Arrays.asList(
+        new ItemStorage(1, "RecipeTestIngredient1", "notes", null, null, 10, null, null),
+        new ItemStorage(2, "RecipeTestIngredient2", "notes", null, null, 20, null, null),
+        new ItemStorage(3, "RecipeTestIngredient3", "notes", null, null, 30, null, null)));
     private static final Set<RecipeCategory> TEST_RECIPE_CATEGORIES = new HashSet<>(Arrays.asList(RecipeCategory.breakfast, RecipeCategory.vegetarian));
 
     private final RecipeRepository recipeRepository;
