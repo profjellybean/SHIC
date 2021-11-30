@@ -3,6 +3,8 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 import javax.persistence.*;
 import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 @Entity
@@ -15,18 +17,18 @@ public class Bill {
 
     @OneToMany
     @JoinColumn(name = "item_id")
-    private Set<Item> groceries;
+    private Map<Long, Item> groceries;
 
     @Column(name = "notes")
     private String notes;
 
     @OneToMany
     @JoinColumn(name = "applicationUser_id")
-    private Set<ApplicationUser> names;
+    private Map<Long, ApplicationUser> names;
 
     @OneToMany
     @JoinColumn(name = "applicationUser_id")
-    private Set<ApplicationUser> notPaidNames;
+    private Map<Long, ApplicationUser> notPaidNames;
 
     @Column(name = "sum")
     private double sum;
@@ -42,7 +44,7 @@ public class Bill {
 
     }
 
-    public Bill(Long id, Set<Item> groceries, String notes, Set<ApplicationUser> names, double sum, LocalDate date) {
+    public Bill(Long id, HashMap<Long, Item> groceries, String notes, HashMap<Long, ApplicationUser> names, double sum, LocalDate date) {
         this.id = id;
         this.groceries = groceries;
         this.notes = notes;
@@ -60,11 +62,11 @@ public class Bill {
         return id;
     }
 
-    public Set<Item> getGroceries() {
+    public Map<Long, Item> getGroceries() {
         return groceries;
     }
 
-    public void setGroceries(Set<Item> groceries) {
+    public void setGroceries(HashMap<Long, Item> groceries) {
         this.groceries = groceries;
     }
 
@@ -76,11 +78,11 @@ public class Bill {
         this.notes = notes;
     }
 
-    public Set<ApplicationUser> getNames() {
+    public Map<Long, ApplicationUser> getNames() {
         return names;
     }
 
-    public void setNames(Set<ApplicationUser> names) {
+    public void setNames(Map<Long, ApplicationUser> names) {
         this.names = names;
     }
 
@@ -108,11 +110,9 @@ public class Bill {
         return sum / names.size();
     }
 
-    public Set<ApplicationUser> getNotPaidNames() {
-        return notPaidNames;
-    }
+    public void setNotPaidNames(Map<Long, ApplicationUser> notPaidNames) { this.notPaidNames = notPaidNames; }
 
-    public void setNotPaidNames(Set<ApplicationUser> notPaidNames) {
-        this.notPaidNames = notPaidNames;
+    public Map<Long, ApplicationUser> getNotPaidNames() {
+        return notPaidNames;
     }
 }

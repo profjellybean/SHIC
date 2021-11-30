@@ -13,6 +13,8 @@ import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
 import { StorageComponent } from './components/storage/storage.component';
+import {RegisterComponent} from './components/register/register.component';
+import { BillComponent } from './components/bill/bill.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +25,8 @@ import { StorageComponent } from './components/storage/storage.component';
     LoginComponent,
     MessageComponent,
     StorageComponent,
+    RegisterComponent,
+    BillComponent
   ],
   imports: [
     BrowserModule,

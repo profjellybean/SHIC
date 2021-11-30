@@ -31,7 +31,8 @@ public class RegisterEndpoint {
         this.registerMapper = registerMapper;
     }
 
-    @Secured("ROLE_USER")
+    //@Secured("ROLE_USER")
+    @PermitAll
     @GetMapping(value = "/{id}")
     @Operation(summary = "Get detailed information about a specific register", security = @SecurityRequirement(name = "apiKey"))
     public RegisterDto find(@PathVariable Long id) {
@@ -39,14 +40,15 @@ public class RegisterEndpoint {
         return registerMapper.registerToRegisterDto(registerService.findOne(id));
     }
 
-    @Secured("ROLE_USER")
+    //@Secured("ROLE_USER")
+    @PermitAll
     @PutMapping
     @Operation(summary = "Get detailed information about a specific register", security = @SecurityRequirement(name = "apiKey"))
     public RegisterDto confirmPayment(@Valid @RequestBody RegisterConfirmPaymentDto registerConfirmPaymentDto) {
         LOGGER.info("PUT /api/v1/register/{}", registerConfirmPaymentDto);
         Register register = registerMapper.registerConfirmPaymentDtoToRegister(registerConfirmPaymentDto);
-        return registerMapper.registerToRegisterDto(registerService.confirmPayment(register,
-            registerConfirmPaymentDto.getBill(), registerConfirmPaymentDto.getUser()));
+        return registerMapper.registerToRegisterDto(registerService.confirmPayment(register.getId(),
+            registerConfirmPaymentDto.getBill().getId(), registerConfirmPaymentDto.getUser().getId()));
     }
 
 

@@ -1,9 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Bill;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Message;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Register;
-import at.ac.tuwien.sepm.groupphase.backend.repository.MessageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.RegisterRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.lang.invoke.MethodHandles;
-import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,8 +19,8 @@ import java.util.Set;
 public class RegisterDataGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private static final int NUMBER_OF_REGISTERS_TO_GENERATE = 1;
-    private static final Set<Bill> TEST_BILLS = new HashSet<Bill>();
+    private static final int NUMBER_OF_REGISTERS_TO_GENERATE = 3;
+    private static final HashMap<Long, Bill> TEST_BILLS = new HashMap<Long, Bill>();
     private static final double TEST_MONTHLY_PAYMENT = 300;
     private static final double TEST_MONTHLY_BUDGET = 500;
 
@@ -38,7 +36,7 @@ public class RegisterDataGenerator {
             LOGGER.debug("register already generated");
         } else {
             LOGGER.debug("generating {} message entries", NUMBER_OF_REGISTERS_TO_GENERATE);
-            TEST_BILLS.add(null);
+            TEST_BILLS.put(null, null);
             for (int i = 0; i < NUMBER_OF_REGISTERS_TO_GENERATE; i++) {
                 Register register = Register.RegisterBuilder.aRegister()
                     .withBills(TEST_BILLS)

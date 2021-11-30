@@ -10,7 +10,7 @@ import java.util.List;
 public interface MessageRepository extends JpaRepository<Message, Long> {
 
     /**
-     * Find all message entries ordered by published at date (descending).
+     * Get all message entries ordered by published at date (descending).
      *
      * @return ordered list of al message entries
      */

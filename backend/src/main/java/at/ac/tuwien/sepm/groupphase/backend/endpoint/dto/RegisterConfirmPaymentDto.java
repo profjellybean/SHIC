@@ -3,13 +3,14 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Bill;
 
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
 public class RegisterConfirmPaymentDto {
     private Long id;
 
-    private Set<Bill> billSet;
+    private Map<Long, Bill> billMap;
 
     private Bill bill;
 
@@ -27,12 +28,12 @@ public class RegisterConfirmPaymentDto {
         this.id = id;
     }
 
-    public Set<Bill> getBillSet() {
-        return billSet;
+    public Map<Long, Bill> getBillMap() {
+        return billMap;
     }
 
-    public void setBillSet(Set<Bill> billSet) {
-        this.billSet = billSet;
+    public void setBillMap(Map<Long, Bill> billMap) {
+        this.billMap = billMap;
     }
 
     public Bill getBill() {
@@ -77,7 +78,7 @@ public class RegisterConfirmPaymentDto {
         }
         RegisterConfirmPaymentDto that = (RegisterConfirmPaymentDto) o;
         return Objects.equals(id, that.id)
-            && Objects.equals(billSet, that.billSet)
+            && Objects.equals(billMap, that.billMap)
             && Objects.equals(bill, that.bill)
             && Objects.equals(user, that.user)
             && Objects.equals(monthlyPayments, that.monthlyPayments)
@@ -86,14 +87,14 @@ public class RegisterConfirmPaymentDto {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, billSet, bill, monthlyPayments, monthlyBudget);
+        return Objects.hash(id, billMap, bill, monthlyPayments, monthlyBudget);
     }
 
     @Override
     public String toString() {
         return "SimpleMessageDto{"
             + "id=" + id
-            + ", billSet=" + billSet
+            + ", billMap=" + billMap
             + ", bill=" + bill
             + ", user=" + user
             + ", monthlyPayment='" + monthlyPayments + '\''
@@ -103,7 +104,7 @@ public class RegisterConfirmPaymentDto {
 
     public static final class RegisterComfirmPaymentDtoBuilder {
         private Long id;
-        private Set<Bill> billSet;
+        private Map<Long, Bill> billMap;
         private Bill bill;
         private ApplicationUser user;
         private double monthlyPayments;
@@ -121,8 +122,8 @@ public class RegisterConfirmPaymentDto {
             return this;
         }
 
-        public RegisterComfirmPaymentDtoBuilder withBillSet(Set<Bill> billSet) {
-            this.billSet = billSet;
+        public RegisterComfirmPaymentDtoBuilder withBillSet(Map<Long, Bill> billMap) {
+            this.billMap = billMap;
             return this;
         }
 
@@ -149,7 +150,7 @@ public class RegisterConfirmPaymentDto {
         public RegisterConfirmPaymentDto build() {
             RegisterConfirmPaymentDto registerConfirmPaymentDto = new RegisterConfirmPaymentDto();
             registerConfirmPaymentDto.setId(id);
-            registerConfirmPaymentDto.setBillSet(billSet);
+            registerConfirmPaymentDto.setBillMap(billMap);
             registerConfirmPaymentDto.setBill(bill);
             registerConfirmPaymentDto.setUser(user);
             registerConfirmPaymentDto.setMonthlyPayments(monthlyPayments);

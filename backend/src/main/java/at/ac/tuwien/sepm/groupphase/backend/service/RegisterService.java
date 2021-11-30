@@ -10,7 +10,7 @@ public interface RegisterService {
      * Confirm an outstanding payment of a bill
      *
      */
-    Register confirmPayment(Register register, Bill bill, ApplicationUser user);
+    Register confirmPayment(Long registerId, Long billId, Long userId);
 
     Register findOne(Long id);
 }

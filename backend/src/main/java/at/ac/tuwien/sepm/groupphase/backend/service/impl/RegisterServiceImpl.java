@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -25,15 +27,25 @@ public class RegisterServiceImpl implements RegisterService {
     }
 
     @Override
-    public Register confirmPayment(Register register, Bill bill, ApplicationUser user) {
-        LOGGER.debug("Service: confirm Payment {}{}", register, user);
-        Set<Bill> bills = register.getBills();
-        bills.remove(bill);
-        Set<ApplicationUser> all = bill.getNotPaidNames();
-        all.remove(user);
-        bill.setNotPaidNames(all);
-        bills.add(bill);
-        return register;
+    public Register confirmPayment(Long registerId, Long billId, Long userId) {
+        LOGGER.debug("Service: confirm Payment {}{}", registerId, userId);
+        Optional<Register> registerOptional = registerRepository.findById(registerId);
+        if(registerOptional.isPresent()) {
+            Register register = registerOptional.get();
+            Map<Long, Bill> bills = register.getBills();
+            Bill bill = bills.get(billId);
+            bills.remove(bill);
+            Map<Long, ApplicationUser> all = bill.getNotPaidNames();
+            ApplicationUser user = all.get(userId);
+            all.remove(user);
+            bill.setNotPaidNames(all);
+            bills.put(billId, bill);
+            register.setBills(bills);
+            register = registerRepository.save(register);
+            return register;
+        } else {
+            throw new NotFoundException(String.format("Could not find register with id %s", registerId));
+        }
     }
 
     public Register findOne(Long id) {
@@ -42,8 +54,7 @@ public class RegisterServiceImpl implements RegisterService {
         if (register.isPresent()) {
             return register.get();
         } else {
-            throw new NotFoundException(String.format("Could not find message with id %s", id));
+            throw new NotFoundException(String.format("Could not find register with id %s", id));
         }
-
     }
 }
