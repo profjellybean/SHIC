@@ -15,6 +15,9 @@ public class Bill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "register_id")
+    private Long registerId;
+
     @OneToMany
     @JoinColumn(name = "item_id")
     private Map<Long, Item> groceries;
