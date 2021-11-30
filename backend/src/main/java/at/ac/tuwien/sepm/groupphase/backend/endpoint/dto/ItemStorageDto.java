@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.UnitOfQuantity;
 import java.util.Date;
 
 public class ItemStorageDto{
+    private Long StorageId;
     private Long id;
     private String name;
     private UnitOfQuantity quantity;
@@ -15,19 +16,14 @@ public class ItemStorageDto{
     private Location locationTag;
 
 
-    public ItemStorageDto(){
+    public ItemStorageDto(){}
 
+    public Long getStorageId() {
+        return StorageId;
     }
 
-    public ItemStorageDto(Long id, String name,String notes, byte[] image, Date expDate, int amount, Location locationTag, UnitOfQuantity quantity) {
-        this.id = id;
-        this.name = name;
-        this.notes = notes;
-        this.image = image;
-        this.expDate = expDate;
-        this.amount = amount;
-        this.locationTag = locationTag;
-        this.quantity = quantity;
+    public void setStorageId(Long storageId) {
+        StorageId = storageId;
     }
 
     public Long getId() {

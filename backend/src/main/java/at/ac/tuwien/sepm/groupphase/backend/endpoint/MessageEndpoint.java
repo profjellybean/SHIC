@@ -54,7 +54,7 @@ public class MessageEndpoint {
         return messageMapper.messageToDetailedMessageDto(messageService.findOne(id));
     }
 
-    @Secured("ROLE_ADMIN")
+    @Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     @Operation(summary = "Publish a new message", security = @SecurityRequirement(name = "apiKey"))

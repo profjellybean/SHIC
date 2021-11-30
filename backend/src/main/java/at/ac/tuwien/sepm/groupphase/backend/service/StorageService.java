@@ -14,11 +14,13 @@ public interface StorageService {
 
     ItemStorage deleteItemById(Long id);
 
-    ItemStorage saveItem(ItemStorage itemStorage);
+    ItemStorage saveItem(ItemStorage itemStorage, Long id);
 
     List<ItemStorage> searchItem(String name);
 
-    List<ItemStorage> getAll();
+    List<ItemStorage> getAll(Long id);
 
-    int createNewStorage();
+    Long findStorageById(Long id);
+
+    Long createNewStorage();
 }
