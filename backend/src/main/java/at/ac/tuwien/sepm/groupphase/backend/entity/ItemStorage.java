@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
+import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.UnitOfQuantity;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -10,6 +11,7 @@ public class ItemStorage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    private long storageId;
     @Column
     private String name;
     @Column
@@ -22,10 +24,13 @@ public class ItemStorage {
     private int amount;
     @Column
     private Location locationTag;
+    @Column
+    private UnitOfQuantity quantity;
+
 
     public ItemStorage(){}
 
-    public ItemStorage(long id, String name, String notes, byte[] image, Date expDate, int amount, Location locationTag) {
+    public ItemStorage(long id, String name, String notes, byte[] image, Date expDate, int amount, Location locationTag, UnitOfQuantity quantity) {
         this.id = id;
         this.name = name;
         this.notes = notes;
@@ -33,6 +38,7 @@ public class ItemStorage {
         this.expDate = expDate;
         this.amount = amount;
         this.locationTag = locationTag;
+        this.quantity = quantity;
     }
 
     public long getId() {
@@ -89,5 +95,13 @@ public class ItemStorage {
 
     public void setLocationTag(Location locationTag) {
         this.locationTag = locationTag;
+    }
+
+    public UnitOfQuantity getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(UnitOfQuantity quantity) {
+        this.quantity = quantity;
     }
 }

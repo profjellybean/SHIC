@@ -17,7 +17,6 @@ public class Storage {
     public Storage() {
     }
 
-
     public Long getId() {
         return id;
     }
