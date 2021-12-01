@@ -10,4 +10,10 @@ import java.util.List;
 @Repository
 public interface RecipeRepository extends JpaRepository<Recipe, Long> {
 
+    /**
+     * Find all recipes entries
+     *
+     * @return orderd list of all recipes entities
+     */
+    List<Recipe>findAll();
 }

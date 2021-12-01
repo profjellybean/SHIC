@@ -32,4 +32,14 @@ public class RecipeEndpoint {
         this.recipeService = recipeService;
     }
 
+    // TODO: change role to user
+    //@Secured("ROLE_USER")
+    @PermitAll
+    @GetMapping
+    @Operation(summary = "Get list of all recipes",security = @SecurityRequirement(name = "apiKey"))
+    public List<RecipeDto> findAll() {
+        LOGGER.info("GET /recipe");
+        return recipeMapper.recipeToRecipeDto(recipeService.findAll());
+    }
+
 }

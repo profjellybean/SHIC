@@ -20,4 +20,9 @@ public class RecipeServiceImpl implements RecipeService {
         this.recipeRepository = recipeRepository;
     }
 
+    @Override
+    public List<Recipe> findAll() {
+        LOGGER.debug("Find all recipes");
+        return recipeRepository.findAll();
+    }
 }

@@ -7,4 +7,11 @@ import java.util.List;
 
 public interface RecipeService {
 
+    /**
+     * Find all recipe entries:
+     *
+     * @return ordered list of all recipe entries
+     */
+    List<Recipe>findAll();
+
 }
