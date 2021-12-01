@@ -1,27 +1,38 @@
-package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
+package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.UnitOfQuantity;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
-public class ItemDto {
-    private Long id;
+@Entity
+public class ItemStorage {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    private long storageId;
+    @Column
+    private String name;
+    @Column
     private String notes;
+    @Column
     private byte[] image;
+    @Column
     private Date expDate;
+    @Column
     private int amount;
+    @Column
     private Location locationTag;
+    @Column
     private UnitOfQuantity quantity;
 
-    public ItemDto(){
 
-    }
+    public ItemStorage(){}
 
-    public ItemDto(Long id, String notes, byte[] image, Date expDate, int amount, Location locationTag, UnitOfQuantity quantity) {
+    public ItemStorage(long id, String name, String notes, byte[] image, Date expDate, int amount, Location locationTag, UnitOfQuantity quantity) {
         this.id = id;
+        this.name = name;
         this.notes = notes;
         this.image = image;
         this.expDate = expDate;
@@ -30,12 +41,20 @@ public class ItemDto {
         this.quantity = quantity;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getNotes() {
