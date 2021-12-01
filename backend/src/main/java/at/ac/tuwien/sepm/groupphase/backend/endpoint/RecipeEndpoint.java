@@ -19,7 +19,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/recipe")
+@RequestMapping(value = "/api/v1/recipe")
 public class RecipeEndpoint {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

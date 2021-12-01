@@ -12,7 +12,8 @@ import {LoginComponent} from './components/login/login.component';
 import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
-import { StorageComponent } from './components/storage/storage.component';
+import { RecipeComponent } from './components/recipe/recipe.component';
+import { ShoppingListComponent } from './components/shopping-list/shopping-list.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { StorageComponent } from './components/storage/storage.component';
     HomeComponent,
     LoginComponent,
     MessageComponent,
-    StorageComponent,
+    RecipeComponent,
+    ShoppingListComponent,
   ],
   imports: [
     BrowserModule,
