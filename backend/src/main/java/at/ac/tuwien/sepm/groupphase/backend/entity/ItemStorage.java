@@ -11,7 +11,6 @@ public class ItemStorage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private long storageId;
     @Column
     private String name;
     @Column

@@ -72,8 +72,6 @@ public class UserServiceImpl implements UserService {
         LOGGER.debug("Create new user: {}",userLoginDto.getUsername());
         userRepository.createUser(userMapper.dtoToEntity(userLoginDto));
 
-
-
     }
 
 
