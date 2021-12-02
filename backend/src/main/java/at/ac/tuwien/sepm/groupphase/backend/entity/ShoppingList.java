@@ -6,7 +6,6 @@ import java.util.Set;
 
 @Entity
 public class ShoppingList {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

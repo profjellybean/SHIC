@@ -14,7 +14,7 @@ public interface StorageService {
 
     ItemStorage deleteItemById(Long id);
 
-    ItemStorage saveItem(ItemStorage itemStorage, Long id);
+    ItemStorage saveItem(ItemStorage itemStorage);
 
     List<ItemStorage> searchItem(String name);
 

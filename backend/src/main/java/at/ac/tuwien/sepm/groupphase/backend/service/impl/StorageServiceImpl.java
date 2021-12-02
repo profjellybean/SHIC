@@ -1,20 +1,18 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.Item;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Storage;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepositoryStorage;
 import at.ac.tuwien.sepm.groupphase.backend.service.StorageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.endpoint.web.Link;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
-import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -23,19 +21,21 @@ public class StorageServiceImpl implements StorageService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final StorageRepository storageRepository;
     private final StorageRepositoryStorage storageRepositoryStorage;
+    private final ItemStorageRepository itemStorageRepository;
 
     @Autowired
-    public StorageServiceImpl(StorageRepository storageRepository, StorageRepositoryStorage storageRepositoryStorage) {
+    public StorageServiceImpl(StorageRepository storageRepository, StorageRepositoryStorage storageRepositoryStorage, ItemStorageRepository itemStorageRepository) {
         this.storageRepository = storageRepository;
         this.storageRepositoryStorage = storageRepositoryStorage;
+        this.itemStorageRepository = itemStorageRepository;
     }
 
     @Override
     public ItemStorage deleteItemById(Long id) {
         LOGGER.debug("Delete item by id");
         try {
-            ItemStorage itemToDelete = storageRepository.getById(id);
-            storageRepository.delete(itemToDelete);
+            ItemStorage itemToDelete = itemStorageRepository.getById(id);
+            itemStorageRepository.delete(itemToDelete);
             return itemToDelete;
         } catch (NotFoundException e) {
             throw new NotFoundException();
@@ -43,24 +43,17 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public ItemStorage saveItem(ItemStorage itemStorage, Long id){
+    public ItemStorage saveItem(ItemStorage itemStorage){
         LOGGER.debug("Save item");
-        if(findStorageById(id)!=null){
-            storageRepository.saveAndFlush(itemStorage);
-            storageRepository.insert(itemStorage.getId(), id);
-        }
-        else {
-            Long newStorage = createNewStorage();
-            storageRepository.saveAndFlush(itemStorage);
-            storageRepository.insert(itemStorage.getId(),newStorage);
-        }
+        System.out.println(itemStorage.toString());
+        itemStorageRepository.save(itemStorage);
         return itemStorage;
     }
 
     @Override
     public List<ItemStorage> getAll(Long id){
         LOGGER.debug("Getting all items");
-        return storageRepository.findAllByStorageId(id);
+        return itemStorageRepository.findAllByStorageId(id);
     }
 
     @Override
