@@ -16,7 +16,7 @@ import javax.annotation.PostConstruct;
 import java.lang.invoke.MethodHandles;
 import java.util.Set;
 
-@Profile("generateData")
+//@Profile("generateData")
 @Component
 public class StorageDataGenerator {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -33,7 +33,7 @@ public class StorageDataGenerator {
     }
 
     @PostConstruct
-    private void generateStorage() {
+    void generateStorage() {
         if(storageRepositoryStorage.findAll().size() > 0) {
             LOGGER.debug("storage already generated");
         } else {

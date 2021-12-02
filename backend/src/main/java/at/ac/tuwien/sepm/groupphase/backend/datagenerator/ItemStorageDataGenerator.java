@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.lang.invoke.MethodHandles;
 
-@Profile("generateData")
+//@Profile("generateData")
 @Component
 public class ItemStorageDataGenerator {
 
@@ -28,7 +28,7 @@ public class ItemStorageDataGenerator {
     }
 
     @PostConstruct
-    private void generateItemStorage() {
+    void generateItemStorage() {
         if(itemStorageRepository.findAll().size() > 0) {
             LOGGER.debug("ItemStorage already generated");
         } else {

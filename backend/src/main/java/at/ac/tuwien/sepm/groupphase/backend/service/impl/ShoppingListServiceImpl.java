@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.*;
+import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.UnitOfQuantity;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
@@ -61,12 +62,12 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         }
 
         recipe.setIngredients(new HashSet<ItemStorage>(Arrays.asList(
-            new ItemStorage(1L, "Name1", "notes of item 1", null, null, 10, null, null, 1L),
-            new ItemStorage(2L, "Name2", "notes of item 2", null, null, 20, null, null, 1L))));
+            new ItemStorage(1L, "Name1", "notes of item 1", null, null, 10, null, UnitOfQuantity.kg, 1L),
+            new ItemStorage(2L, "Name2", "notes of item 2", null, null, 20, null, UnitOfQuantity.kg, 1L))));
 
         storageItems = Arrays.asList(
-            new ItemStorage(4L, "Name2", "notes of item 2", null, null, 20, null, null, 1L),
-            new ItemStorage(3L, "Name3", "notes of item 3", null, null, 30, null, null, 1L));
+            new ItemStorage(2L, "Name2", "notes of item 2", null, null, 20, null, UnitOfQuantity.kg, 1L),
+            new ItemStorage(3L, "Name3", "notes of item 3", null, null, 30, null, UnitOfQuantity.kg, 1L));
 
 
         // TODO compare item sets

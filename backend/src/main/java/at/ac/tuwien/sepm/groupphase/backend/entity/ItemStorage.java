@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.UnitOfQuantity;
 import javax.persistence.*;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 public class ItemStorage {
@@ -127,6 +128,28 @@ public class ItemStorage {
         this.quantity = quantity;
     }
 
+    /**
+     * intentionally only compares name and unit of quantity,
+     * so it can be used in planRecipe to check if an ingredient is already in the storage
+     * @param o object that this is compared to
+     * @return true if and only if name AND quantity are the same
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ItemStorage that = (ItemStorage) o;
+        return Objects.equals(name, that.name)
+            && quantity == that.quantity;
+    }
+
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(id, name, notes, expDate, amount, locationTag, quantity, storageId);
+        result = 31 * result + Arrays.hashCode(image);
+        return result;
+    }
 
     @Override
     public String toString() {

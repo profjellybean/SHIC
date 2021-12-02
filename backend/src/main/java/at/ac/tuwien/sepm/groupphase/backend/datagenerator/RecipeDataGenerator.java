@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-@Profile("generateData")
+//@Profile("generateData")
 @Component
 public class RecipeDataGenerator {
 
@@ -37,7 +37,7 @@ public class RecipeDataGenerator {
     }
 
     @PostConstruct
-    private void generateRecipes() {
+    void generateRecipes() {
         if(recipeRepository.findAll().size() > 0) {
             LOGGER.debug("recipes already generated");
         } else {

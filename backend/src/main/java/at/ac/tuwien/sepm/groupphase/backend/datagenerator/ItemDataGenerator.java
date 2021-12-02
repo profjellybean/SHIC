@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.lang.invoke.MethodHandles;
 
-@Profile("generateData")
+//@Profile("generateData")
 @Component
 public class ItemDataGenerator {
 
@@ -29,7 +29,7 @@ public class ItemDataGenerator {
 
 
     @PostConstruct
-    private void generateItem() {
+    void generateItem() {
         if(itemRepository.findAll().size() > 0) {
             LOGGER.debug("Item already generated");
         } else {

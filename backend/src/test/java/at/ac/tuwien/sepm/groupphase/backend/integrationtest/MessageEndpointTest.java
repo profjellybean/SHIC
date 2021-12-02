@@ -74,7 +74,7 @@ public class MessageEndpointTest implements TestData {
             .withPublishedAt(TEST_NEWS_PUBLISHED_AT)
             .build();
     }
-    /*
+
 
     @Test
     public void givenNothing_whenFindAll_thenEmptyList() throws Exception {
@@ -209,7 +209,6 @@ public class MessageEndpointTest implements TestData {
             }
         );
     }
-    */
 
 
     private boolean isNow(LocalDateTime date) {
