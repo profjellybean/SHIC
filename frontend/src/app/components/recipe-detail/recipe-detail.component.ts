@@ -3,6 +3,7 @@ import {MessageService} from '../../services/message.service';
 import {Recipe} from '../../dtos/recipe';
 import {RecipeService} from '../../services/recipe.service';
 import {ActivatedRoute} from '@angular/router';
+import {ShoppingListService} from '../../services/shopping-list.service';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -19,10 +20,25 @@ export class RecipeDetailComponent implements OnInit {
   errorMessage = '';
 
   constructor(private messageService: MessageService, private recipeService: RecipeService,
-              private route: ActivatedRoute) { }
+              private route: ActivatedRoute,
+              private shoppingListService: ShoppingListService) { }
 
   ngOnInit(): void {
     this.recipe.id = this.route.snapshot.params.id;
+  }
+
+
+  planRecipe() {
+    this.shoppingListService.planRecipe(this.recipe.id).subscribe({
+      next: res => {
+        // TODO add success
+        this.recipe.name = 'test successful: '+res.name;
+      },
+      error: err => {
+        this.defaultServiceErrorHandling(err);
+      }
+    });
+
   }
 
   /**

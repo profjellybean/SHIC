@@ -32,12 +32,10 @@ public class ShoppingListEndpoint {
     @PermitAll
     //@Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.OK)
-    // TODO change mapping
-    //@PutMapping(value = "/{recipeId},{storageId}")
-    @PutMapping
+    @PutMapping    // TODO change mapping
     @Operation(summary = "Plan a recipe: creates shoppingList based on missing ingredients", security = @SecurityRequirement(name = "apiKey"))
-    // TODO: change paramteters to new Dto
-    //public ShoppingListDto create(@PathVariable Long recipeId, @PathVariable Long storageId) {
+    // TODO: change paramteters to new Dto?
+    // TODO: return added Items instead of ShoppingListDto?
     public ShoppingListDto create(@RequestParam(name = "recipeId") Long recipeId, @RequestParam(name = "storageId") Long storageId) {
         LOGGER.info("Endpoint: POST /api/v1/shoppinglist/recipeId={},storageId={}", recipeId, storageId);
         return shoppingListMapper.shoppingListToShoppingListDto(
