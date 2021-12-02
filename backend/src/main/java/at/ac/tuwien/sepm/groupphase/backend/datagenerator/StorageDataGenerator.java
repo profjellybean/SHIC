@@ -33,18 +33,15 @@ public class StorageDataGenerator {
     }
 
     @PostConstruct
-    private void generateShoppingList() {
+    private void generateStorage() {
         if(storageRepositoryStorage.findAll().size() > 0) {
             LOGGER.debug("storage already generated");
         } else {
             LOGGER.debug("generating {} storage entries", NUMBER_OF_STOREGES);
             for (int i = 0; i < NUMBER_OF_STOREGES; i++) {
-                // TODO add storages
                 Storage storage = new Storage();
-                storage.setId(0L);
-                LOGGER.debug("saving storage {}", storage);
+                LOGGER.debug("saving Storage {}", storage);
                 storageRepositoryStorage.save(storage);
-
             }
         }
     }

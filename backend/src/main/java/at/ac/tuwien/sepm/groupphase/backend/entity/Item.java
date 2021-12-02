@@ -29,6 +29,12 @@ public class Item {
 
     }
 
+    public Item(Long id, String name, UnitOfQuantity quantity) {
+        this.id = id;
+        this.name = name;
+        this.quantity = quantity;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }

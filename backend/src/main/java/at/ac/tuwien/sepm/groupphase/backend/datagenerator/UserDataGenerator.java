@@ -31,7 +31,7 @@ public class UserDataGenerator {
     }
 
     @PostConstruct
-    private void generateShoppingList() {
+    private void generateUser() {
 
         UserLoginDto user = new UserLoginDto("user@email.com", "password");
         UserLoginDto admin = new UserLoginDto("admin@email.com", "password");
