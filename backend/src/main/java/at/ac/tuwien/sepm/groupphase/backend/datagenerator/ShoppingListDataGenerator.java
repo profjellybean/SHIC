@@ -16,7 +16,7 @@ import java.util.Set;
 import javax.annotation.PostConstruct;
 import java.lang.invoke.MethodHandles;
 
-@Profile("generateData")
+//@Profile("generateData")
 @Component
 public class ShoppingListDataGenerator {
 
@@ -35,7 +35,7 @@ public class ShoppingListDataGenerator {
     }
 
     @PostConstruct
-    private void generateShoppingList() {
+    void generateShoppingList() {
         if(shoppingListRepository.findAll().size() > 0) {
             LOGGER.debug("shoppinglist already generated");
         } else {

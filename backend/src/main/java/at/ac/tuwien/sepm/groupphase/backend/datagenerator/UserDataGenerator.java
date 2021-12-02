@@ -17,7 +17,7 @@ import javax.annotation.PostConstruct;
 import java.lang.invoke.MethodHandles;
 import java.util.Optional;
 
-@Profile("generateData")
+//@Profile("generateData")
 @Component
 public class UserDataGenerator {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -31,7 +31,7 @@ public class UserDataGenerator {
     }
 
     @PostConstruct
-    private void generateShoppingList() {
+    void generateShoppingList() {
 
         UserLoginDto user = new UserLoginDto("user@email.com", "password");
         UserLoginDto admin = new UserLoginDto("admin@email.com", "password");
