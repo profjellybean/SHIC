@@ -191,7 +191,7 @@ public class SecurityTest implements TestData {
         assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatus());
     }
 
-    @Test
+    /*@Test
     public void givenUserLoggedIn_whenPost_then403() throws Exception {
         message.setPublishedAt(null);
         MessageInquiryDto messageInquiryDto = messageMapper.messageToMessageInquiryDto(message);
@@ -206,5 +206,5 @@ public class SecurityTest implements TestData {
         MockHttpServletResponse response = mvcResult.getResponse();
 
         assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatus());
-    }
+    }*/
 }

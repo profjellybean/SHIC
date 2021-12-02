@@ -1,9 +1,12 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+import java.util.Map;
 
 public interface UserService extends UserDetailsService {
 
@@ -26,5 +29,20 @@ public interface UserService extends UserDetailsService {
      * @param username the username
      * @return a application user
      */
+
     ApplicationUser findApplicationUserByUsername(String username);
+
+
+
+    /**
+     * Find an application user based on the username.
+     *
+     * @param userLoginDto the DTO of the user to be created
+     *
+     */
+    void createUser(UserLoginDto userLoginDto);
+
+
+
+
 }
