@@ -45,9 +45,9 @@ public class RecipeDataGenerator {
 
             for (int i = 0; i < NUMBER_OF_RECIPES_TO_GENERATE; i++) {
                 Recipe recipe = Recipe.RecipeBuilder.aRecipe()
-                    .withName(TEST_RECIPE_NAME)
-                    .withDescription(TEST_RECIPE_DESCRIPTION)
-                    .withIngredients(TEST_RECIPE_INGREDIENTS)
+                    .withName(TEST_RECIPE_NAME+" "+i)
+                    .withDescription(TEST_RECIPE_DESCRIPTION+" "+i)
+                    //.withIngredients(TEST_RECIPE_INGREDIENTS)
                     .withCategories(TEST_RECIPE_CATEGORIES)
                     .build();
                 LOGGER.debug("saving recipe {}", recipe);
