@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.UnitOfQuantity;
 
 import javax.persistence.*;
+import java.util.Arrays;
 import java.util.Date;
 
 @Entity
@@ -25,12 +26,13 @@ public class ItemStorage {
     private Location locationTag;
     @Column
     private UnitOfQuantity quantity;
+    @Column
+    private Long storageId;
 
 
     public ItemStorage(){}
 
-    public ItemStorage(long id, String name, String notes, byte[] image, Date expDate, int amount, Location locationTag, UnitOfQuantity quantity) {
-        this.id = id;
+    public ItemStorage(String name, String notes, byte[] image, Date expDate, int amount, Location locationTag, UnitOfQuantity quantity, Long storageId) {
         this.name = name;
         this.notes = notes;
         this.image = image;
@@ -38,6 +40,15 @@ public class ItemStorage {
         this.amount = amount;
         this.locationTag = locationTag;
         this.quantity = quantity;
+        this.storageId = storageId;
+    }
+
+    public Long getStorageId() {
+        return storageId;
+    }
+
+    public void setStorageId(Long storageId) {
+        this.storageId = storageId;
     }
 
     public long getId() {
@@ -102,5 +113,21 @@ public class ItemStorage {
 
     public void setQuantity(UnitOfQuantity quantity) {
         this.quantity = quantity;
+    }
+
+
+    @Override
+    public String toString() {
+        return "ItemStorage{" +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", notes='" + notes + '\'' +
+            ", image=" + Arrays.toString(image) +
+            ", expDate=" + expDate +
+            ", amount=" + amount +
+            ", locationTag=" + locationTag +
+            ", quantity=" + quantity +
+            ", storageId=" + storageId +
+            '}';
     }
 }

@@ -14,12 +14,32 @@ public class Group {
     private Set<ApplicationUser> user;
 
     @Column
-    private Long storageId;
-    @Column
-    private Long recipeId = storageId;
-    @Column
-    private Long shoppingListId = storageId;
-    //TODO: Kassa
+    private Long groupId;
+
+    public Group(Set<ApplicationUser> user, Long groupId) {
+        this.user = user;
+        this.groupId = groupId;
+    }
+
+    public Group() {
+
+    }
+
+    public Long getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
+    }
+
+    public Set<ApplicationUser> getUser() {
+        return user;
+    }
+
+    public void setUser(Set<ApplicationUser> user) {
+        this.user = user;
+    }
 
     public Long getId() {
         return id;

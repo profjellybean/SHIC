@@ -34,8 +34,8 @@ public class StorageServiceImpl implements StorageService {
     public ItemStorage deleteItemById(Long id) {
         LOGGER.debug("Delete item by id");
         try {
-            ItemStorage itemToDelete = storageRepository.getById(id);
-            storageRepository.delete(itemToDelete);
+            ItemStorage itemToDelete = itemStorageRepository.getById(id);
+            itemStorageRepository.delete(itemToDelete);
             return itemToDelete;
         } catch (NotFoundException e) {
             throw new NotFoundException();
@@ -43,17 +43,10 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public ItemStorage saveItem(ItemStorage itemStorage, Long id){
+    public ItemStorage saveItem(ItemStorage itemStorage){
         LOGGER.debug("Save item");
-        if(findStorageById(id)!=null){
-            storageRepository.saveAndFlush(itemStorage);
-            storageRepository.insert(itemStorage.getId(), id);
-        }
-        else {
-            Long newStorage = createNewStorage();
-            storageRepository.saveAndFlush(itemStorage);
-            storageRepository.insert(itemStorage.getId(),newStorage);
-        }
+        System.out.println(itemStorage.toString());
+        itemStorageRepository.save(itemStorage);
         return itemStorage;
     }
 

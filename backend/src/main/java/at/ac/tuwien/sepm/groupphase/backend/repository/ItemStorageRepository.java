@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface ItemStorageRepository extends JpaRepository<ItemStorage, Long> {
     List<ItemStorage> findAllByStorageId(Long id);
+    void deleteById(Long id);
 }
