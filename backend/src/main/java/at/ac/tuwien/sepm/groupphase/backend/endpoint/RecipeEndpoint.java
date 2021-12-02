@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemStorageDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.RecipeDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SimpleMessageDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.RecipeMapper;
@@ -9,6 +10,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,11 +34,9 @@ public class RecipeEndpoint {
         this.recipeService = recipeService;
     }
 
-    // TODO: change role to user
-    //@Secured("ROLE_USER")
-    @PermitAll
     @GetMapping
-    @Operation(summary = "Get list of all recipes",security = @SecurityRequirement(name = "apiKey"))
+    @PermitAll
+    @Operation(summary = "Get list of all recipes") //TODO: add security
     public List<RecipeDto> findAll() {
         LOGGER.info("GET /recipe");
         return recipeMapper.recipeToRecipeDto(recipeService.findAll());
