@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Storage;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepositoryStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -25,20 +26,22 @@ public class StorageDataGenerator {
     private static final ApplicationUser TEST_STORAGE_OWNER = null;
     private static final Set<Item> TEST_STORAGE_ITEMS = null;
 
-    private final StorageRepository storageRepository;
+    private final StorageRepositoryStorage storageRepositoryStorage;
 
-    public StorageDataGenerator(StorageRepository storageRepository) {
-        this.storageRepository = storageRepository;
+    public StorageDataGenerator(StorageRepositoryStorage storageRepositoryStorage) {
+        this.storageRepositoryStorage = storageRepositoryStorage;
     }
 
     @PostConstruct
-    private void generateShoppingList() {
-        if(storageRepository.findAll().size() > 0) {
+    private void generateStorage() {
+        if(storageRepositoryStorage.findAll().size() > 0) {
             LOGGER.debug("storage already generated");
         } else {
             LOGGER.debug("generating {} storage entries", NUMBER_OF_STOREGES);
             for (int i = 0; i < NUMBER_OF_STOREGES; i++) {
-
+                Storage storage = new Storage();
+                LOGGER.debug("saving Storage {}", storage);
+                storageRepositoryStorage.save(storage);
             }
         }
     }
