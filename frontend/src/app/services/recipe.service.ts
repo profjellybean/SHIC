@@ -9,13 +9,19 @@ import {Recipe} from '../dtos/recipe';
 })
 export class RecipeService {
 
-  private messageBaseUri: string = this.globals.backendUri + '/recipe';
+  private recipeBaseUri: string = this.globals.backendUri + '/recipe';
 
   constructor(private httpClient: HttpClient,
               private globals: Globals) {
   }
 
   findAll(): Observable<Recipe[]>{
-    return null;
+    console.log('load recipes');
+    return this.httpClient.get<Recipe[]>(this.recipeBaseUri);
+  }
+
+  findRecipeById(id: number): Observable<Recipe>{
+    console.log('load recipe with id ' + 1);
+    return this.httpClient.get<Recipe>(this.recipeBaseUri + '/' + id);
   }
 }
