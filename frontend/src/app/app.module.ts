@@ -14,6 +14,8 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
 import { RecipeComponent } from './components/recipe/recipe.component';
 import { ShoppingListComponent } from './components/shopping-list/shopping-list.component';
+import { StorageComponent } from './components/storage/storage.component';
+import { RecipeDetailComponent } from './components/recipe-detail/recipe-detail.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +27,8 @@ import { ShoppingListComponent } from './components/shopping-list/shopping-list.
     MessageComponent,
     RecipeComponent,
     ShoppingListComponent,
+    StorageComponent,
+    RecipeDetailComponent,
   ],
   imports: [
     BrowserModule,
