@@ -11,7 +11,7 @@ import java.util.Date;
 public class ItemStorage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     @Column
     private String name;
     @Column
@@ -43,6 +43,18 @@ public class ItemStorage {
         this.storageId = storageId;
     }
 
+    public ItemStorage(Long id, String name, String notes, byte[] image, Date expDate, int amount, Location locationTag, UnitOfQuantity quantity, Long storageId) {
+        this.id = id;
+        this.name = name;
+        this.notes = notes;
+        this.image = image;
+        this.expDate = expDate;
+        this.amount = amount;
+        this.locationTag = locationTag;
+        this.quantity = quantity;
+        this.storageId = storageId;
+    }
+
     public Long getStorageId() {
         return storageId;
     }
@@ -51,11 +63,11 @@ public class ItemStorage {
         this.storageId = storageId;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

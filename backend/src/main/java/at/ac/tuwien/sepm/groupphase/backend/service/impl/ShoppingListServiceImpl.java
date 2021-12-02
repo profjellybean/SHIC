@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.ShoppingListService;
 import org.hibernate.LazyInitializationException;
 import org.slf4j.Logger;
@@ -22,24 +23,26 @@ import java.util.stream.Collectors;
 public class ShoppingListServiceImpl implements ShoppingListService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private final ShoppingListRepository shoppingListRepository;
+    //private final UserRepository userRepository;
     private final RecipeRepository recipeRepository;
     private final StorageRepository storageRepository;
 
-    public ShoppingListServiceImpl(ShoppingListRepository shoppingListRepository,
+    public ShoppingListServiceImpl(//UserRepository userRepository,
                                    RecipeRepository recipeRepository,
                                    StorageRepository storageRepository) {
-        this.shoppingListRepository = shoppingListRepository;
+        //this.userRepository = userRepository;
         this.recipeRepository = recipeRepository;
         this.storageRepository = storageRepository;
     }
 
     @Override
     @Transactional
-    public ShoppingList planRecipe(Long recipeId, Long storageId) {
+    public List<ItemStorage> planRecipe(Long recipeId, Long storageId) {
         LOGGER.debug("Service: plan Recipe {} based on storage {}.", recipeId, storageId);
         Recipe recipe = null;
-        ItemStorage storage;
+        List<ItemStorage> storageItems;
+
+        List<ItemStorage> returnList = null;
         // TODO: check if user has access
 
         // TODO: catch errors that might occur accessing the repository
@@ -51,19 +54,26 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         }
 
         try {
-            storage = storageRepository.getById(storageId);
-            //System.out.println("STORAGE: "+storage); // TODO delete line
+            storageItems = storageRepository.findAllByStorageId(storageId);
+            System.out.println("STORAGE: "+storageItems); // TODO delete line
         } catch (EntityNotFoundException e) { // TODO catch other error
             throw new NotFoundException("Could not find storage with id "+storageId, e);
         }
 
-        ShoppingList shoppingList = new ShoppingList();
-        shoppingList.setName("Ingredients required for recipe: "+recipe.getName());
+        recipe.setIngredients(new HashSet<ItemStorage>(Arrays.asList(
+            new ItemStorage(1L, "Name1", "notes of item 1", null, null, 10, null, null, 1L),
+            new ItemStorage(2L, "Name2", "notes of item 2", null, null, 20, null, null, 1L))));
+
+        storageItems = Arrays.asList(
+            new ItemStorage(4L, "Name2", "notes of item 2", null, null, 20, null, null, 1L),
+            new ItemStorage(3L, "Name3", "notes of item 3", null, null, 30, null, null, 1L));
+
+
         // TODO compare item sets
-        // shoppingList.setItems(compareItemSets(recipe.getIngredients(), storage.getItems()));
+        returnList = compareItemSets(recipe.getIngredients(), storageItems);
 
         // TODO add items to existing list
-        return shoppingList;
+        return returnList;
         //return shoppingListRepository.save(shoppingList);
     }
 
@@ -77,9 +87,9 @@ public class ShoppingListServiceImpl implements ShoppingListService {
      * @return Set of all Items that occur in recipeIngredients but not in storedItems
      *      OR occur in both, but the amount in recipeIngredients is bigger than the amount in storedItems
      */
-    private Set<ItemStorage> compareItemSets(Set<ItemStorage> recipeIngredients, Set<ItemStorage> storedItems) {
+    private List<ItemStorage> compareItemSets(Set<ItemStorage> recipeIngredients, List<ItemStorage> storedItems) {
         LOGGER.debug("Service: compareItemLists");
-        Set<ItemStorage> returnSet = new HashSet<>();
+        List<ItemStorage> returnSet = new LinkedList<>();
         // stores items from Set into Map, because one cannot get items from a Set
         Map<Long, ItemStorage> storedItemsMap = storedItems.stream().collect(Collectors.toMap(ItemStorage::getId, Function.identity()));
         for (ItemStorage ingredient:

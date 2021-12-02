@@ -1,6 +1,9 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
+
+import java.util.List;
 
 public interface ShoppingListService {
 
@@ -10,8 +13,8 @@ public interface ShoppingListService {
      *
      * @param recipeId id of recipe that user wants to cook
      * @param storageId id of storage of the group, of which the user is part of
-     * @return a new ShoppingList with required, non-existing ingredients
+     * @return a List of all ingredients that were added to the ShoppingList
      */
-    ShoppingList planRecipe(Long recipeId, Long storageId);
+    List<ItemStorage> planRecipe(Long recipeId, Long storageId);
 
 }
