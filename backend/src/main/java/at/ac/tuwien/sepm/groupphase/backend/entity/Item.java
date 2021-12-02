@@ -11,12 +11,6 @@ import javax.persistence.*;
 @Table(name = "Item")
 public class Item {
 
-    public Item() {}
-
-    public Item(Long id) {
-        this.id = id;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

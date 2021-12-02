@@ -15,7 +15,7 @@ public class RecipeDto {
 
     private String description;
 
-    private Set<ItemDto> ingredients;
+    private Set<ItemStorageDto> ingredients;
 
     private Set<RecipeCategory> categories;
 
@@ -43,11 +43,11 @@ public class RecipeDto {
         this.description = description;
     }
 
-    public Set<ItemDto> getIngredients() {
+    public Set<ItemStorageDto> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(Set<ItemDto> ingredients) {
+    public void setIngredients(Set<ItemStorageDto> ingredients) {
         this.ingredients = ingredients;
     }
 

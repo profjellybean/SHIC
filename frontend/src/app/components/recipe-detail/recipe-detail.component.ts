@@ -1,24 +1,28 @@
 import { Component, OnInit } from '@angular/core';
 import {MessageService} from '../../services/message.service';
 import {Recipe} from '../../dtos/recipe';
+import {RecipeService} from '../../services/recipe.service';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
-  selector: 'app-recipe',
-  templateUrl: './recipe.component.html',
-  styleUrls: ['./recipe.component.scss']
+  selector: 'app-recipe-detail',
+  templateUrl: './recipe-detail.component.html',
+  styleUrls: ['./recipe-detail.component.scss']
 })
-export class RecipeComponent implements OnInit {
+export class RecipeDetailComponent implements OnInit {
 
-  fakeRecipe: Recipe = {
-    id: 1, name: 'fakeRecipe', description: 'this recipe is not real'
+  recipe: Recipe = {
+    id: null, name: null, description: null
   };
 
   error = false;
   errorMessage = '';
 
-  constructor(private messageService: MessageService) { }
+  constructor(private messageService: MessageService, private recipeService: RecipeService,
+              private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+    this.recipe.id = this.route.snapshot.params.id;
   }
 
   /**
@@ -37,4 +41,5 @@ export class RecipeComponent implements OnInit {
       this.errorMessage = error.error;
     }
   }
+
 }
