@@ -48,10 +48,12 @@ public class UserEndpoint {
 
     }
 
-    @Secured("ROLE_USER")
+    @PermitAll                   //TODO just for Tests
     @PutMapping
-    public void editUser(){
-        LOGGER.info("Endpoint: PUT /user");
+    public void test(@RequestBody UserLoginDto userLoginDto){
+
+            LOGGER.info("Endpoint: Test /user");
+
     }
 
 }
