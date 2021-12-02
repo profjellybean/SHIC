@@ -13,10 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.security.PermitAll;
+import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 
@@ -36,10 +38,20 @@ public class RecipeEndpoint {
 
     @GetMapping
     @PermitAll
+    @Transactional
     @Operation(summary = "Get list of all recipes") //TODO: add security
     public List<RecipeDto> findAll() {
         LOGGER.info("GET /recipe");
         return recipeMapper.recipeToRecipeDto(recipeService.findAll());
+    }
+
+    @GetMapping(value = "/{id}")
+    @PermitAll
+    @Transactional
+    @Operation(summary = "Get recipe by id") //TODO: add security
+    public RecipeDto findRecipeById(@PathVariable("id") Long id) {
+        LOGGER.info("GET /recipe by id");
+        return recipeMapper.recipeToRecipeDto(recipeService.findRecipeById(id));
     }
 
 }

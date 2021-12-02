@@ -23,8 +23,8 @@ public class RecipeDataGenerator {
     private static final int NUMBER_OF_RECIPES_TO_GENERATE = 5;
     private static final String TEST_RECIPE_NAME = "Name";
     private static final String TEST_RECIPE_DESCRIPTION = "Description of Recipe";
-    private static final Set<Item> TEST_RECIPE_INGREDIENTS = null;
-    private static final Set<RecipeCategory> TEST_RECIPE_CATEGORIES = null;
+    private static final Set<Item> TEST_RECIPE_INGREDIENTS = new HashSet<>(Arrays.asList(new Item(1L), new Item(2L)));
+    private static final Set<RecipeCategory> TEST_RECIPE_CATEGORIES = new HashSet<>(Arrays.asList(RecipeCategory.breakfast, RecipeCategory.vegetarian));
 
     private final RecipeRepository recipeRepository;
 

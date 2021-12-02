@@ -23,9 +23,14 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    @Transactional
     public List<Recipe> findAll() {
         LOGGER.debug("Find all recipes");
         return recipeRepository.findAll();
+    }
+
+    @Override
+    public Recipe findRecipeById(Long id) {
+        LOGGER.debug("Find one recipe by id");
+        return recipeRepository.findRecipeById(id);
     }
 }

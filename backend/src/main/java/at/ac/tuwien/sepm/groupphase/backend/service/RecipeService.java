@@ -14,4 +14,11 @@ public interface RecipeService {
      */
     List<Recipe>findAll();
 
+    /**
+     * Find one recipe entry by id
+     *
+     * @return recipe with given id
+     */
+    Recipe findRecipeById(Long id);
+
 }
