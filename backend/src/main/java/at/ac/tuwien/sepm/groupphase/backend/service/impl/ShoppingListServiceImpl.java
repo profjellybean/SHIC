@@ -48,8 +48,8 @@ public class ShoppingListServiceImpl implements ShoppingListService {
 
         // TODO: catch errors that might occur accessing the repository
         try {
-            recipe = recipeRepository.getById(recipeId);
-            //System.out.println("RECIPE: "+recipe); // TODO delete line
+            recipe = recipeRepository.findRecipeById(recipeId);
+            System.out.println("RECIPE: "+recipe); // TODO delete line
         } catch (EntityNotFoundException e) { // TODO catch other error
             throw new NotFoundException("Could not find recipe with id "+recipeId, e);
         }
@@ -61,6 +61,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
             throw new NotFoundException("Could not find storage with id "+storageId, e);
         }
 
+        /*
         recipe.setIngredients(new HashSet<ItemStorage>(Arrays.asList(
             new ItemStorage(1L, "Name1", "notes of item 1", null, null, 10, null, UnitOfQuantity.kg, 1L),
             new ItemStorage(2L, "Name2", "notes of item 2", null, null, 20, null, UnitOfQuantity.kg, 1L))));
@@ -68,7 +69,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         storageItems = Arrays.asList(
             new ItemStorage(2L, "Name2", "notes of item 2", null, null, 20, null, UnitOfQuantity.kg, 1L),
             new ItemStorage(3L, "Name3", "notes of item 3", null, null, 30, null, UnitOfQuantity.kg, 1L));
-
+         */
 
         // TODO compare item sets
         returnList = compareItemSets(recipe.getIngredients(), storageItems);
@@ -92,14 +93,14 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         LOGGER.debug("Service: compareItemLists");
         List<ItemStorage> returnSet = new LinkedList<>();
         // stores items from Set into Map, because one cannot get items from a Set
-        Map<Long, ItemStorage> storedItemsMap = storedItems.stream().collect(Collectors.toMap(ItemStorage::getId, Function.identity()));
+        Map<String, ItemStorage> storedItemsMap = storedItems.stream().collect(Collectors.toMap(ItemStorage::getName, Function.identity()));
         for (ItemStorage ingredient:
             recipeIngredients) {
             if(!storedItems.contains(ingredient)) {
                 // adds items that are not in the storage
                 returnSet.add(ingredient);
             } else {
-                ItemStorage storedItem = storedItemsMap.get(ingredient.getId());
+                ItemStorage storedItem = storedItemsMap.get(ingredient.getName());
                 if(ingredient.getQuantity().equals(storedItem.getQuantity())) {
                     // adds items if there is not enough in the storage
                     if(ingredient.getAmount() > storedItem.getAmount()) returnSet.add(ingredient);

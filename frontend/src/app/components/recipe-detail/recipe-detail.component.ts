@@ -25,6 +25,7 @@ export class RecipeDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.recipe.id = this.route.snapshot.params.id;
+    this.findRecipeById(this.recipe.id);
   }
 
 
@@ -39,6 +40,18 @@ export class RecipeDetailComponent implements OnInit {
       }
     });
 
+  }
+
+  findRecipeById(id: number) {
+    this.recipeService.findRecipeById(id).subscribe({
+      next: data => {
+        console.log('received recipes', data);
+        this.recipe = data;
+      },
+      error: err => {
+        this.defaultServiceErrorHandling(err);
+      }
+    });
   }
 
   /**

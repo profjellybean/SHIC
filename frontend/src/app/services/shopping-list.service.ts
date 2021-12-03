@@ -18,6 +18,6 @@ export class ShoppingListService {
   // TODO get user id
   planRecipe(id: number): Observable<ShoppingList> {
     console.log('plan recipe with id: ' + id);
-    return this.httpClient.put<ShoppingList>(this.shoppinListBaseUri+'/?recipeId='+id+'&storageId=2', id);
+    return this.httpClient.put<ShoppingList>(this.shoppinListBaseUri+'/?recipeId='+id+'&storageId='+1, id);
   }
 }
