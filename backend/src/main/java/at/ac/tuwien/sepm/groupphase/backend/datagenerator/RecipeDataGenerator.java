@@ -88,9 +88,28 @@ public class RecipeDataGenerator {
             ItemStorage potato = new ItemStorage("Potatoes", "any kind", null, null, 400, null, UnitOfQuantity.g, null);
             LOGGER.debug("saving ingredient {}", potato);
             potato = itemStorageRepository.save(potato);
-
             storedPotatoWedgesRecipe.setIngredients(new HashSet<>(Arrays.asList(potato)));
             recipeRepository.save(storedPotatoWedgesRecipe);
+
+            // noodles with pesto
+            // generate recipe
+            Recipe PestoNoodles = Recipe.RecipeBuilder.aRecipe()
+                .withName("Noodles with Pesto")
+                .withDescription("For one Person: Cook noodles and add 100g Pesto")
+                .withCategories(new HashSet<>(Arrays.asList(RecipeCategory.vegetarian, RecipeCategory.dinner)))
+                .build();
+            LOGGER.debug("saving recipe {}", PestoNoodles);
+            Recipe storedPestoNoodles = recipeRepository.save(PestoNoodles);
+            // generate ingredients
+            ItemStorage pesto = new ItemStorage("Pesto", "any kind", null, null, 100, null, UnitOfQuantity.g, null);
+            LOGGER.debug("saving ingredient {}", pesto);
+            pesto = itemStorageRepository.save(pesto);
+            ItemStorage noodlesForPesto = new ItemStorage("Noodles", "any kind", null, null, 100, null, UnitOfQuantity.g, null);
+            LOGGER.debug("saving ingredient {}", noodlesForPesto);
+            noodlesForPesto = itemStorageRepository.save(noodlesForPesto);
+
+            storedPestoNoodles.setIngredients(new HashSet<>(Arrays.asList(pesto, noodlesForPesto)));
+            recipeRepository.save(storedPestoNoodles);
 
 
         } else {

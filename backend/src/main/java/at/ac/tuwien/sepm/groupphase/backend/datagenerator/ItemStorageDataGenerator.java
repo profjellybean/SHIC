@@ -48,6 +48,10 @@ public class ItemStorageDataGenerator {
             LOGGER.debug("saving ItemStorage {}", milk);
             itemStorageRepository.save(milk);
 
+            ItemStorage pesto = new ItemStorage("Pesto", "Genovese", null, null, 200, Location.fridge, UnitOfQuantity.g, ID_OF_STORAGE);
+            LOGGER.debug("saving ItemStorage {}", pesto);
+            itemStorageRepository.save(pesto);
+
 
 
         } else {
