@@ -37,5 +37,12 @@ public class ItemServiceImpl implements ItemService {
         return unitOfQuantity;
     }
 
+    @Override
+    public List<UnitOfQuantity> getAll() {
+        LOGGER.debug("Getting all units of quantity");
+        return unitOfQuantityRepository.findAll();
+    }
+
+
 
 }

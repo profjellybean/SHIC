@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface ItemService {
     UnitOfQuantity addUnitOfQuantity(UnitOfQuantity unitOfQuantity);
-
+    List<UnitOfQuantity> getAll();
 
 }

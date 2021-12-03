@@ -37,6 +37,14 @@ public class ItemEndpoint {
         return unitOfQuantityMapper.unitOfQuantityToUnitOfQuantityDto(itemService.addUnitOfQuantity(unitOfQuantityMapper.unitOfQuantityDtoToUnitOfQuantity(unitOfQuantityDto)));
 
     }
+    @GetMapping(value="/unitOfQuantity")
+    @PermitAll
+    @Operation(summary = "Get all Units of quantity")
+    List<UnitOfQuantityDto> getAll(){
+        LOGGER.info("getAllunitOfQuantity, itemEndpoint");
+        return unitOfQuantityMapper.unitsOfQuantityToUnitsOfQuantityDto(itemService.getAll());
+    }
+
 
 
 }
