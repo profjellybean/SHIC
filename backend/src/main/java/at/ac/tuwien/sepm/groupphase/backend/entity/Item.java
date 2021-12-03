@@ -2,8 +2,6 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.UnitOfQuantity;
-
 import javax.persistence.*;
 
 
@@ -18,7 +16,7 @@ public class Item {
     private String name;
 
     @Column(name = "Quantity")
-    private UnitOfQuantity quantity;
+    private Long quantity;
 
     public Item(Long id) {
         this.id = id;
@@ -28,7 +26,7 @@ public class Item {
 
     }
 
-    public Item(Long id, String name, UnitOfQuantity quantity) {
+    public Item(Long id, String name, Long quantity) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
@@ -42,11 +40,11 @@ public class Item {
         return id;
     }
 
-    public UnitOfQuantity getQuantity() {
+    public Long getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(UnitOfQuantity quantity) {
+    public void setQuantity(Long quantity) {
         this.quantity = quantity;
     }
 
