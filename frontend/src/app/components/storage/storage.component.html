@@ -1,1 +1,26 @@
 <p>storage works!</p>
+<!--TABLE START-->
+<table class="table table-striped">
+  <thead class="thead-dark">
+  <tr>
+    <th>Name</th>
+    <th>Amount</th>
+    <th>Quantity</th>
+    <th>Notes</th>
+    <th>ExpDate</th>
+    <th>LocationTag</th>
+    <th></th>
+  </tr>
+  </thead>
+  <tbody>
+
+  <tr *ngFor="let item of $any(items)">
+    <td>{{item.name}}</td>
+    <td>{{item.amount}}</td>
+    <td>{{item.quantity}}</td>
+    <td>{{item.notes}}</td>
+    <td>{{item.expDate}}</td>
+    <td>{{item.locationTag}}</td>
+  </tr>
+  </tbody>
+</table>
