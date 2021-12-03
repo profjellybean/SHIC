@@ -34,30 +34,34 @@ public class ItemDataGenerator {
             LOGGER.debug("Item already generated");
         } else {
             LOGGER.debug("generating Item entries");
-
+            Long i = 0L;
             for (String name :
                 ITEM_NAMES_FOR_PIECES) {
-                Item item = new Item(null, name, UnitOfQuantity.pieces);
+                Item item = new Item(i, name, UnitOfQuantity.pieces);
                 LOGGER.debug("saving item {}", item);
                 itemRepository.save(item);
+                i++;
             }
             for (String name :
                 ITEM_NAMES_FOR_KG) {
-                Item item = new Item(null, name, UnitOfQuantity.kg);
+                Item item = new Item(i, name, UnitOfQuantity.kg);
                 LOGGER.debug("saving Item {}", item);
                 itemRepository.save(item);
+                i++;
             }
             for (String name :
                 ITEM_NAMES_FOR_G) {
-                Item item = new Item(null, name, UnitOfQuantity.g);
+                Item item = new Item(i, name, UnitOfQuantity.g);
                 LOGGER.debug("saving item {}", item);
                 itemRepository.save(item);
+                i++;
             }
             for (String name :
                 ITEM_NAMES_FOR_L) {
-                Item item = new Item(null, name, UnitOfQuantity.L);
+                Item item = new Item(i, name, UnitOfQuantity.L);
                 LOGGER.debug("saving item {}", item);
                 itemRepository.save(item);
+                i++;
             }
         }
     }

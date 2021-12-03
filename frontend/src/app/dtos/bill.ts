@@ -3,10 +3,10 @@ import {User} from './user';
 
 export interface Bill {
   id: number;
-  groceries: Map<number, Item>;
+  groceries: string[];
   notes: string;
-  names: Map<number, User>;
-  notPaidNames: Map<number, User>;
+  names: string[];
+  notPaidNames: string[];
   sum: number;
   sumPerPerson: number;
   date: Date;
