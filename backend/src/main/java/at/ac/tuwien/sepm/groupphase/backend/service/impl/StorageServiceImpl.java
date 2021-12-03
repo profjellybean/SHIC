@@ -74,9 +74,9 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public List<ItemStorage> searchItem(String name){
+    public List<ItemStorage> searchItem(Long id, String name){
         LOGGER.debug("search for items");
-        return storageRepository.findAllByNameLike(name);
+        return itemStorageRepository.findAllByStorageIdAndNameContainingIgnoreCase(id,name);
     }
 
 }
