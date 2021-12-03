@@ -56,5 +56,12 @@ public class ApplicationUser {
         this.password = password;
     }
 
+    public Group getCurrGroup() {
+        return currGroup;
+    }
+
+    public void setCurrGroup(Group currGroup) {
+        this.currGroup = currGroup;
+    }
 }
 
