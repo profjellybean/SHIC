@@ -20,5 +20,5 @@ public interface StorageRepository extends JpaRepository<ItemStorage, Long> {
     void insert(@Param("idItem") Long idItem, @Param("id") Long id);
 
 
-    List<ItemStorage> findAllByStorageId(Long storageId);
+    List<ItemStorage> findAllByStorageId(Long id);
 }
