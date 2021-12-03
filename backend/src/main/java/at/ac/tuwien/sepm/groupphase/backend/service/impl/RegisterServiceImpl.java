@@ -2,18 +2,17 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Bill;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Message;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Register;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.BillRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.RegisterRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.RegisterService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -21,30 +20,41 @@ import java.util.Set;
 public class RegisterServiceImpl implements RegisterService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final RegisterRepository registerRepository;
+    private final BillRepository billRepository;
+    private final UserRepository userRepository;
 
-    public RegisterServiceImpl(RegisterRepository registerRepository) {
+    public RegisterServiceImpl(RegisterRepository registerRepository, BillRepository billRepository,
+                               UserRepository userRepository) {
         this.registerRepository = registerRepository;
+        this.billRepository = billRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
     public Register confirmPayment(Long registerId, Long billId, Long userId) {
         LOGGER.debug("Service: confirm Payment {}{}", registerId, userId);
         Optional<Register> registerOptional = registerRepository.findById(registerId);
-        if(registerOptional.isPresent()) {
+        Optional<Bill> billOptional = billRepository.findById(billId);
+        Optional<ApplicationUser> userOptional = userRepository.findById(userId);
+        if(registerOptional.isPresent() && billOptional.isPresent() && userOptional.isPresent()) {
             Register register = registerOptional.get();
-            Map<Long, Bill> bills = register.getBills();
-            Bill bill = bills.get(billId);
-            bills.remove(bill);
-            Map<Long, ApplicationUser> all = bill.getNotPaidNames();
-            ApplicationUser user = all.get(userId);
+            Bill bill = billOptional.get();
+            ApplicationUser user = userOptional.get();
+
+            Set<ApplicationUser> all =  bill.getNotPaidNames();
             all.remove(user);
             bill.setNotPaidNames(all);
-            bills.put(billId, bill);
-            register.setBills(bills);
-            register = registerRepository.save(register);
+            billRepository.save(bill);
+            Set<Bill> allBills = register.getBills();
+            allBills.add(bill);
+            register = registerRepository.saveAndFlush(register);
             return register;
-        } else {
+        } else if(registerOptional.isEmpty()){
             throw new NotFoundException(String.format("Could not find register with id %s", registerId));
+        } else if(billOptional.isEmpty()) {
+            throw new NotFoundException(String.format("Could not find bill with id %", billId));
+        } else {
+            throw new NotFoundException(String.format("Could not find user with id %", userId));
         }
     }
 

@@ -3,8 +3,6 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.RegisterDto;
 
 import javax.persistence.*;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 @Entity
@@ -17,7 +15,7 @@ public class Register {
 
     @OneToMany
     @Column(name = "bills")
-    private Map<Long, Bill> bills;
+    private Set<Bill> bills;
 
     @Column(name = "monthlyPayment")
     private double monthlyPayments;
@@ -29,7 +27,7 @@ public class Register {
 
     }
 
-    public Register(Long id, Map<Long, Bill> bills, double monthlyPayments, double monthlyBudget) {
+    public Register(Long id, Set<Bill> bills, double monthlyPayments, double monthlyBudget) {
         this.id = id;
         this.bills = bills;
         this.monthlyPayments = monthlyPayments;
@@ -44,11 +42,11 @@ public class Register {
         return id;
     }
 
-    public Map<Long, Bill> getBills() {
+    public Set<Bill> getBills() {
         return bills;
     }
 
-    public void setBills(Map<Long, Bill> bills) {
+    public void setBills(Set<Bill> bills) {
         this.bills = bills;
     }
 
@@ -70,7 +68,7 @@ public class Register {
 
     public static final class RegisterBuilder {
         private Long id;
-        private Map<Long, Bill> bills;
+        private Set<Bill> bills;
         private double monthlyPayments;
         private double monthlyBudget;
 
@@ -86,7 +84,7 @@ public class Register {
             return this;
         }
 
-        public RegisterBuilder withBills(Map<Long, Bill> bills) {
+        public RegisterBuilder withBills(Set<Bill> bills) {
             this.bills = bills;
             return this;
         }

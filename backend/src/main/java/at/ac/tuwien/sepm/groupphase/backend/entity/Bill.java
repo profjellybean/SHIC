@@ -3,8 +3,6 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 import javax.persistence.*;
 import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 @Entity
@@ -20,18 +18,18 @@ public class Bill {
 
     @OneToMany
     @JoinColumn(name = "item_id")
-    private Map<Long, Item> groceries;
+    private Set<Item> groceries;
 
     @Column(name = "notes")
     private String notes;
 
     @OneToMany
     @JoinColumn(name = "applicationUser_id")
-    private Map<Long, ApplicationUser> names;
+    private Set<ApplicationUser> names;
 
     @OneToMany
     @JoinColumn(name = "applicationUser_id")
-    private Map<Long, ApplicationUser> notPaidNames;
+    private Set<ApplicationUser> notPaidNames;
 
     @Column(name = "sum")
     private double sum;
@@ -47,29 +45,40 @@ public class Bill {
 
     }
 
-    public Bill(Long id, HashMap<Long, Item> groceries, String notes, HashMap<Long, ApplicationUser> names, double sum, LocalDate date) {
+    public Bill(Long id, Long registerId, Set<Item> groceries, String notes, Set<ApplicationUser> names,
+                Set<ApplicationUser> notPaidNames, double sum, double sumPerPerson, LocalDate date) {
         this.id = id;
+        this.registerId = registerId;
         this.groceries = groceries;
         this.notes = notes;
         this.names = names;
+        this.notPaidNames = notPaidNames;
         this.sum = sum;
+        this.sumPerPerson = sumPerPerson;
         this.date = date;
-    }
-
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Long getId() {
         return id;
     }
 
-    public Map<Long, Item> getGroceries() {
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getRegisterId() {
+        return registerId;
+    }
+
+    public void setRegisterId(Long registerId) {
+        this.registerId = registerId;
+    }
+
+    public Set<Item> getGroceries() {
         return groceries;
     }
 
-    public void setGroceries(HashMap<Long, Item> groceries) {
+    public void setGroceries(Set<Item> groceries) {
         this.groceries = groceries;
     }
 
@@ -81,12 +90,20 @@ public class Bill {
         this.notes = notes;
     }
 
-    public Map<Long, ApplicationUser> getNames() {
+    public Set<ApplicationUser> getNames() {
         return names;
     }
 
-    public void setNames(Map<Long, ApplicationUser> names) {
+    public void setNames(Set<ApplicationUser> names) {
         this.names = names;
+    }
+
+    public Set<ApplicationUser> getNotPaidNames() {
+        return notPaidNames;
+    }
+
+    public void setNotPaidNames(Set<ApplicationUser> notPaidNames) {
+        this.notPaidNames = notPaidNames;
     }
 
     public double getSum() {
@@ -97,25 +114,19 @@ public class Bill {
         this.sum = sum;
     }
 
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public double getSumPerPerson() {
+        return sumPerPerson;
     }
 
     public void setSumPerPerson(double sumPerPerson) {
         this.sumPerPerson = sumPerPerson;
     }
 
-    public double getSumPerPerson() {
-        return sum / names.size();
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setNotPaidNames(Map<Long, ApplicationUser> notPaidNames) { this.notPaidNames = notPaidNames; }
-
-    public Map<Long, ApplicationUser> getNotPaidNames() {
-        return notPaidNames;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 }

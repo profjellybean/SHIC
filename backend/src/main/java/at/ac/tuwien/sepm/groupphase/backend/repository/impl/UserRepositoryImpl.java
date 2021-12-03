@@ -26,7 +26,7 @@ import java.util.Optional;
 @Transactional
 @Repository
 
-public class UserRepositoryImpl implements UserRepository {
+public class UserRepositoryImpl{
 
     private ApplicationUser user;
     private ApplicationUser admin;
@@ -44,7 +44,7 @@ public class UserRepositoryImpl implements UserRepository {
        // user = new ApplicationUser("username","password");
     }
 
-    @Override
+
     public Optional<ApplicationUser> findUserByUsername(String username) {
         if (username.equals(user.getUsername())) {
             return Optional.of(user);
@@ -57,7 +57,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
 
-    @Override
+
     public void createUser(ApplicationUser newUser) {
 
         LOGGER.debug("Repository: UserRepositoryImpl createUser {}", newUser.getUsername());

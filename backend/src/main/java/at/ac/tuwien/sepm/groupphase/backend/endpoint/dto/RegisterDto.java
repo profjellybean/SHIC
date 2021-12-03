@@ -3,7 +3,6 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Bill;
 
 
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -11,7 +10,7 @@ public class RegisterDto {
 
     private Long id;
 
-    private Map<Long, Bill> bills;
+    private Set<Bill> bills;
 
     private double monthlyPayments;
 
@@ -25,11 +24,11 @@ public class RegisterDto {
         this.id = id;
     }
 
-    public Map<Long, Bill> getBills() {
+    public Set<Bill> getBills() {
         return bills;
     }
 
-    public void setBills(Map<Long, Bill> bills) {
+    public void setBills(Set<Bill> bills) {
         this.bills = bills;
     }
 
@@ -82,7 +81,7 @@ public class RegisterDto {
 
     public static final class RegisterDtoBuilder {
         private Long id;
-        private Map<Long, Bill> bills;
+        private Set<Bill> bills;
         private double monthlyPayments;
         private double monthlyBudget;
 
@@ -98,7 +97,7 @@ public class RegisterDto {
             return this;
         }
 
-        public RegisterDtoBuilder withBills(Map<Long, Bill> bills) {
+        public RegisterDtoBuilder withBills(Set<Bill> bills) {
             this.bills = bills;
             return this;
         }

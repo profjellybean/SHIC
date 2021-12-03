@@ -20,7 +20,7 @@ public class RegisterDataGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final int NUMBER_OF_REGISTERS_TO_GENERATE = 3;
-    private static final HashMap<Long, Bill> TEST_BILLS = new HashMap<Long, Bill>();
+    private static final Set<Bill> TEST_BILLS = new HashSet<Bill>();
     private static final double TEST_MONTHLY_PAYMENT = 300;
     private static final double TEST_MONTHLY_BUDGET = 500;
 
@@ -36,7 +36,7 @@ public class RegisterDataGenerator {
             LOGGER.debug("register already generated");
         } else {
             LOGGER.debug("generating {} message entries", NUMBER_OF_REGISTERS_TO_GENERATE);
-            TEST_BILLS.put(null, null);
+            TEST_BILLS.add(null);
             for (int i = 0; i < NUMBER_OF_REGISTERS_TO_GENERATE; i++) {
                 Register register = Register.RegisterBuilder.aRegister()
                     .withBills(TEST_BILLS)

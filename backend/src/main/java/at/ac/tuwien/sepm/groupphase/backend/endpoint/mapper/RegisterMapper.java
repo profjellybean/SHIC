@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.RegisterConfirmPaymentDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.IdCollectionDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.RegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Register;
 import org.mapstruct.Mapper;
@@ -12,7 +12,7 @@ public interface RegisterMapper {
 
     RegisterDto registerToRegisterDto(Register register);
 
-    Register registerConfirmPaymentDtoToRegister(RegisterConfirmPaymentDto registerConfirmPaymentDto);
+    Register registerConfirmPaymentDtoToRegister(IdCollectionDto registerConfirmPaymentDto);
 
 
 
