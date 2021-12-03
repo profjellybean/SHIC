@@ -10,9 +10,6 @@ import {RecipeService} from '../../services/recipe.service';
 })
 export class RecipeComponent implements OnInit {
 
-  fakeRecipe: Recipe = {
-    id: 1, name: 'fakeRecipe', description: 'this recipe is not real'
-  };
   recipes: Recipe[] = null;
 
   error = false;

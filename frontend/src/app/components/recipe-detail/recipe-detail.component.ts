@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {MessageService} from '../../services/message.service';
 import {Recipe} from '../../dtos/recipe';
+import {Item} from '../../dtos/item';
 import {RecipeService} from '../../services/recipe.service';
 import {ActivatedRoute} from '@angular/router';
 import {ShoppingListService} from '../../services/shopping-list.service';
@@ -13,8 +14,10 @@ import {ShoppingListService} from '../../services/shopping-list.service';
 export class RecipeDetailComponent implements OnInit {
 
   recipe: Recipe = {
-    id: null, name: null, description: null
+    id: null, name: null, description: null, ingredients: [], categories: []
   };
+
+  items; // = [];
 
   error = false;
   errorMessage = '';
@@ -33,7 +36,8 @@ export class RecipeDetailComponent implements OnInit {
     this.shoppingListService.planRecipe(this.recipe.id).subscribe({
       next: res => {
         // TODO add success
-        this.recipe.name = 'test successful: '+res.name;
+        //this.recipe.name = 'test successful: '+res.name;
+        this.items = res;
       },
       error: err => {
         this.defaultServiceErrorHandling(err);
