@@ -1,0 +1,40 @@
+<br>
+<h4 class="alert-heading">Register:</h4>
+<p></p>
+<hr>
+
+Spending this month:
+<br>
+{{monthlyPayment}}
+<br>
+Budget:
+<br>
+{{monthlyBudget}}
+<br>
+<br>
+
+Bills:
+
+<table class='table'>
+  <thead>
+  <tr>
+    <th>Included: </th>
+    <th>Not paid yet: </th>
+    <th>Sum of the purchase: </th>
+    <th>To pay per person: </th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let bill of billArray;">
+    <td>{{bill.names}}</td>
+    <td>{{bill.notPaidNames}}</td>
+    <td>{{bill.sum}}</td>
+    <td>{{bill.sumPerPerson}}</td>
+    <td>
+      <div>
+        <button type="button" style="BACKGROUND-COLOR:green;" class="btn btn-secondary" (click)="confirmPayment(bill.id);">Confirm Payment</button>
+      </div>
+    </td>
+  </tr>
+  </tbody>
+</table>

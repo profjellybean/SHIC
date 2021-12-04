@@ -1,8 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.BillDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.DetailedMessageDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.MessageInquiryDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.IdCollectionDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.BillMapper;
 import at.ac.tuwien.sepm.groupphase.backend.service.BillService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,7 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+
+import javax.annotation.security.PermitAll;
+import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 
@@ -40,11 +41,26 @@ public class BillEndpoint {
         return billMapper.billListToBillDtoList(billService.findAll());
     }
 
-    @Secured("ROLE_USER")
-    @PostMapping
+    //@Secured("ROLE_USER")
+    @Transactional
+    @PermitAll
+    @GetMapping(value = "/{id}")
     @Operation(summary = "Publish a new message", security = @SecurityRequirement(name = "apiKey"))
     public BillDto find(@PathVariable Long id) {
         LOGGER.info("POST /api/v1/bill {}", id);
         return billMapper.billToBillDto(billService.findOne(id));
     }
+
+    //@Secured("ROLE_USER")
+    @PermitAll
+    @PutMapping
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Publish a new message", security = @SecurityRequirement(name = "apiKey"))
+    public BillDto deleteNames(@RequestBody IdCollectionDto idCollectionDto) {
+        LOGGER.info("PUT /api/v1/bill {}", idCollectionDto);
+        return billMapper.billToBillDto(billService.deleteNames(idCollectionDto.getFirstAdditionalId(),
+            idCollectionDto.getSecondAdditionalId()));
+    }
+
+
 }

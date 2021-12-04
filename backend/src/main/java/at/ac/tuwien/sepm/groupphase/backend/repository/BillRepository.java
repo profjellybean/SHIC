@@ -12,4 +12,6 @@ public interface BillRepository extends JpaRepository<Bill, Long> {
      * @return the requested bill
      */
     Bill getById(Long id);
+
+    Bill save(Bill bill);
 }

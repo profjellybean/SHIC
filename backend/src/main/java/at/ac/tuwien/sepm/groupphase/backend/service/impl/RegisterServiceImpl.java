@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.util.Optional;
 import java.util.Set;
@@ -58,6 +59,7 @@ public class RegisterServiceImpl implements RegisterService {
         }
     }
 
+    @Transactional
     public Register findOne(Long id) {
         LOGGER.debug("Service: find register by id {}", id);
         Optional<Register> register = registerRepository.findById(id);

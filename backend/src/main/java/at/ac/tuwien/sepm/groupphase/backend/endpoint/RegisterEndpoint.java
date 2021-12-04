@@ -3,7 +3,6 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.IdCollectionDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.RegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.RegisterMapper;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Register;
 import at.ac.tuwien.sepm.groupphase.backend.service.RegisterService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -13,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.PermitAll;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.lang.invoke.MethodHandles;
 
@@ -31,6 +31,7 @@ public class RegisterEndpoint {
     }
 
     //@Secured("ROLE_USER")
+    @Transactional
     @PermitAll
     @GetMapping(value = "/{id}")
     @Operation(summary = "Get detailed information about a specific register", security = @SecurityRequirement(name = "apiKey"))
@@ -45,8 +46,7 @@ public class RegisterEndpoint {
     @Operation(summary = "Get detailed information about a specific register", security = @SecurityRequirement(name = "apiKey"))
     public RegisterDto confirmPayment(@Valid @RequestBody IdCollectionDto idCollectionDto) {
         LOGGER.info("PUT /api/v1/register/{}", idCollectionDto);
-        Register register = registerMapper.registerConfirmPaymentDtoToRegister(idCollectionDto);
-        return registerMapper.registerToRegisterDto(registerService.confirmPayment(register.getId(),
+        return registerMapper.registerToRegisterDto(registerService.confirmPayment(idCollectionDto.getId(),
             idCollectionDto.getFirstAdditionalId(), idCollectionDto.getSecondAdditionalId()));
     }
 

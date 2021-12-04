@@ -5,8 +5,8 @@ export interface Bill {
   id: number;
   groceries: string[];
   notes: string;
-  names: string[];
-  notPaidNames: string[];
+  names: User[];
+  notPaidNames: User[];
   sum: number;
   sumPerPerson: number;
   date: Date;

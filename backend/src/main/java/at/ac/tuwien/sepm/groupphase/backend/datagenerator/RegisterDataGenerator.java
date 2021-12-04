@@ -1,8 +1,12 @@
 package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.Bill;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Register;
+import at.ac.tuwien.sepm.groupphase.backend.entity.*;
+import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
+import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.UnitOfQuantity;
+import at.ac.tuwien.sepm.groupphase.backend.repository.BillRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.RegisterRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -10,8 +14,10 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.lang.invoke.MethodHandles;
-import java.util.HashMap;
+import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Profile("generateData")
@@ -20,13 +26,29 @@ public class RegisterDataGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final int NUMBER_OF_REGISTERS_TO_GENERATE = 3;
-    private static final Set<Bill> TEST_BILLS = new HashSet<Bill>();
+    private static Set<Bill> TEST_BILLS;
     private static final double TEST_MONTHLY_PAYMENT = 300;
     private static final double TEST_MONTHLY_BUDGET = 500;
 
+    private static Set<ItemStorage> GROCERIES = new HashSet<ItemStorage>(Arrays.asList(new ItemStorage("name 1", "notes for itemStorage 1", null,
+        null, 10, Location.fridge, UnitOfQuantity.kg, null)));
+    private static final String NOTES = "bought at billa";
+    private static Set<ApplicationUser> NAMES = new HashSet<ApplicationUser>(Arrays.asList(new ApplicationUser("luke@email.com", "password")));
+    private static Set<ApplicationUser> NOT_PAID_NAMES = new HashSet<ApplicationUser>(Arrays.asList(new ApplicationUser("luke@email.com", "password")));
+    private static final double SUM = 48.0;
+    private static final double SUM_PER_PERSON = 16.0;
+    private static final LocalDate DATE = LocalDate.of(2021, 12, 3);
+
+    private final ItemStorageRepository itemStorageRepository;
+    private final UserRepository userRepository;
+    private final BillRepository billRepository;
     private final RegisterRepository registerRepository;
 
-    public RegisterDataGenerator(RegisterRepository registerRepository) {
+    public RegisterDataGenerator(ItemStorageRepository itemStorageRepository, UserRepository userRepository,
+                                 BillRepository billRepository, RegisterRepository registerRepository) {
+        this.itemStorageRepository = itemStorageRepository;
+        this.userRepository = userRepository;
+        this.billRepository = billRepository;
         this.registerRepository = registerRepository;
     }
 
@@ -35,18 +57,71 @@ public class RegisterDataGenerator {
         if (registerRepository.findAll().size() > 0) {
             LOGGER.debug("register already generated");
         } else {
-            LOGGER.debug("generating {} message entries", NUMBER_OF_REGISTERS_TO_GENERATE);
-            TEST_BILLS.add(null);
-            for (int i = 0; i < NUMBER_OF_REGISTERS_TO_GENERATE; i++) {
-                Register register = Register.RegisterBuilder.aRegister()
-                    .withBills(TEST_BILLS)
-                    .withMonthlyPayment(TEST_MONTHLY_PAYMENT + i)
-                    .withMonthlyBudget(TEST_MONTHLY_BUDGET + i)
-                    .build();
-                LOGGER.debug("saving register {}", register);
-                registerRepository.save(register);
-                System.out.println(register.getId());
-            }
+
+            //register
+            Register register = Register.RegisterBuilder.aRegister()
+                .withBills(TEST_BILLS)
+                .withMonthlyPayment(TEST_MONTHLY_PAYMENT)
+                .withMonthlyBudget(TEST_MONTHLY_BUDGET)
+                .build();
+            Register savedRegister = registerRepository.save(register);
+
+            //bills
+            Bill bill = Bill.BillBuilder.aBill()
+                .withRegisterId(1L)
+                .withGroceries(GROCERIES)
+                .withNotes("bought at billa")
+                .withNames(NAMES)
+                .withNotPaidNames(NAMES)
+                .withSum(48)
+                .withSumPerPerson(14)
+                .withDate(DATE)
+                .build();
+            Bill savedBill = billRepository.save(bill);
+
+            //items
+            ItemStorage itemStorage1 = new ItemStorage("name 1", "notes for itemStorage 1", null,
+                null, 10, Location.fridge, UnitOfQuantity.kg, null);
+            ItemStorage item1 = itemStorageRepository.save(itemStorage1);
+            ItemStorage itemStorage2 = new ItemStorage("name 2", "notes for itemStorage 2", null,
+                null, 10, Location.fridge, UnitOfQuantity.kg, null);
+            ItemStorage item2 = itemStorageRepository.save(itemStorage2);
+            ItemStorage itemStorage3 = new ItemStorage("name 3", "notes for itemStorage 3", null,
+                null, 10, Location.fridge, UnitOfQuantity.kg, null);
+            ItemStorage item3 = itemStorageRepository.save(itemStorage3);
+
+            savedBill.setGroceries(new HashSet<ItemStorage>(){{
+                add(item1);
+                add(item2);
+                add(item3);
+            }});
+            savedBill = billRepository.save(savedBill);
+
+            //user
+            ApplicationUser maleUser = new ApplicationUser("luke@email.com", "password");
+            ApplicationUser user1 = userRepository.save(maleUser);
+            ApplicationUser femaleUser = new ApplicationUser("anne@email.com", "password");
+            ApplicationUser user2 = userRepository.save(femaleUser);
+
+            savedBill.setNames(new HashSet<ApplicationUser>() {{
+                add(user1);
+                add(user2);
+            }});
+            savedBill.setNotPaidNames(new HashSet<ApplicationUser>() {{
+                add(user1);
+                add(user2);
+            }});
+
+           savedBill = billRepository.save(savedBill);
+
+            Bill finalSavedBill = savedBill;
+            savedRegister.setBills(new HashSet<Bill>() {{
+                add(finalSavedBill);
+            }});
+
+            registerRepository.save(savedRegister);
+
+
         }
     }
 

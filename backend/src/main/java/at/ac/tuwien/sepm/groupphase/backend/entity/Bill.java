@@ -18,7 +18,7 @@ public class Bill {
 
     @OneToMany
     @JoinColumn(name = "item_id")
-    private Set<Item> groceries;
+    private Set<ItemStorage> groceries;
 
     @Column(name = "notes")
     private String notes;
@@ -45,7 +45,7 @@ public class Bill {
 
     }
 
-    public Bill(Long id, Long registerId, Set<Item> groceries, String notes, Set<ApplicationUser> names,
+    public Bill(Long id, Long registerId, Set<ItemStorage> groceries, String notes, Set<ApplicationUser> names,
                 Set<ApplicationUser> notPaidNames, double sum, double sumPerPerson, LocalDate date) {
         this.id = id;
         this.registerId = registerId;
@@ -74,11 +74,11 @@ public class Bill {
         this.registerId = registerId;
     }
 
-    public Set<Item> getGroceries() {
+    public Set<ItemStorage> getGroceries() {
         return groceries;
     }
 
-    public void setGroceries(Set<Item> groceries) {
+    public void setGroceries(Set<ItemStorage> groceries) {
         this.groceries = groceries;
     }
 
@@ -128,5 +128,83 @@ public class Bill {
 
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    public static final class BillBuilder {
+        private Long id;
+        private Long registerId;
+        private Set<ItemStorage> groceries;
+        private String notes;
+        private Set<ApplicationUser> names;
+        private Set<ApplicationUser> notPaidNames;
+        private double sum;
+        private double sumPerPerson;
+        private LocalDate date;
+
+        public BillBuilder() {
+        }
+
+        public static BillBuilder aBill() {
+            return new BillBuilder();
+        }
+
+        public BillBuilder withId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public BillBuilder withRegisterId(Long registerId) {
+            this.registerId = registerId;
+            return this;
+        }
+
+        public BillBuilder withGroceries(Set<ItemStorage> groceries) {
+            this.groceries = groceries;
+            return this;
+        }
+
+        public BillBuilder withNotes(String notes) {
+            this.notes = notes;
+            return this;
+        }
+
+        public BillBuilder withNames(Set<ApplicationUser> names) {
+            this.names = names;
+            return this;
+        }
+
+        public BillBuilder withNotPaidNames(Set<ApplicationUser> notPaidNames) {
+            this.notPaidNames = notPaidNames;
+            return this;
+        }
+
+        public BillBuilder withSum(double sum) {
+            this.sum = sum;
+            return this;
+        }
+
+        public BillBuilder withSumPerPerson(double sumPerPerson) {
+            this.sumPerPerson = sumPerPerson;
+            return this;
+        }
+
+        public BillBuilder withDate(LocalDate date) {
+            this.date = date;
+            return this;
+        }
+
+        public Bill build() {
+            Bill bill = new Bill();
+            bill.setId(this.id);
+            bill.setRegisterId(this.registerId);
+            bill.setGroceries(this.groceries);
+            bill.setNotes(this.notes);
+            bill.setNames(this.names);
+            bill.setNotPaidNames(this.notPaidNames);
+            bill.setSum(this.sum);
+            bill.setSumPerPerson(this.sumPerPerson);
+            bill.setDate(this.date);
+            return bill;
+        }
     }
 }
