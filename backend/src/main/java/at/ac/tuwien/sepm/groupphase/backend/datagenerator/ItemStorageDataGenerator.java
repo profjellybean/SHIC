@@ -34,7 +34,7 @@ public class ItemStorageDataGenerator {
             LOGGER.debug("generating {} ItemStorage entries", NUMBER_OF_ITEMSTORAGES);
             for (int i = 0; i < NUMBER_OF_ITEMSTORAGES; i++) {
 
-                ItemStorage itemStorage = new ItemStorage("name "+i, "notes for itemStorage "+i, null, null, 10, Location.fridge, null, null);
+                ItemStorage itemStorage = new ItemStorage("name "+i, "notes for itemStorage "+i, null, null, 10, Location.fridge, null, 1L);
                 LOGGER.debug("saving ItemStorage {}", itemStorage);
                 itemStorageRepository.save(itemStorage);
             }

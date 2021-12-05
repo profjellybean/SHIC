@@ -10,7 +10,7 @@ import {Params} from '@angular/router';
 })
 export class StorageService {
 
-  private storageBaseUri: string = this.globals.backendUri + '/storage';
+  private storageBaseUri: string = 'http://localhost:8080/storage';
 
   constructor(private httpClient: HttpClient, private globals: Globals) {
   }

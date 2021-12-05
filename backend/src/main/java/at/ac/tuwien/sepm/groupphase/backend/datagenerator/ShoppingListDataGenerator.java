@@ -42,8 +42,8 @@ public class ShoppingListDataGenerator {
             LOGGER.debug("generating {} shoppinglist entries", NUMBER_OF_SHOPPINGLISTS_TO_GENERATE);
             for (int i = 0; i < NUMBER_OF_SHOPPINGLISTS_TO_GENERATE; i++) {
                 ShoppingList shoppingList = ShoppingList.ShoppingListBuilder.aShoppingList()
-                    .withName(TEST_SHOPPINGLIST_NAME)
-                    .withNotes(TEST_SHOPPINGLIST_NOTES)
+                    .withName(TEST_SHOPPINGLIST_NAME+" "+i)
+                    .withNotes(TEST_SHOPPINGLIST_NOTES+" "+i)
                     .withOwner(TEST_SHOPPINGLIST_OWNER)
                     .withItems(TEST_SHOPPINGLIST_ITEMS)
                     .build();

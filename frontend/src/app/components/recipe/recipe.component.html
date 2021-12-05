@@ -1,0 +1,17 @@
+<div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+  <strong>Error! </strong> {{ errorMessage }}
+  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<p>recipe works!</p>
+
+<div class="card-header">
+  <strong>{{fakeRecipe.name}}</strong>
+</div>
+<div class="card-body">
+  <p class="card-text">Description: <strong>{{fakeRecipe.description}}</strong></p>
+  <br>
+    <button type="button" class="btn btn-secondary mr-1" routerLink="/recipe/{{fakeRecipe.id}}">Details</button>
+</div>

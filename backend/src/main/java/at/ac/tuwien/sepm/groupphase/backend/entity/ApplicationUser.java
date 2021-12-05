@@ -9,7 +9,6 @@ import javax.persistence.*;
     query= "SELECT c FROM ApplicationUser c WHERE c.username = :username"
 )
 public class ApplicationUser {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,6 +19,9 @@ public class ApplicationUser {
 
     @Column(nullable = false, name = "PASSWORD")
     private String password;
+
+    @OneToOne
+    private Group currGroup;
 
 
     public ApplicationUser() {

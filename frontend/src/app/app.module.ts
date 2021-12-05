@@ -12,7 +12,10 @@ import {LoginComponent} from './components/login/login.component';
 import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
+import { RecipeComponent } from './components/recipe/recipe.component';
+import { ShoppingListComponent } from './components/shopping-list/shopping-list.component';
 import { StorageComponent } from './components/storage/storage.component';
+import { RecipeDetailComponent } from './components/recipe-detail/recipe-detail.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +26,9 @@ import { StorageComponent } from './components/storage/storage.component';
     LoginComponent,
     MessageComponent,
     StorageComponent,
+    RecipeComponent,
+    ShoppingListComponent,
+    RecipeDetailComponent,
   ],
   imports: [
     BrowserModule,
