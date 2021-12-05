@@ -2,7 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Item;
-import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.UnitOfQuantity;
+import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,25 +37,25 @@ public class ItemDataGenerator {
 
             for (String name :
                 ITEM_NAMES_FOR_PIECES) {
-                Item item = new Item(null, name, UnitOfQuantity.pieces);
+                Item item = new Item(null, name, null);
                 LOGGER.debug("saving item {}", item);
                 itemRepository.save(item);
             }
             for (String name :
                 ITEM_NAMES_FOR_KG) {
-                Item item = new Item(null, name, UnitOfQuantity.kg);
+                Item item = new Item(null, name, null);
                 LOGGER.debug("saving Item {}", item);
                 itemRepository.save(item);
             }
             for (String name :
                 ITEM_NAMES_FOR_G) {
-                Item item = new Item(null, name, UnitOfQuantity.g);
+                Item item = new Item(null, name, null);
                 LOGGER.debug("saving item {}", item);
                 itemRepository.save(item);
             }
             for (String name :
                 ITEM_NAMES_FOR_L) {
-                Item item = new Item(null, name, UnitOfQuantity.L);
+                Item item = new Item(null, name, null);
                 LOGGER.debug("saving item {}", item);
                 itemRepository.save(item);
             }
