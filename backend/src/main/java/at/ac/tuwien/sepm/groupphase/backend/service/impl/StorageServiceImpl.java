@@ -5,7 +5,6 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Storage;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepositoryStorage;
 import at.ac.tuwien.sepm.groupphase.backend.service.StorageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,13 +19,11 @@ public class StorageServiceImpl implements StorageService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final StorageRepository storageRepository;
-    private final StorageRepositoryStorage storageRepositoryStorage;
     private final ItemStorageRepository itemStorageRepository;
 
     @Autowired
-    public StorageServiceImpl(StorageRepository storageRepository, StorageRepositoryStorage storageRepositoryStorage, ItemStorageRepository itemStorageRepository) {
+    public StorageServiceImpl(StorageRepository storageRepository, ItemStorageRepository itemStorageRepository) {
         this.storageRepository = storageRepository;
-        this.storageRepositoryStorage = storageRepositoryStorage;
         this.itemStorageRepository = itemStorageRepository;
     }
 
@@ -59,7 +56,7 @@ public class StorageServiceImpl implements StorageService {
     @Override
     public Long findStorageById(Long id) {
         LOGGER.debug("Getting the Storage with the id");
-        if(storageRepositoryStorage.findById(id).isPresent()){
+        if(storageRepository.findById(id).isPresent()){
             return id;
         }
         else {
@@ -70,7 +67,7 @@ public class StorageServiceImpl implements StorageService {
     @Override
     public Long createNewStorage() {
         LOGGER.debug("Creating a new storage");
-        return storageRepositoryStorage.saveAndFlush(new Storage()).getId();
+        return storageRepository.saveAndFlush(new Storage()).getId();
     }
 
     @Override

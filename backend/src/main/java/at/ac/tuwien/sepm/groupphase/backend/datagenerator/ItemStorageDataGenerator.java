@@ -3,8 +3,8 @@ package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
-import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -20,10 +20,11 @@ public class ItemStorageDataGenerator {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final ItemStorageRepository itemStorageRepository;
     private static final int NUMBER_OF_ITEMSTORAGES = 5;
+    private final StorageRepository storageRepository;
 
-
-    public ItemStorageDataGenerator(ItemStorageRepository itemStorageRepository) {
+    public ItemStorageDataGenerator(ItemStorageRepository itemStorageRepository, StorageRepository storageRepository) {
         this.itemStorageRepository = itemStorageRepository;
+        this.storageRepository = storageRepository;
     }
 
     @PostConstruct
@@ -40,5 +41,4 @@ public class ItemStorageDataGenerator {
             }
         }
     }
-
 }

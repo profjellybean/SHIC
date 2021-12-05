@@ -11,12 +11,14 @@ import {Params} from '@angular/router';
 export class StorageComponent implements OnInit {
   items: Item[];
 
-  constructor(private storageService: StorageService) { }
+  constructor(private storageService: StorageService) {
+  }
 
   ngOnInit(): void {
-    this.getAllItemsByStorageId({id:1});
+    this.getAllItemsByStorageId({id: 1});
   }
-  private getAllItemsByStorageId(params: Params){
+
+  private getAllItemsByStorageId(params: Params) {
     this.storageService.getItems(params).subscribe({
       next: data => {
         console.log('received items', data);
@@ -27,5 +29,4 @@ export class StorageComponent implements OnInit {
       }
     });
   }
-
 }
