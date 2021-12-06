@@ -13,6 +13,7 @@ import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
 import { StorageComponent } from './components/storage/storage.component';
+import {RegisterUserComponent} from './components/registerUser/registerUser.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { StorageComponent } from './components/storage/storage.component';
     FooterComponent,
     HomeComponent,
     LoginComponent,
+    RegisterUserComponent,
     MessageComponent,
     StorageComponent,
   ],
