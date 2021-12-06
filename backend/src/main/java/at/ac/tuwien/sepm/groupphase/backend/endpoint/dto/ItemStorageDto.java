@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
-import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.UnitOfQuantity;
+import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -10,7 +10,7 @@ public class ItemStorageDto{
     private Long storageId;
     private Long id;
     private String name;
-    private UnitOfQuantity quantity;
+    private Long quantity;
     private String notes;
     private byte[] image;
     private Date expDate;
@@ -84,11 +84,11 @@ public class ItemStorageDto{
         this.locationTag = locationTag;
     }
 
-    public UnitOfQuantity getQuantity() {
+    public Long getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(UnitOfQuantity quantity) {
+    public void setQuantity(Long quantity) {
         this.quantity = quantity;
     }
 

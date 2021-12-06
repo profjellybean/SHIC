@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
-import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.UnitOfQuantity;
 
 import javax.persistence.*;
 import java.util.Arrays;
@@ -26,7 +25,7 @@ public class ItemStorage {
     @Column
     private Location locationTag;
     @Column
-    private UnitOfQuantity quantity;
+    private Long quantity;
     @Column
     private Long storageId;
 
@@ -36,7 +35,7 @@ public class ItemStorage {
         this.id = id;
     }
 
-    public ItemStorage(String name, String notes, byte[] image, Date expDate, int amount, Location locationTag, UnitOfQuantity quantity, Long storageId) {
+    public ItemStorage(String name, String notes, byte[] image, Date expDate, int amount, Location locationTag, Long quantity, Long storageId) {
         this.name = name;
         this.notes = notes;
         this.image = image;
@@ -123,11 +122,11 @@ public class ItemStorage {
         this.locationTag = locationTag;
     }
 
-    public UnitOfQuantity getQuantity() {
+    public Long getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(UnitOfQuantity quantity) {
+    public void setQuantity(Long quantity) {
         this.quantity = quantity;
     }
 

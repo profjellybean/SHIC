@@ -3,8 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
-import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.UnitOfQuantity;
-import at.ac.tuwien.sepm.groupphase.backend.repository.ItemRepository;
+import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,8 +57,9 @@ public class ItemStorageDataGenerator {
             LOGGER.debug("generating {} ItemStorage entries", NUMBER_OF_ITEMSTORAGES);
             for (int i = 1; i <= NUMBER_OF_ITEMSTORAGES; i++) {
 
+                ItemStorage itemStorage = new ItemStorage("name "+i, "notes for itemStorage "+i, null, null, 10, Location.fridge, null, null);
                 //ItemStorage itemStorage = new ItemStorage((long) i,"name "+i, "notes for itemStorage "+i, null, null, 10, Location.fridge, UnitOfQuantity.kg, 1L);
-                ItemStorage itemStorage = new ItemStorage("name "+i, "notes for itemStorage "+i, null, null, 10, Location.fridge, UnitOfQuantity.kg, ID_OF_STORAGE);
+                //ItemStorage itemStorage = new ItemStorage("name "+i, "notes for itemStorage "+i, null, null, 10, Location.fridge, UnitOfQuantity.kg, ID_OF_STORAGE);
                 LOGGER.debug("saving ItemStorage {}", itemStorage);
                 itemStorageRepository.save(itemStorage);
             }

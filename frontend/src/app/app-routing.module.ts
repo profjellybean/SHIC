@@ -8,10 +8,12 @@ import {StorageComponent} from './components/storage/storage.component';
 import {RecipeComponent} from './components/recipe/recipe.component';
 import {ShoppingListComponent} from './components/shopping-list/shopping-list.component';
 import {RecipeDetailComponent} from './components/recipe-detail/recipe-detail.component';
+import {RegisterUserComponent} from './components/registerUser/registerUser.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'login', component: LoginComponent},
+  {path: 'registerUser', component: RegisterUserComponent},
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
   {path: 'storage', component: StorageComponent},
   {path: 'recipe/:id', canActivate: [AuthGuard], component: RecipeDetailComponent},
