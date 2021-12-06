@@ -28,11 +28,13 @@ public class ItemStorage {
     private UnitOfQuantity quantity;
     @Column
     private Long storageId;
+    @Column
+    private Long shoppingListId;
 
 
     public ItemStorage(){}
 
-    public ItemStorage(String name, String notes, byte[] image, Date expDate, int amount, Location locationTag, UnitOfQuantity quantity, Long storageId) {
+    public ItemStorage(String name, String notes, byte[] image, Date expDate, int amount, Location locationTag, UnitOfQuantity quantity, Long storageId, Long shoppingListId) {
         this.name = name;
         this.notes = notes;
         this.image = image;
@@ -41,6 +43,7 @@ public class ItemStorage {
         this.locationTag = locationTag;
         this.quantity = quantity;
         this.storageId = storageId;
+        this.shoppingListId = shoppingListId;
     }
 
     public Long getStorageId() {
@@ -49,6 +52,14 @@ public class ItemStorage {
 
     public void setStorageId(Long storageId) {
         this.storageId = storageId;
+    }
+
+    public Long getShoppingListId() {
+        return shoppingListId;
+    }
+
+    public void setShoppingListId(Long shoppingListId) {
+        this.shoppingListId = shoppingListId;
     }
 
     public long getId() {
@@ -128,6 +139,7 @@ public class ItemStorage {
             ", locationTag=" + locationTag +
             ", quantity=" + quantity +
             ", storageId=" + storageId +
+            ", shoppingListId=" + shoppingListId +
             '}';
     }
 }
