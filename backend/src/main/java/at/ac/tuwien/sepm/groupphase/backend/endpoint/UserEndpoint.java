@@ -34,6 +34,7 @@ public class UserEndpoint {
 
     @PermitAll
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public void createUser(@RequestBody UserLoginDto userLoginDto){
         LOGGER.info("Endpoint: POST /user");
         try {
