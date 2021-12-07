@@ -69,8 +69,6 @@ public class ShoppingListServiceImpl implements ShoppingListService {
 
         returnList = compareItemSets(recipe.getIngredients(), storageItems);
 
-        // TODO add items to existing list
-        //shoppingListItemRepository.saveAll(returnList);
         String notes = "Ingredient required for recipe: "+recipe.getName();
         for (ItemStorage item :
             returnList) {
@@ -120,7 +118,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     public ItemStorage saveItem(ItemStorage itemStorage, Long id) {
         LOGGER.debug("save item in shopping list");
 
-        if (findShoppingListById(id) != null) { //TODO uncomment statement
+        if (findShoppingListById(id) != null) {
             shoppingListItemRepository.saveAndFlush(itemStorage);
             shoppingListItemRepository.insert(id, itemStorage.getId());
         } else {
