@@ -16,7 +16,7 @@ import { RecipeComponent } from './components/recipe/recipe.component';
 import { ShoppingListComponent } from './components/shopping-list/shopping-list.component';
 import { StorageComponent } from './components/storage/storage.component';
 import { RecipeDetailComponent } from './components/recipe-detail/recipe-detail.component';
-import {RegisterUserComponent} from "./components/registerUser/registerUser.component";
+import {RegisterUserComponent} from './components/registerUser/registerUser.component';
 
 @NgModule({
   declarations: [
