@@ -17,4 +17,9 @@ export class ItemService {
               private globals: Globals) {
   }
 
+  findAll(): Observable<Item[]>{
+    console.log('load all items');
+    return this.httpClient.get<Item[]>(this.recipeBaseUri);
+  }
+
 }

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {MessageService} from '../../services/message.service';
+import {ItemService} from '../../services/item.service';
+import {Item} from '../../dtos/item';
 
 @Component({
   selector: 'app-storage-add-item',
@@ -11,9 +13,27 @@ export class StorageAddItemComponent implements OnInit {
   error = false;
   errorMessage = '';
 
-  constructor( private messageService: MessageService ) { }
+  items: Item[] = null;
+  item: Item = null;
+
+  constructor( private messageService: MessageService,
+               private itemService: ItemService) { }
 
   ngOnInit(): void {
+    this.loadAllItems();
+  }
+
+  loadAllItems() {
+    this.itemService.findAll().subscribe({
+      next: data => {
+        // TODO add error
+        console.log('received items', data);
+        this.items = data;
+      },
+      error: error => {
+        console.error(error.message);
+      }
+    });
   }
 
   /**

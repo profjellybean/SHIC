@@ -6,5 +6,20 @@
 </div>
 
 <p>storage-add-item works!</p>
-
+<table class="table">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Unit of Quantity</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let item of items">
+    <td>{{item.id}}</td>
+    <td>{{item.name}}</td>
+    <td>{{item.quantity}}</td>
+  </tr>
+  </tbody>
+</table>
 
