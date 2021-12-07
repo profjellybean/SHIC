@@ -21,14 +21,23 @@ public class ApplicationUser {
     @Column(nullable = false, name = "PASSWORD")
     private String password;
 
+    @Column(nullable = false, name = "PRIVLIST")
+    private Long privList;
 
     public ApplicationUser() {
     }
 
-    public ApplicationUser(String username, String password) {
+    public ApplicationUser(String username, String password, Long shoppingListId) {
         this.username = username;
         this.password = password;
+        this.privList = shoppingListId;
     }
+
+
+
+    public Long getPrivList() {return privList;}
+
+    public void setPrivList(Long privList) {this.privList = privList;}
 
     public Long getId() {
         return id;

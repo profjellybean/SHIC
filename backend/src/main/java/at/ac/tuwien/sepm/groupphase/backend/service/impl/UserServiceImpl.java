@@ -3,10 +3,12 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.PasswordTooShortException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.UsernameTakenException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.CustomUserRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,14 +31,16 @@ public class UserServiceImpl implements UserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final CustomUserRepository userRepository;
+    private final ShoppingListRepository shoppingListRepository;
     private final UserMapper userMapper;
     private final EntityManager entityManager;
 
     @Autowired
-    public UserServiceImpl(CustomUserRepository userRepository, UserMapper userMapper, EntityManager entityManager) {
+    public UserServiceImpl(CustomUserRepository userRepository,ShoppingListRepository shoppingListRepository, UserMapper userMapper, EntityManager entityManager) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.entityManager = entityManager;
+        this.shoppingListRepository = shoppingListRepository;
     }
 
     @Override
@@ -66,6 +70,16 @@ public class UserServiceImpl implements UserService {
         throw new NotFoundException(String.format("Could not find the user with the username %s", username));
     }
 
+    @Override
+    public Long getPrivateShoppingListIdByUsername(String username) {
+        LOGGER.debug("Service: Find private shoppinglist for user by username");
+        Optional<ApplicationUser> applicationUser = userRepository.findUserByUsername(username);
+        if (applicationUser.isPresent()) {
+            return applicationUser.get().getPrivList();
+        }
+        throw new NotFoundException(String.format("Could not find the user with the username %s", username));
+    }
+
 
     @Override
     public void createUser(UserLoginDto userLoginDto) {
@@ -80,7 +94,8 @@ public class UserServiceImpl implements UserService {
             throw new UsernameTakenException("Username already taken");
         }
 
-        userRepository.save(userMapper.dtoToEntity(userLoginDto));
+        Long shoppingListId = shoppingListRepository.saveAndFlush(   ShoppingList.ShoppingListBuilder.aShoppingList().withName( "Your private shopping list").build()  ).getId();
+        userRepository.save(userMapper.dtoToEntity(userLoginDto,shoppingListId));
 
 
 

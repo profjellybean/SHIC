@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -16,7 +17,7 @@ public class ShoppingList {
     @Column(length = 10000)
     private String notes;
 
-    @OneToMany
+    @OneToMany()
     private Set<Item> items;
 
     /**
@@ -55,6 +56,9 @@ public class ShoppingList {
     }
 
     public void setItems(Set<Item> items) {
+        if(items == null){
+            this.items = new HashSet();
+        }
         this.items = items;
     }
 

@@ -14,6 +14,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
 import { StorageComponent } from './components/storage/storage.component';
 import {RegisterUserComponent} from './components/registerUser/registerUser.component';
+import { ShoppingListComponent } from './components/shopping-list/shopping-list.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import {RegisterUserComponent} from './components/registerUser/registerUser.comp
     RegisterUserComponent,
     MessageComponent,
     StorageComponent,
+    ShoppingListComponent,
   ],
   imports: [
     BrowserModule,
