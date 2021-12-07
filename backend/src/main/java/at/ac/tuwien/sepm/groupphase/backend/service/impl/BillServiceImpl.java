@@ -47,17 +47,4 @@ public class BillServiceImpl implements BillService {
         return billRepository.findAll();
     }
 
-    @Override
-    public Bill deleteNames(Long billId, Long userId) {
-        Optional <ApplicationUser> user = userRepository.findById(userId);
-        if(user.isPresent()) {
-            Bill bill = findOne(billId);
-            ApplicationUser userToRemove = user.get();
-            bill.getNotPaidNames().remove(user.get());
-            Bill savedBill = billRepository.saveAndFlush(bill);
-            return savedBill;
-        } else {
-            throw new NotFoundException(String.format("Could not find user with id %s", userId));
-        }
-    }
 }

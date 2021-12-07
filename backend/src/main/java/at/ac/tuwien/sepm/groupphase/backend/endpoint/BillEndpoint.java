@@ -54,16 +54,4 @@ public class BillEndpoint {
         return billDto;
     }
 
-    //@Secured("ROLE_USER")
-    @PermitAll
-    @PatchMapping
-    @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Publish a new message", security = @SecurityRequirement(name = "apiKey"))
-    public BillDto deleteName(IdCollectionDto idCollectionDto) {
-        LOGGER.info("PUT /api/v1/bill {}", idCollectionDto);
-        BillDto billDto = billMapper.billToBillDto(billService.deleteNames(idCollectionDto.getFirstAdditionalId(),
-            idCollectionDto.getSecondAdditionalId()));
-        return billDto;
-    }
-
 }

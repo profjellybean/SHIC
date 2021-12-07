@@ -10,5 +10,10 @@ public interface RegisterService {
      */
     Register confirmPayment(Long registerId, Long billId, Long userId);
 
+    /**
+     * Find a register by a given id
+     *
+     * @return the requested register
+     */
     Register findOne(Long id);
 }

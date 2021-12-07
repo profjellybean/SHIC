@@ -15,5 +15,10 @@ public interface RegisterRepository extends JpaRepository<Register, Long> {
      */
     Optional<Register> findRegisterById(Long id);
 
+    /**
+     * Save a given register
+     *
+     * @return the saved register
+     */
     Register save(Register register);
 }
