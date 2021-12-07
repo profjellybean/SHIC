@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Item;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
 import org.slf4j.Logger;
@@ -25,7 +26,7 @@ public class ShoppingListDataGenerator {
     private static final String TEST_SHOPPINGLIST_NAME = "Name";
     private static final String TEST_SHOPPINGLIST_NOTES = "Notes of the shoppinglist";
     private static final ApplicationUser TEST_SHOPPINGLIST_OWNER = null;
-    private static final Set<Item> TEST_SHOPPINGLIST_ITEMS = null;
+    private static final Set<ItemStorage> TEST_SHOPPINGLIST_ITEMS = null;
     //private static final Set<Item> TEST_SHOPPINGLIST_ITEMS = new HashSet<Item>(Arrays.asList(new Item(1L), new Item(2L)));
 
     private final ShoppingListRepository shoppingListRepository;

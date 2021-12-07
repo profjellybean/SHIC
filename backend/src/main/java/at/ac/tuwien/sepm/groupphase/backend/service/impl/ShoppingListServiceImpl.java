@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.*;
-//import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.UnitOfQuantity;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.*;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
@@ -35,7 +34,6 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     public ShoppingListServiceImpl(ShoppingListRepository shoppingListRepository,
                                    RecipeRepository recipeRepository,
                                    ItemStorageRepository itemStorageRepository,
-                                   ShoppingListRepository shoppingListRepository,
                                    ShoppingListItemRepository shoppingListItemRepository) {
         this.recipeRepository = recipeRepository;
         this.itemStorageRepository = itemStorageRepository;
@@ -45,25 +43,26 @@ public class ShoppingListServiceImpl implements ShoppingListService {
 
     @Override
     @Transactional
-    public List<ItemStorage> planRecipe(Long recipeId, Long storageId) {
-        LOGGER.debug("Service: plan Recipe {} based on storage {}.", recipeId, storageId);
+    public List<ItemStorage> planRecipe(Long recipeId, Long userId) {
+        LOGGER.debug("Service: plan Recipe {} based on user {}.", recipeId, userId);
+
+        // TODO: check if user has access
+        Long storageId = userId;
+        Long shoppingListId = userId;
+
         Recipe recipe = null;
         List<ItemStorage> storageItems;
-
         List<ItemStorage> returnList = null;
-        // TODO: check if user has access
 
         // TODO: catch errors that might occur accessing the repository
         try {
             recipe = recipeRepository.findRecipeById(recipeId);
-            System.out.println("RECIPE: "+recipe); // TODO delete line
         } catch (EntityNotFoundException e) {
             throw new NotFoundException("Could not find recipe with id "+recipeId, e);
         }
 
         try {
             storageItems = itemStorageRepository.findAllByStorageId(storageId);
-            System.out.println("STORAGE: "+storageItems); // TODO delete line
         } catch (EntityNotFoundException e) {
             throw new NotFoundException("Could not find storage with id "+storageId, e);
         }
@@ -71,8 +70,17 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         returnList = compareItemSets(recipe.getIngredients(), storageItems);
 
         // TODO add items to existing list
+        //shoppingListItemRepository.saveAll(returnList);
+        String notes = "Ingredient required for recipe: "+recipe.getName();
+        for (ItemStorage item :
+            returnList) {
+            ItemStorage shoppingListItem = new ItemStorage(item);
+            shoppingListItem.setShoppingListId(shoppingListId);
+            shoppingListItem.setNotes(notes);
+            shoppingListItem = itemStorageRepository.saveAndFlush(shoppingListItem);
+            saveItem(shoppingListItem, shoppingListId);
+        }
         return returnList;
-        //return shoppingListRepository.save(shoppingList);
     }
 
     /**
@@ -112,13 +120,13 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     public ItemStorage saveItem(ItemStorage itemStorage, Long id) {
         LOGGER.debug("save item in shopping list");
 
-        if (findShoppingListById(id) != null) {
+        if (findShoppingListById(id) != null) { //TODO uncomment statement
             shoppingListItemRepository.saveAndFlush(itemStorage);
-            shoppingListItemRepository.insert(itemStorage.getId(), id);
+            shoppingListItemRepository.insert(id, itemStorage.getId());
         } else {
             Long newStorage = createNewShoppingList();
             shoppingListItemRepository.saveAndFlush(itemStorage);
-            shoppingListItemRepository.insert(itemStorage.getId(), newStorage);
+            shoppingListItemRepository.insert(newStorage, itemStorage.getId());
         }
         return itemStorage;
 

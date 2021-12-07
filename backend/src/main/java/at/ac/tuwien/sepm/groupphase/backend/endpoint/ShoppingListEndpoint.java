@@ -56,16 +56,16 @@ public class ShoppingListEndpoint {
         return itemStorageMapper.itemsStorageToItemsStorageDto(shoppingListService.findAllByStorageId(id));
     }
 
-    @PermitAll
+    @PermitAll //TODO: add security
     //@Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.OK)
     @PutMapping
-    @Operation(summary = "Plan a recipe: creates shoppingList based on missing ingredients", security = @SecurityRequirement(name = "apiKey"))
+    @Operation(summary = "Plan a recipe: adds missing ingredients to shoppingList", security = @SecurityRequirement(name = "apiKey"))
     // TODO: change paramteters to new Dto?
-    public List<ItemStorageDto> create(@RequestParam(name = "recipeId") Long recipeId, @RequestParam(name = "storageId") Long storageId) {
-        LOGGER.info("Endpoint: POST /api/v1/shoppinglist/recipeId={},storageId={}", recipeId, storageId);
+    public List<ItemStorageDto> planRecipe(@RequestParam(name = "recipeId") Long recipeId, @RequestParam(name = "userId") Long userId) {
+        LOGGER.info("Endpoint: POST /api/v1/shoppinglist/recipeId={},userId={}", recipeId, userId);
         return itemStorageMapper.itemsStorageToItemsStorageDto(
-            shoppingListService.planRecipe(recipeId, storageId));
+            shoppingListService.planRecipe(recipeId, userId));
     }
 
 }

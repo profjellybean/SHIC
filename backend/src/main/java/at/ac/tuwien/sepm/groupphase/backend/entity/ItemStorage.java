@@ -49,6 +49,20 @@ public class ItemStorage {
         this.shoppingListId = shoppingListId;
     }
 
+    public ItemStorage(ItemStorage itemStorage){
+        //this = itemStorage.clone();
+        // this.id = itemStorage.getId();
+        this.notes = itemStorage.notes;
+        this.image = itemStorage.image;
+        this.expDate = itemStorage.expDate;
+        this.amount = itemStorage.amount;
+        this.locationTag = itemStorage.locationTag;
+        this.quantity = itemStorage.quantity;
+        this.storageId = itemStorage.storageId;
+        this.shoppingListId = itemStorage.shoppingListId;
+    }
+
+
     public Long getStorageId() {
         return storageId;
     }

@@ -28,6 +28,7 @@ public class ItemStorageDataGenerator {
     private final UnitOfQuantityRepository unitOfQuantityRepository;
     private static final int NUMBER_OF_ITEMSTORAGES = 5;
     private static final Long ID_OF_STORAGE = 1L;
+    private static final Long ID_OF_SHOPPINGLIST = null;
     private static final boolean CREATE_REAL_ITEMSTORAGES = true;
     private final StorageRepository storageRepository;
 
@@ -63,22 +64,22 @@ public class ItemStorageDataGenerator {
             }
 
             //ItemStorage feta = new ItemStorage("Feta", null, null, null, 1, Location.fridge, UnitOfQuantity.pieces, ID_OF_STORAGE);
-            ItemStorage feta = new ItemStorage("Feta", null, null, null, 1, Location.fridge, mappedUnits.get("pieces"), ID_OF_STORAGE);
+            ItemStorage feta = new ItemStorage("Feta", null, null, null, 1, Location.fridge, mappedUnits.get("pieces"), ID_OF_STORAGE, ID_OF_SHOPPINGLIST);
             LOGGER.debug("saving ItemStorage {}", feta);
             itemStorageRepository.save(feta);
 
             //ItemStorage noodles = new ItemStorage("Noodles", null, null, null, 500, Location.shelf, UnitOfQuantity.g, ID_OF_STORAGE);
-            ItemStorage noodles = new ItemStorage("Noodles", null, null, null, 500, Location.shelf, mappedUnits.get("g"), ID_OF_STORAGE);
+            ItemStorage noodles = new ItemStorage("Noodles", null, null, null, 500, Location.shelf, mappedUnits.get("g"), ID_OF_STORAGE, ID_OF_SHOPPINGLIST);
             LOGGER.debug("saving ItemStorage {}", noodles);
             itemStorageRepository.save(noodles);
 
             //ItemStorage milk = new ItemStorage("Milk", null, null, null, 2, Location.fridge, UnitOfQuantity.L, ID_OF_STORAGE);
-            ItemStorage milk = new ItemStorage("Milk", null, null, null, 2, Location.fridge, mappedUnits.get("L"), ID_OF_STORAGE);
+            ItemStorage milk = new ItemStorage("Milk", null, null, null, 2, Location.fridge, mappedUnits.get("L"), ID_OF_STORAGE, ID_OF_SHOPPINGLIST);
             LOGGER.debug("saving ItemStorage {}", milk);
             itemStorageRepository.save(milk);
 
             //ItemStorage pesto = new ItemStorage("Pesto", "Genovese", null, null, 200, Location.fridge, UnitOfQuantity.g, ID_OF_STORAGE);
-            ItemStorage pesto = new ItemStorage("Pesto", "Genovese", null, null, 200, Location.fridge, mappedUnits.get("g"), ID_OF_STORAGE);
+            ItemStorage pesto = new ItemStorage("Pesto", "Genovese", null, null, 200, Location.fridge, mappedUnits.get("g"), ID_OF_STORAGE, ID_OF_SHOPPINGLIST);
             LOGGER.debug("saving ItemStorage {}", pesto);
             itemStorageRepository.save(pesto);
 
@@ -88,7 +89,7 @@ public class ItemStorageDataGenerator {
             LOGGER.debug("generating {} ItemStorage entries", NUMBER_OF_ITEMSTORAGES);
             for (int i = 1; i <= NUMBER_OF_ITEMSTORAGES; i++) {
 
-                ItemStorage itemStorage = new ItemStorage("name "+i, "notes for itemStorage "+i, null, null, 10, Location.fridge, null, 1L);
+                ItemStorage itemStorage = new ItemStorage("name "+i, "notes for itemStorage "+i, null, null, 10, Location.fridge, null, null, null);
                 LOGGER.debug("saving ItemStorage {}", itemStorage);
                 itemStorageRepository.save(itemStorage);
             }
