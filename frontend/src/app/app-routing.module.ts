@@ -5,6 +5,7 @@ import {LoginComponent} from './components/login/login.component';
 import {AuthGuard} from './guards/auth.guard';
 import {MessageComponent} from './components/message/message.component';
 import {StorageComponent} from './components/storage/storage.component';
+import {RegisterComponent} from './components/register/register.component';
 import {RecipeComponent} from './components/recipe/recipe.component';
 import {ShoppingListComponent} from './components/shopping-list/shopping-list.component';
 import {RecipeDetailComponent} from './components/recipe-detail/recipe-detail.component';
@@ -16,6 +17,8 @@ const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'registerUser', component: RegisterUserComponent},
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
+  {path: 'storage', component: StorageComponent},
+  {path: 'register', component: RegisterComponent},
   {path: 'storage', component: StorageComponent},
   {path: 'recipe/:id', canActivate: [AuthGuard], component: RecipeDetailComponent},
   {path: 'recipe', canActivate: [AuthGuard], component: RecipeComponent},
