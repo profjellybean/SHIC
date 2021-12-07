@@ -8,6 +8,7 @@ import java.util.Date;
 
 public class ItemStorageDto{
     private Long storageId;
+    private Long shoppingListId;
     private Long id;
     private String name;
     private Long quantity;
@@ -26,6 +27,14 @@ public class ItemStorageDto{
 
     public void setStorageId(Long storageId) {
         this.storageId = storageId;
+    }
+
+    public Long getShoppingListId() {
+        return shoppingListId;
+    }
+
+    public void setShoppingListId(Long shoppingListId) {
+        this.shoppingListId = shoppingListId;
     }
 
     public Long getId() {
@@ -97,6 +106,7 @@ public class ItemStorageDto{
     public String toString() {
         return "ItemStorageDto{" +
             "storageId=" + storageId +
+            "shoppingListId=" + shoppingListId +
             ", id=" + id +
             ", name='" + name + '\'' +
             ", quantity=" + quantity +

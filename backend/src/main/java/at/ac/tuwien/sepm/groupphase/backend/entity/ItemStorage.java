@@ -28,6 +28,8 @@ public class ItemStorage {
     private Long quantity;
     @Column
     private Long storageId;
+    @Column
+    private Long shoppingListId;
 
 
     public ItemStorage(){}
@@ -35,7 +37,7 @@ public class ItemStorage {
         this.id = id;
     }
 
-    public ItemStorage(String name, String notes, byte[] image, Date expDate, int amount, Location locationTag, Long quantity, Long storageId) {
+    public ItemStorage(String name, String notes, byte[] image, Date expDate, int amount, Location locationTag, Long quantity, Long storageId, Long shoppingListId) {
         this.name = name;
         this.notes = notes;
         this.image = image;
@@ -44,19 +46,7 @@ public class ItemStorage {
         this.locationTag = locationTag;
         this.quantity = quantity;
         this.storageId = storageId;
-    }
-
-    //public ItemStorage(Long id, String name, String notes, byte[] image, Date expDate, int amount, Location locationTag, UnitOfQuantity quantity, Long storageId) {
-    public ItemStorage(Long id, String name, String notes, byte[] image, Date expDate, int amount, Location locationTag, Long quantity, Long storageId) {
-        this.id = id;
-        this.name = name;
-        this.notes = notes;
-        this.image = image;
-        this.expDate = expDate;
-        this.amount = amount;
-        this.locationTag = locationTag;
-        this.quantity = quantity;
-        this.storageId = storageId;
+        this.shoppingListId = shoppingListId;
     }
 
     public Long getStorageId() {
@@ -73,6 +63,14 @@ public class ItemStorage {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getShoppingListId() {
+        return shoppingListId;
+    }
+
+    public void setShoppingListId(Long shoppingListId) {
+        this.shoppingListId = shoppingListId;
     }
 
     public String getName() {
@@ -166,6 +164,7 @@ public class ItemStorage {
             ", locationTag=" + locationTag +
             ", quantity=" + quantity +
             ", storageId=" + storageId +
+            ", shoppingListId=" + shoppingListId +
             '}';
     }
 }
