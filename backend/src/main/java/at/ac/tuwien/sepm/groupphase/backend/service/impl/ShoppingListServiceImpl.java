@@ -3,10 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 import at.ac.tuwien.sepm.groupphase.backend.entity.*;
 //import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.UnitOfQuantity;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepm.groupphase.backend.repository.RecipeRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.*;
 import at.ac.tuwien.sepm.groupphase.backend.service.ShoppingListService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,14 +22,14 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final ShoppingListRepository shoppingListRepository;
     private final RecipeRepository recipeRepository;
-    private final StorageRepository storageRepository;
+    private final ItemStorageRepository itemStorageRepository;
 
     public ShoppingListServiceImpl(ShoppingListRepository shoppingListRepository,
                                    RecipeRepository recipeRepository,
-                                   StorageRepository storageRepository) {
+                                   ItemStorageRepository itemStorageRepository) {
         this.shoppingListRepository = shoppingListRepository;
         this.recipeRepository = recipeRepository;
-        this.storageRepository = storageRepository;
+        this.itemStorageRepository = itemStorageRepository;
     }
 
     @Override
@@ -54,7 +51,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         }
 
         try {
-            storageItems = storageRepository.findAllByStorageId(storageId);
+            storageItems = itemStorageRepository.findAllByStorageId(storageId);
             System.out.println("STORAGE: "+storageItems); // TODO delete line
         } catch (EntityNotFoundException e) {
             throw new NotFoundException("Could not find storage with id "+storageId, e);
