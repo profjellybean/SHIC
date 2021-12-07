@@ -16,7 +16,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/storage")
+@RequestMapping(value = "/api/v1/storage")
 public class StorageEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final StorageService storageService;
