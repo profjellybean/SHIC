@@ -16,7 +16,7 @@ import javax.annotation.PostConstruct;
 import java.lang.invoke.MethodHandles;
 import java.util.Set;
 
-//@Profile("generateData")
+@Profile("generateData")
 @Component
 public class StorageDataGenerator {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -26,22 +26,22 @@ public class StorageDataGenerator {
     private static final ApplicationUser TEST_STORAGE_OWNER = null;
     private static final Set<Item> TEST_STORAGE_ITEMS = null;
 
-    private final StorageRepositoryStorage storageRepositoryStorage;
+    private final StorageRepository storageRepository;
 
-    public StorageDataGenerator(StorageRepositoryStorage storageRepositoryStorage) {
-        this.storageRepositoryStorage = storageRepositoryStorage;
+    public StorageDataGenerator(StorageRepository storageRepository) {
+        this.storageRepository = storageRepository;
     }
 
     @PostConstruct
     void generateStorage() {
-        if(storageRepositoryStorage.findAll().size() > 0) {
+        if(storageRepository.findAll().size() > 0) {
             LOGGER.debug("storage already generated");
         } else {
             LOGGER.debug("generating {} storage entries", NUMBER_OF_STOREGES);
             for (int i = 0; i < NUMBER_OF_STOREGES; i++) {
                 Storage storage = new Storage();
                 LOGGER.debug("saving Storage {}", storage);
-                storageRepositoryStorage.save(storage);
+                storageRepository.save(storage);
             }
         }
     }

@@ -3,10 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
-import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepm.groupphase.backend.exception.UsernameTakenException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.CustomUserRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

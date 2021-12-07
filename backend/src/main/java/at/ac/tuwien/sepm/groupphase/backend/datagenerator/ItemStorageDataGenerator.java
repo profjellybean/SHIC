@@ -3,11 +3,12 @@ package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
-import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitOfQuantityRepository;import org.slf4j.Logger;
+import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -18,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-//@Profile("generateData")
+@Profile("generateData")
 @Component
 public class ItemStorageDataGenerator {
 
@@ -28,17 +29,20 @@ public class ItemStorageDataGenerator {
     private static final int NUMBER_OF_ITEMSTORAGES = 5;
     private static final Long ID_OF_STORAGE = 1L;
     private static final boolean CREATE_REAL_ITEMSTORAGES = true;
+    private final StorageRepository storageRepository;
 
     private final UnitOfQuantityDataGenerator unitOfQuantityDataGenerator;
 
 
     public ItemStorageDataGenerator(ItemStorageRepository itemStorageRepository,
                                     UnitOfQuantityRepository unitOfQuantityRepository,
-                                    UnitOfQuantityDataGenerator unitOfQuantityDataGenerator) {
+                                    UnitOfQuantityDataGenerator unitOfQuantityDataGenerator,
+                                    StorageRepository storageRepository) {
         this.itemStorageRepository = itemStorageRepository;
         this.unitOfQuantityRepository = unitOfQuantityRepository;
         this.unitOfQuantityDataGenerator = unitOfQuantityDataGenerator;
 
+        this.storageRepository = storageRepository;
     }
 
     @PostConstruct
@@ -84,13 +88,10 @@ public class ItemStorageDataGenerator {
             LOGGER.debug("generating {} ItemStorage entries", NUMBER_OF_ITEMSTORAGES);
             for (int i = 1; i <= NUMBER_OF_ITEMSTORAGES; i++) {
 
-                ItemStorage itemStorage = new ItemStorage("name "+i, "notes for itemStorage "+i, null, null, 10, Location.fridge, null, null);
-                //ItemStorage itemStorage = new ItemStorage((long) i,"name "+i, "notes for itemStorage "+i, null, null, 10, Location.fridge, UnitOfQuantity.kg, 1L);
-                //ItemStorage itemStorage = new ItemStorage("name "+i, "notes for itemStorage "+i, null, null, 10, Location.fridge, UnitOfQuantity.kg, ID_OF_STORAGE);
+                ItemStorage itemStorage = new ItemStorage("name "+i, "notes for itemStorage "+i, null, null, 10, Location.fridge, null, 1L);
                 LOGGER.debug("saving ItemStorage {}", itemStorage);
                 itemStorageRepository.save(itemStorage);
             }
         }
     }
-
 }

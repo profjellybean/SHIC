@@ -19,7 +19,7 @@ import javax.annotation.PostConstruct;
 import java.lang.invoke.MethodHandles;
 import java.util.*;
 
-//@Profile("generateData")
+@Profile("generateData")
 @Component
 public class RecipeDataGenerator {
 

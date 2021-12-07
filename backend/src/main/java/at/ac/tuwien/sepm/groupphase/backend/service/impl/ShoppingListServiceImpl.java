@@ -8,7 +8,6 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.ShoppingListService;
-import org.hibernate.LazyInitializationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -24,14 +23,14 @@ import java.util.stream.Collectors;
 public class ShoppingListServiceImpl implements ShoppingListService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    //private final UserRepository userRepository;
+    private final ShoppingListRepository shoppingListRepository;
     private final RecipeRepository recipeRepository;
     private final StorageRepository storageRepository;
 
-    public ShoppingListServiceImpl(//UserRepository userRepository,
+    public ShoppingListServiceImpl(ShoppingListRepository shoppingListRepository,
                                    RecipeRepository recipeRepository,
                                    StorageRepository storageRepository) {
-        //this.userRepository = userRepository;
+        this.shoppingListRepository = shoppingListRepository;
         this.recipeRepository = recipeRepository;
         this.storageRepository = storageRepository;
     }
