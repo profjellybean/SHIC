@@ -15,6 +15,7 @@ import {httpInterceptorProviders} from './interceptors';
 import { RecipeComponent } from './components/recipe/recipe.component';
 import { ShoppingListComponent } from './components/shopping-list/shopping-list.component';
 import { StorageComponent } from './components/storage/storage.component';
+import {RegisterComponent} from './components/register/register.component';
 import {RegisterUserComponent} from './components/registerUser/registerUser.component';
 import { RecipeDetailComponent } from './components/recipe-detail/recipe-detail.component';
 import { RecipeListComponent } from './components/recipe-list/recipe-list.component';
@@ -29,6 +30,7 @@ import { RecipeListComponent } from './components/recipe-list/recipe-list.compon
     RegisterUserComponent,
     MessageComponent,
     StorageComponent,
+    RegisterComponent,
     RecipeComponent,
     ShoppingListComponent,
     RecipeDetailComponent,
