@@ -1,9 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 
-
-import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.UnitOfQuantity;
-
 import javax.persistence.*;
 
 
@@ -43,7 +40,6 @@ public class Item {
         return id;
     }
 
-    public Long getQuantity() {
     public String getName() {
         return name;
     }
@@ -52,7 +48,7 @@ public class Item {
         this.name = name;
     }
 
-    public UnitOfQuantity getQuantity() {
+    public Long getQuantity() {
         return quantity;
     }
 
