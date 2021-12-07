@@ -12,9 +12,14 @@ import {LoginComponent} from './components/login/login.component';
 import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
+import { RecipeComponent } from './components/recipe/recipe.component';
+import { ShoppingListComponent } from './components/shopping-list/shopping-list.component';
 import { StorageComponent } from './components/storage/storage.component';
 import {RegisterComponent} from './components/register/register.component';
 import { BillComponent } from './components/bill/bill.component';
+import {RegisterUserComponent} from './components/registerUser/registerUser.component';
+import { RecipeDetailComponent } from './components/recipe-detail/recipe-detail.component';
+import { RecipeListComponent } from './components/recipe-list/recipe-list.component';
 
 @NgModule({
   declarations: [
@@ -23,10 +28,15 @@ import { BillComponent } from './components/bill/bill.component';
     FooterComponent,
     HomeComponent,
     LoginComponent,
+    RegisterUserComponent,
     MessageComponent,
     StorageComponent,
     RegisterComponent,
     BillComponent
+    RecipeComponent,
+    ShoppingListComponent,
+    RecipeDetailComponent,
+    RecipeListComponent,
   ],
   imports: [
     BrowserModule,

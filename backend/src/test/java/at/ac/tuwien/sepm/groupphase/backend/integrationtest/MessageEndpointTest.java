@@ -75,6 +75,7 @@ public class MessageEndpointTest implements TestData {
             .build();
     }
 
+
     @Test
     public void givenNothing_whenFindAll_thenEmptyList() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(get(MESSAGE_BASE_URI)
@@ -208,6 +209,7 @@ public class MessageEndpointTest implements TestData {
             }
         );
     }
+
 
     private boolean isNow(LocalDateTime date) {
         LocalDateTime today = LocalDateTime.now();

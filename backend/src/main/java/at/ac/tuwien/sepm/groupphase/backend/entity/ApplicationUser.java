@@ -21,6 +21,9 @@ public class ApplicationUser {
     @Column(nullable = false, name = "PASSWORD")
     private String password;
 
+    @OneToOne
+    private Group currGroup;
+
 
     public ApplicationUser() {
     }
@@ -54,6 +57,14 @@ public class ApplicationUser {
         this.password = password;
     }
 
+    public Group getCurrGroup() {
+        return currGroup;
+    }
+
+    public void setCurrGroup(Group currGroup) {
+        this.currGroup = currGroup;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -66,5 +77,6 @@ public class ApplicationUser {
     public int hashCode() {
         return Objects.hash(id, username, password);
     }
+
 }
 

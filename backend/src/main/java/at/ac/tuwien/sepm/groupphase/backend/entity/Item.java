@@ -10,6 +10,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "Item")
 public class Item {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,7 +19,7 @@ public class Item {
     private String name;
 
     @Column(name = "Quantity")
-    private UnitOfQuantity quantity;
+    private Long quantity;
 
     public Item(Long id) {
         this.id = id;
@@ -28,7 +29,7 @@ public class Item {
 
     }
 
-    public Item(Long id, String name, UnitOfQuantity quantity) {
+    public Item(Long id, String name, Long quantity) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
@@ -42,6 +43,7 @@ public class Item {
         return id;
     }
 
+    public Long getQuantity() {
     public String getName() {
         return name;
     }
@@ -54,7 +56,7 @@ public class Item {
         return quantity;
     }
 
-    public void setQuantity(UnitOfQuantity quantity) {
+    public void setQuantity(Long quantity) {
         this.quantity = quantity;
     }
 
