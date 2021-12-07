@@ -32,7 +32,7 @@ import { RecipeListComponent } from './components/recipe-list/recipe-list.compon
     MessageComponent,
     StorageComponent,
     RegisterComponent,
-    BillComponent
+    BillComponent,
     RecipeComponent,
     ShoppingListComponent,
     RecipeDetailComponent,
