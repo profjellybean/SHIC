@@ -12,8 +12,4 @@ public interface RegisterMapper {
 
     RegisterDto registerToRegisterDto(Register register);
 
-    Register registerConfirmPaymentDtoToRegister(IdCollectionDto registerConfirmPaymentDto);
-
-
-
 }

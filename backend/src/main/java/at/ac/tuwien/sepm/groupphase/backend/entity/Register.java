@@ -1,8 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.RegisterDto;
-
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -13,7 +13,7 @@ public class Register {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @Column(name = "bills")
     private Set<Bill> bills;
 
@@ -64,6 +64,32 @@ public class Register {
 
     public void setMonthlyBudget(double monthlyBudget) {
         this.monthlyBudget = monthlyBudget;
+    }
+
+    @Override
+    public String toString() {
+        return "Register{" +
+            "id=" + id +
+            ", bills=" + bills +
+            ", monthlyPayments=" + monthlyPayments +
+            ", monthlyBudget=" + monthlyBudget +
+            '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Register register = (Register) o;
+        return Double.compare(register.monthlyPayments, monthlyPayments) == 0
+            && Double.compare(register.monthlyBudget, monthlyBudget) == 0
+            && Objects.equals(id, register.id)
+            && Objects.equals(bills, register.bills);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, bills, monthlyPayments, monthlyBudget);
     }
 
     public static final class RegisterBuilder {

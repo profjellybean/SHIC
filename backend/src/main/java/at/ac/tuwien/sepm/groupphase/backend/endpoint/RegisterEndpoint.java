@@ -31,20 +31,20 @@ public class RegisterEndpoint {
     }
 
     //@Secured("ROLE_USER")
-    @Transactional
     @PermitAll
     @GetMapping(value = "/{id}")
     @Operation(summary = "Get detailed information about a specific register", security = @SecurityRequirement(name = "apiKey"))
-    public RegisterDto find(@PathVariable Long id) {
+    public RegisterDto findById(@PathVariable Long id) {
         LOGGER.info("GET /api/v1/register/{}", id);
-        return registerMapper.registerToRegisterDto(registerService.findOne(id));
+        RegisterDto registerDto = registerMapper.registerToRegisterDto(registerService.findOne(id));
+        return registerDto;
     }
 
     //@Secured("ROLE_USER")
     @PermitAll
     @PutMapping
     @Operation(summary = "Get detailed information about a specific register", security = @SecurityRequirement(name = "apiKey"))
-    public RegisterDto confirmPayment(@Valid @RequestBody IdCollectionDto idCollectionDto) {
+    public RegisterDto confirmPayment(IdCollectionDto idCollectionDto) {
         LOGGER.info("PUT /api/v1/register/{}", idCollectionDto);
         return registerMapper.registerToRegisterDto(registerService.confirmPayment(idCollectionDto.getId(),
             idCollectionDto.getFirstAdditionalId(), idCollectionDto.getSecondAdditionalId()));

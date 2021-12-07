@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Item;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -11,7 +12,7 @@ public class BillDto {
 
     private Long id;
 
-    private Set<Item> groceries;
+    private Set<ItemStorage> groceries;
 
     private String notes;
 
@@ -29,7 +30,7 @@ public class BillDto {
 
     }
 
-    public BillDto(Long id, Set<Item> groceries, String notes, Set<ApplicationUser> names,
+    public BillDto(Long id, Set<ItemStorage> groceries, String notes, Set<ApplicationUser> names,
                    Set<ApplicationUser> notPaidNames, double sum, double sumPerPerson, LocalDate date) {
         this.id = id;
         this.groceries = groceries;
@@ -49,11 +50,11 @@ public class BillDto {
         this.id = id;
     }
 
-    public Set<Item> getGroceries() {
+    public Set<ItemStorage> getGroceries() {
         return groceries;
     }
 
-    public void setGroceries(Set<Item> groceries) {
+    public void setGroceries(Set<ItemStorage> groceries) {
         this.groceries = groceries;
     }
 
@@ -128,7 +129,7 @@ public class BillDto {
 
     public static class BillDtoBuilder {
         private Long id;
-        private Set<Item> groceries;
+        private Set<ItemStorage> groceries;
         private String notes;
         private Set<ApplicationUser> names;
         private Set<ApplicationUser> notPaidNames;
@@ -148,7 +149,7 @@ public class BillDto {
             return this;
         }
 
-        public BillDtoBuilder withGroceries(Set<Item> groceries) {
+        public BillDtoBuilder withGroceries(Set<ItemStorage> groceries) {
             this.groceries = groceries;
             return this;
         }

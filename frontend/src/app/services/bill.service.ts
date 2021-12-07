@@ -31,6 +31,7 @@ export class BillService {
 
   deleteName(billId: number, userId: number): Observable<Bill> {
     console.log('delete user ' + userId + ' of bill ' + billId);
-    return this.httpClient.delete<Bill>(this.billBaseUri);
+    return this.httpClient.patch<Bill>(this.billBaseUri + '/?firstAdditionalId=' + billId +
+      '&secondAdditionalId=' + userId, billId);
   }
 }

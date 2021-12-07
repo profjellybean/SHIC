@@ -13,8 +13,14 @@ export class RegisterService {
 
   constructor(private httpClient: HttpClient, private globals: Globals) { }
 
-  confirmPayment(billId: number, userId: number, register: Register): Observable<Register> {
+  getRegisterById(id: number): Observable<Register> {
+    console.log('Load register details for ' + id);
+    return this.httpClient.get<Register>(this.registerBaseUri + '/' + id);
+  }
+
+  confirmPayment(billId: number, userId: number, registerId: number): Observable<Register> {
     console.log('Confirm Payment with bill id ' + billId + ' and user id ' + userId);
-    return this.httpClient.put<Register>(this.registerBaseUri + '/' + billId + '/' + userId, register);
+    return this.httpClient.put<Register>(this.registerBaseUri + '/?id=' + registerId + '&firstAdditionalId=' + billId +
+      '&secondAdditionalId=' + userId, registerId);
   }
 }

@@ -10,9 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class BillServiceImpl implements BillService {
@@ -26,6 +28,7 @@ public class BillServiceImpl implements BillService {
         this.userRepository = userRepository;
     }
 
+    @Transactional
     @Override
     public Bill findOne(Long id) {
         LOGGER.debug("Service: find bill by id {}", id);
@@ -38,6 +41,7 @@ public class BillServiceImpl implements BillService {
         }
     }
 
+    @Transactional
     @Override
     public List<Bill> findAll() {
         return billRepository.findAll();
@@ -48,9 +52,10 @@ public class BillServiceImpl implements BillService {
         Optional <ApplicationUser> user = userRepository.findById(userId);
         if(user.isPresent()) {
             Bill bill = findOne(billId);
+            ApplicationUser userToRemove = user.get();
             bill.getNotPaidNames().remove(user.get());
-            billRepository.saveAndFlush(bill);
-            return null;
+            Bill savedBill = billRepository.saveAndFlush(bill);
+            return savedBill;
         } else {
             throw new NotFoundException(String.format("Could not find user with id %s", userId));
         }

@@ -3,17 +3,17 @@
 <p></p>
 <hr>
 
-Spending this month:
+<th>Spending this month:</th>
 <br>
-{{monthlyPayment}}
+{{register.monthlyPayments}}  €
 <br>
-Budget:
+<th>Budget:</th>
 <br>
-{{monthlyBudget}}
+{{register.monthlyBudget}}  €
 <br>
 <br>
 
-Bills:
+<th>Bills:</th>
 
 <table class='table'>
   <thead>
@@ -26,15 +26,17 @@ Bills:
   </thead>
   <tbody>
   <tr *ngFor="let bill of billArray;">
-    <td>{{bill.names}}</td>
-    <td>{{bill.notPaidNames}}</td>
+    <td>{{bill.nameList}}</td>
+    <td>{{bill.notPaidNameList}}</td>
     <td>{{bill.sum}}</td>
     <td>{{bill.sumPerPerson}}</td>
     <td>
       <div>
         <button type="button" style="BACKGROUND-COLOR:green;" class="btn btn-secondary" (click)="confirmPayment(bill.id);">Confirm Payment</button>
+        {{bill.id}}
       </div>
     </td>
   </tr>
+  {{this.help}}
   </tbody>
 </table>

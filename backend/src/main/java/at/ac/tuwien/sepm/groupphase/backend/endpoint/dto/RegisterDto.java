@@ -71,7 +71,7 @@ public class RegisterDto {
 
     @Override
     public String toString() {
-        return "SimpleMessageDto{"
+        return "RegisterDto{"
             + "id=" + id
             + ", bills=" + bills
             + ", monthlyPayment='" + monthlyPayments + '\''

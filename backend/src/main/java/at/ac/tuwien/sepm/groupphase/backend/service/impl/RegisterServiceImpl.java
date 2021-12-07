@@ -42,12 +42,9 @@ public class RegisterServiceImpl implements RegisterService {
             Bill bill = billOptional.get();
             ApplicationUser user = userOptional.get();
 
-            Set<ApplicationUser> all =  bill.getNotPaidNames();
-            all.remove(user);
-            bill.setNotPaidNames(all);
+            bill.getNotPaidNames().remove(user);
             billRepository.save(bill);
-            Set<Bill> allBills = register.getBills();
-            allBills.add(bill);
+            register.getBills().add(bill);
             register = registerRepository.saveAndFlush(register);
             return register;
         } else if(registerOptional.isEmpty()){
@@ -62,7 +59,7 @@ public class RegisterServiceImpl implements RegisterService {
     @Transactional
     public Register findOne(Long id) {
         LOGGER.debug("Service: find register by id {}", id);
-        Optional<Register> register = registerRepository.findById(id);
+        Optional<Register> register = registerRepository.findRegisterById(id);
         if (register.isPresent()) {
             return register.get();
         } else {

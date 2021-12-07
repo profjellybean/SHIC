@@ -30,11 +30,10 @@ public class RegisterDataGenerator {
     private static final double TEST_MONTHLY_PAYMENT = 300;
     private static final double TEST_MONTHLY_BUDGET = 500;
 
-    private static Set<ItemStorage> GROCERIES = new HashSet<ItemStorage>(Arrays.asList(new ItemStorage("name 1", "notes for itemStorage 1", null,
-        null, 10, Location.fridge, UnitOfQuantity.kg, null)));
+    private static Set<ItemStorage> GROCERIES;
     private static final String NOTES = "bought at billa";
-    private static Set<ApplicationUser> NAMES = new HashSet<ApplicationUser>(Arrays.asList(new ApplicationUser("luke@email.com", "password")));
-    private static Set<ApplicationUser> NOT_PAID_NAMES = new HashSet<ApplicationUser>(Arrays.asList(new ApplicationUser("luke@email.com", "password")));
+    private static Set<ApplicationUser> NAMES;
+    private static Set<ApplicationUser> NOT_PAID_NAMES;
     private static final double SUM = 48.0;
     private static final double SUM_PER_PERSON = 16.0;
     private static final LocalDate DATE = LocalDate.of(2021, 12, 3);
@@ -64,63 +63,88 @@ public class RegisterDataGenerator {
                 .withMonthlyPayment(TEST_MONTHLY_PAYMENT)
                 .withMonthlyBudget(TEST_MONTHLY_BUDGET)
                 .build();
-            Register savedRegister = registerRepository.save(register);
+            Register savedRegister = registerRepository.saveAndFlush(register);
+
+
 
             //bills
-            Bill bill = Bill.BillBuilder.aBill()
-                .withRegisterId(1L)
+            Bill bill2 = Bill.BillBuilder.aBill()
+                .withRegisterId(savedRegister.getId())
                 .withGroceries(GROCERIES)
                 .withNotes("bought at billa")
                 .withNames(NAMES)
-                .withNotPaidNames(NAMES)
-                .withSum(48)
-                .withSumPerPerson(14)
+                .withNotPaidNames(NOT_PAID_NAMES)
+                .withSum(40)
+                .withSumPerPerson(20)
                 .withDate(DATE)
                 .build();
-            Bill savedBill = billRepository.save(bill);
+            Bill savedBill2 = billRepository.saveAndFlush(bill2);
+            savedRegister = registerRepository.saveAndFlush(savedRegister);
+
+            Bill bill3 = Bill.BillBuilder.aBill()
+                .withRegisterId(savedRegister.getId())
+                .withGroceries(GROCERIES)
+                .withNotes("bought at spar")
+                .withNames(NAMES)
+                .withNotPaidNames(NOT_PAID_NAMES)
+                .withSum(80)
+                .withSumPerPerson(40)
+                .withDate(DATE)
+                .build();
+            Bill savedBill3 = billRepository.saveAndFlush(bill3);
+            savedRegister = registerRepository.saveAndFlush(savedRegister);
+
 
             //items
-            ItemStorage itemStorage1 = new ItemStorage("name 1", "notes for itemStorage 1", null,
+            ItemStorage itemStorage4 = new ItemStorage("name 4", "notes for itemStorage 1", null,
                 null, 10, Location.fridge, UnitOfQuantity.kg, null);
-            ItemStorage item1 = itemStorageRepository.save(itemStorage1);
-            ItemStorage itemStorage2 = new ItemStorage("name 2", "notes for itemStorage 2", null,
+            ItemStorage item4 = itemStorageRepository.saveAndFlush(itemStorage4);
+            ItemStorage itemStorage5 = new ItemStorage("name 5", "notes for itemStorage 2", null,
                 null, 10, Location.fridge, UnitOfQuantity.kg, null);
-            ItemStorage item2 = itemStorageRepository.save(itemStorage2);
-            ItemStorage itemStorage3 = new ItemStorage("name 3", "notes for itemStorage 3", null,
+            ItemStorage item5 = itemStorageRepository.saveAndFlush(itemStorage5);
+            ItemStorage itemStorage6 = new ItemStorage("name 6", "notes for itemStorage 3", null,
                 null, 10, Location.fridge, UnitOfQuantity.kg, null);
-            ItemStorage item3 = itemStorageRepository.save(itemStorage3);
+            ItemStorage item6 = itemStorageRepository.saveAndFlush(itemStorage6);
 
-            savedBill.setGroceries(new HashSet<ItemStorage>(){{
-                add(item1);
-                add(item2);
-                add(item3);
+            savedBill2.setGroceries(new HashSet<ItemStorage>(){{
+                add(item4);
+                add(item5);
+                add(item6);
             }});
-            savedBill = billRepository.save(savedBill);
+            savedBill2 = billRepository.saveAndFlush(savedBill2);
+            savedRegister = registerRepository.saveAndFlush(savedRegister);
 
             //user
-            ApplicationUser maleUser = new ApplicationUser("luke@email.com", "password");
-            ApplicationUser user1 = userRepository.save(maleUser);
-            ApplicationUser femaleUser = new ApplicationUser("anne@email.com", "password");
-            ApplicationUser user2 = userRepository.save(femaleUser);
+            ApplicationUser maleUser = new ApplicationUser("tom@email.com", "password");
+            ApplicationUser user3 = userRepository.saveAndFlush(maleUser);
+            ApplicationUser femaleUser = new ApplicationUser("louise@email.com", "password");
+            ApplicationUser user4 = userRepository.saveAndFlush(femaleUser);
 
-            savedBill.setNames(new HashSet<ApplicationUser>() {{
-                add(user1);
-                add(user2);
-            }});
-            savedBill.setNotPaidNames(new HashSet<ApplicationUser>() {{
-                add(user1);
-                add(user2);
+            savedBill2.setNames(new HashSet<ApplicationUser>() {{
+                add(user3);
+                add(user4);
             }});
 
-           savedBill = billRepository.save(savedBill);
+            savedBill2 = billRepository.saveAndFlush(savedBill2);
+            savedRegister = registerRepository.saveAndFlush(savedRegister);
 
-            Bill finalSavedBill = savedBill;
-            savedRegister.setBills(new HashSet<Bill>() {{
-                add(finalSavedBill);
+            savedBill2.setNotPaidNames(new HashSet<ApplicationUser>() {{
+                add(user3);
+                add(user4);
             }});
 
-            registerRepository.save(savedRegister);
+           savedBill2 = billRepository.saveAndFlush(savedBill2);
+           savedRegister = registerRepository.saveAndFlush(savedRegister);
 
+
+            Bill finalSavedBill2 = savedBill2;
+            Bill finalSavedBill3 = savedBill3;
+            HashSet<Bill> billsetjuhu = new HashSet<Bill>();
+            billsetjuhu.add(finalSavedBill2);
+            billsetjuhu.add(finalSavedBill3);
+            savedRegister.setBills(billsetjuhu);
+
+           registerRepository.saveAndFlush(savedRegister);
 
         }
     }

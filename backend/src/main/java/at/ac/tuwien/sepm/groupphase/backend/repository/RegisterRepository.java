@@ -13,7 +13,7 @@ public interface RegisterRepository extends JpaRepository<Register, Long> {
      *
      * @return the requested register
      */
-    Optional<Register> findById(Long id);
+    Optional<Register> findRegisterById(Long id);
 
     Register save(Register register);
 }

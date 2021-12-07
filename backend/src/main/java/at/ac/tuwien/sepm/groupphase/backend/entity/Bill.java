@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 import javax.persistence.*;
 import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -16,19 +17,19 @@ public class Bill {
     @Column(name = "register_id")
     private Long registerId;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "item_id")
     private Set<ItemStorage> groceries;
 
     @Column(name = "notes")
     private String notes;
 
-    @OneToMany
-    @JoinColumn(name = "applicationUser_id")
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
     private Set<ApplicationUser> names;
 
-    @OneToMany
-    @JoinColumn(name = "applicationUser_id")
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "notPaid_id")
     private Set<ApplicationUser> notPaidNames;
 
     @Column(name = "sum")
@@ -128,6 +129,42 @@ public class Bill {
 
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    @Override
+    public String toString() {
+        return "Bill{" +
+            "id=" + id +
+            ", registerId=" + registerId +
+            ", groceries=" + groceries +
+            ", notes='" + notes + '\'' +
+            ", names=" + names +
+            ", notPaidNames=" + notPaidNames +
+            ", sum=" + sum +
+            ", sumPerPerson=" + sumPerPerson +
+            ", date=" + date +
+            '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Bill bill = (Bill) o;
+        return Double.compare(bill.sum, sum) == 0
+            && Double.compare(bill.sumPerPerson, sumPerPerson) == 0
+            && Objects.equals(id, bill.id)
+            && Objects.equals(registerId, bill.registerId)
+            && Objects.equals(groceries, bill.groceries)
+            && Objects.equals(notes, bill.notes)
+            && Objects.equals(names, bill.names)
+            && Objects.equals(notPaidNames, bill.notPaidNames)
+            && Objects.equals(date, bill.date);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, registerId, groceries, notes, names, notPaidNames, sum, sumPerPerson, date);
     }
 
     public static final class BillBuilder {

@@ -3,11 +3,14 @@ import {User} from './user';
 
 export interface Bill {
   id: number;
-  groceries: string[];
+  registerId: number;
+  groceries: Set<Item>;
   notes: string;
-  names: User[];
-  notPaidNames: User[];
+  names: Set<User>;
+  notPaidNames: Set<User>;
   sum: number;
   sumPerPerson: number;
   date: Date;
+  nameList: string;
+  notPaidNameList: string;
 }

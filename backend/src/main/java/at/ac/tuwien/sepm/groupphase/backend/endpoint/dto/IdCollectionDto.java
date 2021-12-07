@@ -51,11 +51,11 @@ public class IdCollectionDto {
 
     @Override
     public String toString() {
-        return "SimpleMessageDto{"
-            + "id=" + id
-            + ", billId=" + firstAdditionalId
-            + ", userId=" + secondAdditionalId
-            + '}';
+        return "IdCollectionDto{" +
+            "id=" + id +
+            ", firstAdditionalId=" + firstAdditionalId +
+            ", secondAdditionalId=" + secondAdditionalId +
+            '}';
     }
 
     public static final class IdCollectionDtoBuilder {
