@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.*;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.ShoppingListService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +50,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         }
 
         try {
-            storage = storageRepository.getById(storageId);
+            //storage = storageRepository.getById(storageId);
             //System.out.println("STORAGE: "+storage); // TODO delete line
         } catch (EntityNotFoundException e) { // TODO catch other error
             throw new NotFoundException("Could not find storage with id "+storageId, e);

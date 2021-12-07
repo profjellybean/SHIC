@@ -54,6 +54,7 @@ public class ItemStorage {
         this.storageId = storageId;
     }
 
+
     public Long getStorageId() {
         return storageId;
     }
