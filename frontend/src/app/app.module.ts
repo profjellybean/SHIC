@@ -24,6 +24,7 @@ import { RecipeDetailComponent } from './components/recipe-detail/recipe-detail.
     FooterComponent,
     HomeComponent,
     LoginComponent,
+    RegisterUserComponent,
     MessageComponent,
     StorageComponent,
     RecipeComponent,
