@@ -1,13 +1,13 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 
-
 import javax.persistence.*;
 
 
 @Entity
 @Table(name = "Item")
 public class Item {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -38,6 +38,14 @@ public class Item {
 
     public Long getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Long getQuantity() {

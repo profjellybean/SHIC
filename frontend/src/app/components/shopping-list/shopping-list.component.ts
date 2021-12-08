@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ShoppingListService} from '../../services/shoppinglist.service';
 
+import {MessageService} from '../../services/message.service';
 
 @Component({
   selector: 'app-shopping-list',
@@ -9,7 +10,10 @@ import {ShoppingListService} from '../../services/shoppinglist.service';
 })
 export class ShoppingListComponent implements OnInit {
 
-  constructor(private shoppingListService: ShoppingListService) { }
+  constructor(private shoppingListService: ShoppingListService,private messageService: MessageService) { }
+  error = false;
+  errorMessage = '';
+
 
   ngOnInit(): void {
   }
@@ -25,4 +29,21 @@ export class ShoppingListComponent implements OnInit {
       }
     );
   }
+  /**
+   * Error flag will be deactivated, which clears the error message
+   */
+  vanishError() {
+    this.error = false;
+  }
+
+  private defaultServiceErrorHandling(error: any) {
+    console.log(error);
+    this.error = true;
+    if (typeof error.error === 'object') {
+      this.errorMessage = error.error.error;
+    } else {
+      this.errorMessage = error.error;
+    }
+  }
+
 }

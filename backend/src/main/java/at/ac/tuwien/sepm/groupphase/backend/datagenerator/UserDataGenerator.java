@@ -21,7 +21,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-@Profile("generateData")
+//@Profile("generateData")
 @Component
 public class UserDataGenerator {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -39,7 +39,7 @@ public class UserDataGenerator {
     }
 
     @PostConstruct
-    private void generateUser() {
+    void generateUser() {
 
         UserLoginDto user = new UserLoginDto("user@email.com", "password");
         UserLoginDto admin = new UserLoginDto("admin@email.com", "password");

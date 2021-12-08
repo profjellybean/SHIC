@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface ShoppingListRepository extends JpaRepository<ShoppingList, Long> {
 
 
+
 }

@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -17,8 +16,9 @@ public class ShoppingList {
     @Column(length = 10000)
     private String notes;
 
-    @OneToMany()
-    private Set<Item> items;
+
+    @OneToMany
+    private Set<ItemStorage> items;
 
     /**
      * if this owner is null, the ShoppingList is public (= for all Users in the Group)
@@ -51,14 +51,11 @@ public class ShoppingList {
         this.notes = notes;
     }
 
-    public Set<Item> getItems() {
+    public Set<ItemStorage> getItems() {
         return items;
     }
 
-    public void setItems(Set<Item> items) {
-        if(items == null){
-            this.items = new HashSet();
-        }
+    public void setItems(Set<ItemStorage> items) {
         this.items = items;
     }
 
@@ -99,7 +96,7 @@ public class ShoppingList {
         private Long id;
         private String name;
         private String notes;
-        private Set<Item> items;
+        private Set<ItemStorage> items;
         private ApplicationUser owner;
 
         private ShoppingListBuilder() {}
@@ -120,7 +117,7 @@ public class ShoppingList {
             return this;
         }
 
-        public ShoppingListBuilder withItems(Set<Item> items) {
+        public ShoppingListBuilder withItems(Set<ItemStorage> items) {
             this.items = items;
             return this;
         }

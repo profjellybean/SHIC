@@ -21,6 +21,9 @@ public class ApplicationUser {
     @Column(nullable = false, name = "PASSWORD")
     private String password;
 
+    @OneToOne
+    private Group currGroup;
+
     @Column(nullable = false, name = "PRIVLIST")
     private Long privList;
 
@@ -61,6 +64,27 @@ public class ApplicationUser {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Group getCurrGroup() {
+        return currGroup;
+    }
+
+    public void setCurrGroup(Group currGroup) {
+        this.currGroup = currGroup;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ApplicationUser that = (ApplicationUser) o;
+        return Objects.equals(id, that.id) && Objects.equals(username, that.username) && Objects.equals(password, that.password);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, password);
     }
 
 }

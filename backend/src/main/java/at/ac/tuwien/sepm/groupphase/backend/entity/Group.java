@@ -4,20 +4,21 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
+@Table(name="APPLICATION_GROUP")
 public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+/*
     @OneToMany
     @Column
     private Set<ApplicationUser> user;
-
+*/
     @Column
     private Long groupId;
 
     public Group(Set<ApplicationUser> user, Long groupId) {
-        this.user = user;
+        //this.user = user;
         this.groupId = groupId;
     }
 
@@ -31,14 +32,6 @@ public class Group {
 
     public void setGroupId(Long groupId) {
         this.groupId = groupId;
-    }
-
-    public Set<ApplicationUser> getUser() {
-        return user;
-    }
-
-    public void setUser(Set<ApplicationUser> user) {
-        this.user = user;
     }
 
     public Long getId() {
