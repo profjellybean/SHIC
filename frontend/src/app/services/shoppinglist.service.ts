@@ -14,7 +14,7 @@ import {ItemStorage} from '../dtos/itemStorage';
 
 export class ShoppingListService {
 
-  private shoppinglistBaseUri: string = this.globals.backendUri + 'shoppinglist';
+  private shoppinglistBaseUri: string = this.globals.backendUri + '/shoppinglist';
 
   constructor(private httpClient: HttpClient,
               private globals: Globals
