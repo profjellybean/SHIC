@@ -46,7 +46,7 @@ export class RegisterComponent implements OnInit {
   };
 
   user: User = {
-    id: 1,
+    id: 3,
     username: 'tom@email.com',
     password: 'password'
   };
@@ -56,9 +56,7 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {
     //const id = +this.route.snapshot.paramMap.get('id');
     this.loadRegister(1);
-    console.log('names ' + this.bill.nameList);
-    console.log('notPaid ' + this.bill.notPaidNameList);
-    console.log('names array ' + this.names);
+    console.log('after'+this.billArray);
   }
 
   public confirmPayment(id: number) {
@@ -126,9 +124,10 @@ export class RegisterComponent implements OnInit {
           }
           this.billArray[this.counter] = bill;
           this.counter++;
+          console.log('names ' + bill.nameList);
+          console.log('notPaid ' + bill.notPaidNameList);
+          console.log(this.billArray);
         }
-        console.log('names ' + this.bill.nameList);
-        console.log('notPaid ' + this.bill.notPaidNameList);
       }, error: err => {
         this.defaultServiceErrorHandling(err);
       }
