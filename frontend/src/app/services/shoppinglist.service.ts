@@ -3,10 +3,6 @@ import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {Injectable} from '@angular/core';
-import { Injectable } from '@angular/core';
-import {Globals} from '../global/globals';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
 import {ItemStorage} from '../dtos/itemStorage';
 
 @Injectable({
@@ -16,7 +12,7 @@ import {ItemStorage} from '../dtos/itemStorage';
 
 
 
-export class ShoppinglistService {
+export class ShoppingListService {
 
   private shoppinglistBaseUri: string = this.globals.backendUri + 'shoppinglist';
 

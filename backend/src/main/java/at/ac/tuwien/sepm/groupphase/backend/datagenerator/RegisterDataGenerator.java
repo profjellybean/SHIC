@@ -2,10 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.*;
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
-import at.ac.tuwien.sepm.groupphase.backend.repository.BillRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.RegisterRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -14,10 +11,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Profile("generateData")
 @Component
@@ -41,13 +35,15 @@ public class RegisterDataGenerator {
     private final UserRepository userRepository;
     private final BillRepository billRepository;
     private final RegisterRepository registerRepository;
+    private final ShoppingListRepository shoppingListRepository;
 
     public RegisterDataGenerator(ItemStorageRepository itemStorageRepository, UserRepository userRepository,
-                                 BillRepository billRepository, RegisterRepository registerRepository) {
+                                 BillRepository billRepository, RegisterRepository registerRepository, ShoppingListRepository shoppingListRepository) {
         this.itemStorageRepository = itemStorageRepository;
         this.userRepository = userRepository;
         this.billRepository = billRepository;
         this.registerRepository = registerRepository;
+        this.shoppingListRepository = shoppingListRepository;
     }
 
     @PostConstruct
@@ -113,10 +109,15 @@ public class RegisterDataGenerator {
             savedBill2 = billRepository.saveAndFlush(savedBill2);
             savedRegister = registerRepository.saveAndFlush(savedRegister);
 
+
+            Long shoppingListIdOfTom = shoppingListRepository.saveAndFlush(   ShoppingList.ShoppingListBuilder.aShoppingList().withName("Your private shopping list").build() ).getId();
+            Long shoppingListIdOfLouise = shoppingListRepository.saveAndFlush(   ShoppingList.ShoppingListBuilder.aShoppingList().withName("Your private shopping list").build() ).getId();
+
+
             //user
-            ApplicationUser maleUser = new ApplicationUser("tom@email.com", "password");
+            ApplicationUser maleUser = new ApplicationUser("tom@email.com", "password",shoppingListIdOfTom);
             ApplicationUser user3 = userRepository.saveAndFlush(maleUser);
-            ApplicationUser femaleUser = new ApplicationUser("louise@email.com", "password");
+            ApplicationUser femaleUser = new ApplicationUser("louise@email.com", "password",shoppingListIdOfLouise);
             ApplicationUser user4 = userRepository.saveAndFlush(femaleUser);
 
             savedBill2.setNames(new HashSet<ApplicationUser>() {{

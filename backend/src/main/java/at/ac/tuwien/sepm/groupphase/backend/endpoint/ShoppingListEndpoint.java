@@ -89,10 +89,10 @@ public class ShoppingListEndpoint {
 
 
     }
-
+/*
     @PostMapping
     @PermitAll
-    @Operation(summary = "Insert a new item into the storage") //TODO: add security
+    @Operation(summary = "Insert a new item into the storage") //TODO: add security /// TEMPLATE
     public ItemStorageDto saveItem(@Valid @RequestBody ItemStorageDto itemStorageDto) {
         LOGGER.info("POST /storagy body: ", itemStorageDto.toString());
         return itemStorageMapper.itemStorageToItemStorageDto(shoppingListService.saveItem(itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto), itemStorageDto.getShoppingListId()));
@@ -106,6 +106,7 @@ public class ShoppingListEndpoint {
         return itemStorageMapper.itemsStorageToItemsStorageDto(shoppingListService.findAllByStorageId(id));
     }
 
+*/
     @PermitAll //TODO: add security
     //@Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.OK)
@@ -126,7 +127,7 @@ public class ShoppingListEndpoint {
         try {
 
 
-            Long id = userService.getPrivateShoppingListIdByUsername(authentication.getName());
+            Long id = userService.getPrivateShoppingListIdByUsername( authentication.getName() );
 
             return shoppingListMapper.shoppingListToShoppingListDto(shoppingListService.getShoppingListByid(id));
 

@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name="APPLICATION_USER",uniqueConstraints={@UniqueConstraint(columnNames={"USERNAME"})})
@@ -24,7 +25,7 @@ public class ApplicationUser {
     @OneToOne
     private Group currGroup;
 
-    @Column(nullable = false, name = "PRIVLIST")
+    @Column(nullable = false, name = "PRIVLIST") // TODO Loading
     private Long privList;
 
     public ApplicationUser() {

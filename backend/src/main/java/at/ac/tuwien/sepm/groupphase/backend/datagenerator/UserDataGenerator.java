@@ -49,7 +49,8 @@ public class UserDataGenerator {
         Set<Item> items= new HashSet<>();
         items.add(itemRepository.getById(itemId));
 
-        Long shoppingListId = shoppingListRepository.saveAndFlush(   ShoppingList.ShoppingListBuilder.aShoppingList().withName("Your private shopping list").withItems(items).build()  ).getId();
+       // Long shoppingListId = shoppingListRepository.saveAndFlush(   ShoppingList.ShoppingListBuilder.aShoppingList().withName("Your private shopping list").withItems(items).build()  ).getId();
+        Long shoppingListId = shoppingListRepository.saveAndFlush(   ShoppingList.ShoppingListBuilder.aShoppingList().withName("Your private shopping list").build() ).getId();
         Optional<ApplicationUser> applicationUser = userRepository.findUserByUsername(user.getUsername());
         if (applicationUser.isEmpty()) {
             userRepository.save(userMapper.dtoToEntity(user, shoppingListId));
