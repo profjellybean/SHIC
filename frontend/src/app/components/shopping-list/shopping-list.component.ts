@@ -10,10 +10,11 @@ import {MessageService} from '../../services/message.service';
 })
 export class ShoppingListComponent implements OnInit {
 
-  constructor(private shoppingListService: ShoppingListService,private messageService: MessageService) { }
+
+
   error = false;
   errorMessage = '';
-
+  constructor(private shoppingListService: ShoppingListService,private messageService: MessageService) { }
 
   ngOnInit(): void {
   }
