@@ -42,9 +42,7 @@ public class StorageServiceImpl implements StorageService {
     @Override
     public ItemStorage saveItem(ItemStorage itemStorage){
         LOGGER.debug("Save item");
-        System.out.println(itemStorage.toString());
-        itemStorageRepository.save(itemStorage);
-        return itemStorage;
+        return itemStorageRepository.saveAndFlush(itemStorage);
     }
 
     @Override
