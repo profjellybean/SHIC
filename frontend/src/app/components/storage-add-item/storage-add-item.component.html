@@ -41,13 +41,37 @@
         <div class="form-group">
           <label for="inputAmount">Amount</label>
           <input type="number" name="amount" class="form-control" id="inputAmount" required
-                 aria-describedby="titleHelp" placeholder="Enter amount" [(ngModel)]="item.amount">
+                 aria-describedby="amountHelp" placeholder="Enter Amount" [(ngModel)]="item.amount">
           <div *ngIf="submitted && itemForm.controls.title.errors" class="error">
             <small class="form-text text-warning" *ngIf="itemForm.controls.title.errors.required">Amount
               is
               required!
             </small>
           </div>
+        </div>
+
+        <div class="form-group">
+          <label for="inputNotes">Notes</label>
+          <textarea rows="3" name="notes" class="form-control" id="inputNotes" required
+                    aria-describedby="notesHelp" placeholder="Enter Notes" [(ngModel)]="item.notes"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="inputLocation">Location</label>
+          <input type="text" name="location" class="form-control" id="inputLocation" required
+                 aria-describedby="locationHelp" placeholder="Enter Location" [(ngModel)]="item.locationTag">
+        </div>
+
+        <div class="form-group">
+          <label for="inputExpDate">Expiration Date</label>
+          <input type="date" name="expDate" class="form-control" id="inputExpDate" required
+                 aria-describedby="expDateHelp" placeholder="Enter expDate" [(ngModel)]="item.expDate">
+        </div>
+
+        <div class="form-group">
+          <label for="inputUnitOfQuantity">Unit of Quantity</label>
+          <input type="number" name="quantity" class="form-control" id="inputUnitOfQuantity" required
+                 aria-describedby="quantityHelp" placeholder="Enter Unit of Quantity" [(ngModel)]="item.quantity">
         </div>
 
         <button type="button" (click)="addItemForm(itemForm)" id="add-msg" class="btn btn-success float-right">Add item</button>
@@ -62,4 +86,3 @@
   <button type="button" (click)="addItem(testItem)" class="btn btn-success float-right">Add testItem</button>
 
 </div>
-

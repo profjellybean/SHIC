@@ -52,7 +52,6 @@ export class StorageAddItemComponent implements OnInit {
         console.log('added Item', data);
       },
       error: error => {
-        console.error('Error adding Horse', error.message);
         this.defaultServiceErrorHandling(error);
       }
     });
