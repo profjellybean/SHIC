@@ -8,4 +8,5 @@ export interface Item {
   amount: number;
   locationTag: string;
   storageId: number;
+  shoppingListId: number;
 }

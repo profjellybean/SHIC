@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
-import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
+import at.ac.tuwien.sepm.groupphase.backend.entity.*;
 
 import java.util.List;
 
@@ -33,7 +32,7 @@ public interface ShoppingListService {
      *
      * @return returns list of storage items
      */
-    List<ItemStorage> findAllByStorageId(Long storageId);
+    List<ItemStorage> findAllByShoppingListId(Long storageId);
 
     /**
      * checks if shoppinglist exists
@@ -48,5 +47,12 @@ public interface ShoppingListService {
      * @return returns id of the shopping list
      */
     Long createNewShoppingList();
+
+    /**
+     * Find all item entries:
+     *
+     * @return ordered list of all item entries
+     */
+    List<Item>findAllItems();
 
 }

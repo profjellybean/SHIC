@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {MessageService} from '../../services/message.service';
+import {ShoppingListService} from '../../services/shopping-list.service';
+import {Item} from '../../dtos/item';
 
 @Component({
   selector: 'app-shopping-list',
@@ -11,9 +13,14 @@ export class ShoppingListComponent implements OnInit {
   error = false;
   errorMessage = '';
 
-  constructor(private messageService: MessageService) { }
+  itemsAdd: Item[] = null;
+  itemToAdd: Item = null;
+
+  constructor(private messageService: MessageService,
+              private shoppingListService: ShoppingListService) { }
 
   ngOnInit(): void {
+    this.loadItemsToAdd();
   }
 
   /**
@@ -21,6 +28,23 @@ export class ShoppingListComponent implements OnInit {
    */
   vanishError() {
     this.error = false;
+  }
+
+  loadItemsToAdd() {
+    this.shoppingListService.findAllItems().subscribe({
+      next: data => {
+        console.log('received items', data);
+        this.itemsAdd = data;
+      }
+    });
+  }
+
+  addItemToShoppingList() {
+    console.log('item to add', this.itemToAdd);
+    this.itemToAdd.shoppingListId = 1;
+    this.itemToAdd.id = null;
+    console.log('item to add', this.itemToAdd);
+    this.shoppingListService.addItemToShoppingList(this.itemToAdd);
   }
 
   private defaultServiceErrorHandling(error: any) {

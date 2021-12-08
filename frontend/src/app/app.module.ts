@@ -18,6 +18,8 @@ import { StorageComponent } from './components/storage/storage.component';
 import {RegisterUserComponent} from './components/registerUser/registerUser.component';
 import { RecipeDetailComponent } from './components/recipe-detail/recipe-detail.component';
 import { RecipeListComponent } from './components/recipe-list/recipe-list.component';
+import { ShoppingListAddComponent } from './components/shopping-list-add/shopping-list-add.component';
+import { ShoppingListListComponent } from './components/shopping-list-list/shopping-list-list.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +35,8 @@ import { RecipeListComponent } from './components/recipe-list/recipe-list.compon
     ShoppingListComponent,
     RecipeDetailComponent,
     RecipeListComponent,
+    ShoppingListAddComponent,
+    ShoppingListListComponent,
   ],
   imports: [
     BrowserModule,

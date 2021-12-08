@@ -1,42 +1,33 @@
-package at.ac.tuwien.sepm.groupphase.backend.entity;
+package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
-import javax.persistence.*;
+import java.util.Arrays;
 
-
-@Entity
-@Table(name = "Item")
-public class Item {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class ItemDto {
     private Long id;
 
-    @Column(name = "Name")
     private String name;
 
-    @Column(name = "Quantity")
     private Long quantity;
 
-    public Item(Long id) {
+    public ItemDto(Long id) {
         this.id = id;
     }
 
-    public Item() {
+    public ItemDto() {
 
     }
-
-    public Item(Long id, String name, Long quantity) {
+    public ItemDto(Long id, String name, Long quantity) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -55,4 +46,12 @@ public class Item {
         this.quantity = quantity;
     }
 
+    @Override
+    public String toString() {
+        return "ItemDto{" +
+            ", id=" + id +
+            ", name='" + name + '\'' +
+            ", quantity=" + quantity +
+            '}';
+    }
 }
