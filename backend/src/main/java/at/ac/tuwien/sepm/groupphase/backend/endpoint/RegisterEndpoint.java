@@ -36,8 +36,7 @@ public class RegisterEndpoint {
     @Operation(summary = "Get detailed information about a specific register", security = @SecurityRequirement(name = "apiKey"))
     public RegisterDto findById(@PathVariable Long id) {
         LOGGER.info("GET /api/v1/register/{}", id);
-        RegisterDto registerDto = registerMapper.registerToRegisterDto(registerService.findOne(id));
-        return registerDto;
+        return registerMapper.registerToRegisterDto(registerService.findOne(id));
     }
 
     //@Secured("ROLE_USER")

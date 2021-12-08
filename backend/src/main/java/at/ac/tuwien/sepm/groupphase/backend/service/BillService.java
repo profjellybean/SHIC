@@ -10,5 +10,4 @@ public interface BillService {
 
     List<Bill> findAll();
 
-    Bill deleteNames(Long billId, Long userId);
 }

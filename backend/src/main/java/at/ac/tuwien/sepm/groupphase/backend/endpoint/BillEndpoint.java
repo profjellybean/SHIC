@@ -35,7 +35,6 @@ public class BillEndpoint {
     }
 
     //@Secured("ROLE_USER")
-    @Transactional
     @PermitAll
     @GetMapping
     @Operation(summary = "Get list of bills", security = @SecurityRequirement(name = "apiKey"))
@@ -50,20 +49,7 @@ public class BillEndpoint {
     @Operation(summary = "Publish a new message", security = @SecurityRequirement(name = "apiKey"))
     public BillDto findById(@PathVariable Long id) {
         LOGGER.info("POST /api/v1/bill {}", id);
-        BillDto billDto = billMapper.billToBillDto(billService.findOne(id));
-        return billDto;
-    }
-
-    //@Secured("ROLE_USER")
-    @PermitAll
-    @PatchMapping
-    @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Publish a new message", security = @SecurityRequirement(name = "apiKey"))
-    public BillDto deleteName(IdCollectionDto idCollectionDto) {
-        LOGGER.info("PUT /api/v1/bill {}", idCollectionDto);
-        BillDto billDto = billMapper.billToBillDto(billService.deleteNames(idCollectionDto.getFirstAdditionalId(),
-            idCollectionDto.getSecondAdditionalId()));
-        return billDto;
+        return billMapper.billToBillDto(billService.findOne(id));
     }
 
 }

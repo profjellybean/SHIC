@@ -1,10 +1,11 @@
 import {Item} from './item';
 import {User} from './user';
+import {ItemStorage} from './itemStorage';
 
 export interface Bill {
   id: number;
   registerId: number;
-  groceries: Set<Item>;
+  groceries: Set<ItemStorage>;
   notes: string;
   names: Set<User>;
   notPaidNames: Set<User>;
