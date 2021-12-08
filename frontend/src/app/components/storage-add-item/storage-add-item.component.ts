@@ -3,6 +3,7 @@ import {MessageService} from '../../services/message.service';
 import {ItemService} from '../../services/item.service';
 import {Item} from '../../dtos/item';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {StorageService} from '../../services/storage.service';
 
 @Component({
   selector: 'app-storage-add-item',
@@ -17,9 +18,11 @@ export class StorageAddItemComponent implements OnInit {
 
   items: Item[] = null;
   item: Item = new Item();
+  testItem: Item = new Item();
 
   constructor( private messageService: MessageService,
                private itemService: ItemService,
+               private storageService: StorageService,
                private modalService: NgbModal) { }
 
   ngOnInit(): void {
@@ -40,11 +43,27 @@ export class StorageAddItemComponent implements OnInit {
     });
   }
 
-  addItem(form) {
+  addItem(item: Item) {
+    this.setItemTestData();
+    item = this.testItem;
+    console.log('adding Test items', item); // TODO remove/ edit
+    this.storageService.addItem(item).subscribe({
+      next: data => {
+        console.log('added Item', data);
+      },
+      error: error => {
+        console.error('Error adding Horse', error.message);
+        this.defaultServiceErrorHandling(error);
+      }
+    });
+  }
+
+  addItemForm(form) {
     this.submitted = true;
 
     if(form.valid) {
-      this.itemService.addItem(this.item);
+      //this.storageService.addItem(this.item);
+      this.addItem(this.testItem);
       this.clearForm();
     }
   }
@@ -74,5 +93,16 @@ export class StorageAddItemComponent implements OnInit {
   private clearForm() {
     this.item = new Item();
     this.submitted = false;
+  }
+
+  private setItemTestData() {
+    this.testItem.name = 'testName';
+    this.testItem.notes = 'testNotes';
+    this.testItem.storageId = 1;
+    this.testItem.amount = 10;
+    this.testItem.quantity = 1;
+    // this.testItem.locationTag = 1;
+    // this.testItem.expDate = null;
+    // this.testItem.image = null;
   }
 }

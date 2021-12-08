@@ -31,4 +31,9 @@ export class StorageService {
     console.log('Create item');
     return this.httpClient.post<Item>(this.storageBaseUri, item);
   }
+
+  addItem(item: Item): Observable<Item> {
+    console.log('Service: add item: ' + item);
+    return this.httpClient.post<Item>(this.storageBaseUri, item);
+  }
 }

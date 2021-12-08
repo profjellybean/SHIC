@@ -36,7 +36,7 @@
       </button>
     </div>
     <div class="modal-body">
-      <form (ngSubmit)="addItem(itemForm)" #itemForm="ngForm">
+      <form (ngSubmit)="addItemForm(itemForm)" #itemForm="ngForm">
 
         <div class="form-group">
           <label for="inputAmount">Amount</label>
@@ -50,7 +50,7 @@
           </div>
         </div>
 
-        <button type="button" (click)="addItem(itemForm)" id="add-msg" class="btn btn-success float-right">Add item</button>
+        <button type="button" (click)="addItemForm(itemForm)" id="add-msg" class="btn btn-success float-right">Add item</button>
 
       </form>
     </div>
@@ -58,5 +58,8 @@
       <button type="button" class="btn btn-secondary" id="close-modal-btn" (click)="modal.dismiss('close')">Close</button>
     </div>
   </ng-template>
+
+  <button type="button" (click)="addItem(testItem)" class="btn btn-success float-right">Add testItem</button>
+
 </div>
 
