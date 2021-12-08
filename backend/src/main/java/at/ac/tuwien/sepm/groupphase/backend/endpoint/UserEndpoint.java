@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoggedInDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.exception.PasswordTooShortException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.UsernameTakenException;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
@@ -27,7 +29,6 @@ public class UserEndpoint {
 
     @Autowired
     public UserEndpoint(UserService userService){
-
         this.userService = userService;
     }
 
@@ -50,7 +51,7 @@ public class UserEndpoint {
     }
 
     @PermitAll                   //TODO just for Tests
-    @PutMapping
+    @PatchMapping
     public void test(@RequestBody UserLoginDto userLoginDto){
 
             LOGGER.info("Endpoint: Test /user");

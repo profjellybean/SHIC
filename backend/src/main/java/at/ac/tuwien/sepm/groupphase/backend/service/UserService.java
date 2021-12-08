@@ -32,7 +32,12 @@ public interface UserService extends UserDetailsService {
 
     ApplicationUser findApplicationUserByUsername(String username);
 
-
+    /**
+     *
+     * @param username username of User of required private shopping list
+     * @return private shopping list
+     */
+    Long getPrivateShoppingListIdByUsername(String username);
 
     /**
      * Find an application user based on the username.
