@@ -30,7 +30,7 @@ export class RecipeComponent implements OnInit {
         this.recipes = data;
       },
       error: error => {
-        console.error(error.message);
+        this.defaultServiceErrorHandling(error);
       }
     });
   }

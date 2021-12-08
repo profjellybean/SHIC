@@ -22,4 +22,10 @@ export class ItemService {
     return this.httpClient.get<Item[]>(this.recipeBaseUri);
   }
 
+  addItem(item: Item): Observable<Item> {
+    console.log('add item: ' + item);
+    return this.httpClient.post<Item>(this.recipeBaseUri, item);
+
+  }
+
 }

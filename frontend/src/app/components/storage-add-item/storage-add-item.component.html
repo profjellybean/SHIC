@@ -19,7 +19,44 @@
     <td>{{item.id}}</td>
     <td>{{item.name}}</td>
     <td>{{item.quantity}}</td>
+    <td> <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(itemAddModal)">Add</button> </td>
   </tr>
   </tbody>
 </table>
+
+<div class="row p-2 mb-4">
+  <!--
+  <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(itemAddModal)">Add</button>
+-->
+  <ng-template #itemAddModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Item</h5>
+      <button type="button" class="close" (click)="modal.dismiss('X')" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form (ngSubmit)="addItem(itemForm)" #itemForm="ngForm">
+
+        <div class="form-group">
+          <label for="inputAmount">Amount</label>
+          <input type="number" name="amount" class="form-control" id="inputAmount" required
+                 aria-describedby="titleHelp" placeholder="Enter amount" [(ngModel)]="item.amount">
+          <div *ngIf="submitted && itemForm.controls.title.errors" class="error">
+            <small class="form-text text-warning" *ngIf="itemForm.controls.title.errors.required">Amount
+              is
+              required!
+            </small>
+          </div>
+        </div>
+
+        <button type="button" (click)="addItem(itemForm)" id="add-msg" class="btn btn-success float-right">Add item</button>
+
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" id="close-modal-btn" (click)="modal.dismiss('close')">Close</button>
+    </div>
+  </ng-template>
+</div>
 

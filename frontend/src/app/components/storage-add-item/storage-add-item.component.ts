@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, TemplateRef} from '@angular/core';
 import {MessageService} from '../../services/message.service';
 import {ItemService} from '../../services/item.service';
 import {Item} from '../../dtos/item';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-storage-add-item',
@@ -12,14 +13,17 @@ export class StorageAddItemComponent implements OnInit {
 
   error = false;
   errorMessage = '';
+  submitted = false;
 
   items: Item[] = null;
-  item: Item = null;
+  item: Item = new Item();
 
   constructor( private messageService: MessageService,
-               private itemService: ItemService) { }
+               private itemService: ItemService,
+               private modalService: NgbModal) { }
 
   ngOnInit(): void {
+    // TODO replace with search
     this.loadAllItems();
   }
 
@@ -31,9 +35,23 @@ export class StorageAddItemComponent implements OnInit {
         this.items = data;
       },
       error: error => {
-        console.error(error.message);
+        this.defaultServiceErrorHandling(error);
       }
     });
+  }
+
+  addItem(form) {
+    this.submitted = true;
+
+    if(form.valid) {
+      this.itemService.addItem(this.item);
+      this.clearForm();
+    }
+  }
+
+  openAddModal(itemAddModal: TemplateRef<any>) {
+    this.item = new Item();
+    this.modalService.open(itemAddModal, {ariaLabelledBy: 'modal-basic-title'});
   }
 
   /**
@@ -51,5 +69,10 @@ export class StorageAddItemComponent implements OnInit {
     } else {
       this.errorMessage = error.error;
     }
+  }
+
+  private clearForm() {
+    this.item = new Item();
+    this.submitted = false;
   }
 }
