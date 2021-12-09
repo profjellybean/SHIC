@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Item;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ItemRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitOfQuantityRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.ItemService;
 import org.slf4j.Logger;
@@ -23,10 +24,13 @@ public class ItemServiceImpl implements ItemService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UnitOfQuantityRepository unitOfQuantityRepository;
+    private final ItemRepository itemRepository;
 
     @Autowired
-    public ItemServiceImpl(UnitOfQuantityRepository unitOfQuantityRepository){
+    public ItemServiceImpl(UnitOfQuantityRepository unitOfQuantityRepository,
+                           ItemRepository itemRepository){
         this.unitOfQuantityRepository=unitOfQuantityRepository;
+        this.itemRepository = itemRepository;
     }
 
     @Override
@@ -41,6 +45,12 @@ public class ItemServiceImpl implements ItemService {
     public List<UnitOfQuantity> getAll() {
         LOGGER.debug("Getting all units of quantity");
         return unitOfQuantityRepository.findAll();
+    }
+
+    @Override
+    public List<Item> getAllItems() {
+        LOGGER.debug("Getting all items");
+        return itemRepository.findAll();
     }
 
 

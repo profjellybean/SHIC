@@ -28,6 +28,9 @@ export class RecipeComponent implements OnInit {
       next: data => {
         console.log('received recipes', data);
         this.recipes = data;
+      },
+      error: error => {
+        this.defaultServiceErrorHandling(error);
       }
     });
   }

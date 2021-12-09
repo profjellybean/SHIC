@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UnitOfQuantityDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ItemMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ItemStorageMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UnitOfQuantityMapper;
 import at.ac.tuwien.sepm.groupphase.backend.service.ItemService;
@@ -17,16 +19,19 @@ import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 @RestController
-@RequestMapping(value="/item")
+@RequestMapping(value="/api/v1/item")
 public class ItemEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final ItemService itemService;
     private final UnitOfQuantityMapper unitOfQuantityMapper;
+    private final ItemMapper itemMapper;
 
     @Autowired
-    public ItemEndpoint(ItemService itemService, UnitOfQuantityMapper unitOfQuantityMapper) {
+    public ItemEndpoint(ItemService itemService, UnitOfQuantityMapper unitOfQuantityMapper,
+                        ItemMapper itemMapper) {
         this.itemService = itemService;
         this.unitOfQuantityMapper=unitOfQuantityMapper;
+        this.itemMapper = itemMapper;
     }
 
     @PostMapping(value="/unitOfQuantity")
@@ -37,12 +42,21 @@ public class ItemEndpoint {
         return unitOfQuantityMapper.unitOfQuantityToUnitOfQuantityDto(itemService.addUnitOfQuantity(unitOfQuantityMapper.unitOfQuantityDtoToUnitOfQuantity(unitOfQuantityDto)));
 
     }
+
     @GetMapping(value="/unitOfQuantity")
     @PermitAll
     @Operation(summary = "Get all Units of quantity")
     List<UnitOfQuantityDto> getAll(){
         LOGGER.info("getAllunitOfQuantity, itemEndpoint");
         return unitOfQuantityMapper.unitsOfQuantityToUnitsOfQuantityDto(itemService.getAll());
+    }
+
+    @GetMapping //(value="/item")
+    @PermitAll // TODO add security
+    @Operation(summary = "Get all Items")
+    List<ItemDto> getAllItems(){
+        LOGGER.info("Endpoint: getAllItems()");
+        return itemMapper.itemsToItemDtos(itemService.getAllItems());
     }
 
 

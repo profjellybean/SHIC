@@ -50,7 +50,6 @@ public class MasterDataGenerator {
         storageDataGenerator.generateStorage();
         recipeDataGenerator.generateRecipes();
         shoppingListDataGenerator.generateShoppingList();
-
     }
 
 }
