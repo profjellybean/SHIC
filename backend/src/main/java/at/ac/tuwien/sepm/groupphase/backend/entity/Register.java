@@ -1,7 +1,13 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import javax.persistence.*;
-import java.util.HashSet;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.Objects;
 import java.util.Set;
 
@@ -68,18 +74,27 @@ public class Register {
 
     @Override
     public String toString() {
-        return "Register{" +
-            "id=" + id +
-            ", bills=" + bills +
-            ", monthlyPayments=" + monthlyPayments +
-            ", monthlyBudget=" + monthlyBudget +
+        return "Register{"
+            +
+            "id=" + id
+            +
+            ", bills=" + bills
+            +
+            ", monthlyPayments=" + monthlyPayments
+            +
+            ", monthlyBudget=" + monthlyBudget
+            +
             '}';
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Register register = (Register) o;
         return Double.compare(register.monthlyPayments, monthlyPayments) == 0
             && Double.compare(register.monthlyBudget, monthlyBudget) == 0

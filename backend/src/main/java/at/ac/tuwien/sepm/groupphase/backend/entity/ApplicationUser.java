@@ -1,13 +1,21 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import java.util.Objects;
 
 @Entity
-@Table(name="APPLICATION_USER",uniqueConstraints={@UniqueConstraint(columnNames={"USERNAME"})})
+@Table(name = "APPLICATION_USER", uniqueConstraints = {@UniqueConstraint(columnNames = {"USERNAME"})})
 @NamedQuery(
-    name="findByName",
-    query= "SELECT c FROM ApplicationUser c WHERE c.username = :username"
+    name = "findByName",
+    query = "SELECT c FROM ApplicationUser c WHERE c.username = :username"
 )
 public class ApplicationUser {
 
@@ -38,10 +46,13 @@ public class ApplicationUser {
     }
 
 
+    public Long getPrivList() {
+        return privList;
+    }
 
-    public Long getPrivList() {return privList;}
-
-    public void setPrivList(Long privList) {this.privList = privList;}
+    public void setPrivList(Long privList) {
+        this.privList = privList;
+    }
 
     public Long getId() {
         return id;
@@ -77,8 +88,12 @@ public class ApplicationUser {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         ApplicationUser that = (ApplicationUser) o;
         return Objects.equals(id, that.id) && Objects.equals(username, that.username) && Objects.equals(password, that.password);
     }

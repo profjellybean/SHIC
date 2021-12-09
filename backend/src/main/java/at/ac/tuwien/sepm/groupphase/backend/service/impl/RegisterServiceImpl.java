@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class RegisterServiceImpl implements RegisterService {
@@ -37,7 +36,7 @@ public class RegisterServiceImpl implements RegisterService {
         Optional<Register> registerOptional = registerRepository.findById(registerId);
         Optional<Bill> billOptional = billRepository.findById(billId);
         Optional<ApplicationUser> userOptional = userRepository.findById(userId);
-        if(registerOptional.isPresent() && billOptional.isPresent() && userOptional.isPresent()) {
+        if (registerOptional.isPresent() && billOptional.isPresent() && userOptional.isPresent()) {
             Register register = registerOptional.get();
             Bill bill = billOptional.get();
             ApplicationUser user = userOptional.get();
@@ -47,9 +46,9 @@ public class RegisterServiceImpl implements RegisterService {
             register.getBills().add(bill);
             register = registerRepository.saveAndFlush(register);
             return register;
-        } else if(registerOptional.isEmpty()){
+        } else if (registerOptional.isEmpty()) {
             throw new NotFoundException(String.format("Could not find register with id %s", registerId));
-        } else if(billOptional.isEmpty()) {
+        } else if (billOptional.isEmpty()) {
             throw new NotFoundException(String.format("Could not find bill with id %", billId));
         } else {
             throw new NotFoundException(String.format("Could not find user with id %", userId));

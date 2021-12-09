@@ -1,9 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
 public class UserLoggedInDto {
@@ -23,9 +19,13 @@ public class UserLoggedInDto {
         this.privList = shoppingListId;
     }
 
-    public Long getPrivList() {return privList;}
+    public Long getPrivList() {
+        return privList;
+    }
 
-    public void setPrivList(Long privList) {this.privList = privList;}
+    public void setPrivList(Long privList) {
+        this.privList = privList;
+    }
 
     public Long getId() {
         return id;

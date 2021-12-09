@@ -4,7 +4,6 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitOfQuantityRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -19,13 +18,13 @@ public class UnitOfQuantityDataGenerator {
     private final UnitOfQuantityRepository unitOfQuantityRepository;
     private static final String[] UNITS = {"kg", "g", "L", "ml", "pieces", "can", "cup"};
 
-    public UnitOfQuantityDataGenerator(UnitOfQuantityRepository unitOfQuantityRepository){
-        this.unitOfQuantityRepository=unitOfQuantityRepository;
+    public UnitOfQuantityDataGenerator(UnitOfQuantityRepository unitOfQuantityRepository) {
+        this.unitOfQuantityRepository = unitOfQuantityRepository;
     }
 
     @PostConstruct
     void generateUnitOfQuantity() {
-        if(unitOfQuantityRepository.findAll().size() > 0) {
+        if (unitOfQuantityRepository.findAll().size() > 0) {
             LOGGER.debug("UnitOfQuantity already generated");
         } else {
             for (String unit :

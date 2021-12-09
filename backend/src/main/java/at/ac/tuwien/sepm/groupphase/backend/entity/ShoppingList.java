@@ -1,6 +1,12 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import java.util.Objects;
 import java.util.Set;
 
@@ -21,7 +27,7 @@ public class ShoppingList {
     private Set<ItemStorage> items;
 
     /**
-     * if this owner is null, the ShoppingList is public (= for all Users in the Group)
+     * if this owner is null, the ShoppingList is public (= for all Users in the Group).
      */
     @OneToOne
     //@Column(nullable = true, name = "owner")
@@ -69,8 +75,12 @@ public class ShoppingList {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         ShoppingList that = (ShoppingList) o;
         return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(notes, that.notes) && Objects.equals(items, that.items) && Objects.equals(owner, that.owner);
     }
@@ -82,12 +92,18 @@ public class ShoppingList {
 
     @Override
     public String toString() {
-        return "ShoppingList{" +
-            "id=" + id +
-            ", name='" + name + '\'' +
-            ", notes='" + notes + '\'' +
-            ", items=" + items +
-            ", owner=" + owner +
+        return "ShoppingList{"
+            +
+            "id=" + id
+            +
+            ", name='" + name + '\''
+            +
+            ", notes='" + notes + '\''
+            +
+            ", items=" + items
+            +
+            ", owner=" + owner
+            +
             '}';
     }
 
@@ -99,9 +115,12 @@ public class ShoppingList {
         private Set<ItemStorage> items;
         private ApplicationUser owner;
 
-        private ShoppingListBuilder() {}
+        private ShoppingListBuilder() {
+        }
 
-        public static ShoppingListBuilder aShoppingList() { return new ShoppingListBuilder(); }
+        public static ShoppingListBuilder aShoppingList() {
+            return new ShoppingListBuilder();
+        }
 
         public ShoppingListBuilder withId(Long id) {
             this.id = id;
@@ -112,6 +131,7 @@ public class ShoppingList {
             this.name = name;
             return this;
         }
+
         public ShoppingListBuilder withNotes(String notes) {
             this.notes = notes;
             return this;

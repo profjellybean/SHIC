@@ -21,7 +21,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
-
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Optional;
@@ -36,7 +35,7 @@ public class UserServiceImpl implements UserService {
     private final EntityManager entityManager;
 
     @Autowired
-    public UserServiceImpl(CustomUserRepository userRepository,ShoppingListRepository shoppingListRepository, UserMapper userMapper, EntityManager entityManager) {
+    public UserServiceImpl(CustomUserRepository userRepository, ShoppingListRepository shoppingListRepository, UserMapper userMapper, EntityManager entityManager) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.entityManager = entityManager;
@@ -83,9 +82,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void createUser(UserLoginDto userLoginDto) {
-        LOGGER.debug("Service: Create new user: {}",userLoginDto.getUsername());
+        LOGGER.debug("Service: Create new user: {}", userLoginDto.getUsername());
 
-        if(userLoginDto.getPassword().length() < 8){
+        if (userLoginDto.getPassword().length() < 8) {
             throw new PasswordTooShortException("The password must contain at least eight characters");
         }
 
@@ -94,14 +93,11 @@ public class UserServiceImpl implements UserService {
             throw new UsernameTakenException("Username already taken");
         }
 
-        Long shoppingListId = shoppingListRepository.saveAndFlush(   ShoppingList.ShoppingListBuilder.aShoppingList().withName( "Your private shopping list").build()  ).getId();
-        userRepository.save(userMapper.dtoToEntity(userLoginDto,shoppingListId));
-
+        Long shoppingListId = shoppingListRepository.saveAndFlush(ShoppingList.ShoppingListBuilder.aShoppingList().withName("Your private shopping list").build()).getId();
+        userRepository.save(userMapper.dtoToEntity(userLoginDto, shoppingListId));
 
 
     }
-
-
 
 
 }

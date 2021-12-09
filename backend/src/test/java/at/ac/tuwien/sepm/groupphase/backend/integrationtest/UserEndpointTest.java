@@ -3,9 +3,6 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.repository.CustomUserRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.MessageRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -28,7 +24,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
@@ -51,7 +48,7 @@ public class UserEndpointTest implements TestData {
 
     @Test
     void registerUser() throws Exception {
-        UserLoginDto testUser= new UserLoginDto("TestUser1", "passwort1245");
+        UserLoginDto testUser = new UserLoginDto("TestUser1", "passwort1245");
 
         MvcResult mvcResult = this.mockMvc.perform(post(USERENDPOINT_URI)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -84,8 +81,8 @@ public class UserEndpointTest implements TestData {
 
     @Test
     void registerDuplicateUser() throws Exception {
-        UserLoginDto testUser1= new UserLoginDto("Polo_G", "correctPassword");
-        UserLoginDto testUser2= new UserLoginDto("Polo_G", "letMeIn2000");
+        UserLoginDto testUser1 = new UserLoginDto("Polo_G", "correctPassword");
+        UserLoginDto testUser2 = new UserLoginDto("Polo_G", "letMeIn2000");
 
         MvcResult mvcResult1 = this.mockMvc.perform(post(USERENDPOINT_URI)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -117,15 +114,17 @@ public class UserEndpointTest implements TestData {
         assertTrue(userRepository.findUserByUsername("SomeUserNeverAdded").isEmpty());
 
     }
-    void checkExistenceOfUsers(List<UserLoginDto> users){
-        for(UserLoginDto user: users){
+
+    void checkExistenceOfUsers(List<UserLoginDto> users) {
+        for (UserLoginDto user : users) {
             assertTrue(userRepository.findUserByUsername(user.getUsername()).isPresent());
         }
 
     }
+
     void registerAllValidUsers(List<UserLoginDto> users) throws Exception {
 
-        for(UserLoginDto user: users){
+        for (UserLoginDto user : users) {
             MvcResult mvcResult1 = this.mockMvc.perform(post(USERENDPOINT_URI)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(user)))
@@ -137,7 +136,7 @@ public class UserEndpointTest implements TestData {
 
     }
 
-    void generateUsers(List<UserLoginDto> list,int count){
+    void generateUsers(List<UserLoginDto> list, int count) {
         Random random = new Random();
         String[] gods = {
             "Jupiter",
@@ -159,11 +158,10 @@ public class UserEndpointTest implements TestData {
             "Iuventas"
         };
         int x;
-        for(int c = 0; c < count; c++){
+        for (int c = 0; c < count; c++) {
             x = random.nextInt(gods.length);
             list.add(new UserLoginDto(gods[x] + c, "password" + c));
         }
-
 
 
     }

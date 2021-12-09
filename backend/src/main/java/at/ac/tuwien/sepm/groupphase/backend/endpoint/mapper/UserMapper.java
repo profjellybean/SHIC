@@ -22,19 +22,19 @@ public class UserMapper {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public ApplicationUser dtoToEntity(UserLoginDto user, Long shoppingListId){
-        LOGGER.debug("Mapper: User dtoToEntity" );
-        return  new ApplicationUser(user.getUsername(),passwordEncoder.encode(user.getPassword()), shoppingListId);
+    public ApplicationUser dtoToEntity(UserLoginDto user, Long shoppingListId) {
+        LOGGER.debug("Mapper: User dtoToEntity");
+        return new ApplicationUser(user.getUsername(), passwordEncoder.encode(user.getPassword()), shoppingListId);
     }
 
-    public UserLoginDto entityToDto(ApplicationUser user){
-        LOGGER.debug("Mapper: User entityToDto" );
-        return  new UserLoginDto(user.getUsername(),user.getPassword());
+    public UserLoginDto entityToDto(ApplicationUser user) {
+        LOGGER.debug("Mapper: User entityToDto");
+        return new UserLoginDto(user.getUsername(), user.getPassword());
     }
 
-    public UserLoggedInDto entityToLoggedInDto(ApplicationUser user){
-        LOGGER.debug("Mapper: User entityToLoggedInDto" );
-        return new UserLoggedInDto(user.getId(),user.getUsername(), user.getPrivList());
+    public UserLoggedInDto entityToLoggedInDto(ApplicationUser user) {
+        LOGGER.debug("Mapper: User entityToLoggedInDto");
+        return new UserLoggedInDto(user.getId(), user.getUsername(), user.getPrivList());
     }
 
 }
