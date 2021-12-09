@@ -26,5 +26,8 @@ export class ShoppingListListComponent implements OnInit {
       }
     });
   }
+  addItem(item: Item) {
+    this.items.push(item);
+  }
 
 }

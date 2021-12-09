@@ -43,7 +43,7 @@ public class ShoppingListEndpoint {
     @PostMapping
     @PermitAll
     @Operation(summary = "Insert a new item into the storage") //TODO: add security
-    public ItemStorageDto saveItem(@Valid @RequestBody ItemStorageDto itemStorageDto) {
+    public ItemStorageDto saveItem(@RequestBody ItemStorageDto itemStorageDto) {
         LOGGER.info("POST /item to shopping list: ", itemStorageDto.toString());
         return itemStorageMapper.itemStorageToItemStorageDto(shoppingListService.saveItem(itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto), itemStorageDto.getShoppingListId()));
     }
@@ -70,7 +70,6 @@ public class ShoppingListEndpoint {
 
     @GetMapping(value= "/items")
     @PermitAll
-    @Transactional
     @Operation(summary = "Get list of all items") //TODO: add security
     public List<ItemDto> findAllItems() {
         LOGGER.info("GET /items");

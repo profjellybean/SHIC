@@ -139,6 +139,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         return shoppingListRepository.saveAndFlush(new ShoppingList()).getId();
     }
 
+    @Transactional
     @Override
     public List<Item> findAllItems() {
         LOGGER.debug("Find all items");

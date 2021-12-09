@@ -23,14 +23,5 @@
   <button type="submit">add</button>
 </form>
 
-<select
-  class="form-control"
-  id="itemToAdd2"
-  name="itemToAdd2"
-  [(ngModel)]="this.itemToAdd">
-  <option *ngFor="let myItem of itemsAdd;" [ngValue]="myItem">{{myItem.name}}</option>
-  <option [ngValue]="null">none</option>
-</select>
-<button (click)="addItemToShoppingList()">add2</button>
 
 <app-shopping-list-list></app-shopping-list-list>

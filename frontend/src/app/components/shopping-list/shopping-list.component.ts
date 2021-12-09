@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {MessageService} from '../../services/message.service';
 import {ShoppingListService} from '../../services/shopping-list.service';
 import {Item} from '../../dtos/item';
+import {ItemStorage} from '../../dtos/itemStorage';
 
 @Component({
   selector: 'app-shopping-list',
@@ -44,7 +45,14 @@ export class ShoppingListComponent implements OnInit {
     this.itemToAdd.shoppingListId = 1;
     this.itemToAdd.id = null;
     console.log('item to add', this.itemToAdd);
-    this.shoppingListService.addItemToShoppingList(this.itemToAdd);
+    this.shoppingListService.addItemToShoppingList(this.itemToAdd).subscribe({
+      next: data => {
+        console.log('add item', data);
+      },
+      error: err => {
+        this.defaultServiceErrorHandling(err);
+      }
+    });
   }
 
   private defaultServiceErrorHandling(error: any) {
