@@ -1,12 +1,15 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UnitOfQuantityDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ItemMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UnitOfQuantityMapper;
 import at.ac.tuwien.sepm.groupphase.backend.service.ItemService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,16 +22,18 @@ import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/item")
+@RequestMapping(value = "/api/v1/item")
 public class ItemEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final ItemService itemService;
     private final UnitOfQuantityMapper unitOfQuantityMapper;
+    private final ItemMapper itemMapper;
 
     @Autowired
-    public ItemEndpoint(ItemService itemService, UnitOfQuantityMapper unitOfQuantityMapper) {
+    public ItemEndpoint(ItemService itemService, UnitOfQuantityMapper unitOfQuantityMapper, ItemMapper itemMapper) {
         this.itemService = itemService;
         this.unitOfQuantityMapper = unitOfQuantityMapper;
+        this.itemMapper = itemMapper;
     }
 
     @PostMapping(value = "/unitOfQuantity")
@@ -43,9 +48,17 @@ public class ItemEndpoint {
     @GetMapping(value = "/unitOfQuantity")
     @PermitAll
     @Operation(summary = "Get all Units of quantity")
-    List<UnitOfQuantityDto> getAll() {
+    public List<UnitOfQuantityDto> getAll() {
         LOGGER.info("getAllunitOfQuantity, itemEndpoint");
         return unitOfQuantityMapper.unitsOfQuantityToUnitsOfQuantityDto(itemService.getAll());
+    }
+
+    @DeleteMapping
+    @PermitAll
+    @Operation(summary = "Deletes the item")
+    public boolean deleteItem(@Valid @RequestBody ItemDto itemDto) {
+        LOGGER.info("Delete item {}", itemDto.getName());
+        return itemService.delete(itemMapper.itemDtoToItem(itemDto));
     }
 
 

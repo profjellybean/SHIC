@@ -33,7 +33,7 @@ public class ApplicationUser {
     @OneToOne
     private Group currGroup;
 
-    @Column(nullable = false, name = "PRIVLIST") // TODO Loading
+    //@Column(nullable = false, name = "PRIVLIST") // TODO Loading
     private Long privList;
 
     public ApplicationUser() {
