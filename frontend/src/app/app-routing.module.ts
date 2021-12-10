@@ -11,7 +11,6 @@ import {ShoppingListComponent} from './components/shopping-list/shopping-list.co
 import {RecipeDetailComponent} from './components/recipe-detail/recipe-detail.component';
 import {RegisterUserComponent} from './components/registerUser/registerUser.component';
 
-
 const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'login', component: LoginComponent},
@@ -23,6 +22,7 @@ const routes: Routes = [
   {path: 'recipe/:id', canActivate: [AuthGuard], component: RecipeDetailComponent},
   {path: 'recipe', canActivate: [AuthGuard], component: RecipeComponent},
   {path: 'shopping-list', canActivate: [AuthGuard], component: ShoppingListComponent}
+
 ];
 
 @NgModule({

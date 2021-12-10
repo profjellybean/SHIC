@@ -7,11 +7,16 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BillRepository extends JpaRepository<Bill, Long> {
     /**
-     * Get a bill by a given id
+     * Get a bill by a given id.
      *
      * @return the requested bill
      */
     Bill getById(Long id);
 
+    /**
+     * Save a given bill.
+     *
+     * @return the saved bill
+     */
     Bill save(Bill bill);
 }

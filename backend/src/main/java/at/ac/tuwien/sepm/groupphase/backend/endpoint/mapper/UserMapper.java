@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoggedInDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import org.slf4j.Logger;
@@ -21,14 +22,19 @@ public class UserMapper {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public ApplicationUser dtoToEntity(UserLoginDto user){
-        LOGGER.debug("Mapper: User dtoToEntity" );
-        return  new ApplicationUser(user.getUsername(),passwordEncoder.encode(user.getPassword()));
+    public ApplicationUser dtoToEntity(UserLoginDto user, Long shoppingListId) {
+        LOGGER.debug("Mapper: User dtoToEntity");
+        return new ApplicationUser(user.getUsername(), passwordEncoder.encode(user.getPassword()), shoppingListId);
     }
 
-    public UserLoginDto entityToDto(ApplicationUser user){
-        LOGGER.debug("Mapper: User entityToDto" );
-        return  new UserLoginDto(user.getUsername(),user.getPassword());
+    public UserLoginDto entityToDto(ApplicationUser user) {
+        LOGGER.debug("Mapper: User entityToDto");
+        return new UserLoginDto(user.getUsername(), user.getPassword());
+    }
+
+    public UserLoggedInDto entityToLoggedInDto(ApplicationUser user) {
+        LOGGER.debug("Mapper: User entityToLoggedInDto");
+        return new UserLoggedInDto(user.getId(), user.getUsername(), user.getPrivList());
     }
 
 }

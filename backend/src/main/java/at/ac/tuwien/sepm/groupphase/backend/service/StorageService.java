@@ -6,21 +6,53 @@ import java.util.List;
 
 public interface StorageService {
     /**
-     * Delete an item in the context of Spring Security based on the id
+     * Delete an item in the context of Spring Security based on the id.
      *
      * @param id the id
      * @return a Spring Security user
      */
-
     ItemStorage deleteItemById(Long id);
 
+    /**
+     * Saves an item in the storage (specified in the item itself).
+     *
+     * @param itemStorage the item
+     * @return the item
+     */
     ItemStorage saveItem(ItemStorage itemStorage);
 
-    List<ItemStorage> searchItem(Long id,String name);
+    /**
+     * Searches for items in the storage (specified with the id) by name.
+     *
+     * @param id   the id of the storage
+     * @param name the name of the search
+     * @return a list of the items or none
+     */
+
+    List<ItemStorage> searchItem(Long id, String name);
+
+    /**
+     * Gets all items from the storage (specified with the id).
+     *
+     * @param id the id of the storage.
+     * @return a list of all the items
+     */
 
     List<ItemStorage> getAll(Long id);
 
+    /**
+     * Finds a storage by id.
+     *
+     * @param id the id of the storage
+     * @return the id
+     */
+
     Long findStorageById(Long id);
 
+    /**
+     * Creates an empty new staorage.
+     *
+     * @return the id of the new storage.
+     */
     Long createNewStorage();
 }

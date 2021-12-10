@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitOfQuantityRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +49,6 @@ public class MasterDataGenerator {
         storageDataGenerator.generateStorage();
         recipeDataGenerator.generateRecipes();
         shoppingListDataGenerator.generateShoppingList();
-
     }
 
 }

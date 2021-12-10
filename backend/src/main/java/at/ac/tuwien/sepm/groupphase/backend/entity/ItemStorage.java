@@ -2,7 +2,11 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
@@ -32,7 +36,9 @@ public class ItemStorage {
     private Long shoppingListId;
 
 
-    public ItemStorage(){}
+    public ItemStorage() {
+    }
+
     public ItemStorage(Long id) {
         this.id = id;
     }
@@ -49,7 +55,7 @@ public class ItemStorage {
         this.shoppingListId = shoppingListId;
     }
 
-    public ItemStorage(ItemStorage itemStorage){
+    public ItemStorage(ItemStorage itemStorage) {
         //this = itemStorage.clone();
         // this.id = itemStorage.getId();
         this.notes = itemStorage.notes;
@@ -145,14 +151,19 @@ public class ItemStorage {
 
     /**
      * intentionally only compares name and unit of quantity,
-     * so it can be used in planRecipe to check if an ingredient is already in the storage
+     * so it can be used in planRecipe to check if an ingredient is already in the storage.
+     *
      * @param o object that this is compared to
      * @return true if and only if name AND quantity are the same
      */
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         ItemStorage that = (ItemStorage) o;
         return Objects.equals(name, that.name)
             && quantity == that.quantity;
@@ -168,17 +179,28 @@ public class ItemStorage {
 
     @Override
     public String toString() {
-        return "ItemStorage{" +
-            "id=" + id +
-            ", name='" + name + '\'' +
-            ", notes='" + notes + '\'' +
-            ", image=" + Arrays.toString(image) +
-            ", expDate=" + expDate +
-            ", amount=" + amount +
-            ", locationTag=" + locationTag +
-            ", quantity=" + quantity +
-            ", storageId=" + storageId +
-            ", shoppingListId=" + shoppingListId +
+        return "ItemStorage{"
+            +
+            "id=" + id
+            +
+            ", name='" + name + '\''
+            +
+            ", notes='" + notes + '\''
+            +
+            ", image=" + Arrays.toString(image)
+            +
+            ", expDate=" + expDate
+            +
+            ", amount=" + amount
+            +
+            ", locationTag=" + locationTag
+            +
+            ", quantity=" + quantity
+            +
+            ", storageId=" + storageId
+            +
+            ", shoppingListId=" + shoppingListId
+            +
             '}';
     }
 }

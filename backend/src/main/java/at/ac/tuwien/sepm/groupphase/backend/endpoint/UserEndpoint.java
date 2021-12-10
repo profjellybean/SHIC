@@ -7,16 +7,17 @@ import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.annotation.security.PermitAll;
 import java.lang.invoke.MethodHandles;
-import java.util.Map;
 
 
 @RestController
@@ -26,8 +27,7 @@ public class UserEndpoint {
     private final UserService userService;
 
     @Autowired
-    public UserEndpoint(UserService userService){
-
+    public UserEndpoint(UserService userService) {
         this.userService = userService;
     }
 
@@ -35,14 +35,14 @@ public class UserEndpoint {
     @PermitAll
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createUser(@RequestBody UserLoginDto userLoginDto){
+    public void createUser(@RequestBody UserLoginDto userLoginDto) {
         LOGGER.info("Endpoint: POST /user");
         try {
-          userService.createUser(userLoginDto);
+            userService.createUser(userLoginDto);
 
-        }catch (UsernameTakenException | PasswordTooShortException e) {
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,e.getMessage());
-        }catch (Exception e) {
+        } catch (UsernameTakenException | PasswordTooShortException e) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+        } catch (Exception e) {
             ///TODO Exception ( auch NotfoundException)
         }
 
@@ -50,10 +50,10 @@ public class UserEndpoint {
     }
 
     @PermitAll                   //TODO just for Tests
-    @PutMapping
-    public void test(@RequestBody UserLoginDto userLoginDto){
+    @PatchMapping
+    public void test(@RequestBody UserLoginDto userLoginDto) {
 
-            LOGGER.info("Endpoint: Test /user");
+        LOGGER.info("Endpoint: Test /user");
 
     }
 

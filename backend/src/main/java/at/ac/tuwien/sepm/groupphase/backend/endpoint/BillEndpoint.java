@@ -35,6 +35,7 @@ public class BillEndpoint {
     }
 
     //@Secured("ROLE_USER")
+    @Transactional
     @PermitAll
     @GetMapping
     @Operation(summary = "Get list of bills", security = @SecurityRequirement(name = "apiKey"))

@@ -36,8 +36,12 @@ public class IdCollectionDto {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         IdCollectionDto that = (IdCollectionDto) o;
         return Objects.equals(id, that.id)
             && Objects.equals(firstAdditionalId, that.firstAdditionalId)
@@ -51,10 +55,14 @@ public class IdCollectionDto {
 
     @Override
     public String toString() {
-        return "IdCollectionDto{" +
-            "id=" + id +
-            ", firstAdditionalId=" + firstAdditionalId +
-            ", secondAdditionalId=" + secondAdditionalId +
+        return "IdCollectionDto{"
+            +
+            "id=" + id
+            +
+            ", firstAdditionalId=" + firstAdditionalId
+            +
+            ", secondAdditionalId=" + secondAdditionalId
+            +
             '}';
     }
 

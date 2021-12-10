@@ -40,15 +40,13 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public ItemStorage saveItem(ItemStorage itemStorage){
+    public ItemStorage saveItem(ItemStorage itemStorage) {
         LOGGER.debug("Save item");
-        System.out.println(itemStorage.toString());
-        itemStorageRepository.save(itemStorage);
-        return itemStorage;
+        return itemStorageRepository.saveAndFlush(itemStorage);
     }
 
     @Override
-    public List<ItemStorage> getAll(Long id){
+    public List<ItemStorage> getAll(Long id) {
         LOGGER.debug("Getting all items");
         return itemStorageRepository.findAllByStorageId(id);
     }
@@ -56,10 +54,9 @@ public class StorageServiceImpl implements StorageService {
     @Override
     public Long findStorageById(Long id) {
         LOGGER.debug("Getting the Storage with the id");
-        if(storageRepository.findById(id).isPresent()){
+        if (storageRepository.findById(id).isPresent()) {
             return id;
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -71,9 +68,9 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public List<ItemStorage> searchItem(Long id, String name){
+    public List<ItemStorage> searchItem(Long id, String name) {
         LOGGER.debug("search for items");
-        return itemStorageRepository.findAllByStorageIdAndNameContainingIgnoreCase(id,name);
+        return itemStorageRepository.findAllByStorageIdAndNameContainingIgnoreCase(id, name);
     }
 
 }

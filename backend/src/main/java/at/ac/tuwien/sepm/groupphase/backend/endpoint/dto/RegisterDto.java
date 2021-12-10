@@ -2,7 +2,6 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Bill;
 
-
 import java.util.Objects;
 import java.util.Set;
 

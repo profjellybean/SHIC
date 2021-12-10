@@ -2,12 +2,11 @@ package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
+import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
-
-import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
-import at.ac.tuwien.sepm.groupphase.backend.repository.UnitOfQuantityRepository;import org.slf4j.Logger;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UnitOfQuantityRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -48,15 +47,14 @@ public class ItemStorageDataGenerator {
 
     @PostConstruct
     void generateItemStorage() {
-        if(itemStorageRepository.findAll().size() > 0) {
+        if (itemStorageRepository.findAll().size() > 0) {
             LOGGER.debug("ItemStorage already generated");
-        } else if(CREATE_REAL_ITEMSTORAGES) {
+        } else if (CREATE_REAL_ITEMSTORAGES) {
             LOGGER.debug("generating ItemStorage");
 
             this.unitOfQuantityDataGenerator.generateUnitOfQuantity();
 
             List<UnitOfQuantity> unitList = unitOfQuantityRepository.findAll();
-            // System.out.println("\n\n\n"+"ALL UNITS:" + unitList+ "\n\n\n");
             Map<String, Long> mappedUnits = new HashMap<>();
             for (UnitOfQuantity unit :
                 unitList) {
@@ -84,12 +82,11 @@ public class ItemStorageDataGenerator {
             itemStorageRepository.save(pesto);
 
 
-
         } else {
             LOGGER.debug("generating {} ItemStorage entries", NUMBER_OF_ITEMSTORAGES);
             for (int i = 1; i <= NUMBER_OF_ITEMSTORAGES; i++) {
 
-                ItemStorage itemStorage = new ItemStorage("name "+i, "notes for itemStorage "+i, null, null, 10, Location.fridge, null, null, null);
+                ItemStorage itemStorage = new ItemStorage("name " + i, "notes for itemStorage " + i, null, null, 10, Location.fridge, null, null, null);
                 LOGGER.debug("saving ItemStorage {}", itemStorage);
                 itemStorageRepository.save(itemStorage);
             }

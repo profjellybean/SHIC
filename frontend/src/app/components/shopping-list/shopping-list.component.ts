@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {ShoppingListService} from '../../services/shoppinglist.service';
+
 import {MessageService} from '../../services/message.service';
 
 @Component({
@@ -8,14 +10,26 @@ import {MessageService} from '../../services/message.service';
 })
 export class ShoppingListComponent implements OnInit {
 
+
+
   error = false;
   errorMessage = '';
-
-  constructor(private messageService: MessageService) { }
+  constructor(private shoppingListService: ShoppingListService,private messageService: MessageService) { }
 
   ngOnInit(): void {
   }
 
+  getShoppingList(){
+    this.shoppingListService.getShoppingList().subscribe({
+        next: res => {
+          console.log(res);
+        },
+        error: err => {
+          console.error(err);
+        }
+      }
+    );
+  }
   /**
    * Error flag will be deactivated, which clears the error message
    */

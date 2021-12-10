@@ -1,9 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Bill;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
-import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
 import at.ac.tuwien.sepm.groupphase.backend.repository.BillRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
@@ -13,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.PostConstruct;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Set;
 
 public class BillDataGenerator {
@@ -97,7 +94,6 @@ public class BillDataGenerator {
             savedBill = billRepository.saveAndFlush(savedBill);
 
              */
-
 
 
         }

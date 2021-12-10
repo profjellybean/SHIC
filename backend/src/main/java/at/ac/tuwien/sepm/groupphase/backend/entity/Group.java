@@ -1,19 +1,24 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Set;
 
 @Entity
-@Table(name="APPLICATION_GROUP")
+@Table(name = "APPLICATION_GROUP")
 public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-/*
-    @OneToMany
-    @Column
-    private Set<ApplicationUser> user;
-*/
+    /*
+        @OneToMany
+        @Column
+        private Set<ApplicationUser> user;
+    */
     @Column
     private Long groupId;
 
