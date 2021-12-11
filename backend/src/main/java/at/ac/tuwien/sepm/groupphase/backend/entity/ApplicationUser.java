@@ -31,7 +31,7 @@ public class ApplicationUser {
     private String password;
 
     @OneToOne
-    private Group currGroup;
+    private UserGroup currGroup;
 
     //@Column(nullable = false, name = "PRIVLIST") // TODO Loading
     private Long privList;
@@ -78,11 +78,11 @@ public class ApplicationUser {
         this.password = password;
     }
 
-    public Group getCurrGroup() {
+    public UserGroup getCurrGroup() {
         return currGroup;
     }
 
-    public void setCurrGroup(Group currGroup) {
+    public void setCurrGroup(UserGroup currGroup) {
         this.currGroup = currGroup;
     }
 
