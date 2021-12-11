@@ -1,8 +1,5 @@
-export interface User{
+export interface ApplikationUser {
   id: number;
   username: string;
   password: string;
-  currGroup: number;
-  privList: number;
-
 }

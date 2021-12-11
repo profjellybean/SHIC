@@ -12,13 +12,13 @@ import org.springframework.stereotype.Component;
 import java.lang.invoke.MethodHandles;
 
 @Component
-public class UserMapper {
+public class UserLoginMapper {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserMapper(PasswordEncoder passwordEncoder) {
+    public UserLoginMapper(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
 

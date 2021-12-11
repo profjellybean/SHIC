@@ -3,6 +3,8 @@ import {Observable} from 'rxjs';
 import {HttpBackend, HttpClient} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {Injectable} from '@angular/core';
+import {User} from '../dtos/User';
+import {Params} from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +27,9 @@ export class UserService {
   }
 
 
-
+  getCurrentUser(params: Params): Observable<User>{
+    console.log('get user', params);
+    return this.httpClient.get<User>(this.userRegisterUri, {params});
+  }
 
 }
