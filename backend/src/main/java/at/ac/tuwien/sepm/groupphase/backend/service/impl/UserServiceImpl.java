@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserLoginMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
@@ -31,13 +31,13 @@ public class UserServiceImpl implements UserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final CustomUserRepository userRepository;
     private final ShoppingListRepository shoppingListRepository;
-    private final UserMapper userMapper;
+    private final UserLoginMapper userLoginMapper;
     private final EntityManager entityManager;
 
     @Autowired
-    public UserServiceImpl(CustomUserRepository userRepository, ShoppingListRepository shoppingListRepository, UserMapper userMapper, EntityManager entityManager) {
+    public UserServiceImpl(CustomUserRepository userRepository, ShoppingListRepository shoppingListRepository, UserLoginMapper userLoginMapper, EntityManager entityManager) {
         this.userRepository = userRepository;
-        this.userMapper = userMapper;
+        this.userLoginMapper = userLoginMapper;
         this.entityManager = entityManager;
         this.shoppingListRepository = shoppingListRepository;
     }
@@ -60,7 +60,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ApplicationUser findApplicationUserByUsername(String username) {
-
         LOGGER.debug("Service: Find application user by username");
         Optional<ApplicationUser> applicationUser = userRepository.findUserByUsername(username);
         if (applicationUser.isPresent()) {
@@ -94,7 +93,7 @@ public class UserServiceImpl implements UserService {
         }
 
         Long shoppingListId = shoppingListRepository.saveAndFlush(ShoppingList.ShoppingListBuilder.aShoppingList().withName("Your private shopping list").build()).getId();
-        userRepository.save(userMapper.dtoToEntity(userLoginDto, shoppingListId));
+        userRepository.save(userLoginMapper.dtoToEntity(userLoginDto, shoppingListId));
 
 
     }
