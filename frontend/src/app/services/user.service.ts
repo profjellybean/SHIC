@@ -4,7 +4,7 @@ import {HttpBackend, HttpClient} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {Injectable} from '@angular/core';
 import {User} from '../dtos/User';
-import {Params} from "@angular/router";
+import {Params} from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
