@@ -13,6 +13,7 @@ import {Globals} from '../global/globals';
 export class AuthService {
 
   private authBaseUri: string = this.globals.backendUri + '/authentication';
+
   constructor(private httpClient: HttpClient, private globals: Globals) {
   }
 

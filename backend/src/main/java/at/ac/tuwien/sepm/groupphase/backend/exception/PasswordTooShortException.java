@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.exception;
 
-public class PasswordTooShortException extends RuntimeException {
+public class PasswordTooShortException extends RuntimeException{
     public PasswordTooShortException() {
     }
 

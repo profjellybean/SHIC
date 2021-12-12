@@ -1,44 +1,31 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
 public class ShoppingList {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 200)
+    @Column(nullable = false, length = 200)
     private String name;
 
     @Column(length = 10000)
     private String notes;
 
-
     @OneToMany
-    private Set<ItemStorage> items;
+    private Set<Item> items;
 
     /**
-     * if this owner is null, the ShoppingList is public (= for all Users in the Group).
+     * if this owner is null, the ShoppingList is public (= for all Users in the Group)
      */
     @OneToOne
     //@Column(nullable = true, name = "owner")
     private ApplicationUser owner;
-
-    public ShoppingList(String name) {
-        this.name = name;
-    }
-
-    public ShoppingList() {
-    }
 
     public Long getId() {
         return id;
@@ -64,11 +51,11 @@ public class ShoppingList {
         this.notes = notes;
     }
 
-    public Set<ItemStorage> getItems() {
+    public Set<Item> getItems() {
         return items;
     }
 
-    public void setItems(Set<ItemStorage> items) {
+    public void setItems(Set<Item> items) {
         this.items = items;
     }
 
@@ -82,12 +69,8 @@ public class ShoppingList {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         ShoppingList that = (ShoppingList) o;
         return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(notes, that.notes) && Objects.equals(items, that.items) && Objects.equals(owner, that.owner);
     }
@@ -99,18 +82,12 @@ public class ShoppingList {
 
     @Override
     public String toString() {
-        return "ShoppingList{"
-            +
-            "id=" + id
-            +
-            ", name='" + name + '\''
-            +
-            ", notes='" + notes + '\''
-            +
-            ", items=" + items
-            +
-            ", owner=" + owner
-            +
+        return "ShoppingList{" +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", notes='" + notes + '\'' +
+            ", items=" + items +
+            ", owner=" + owner +
             '}';
     }
 
@@ -119,15 +96,12 @@ public class ShoppingList {
         private Long id;
         private String name;
         private String notes;
-        private Set<ItemStorage> items;
+        private Set<Item> items;
         private ApplicationUser owner;
 
-        private ShoppingListBuilder() {
-        }
+        private ShoppingListBuilder() {}
 
-        public static ShoppingListBuilder aShoppingList() {
-            return new ShoppingListBuilder();
-        }
+        public static ShoppingListBuilder aShoppingList() { return new ShoppingListBuilder(); }
 
         public ShoppingListBuilder withId(Long id) {
             this.id = id;
@@ -138,13 +112,12 @@ public class ShoppingList {
             this.name = name;
             return this;
         }
-
         public ShoppingListBuilder withNotes(String notes) {
             this.notes = notes;
             return this;
         }
 
-        public ShoppingListBuilder withItems(Set<ItemStorage> items) {
+        public ShoppingListBuilder withItems(Set<Item> items) {
             this.items = items;
             return this;
         }

@@ -1,28 +1,17 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-import java.util.Objects;
+import javax.persistence.*;
 
 @Entity
-@Table(name = "APPLICATION_USER", uniqueConstraints = {@UniqueConstraint(columnNames = {"USERNAME"})})
+@Table(name="APPLICATION_USER")
 @NamedQuery(
-    name = "findByName",
-    query = "SELECT c FROM ApplicationUser c WHERE c.username = :username"
+    name="findByName",
+    query= "SELECT c FROM ApplicationUser c WHERE c.username = :username"
 )
 public class ApplicationUser {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
 
     @Column(nullable = false, name = "USERNAME")
     private String username;
@@ -31,27 +20,15 @@ public class ApplicationUser {
     private String password;
 
     @OneToOne
-    private UserGroup currGroup;
+    private Group currGroup;
 
-    //@Column(nullable = false, name = "PRIVLIST") // TODO Loading
-    private Long privList;
 
     public ApplicationUser() {
     }
 
-    public ApplicationUser(String username, String password, Long shoppingListId) {
+    public ApplicationUser(String username, String password) {
         this.username = username;
         this.password = password;
-        this.privList = shoppingListId;
-    }
-
-
-    public Long getPrivList() {
-        return privList;
-    }
-
-    public void setPrivList(Long privList) {
-        this.privList = privList;
     }
 
     public Long getId() {
@@ -78,30 +55,4 @@ public class ApplicationUser {
         this.password = password;
     }
 
-    public UserGroup getCurrGroup() {
-        return currGroup;
-    }
-
-    public void setCurrGroup(UserGroup currGroup) {
-        this.currGroup = currGroup;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        ApplicationUser that = (ApplicationUser) o;
-        return Objects.equals(id, that.id) && Objects.equals(username, that.username) && Objects.equals(password, that.password);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, username, password);
-    }
-
 }
-

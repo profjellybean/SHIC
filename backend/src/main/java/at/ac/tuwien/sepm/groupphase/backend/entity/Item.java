@@ -1,18 +1,15 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+
+import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.UnitOfQuantity;
+
+import javax.persistence.*;
 
 
 @Entity
 @Table(name = "Item")
 public class Item {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,7 +18,7 @@ public class Item {
     private String name;
 
     @Column(name = "Quantity")
-    private Long quantity;
+    private UnitOfQuantity quantity;
 
     public Item(Long id) {
         this.id = id;
@@ -29,12 +26,6 @@ public class Item {
 
     public Item() {
 
-    }
-
-    public Item(Long id, String name, Long quantity) {
-        this.id = id;
-        this.name = name;
-        this.quantity = quantity;
     }
 
     public void setId(Long id) {
@@ -45,19 +36,11 @@ public class Item {
         return id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Long getQuantity() {
+    public UnitOfQuantity getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Long quantity) {
+    public void setQuantity(UnitOfQuantity quantity) {
         this.quantity = quantity;
     }
 
