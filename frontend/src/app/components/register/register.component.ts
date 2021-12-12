@@ -46,7 +46,7 @@ export class RegisterComponent implements OnInit {
   };
 
   user: User = {
-    id: 1,
+    id: 3,
     username: 'tom@email.com',
     password: 'password'
   };

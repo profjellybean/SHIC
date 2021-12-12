@@ -3,8 +3,10 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemStorageDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ShoppingListCreationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ShoppingListDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.WorkOffShoppingListDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ItemStorageMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ShoppingListMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.service.ShoppingListService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
@@ -28,6 +30,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.annotation.security.PermitAll;
 import java.lang.invoke.MethodHandles;
+import java.util.LinkedList;
 import java.util.List;
 
 @RestController
@@ -127,6 +130,14 @@ public class ShoppingListEndpoint {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()); // Todo
         }
 
+    }
+
+    @PermitAll
+    @PostMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ItemStorageDto> workOffShoppingList(@RequestParam Long shoppingListId, WorkOffShoppingListDto workOffShoppingListDto) {
+        return itemStorageMapper.itemsStorageToItemsStorageDto(shoppingListService.workOffShoppingList(shoppingListId,
+            workOffShoppingListDto.getStorageId(), workOffShoppingListDto.getBoughtItems()));
     }
 
 }

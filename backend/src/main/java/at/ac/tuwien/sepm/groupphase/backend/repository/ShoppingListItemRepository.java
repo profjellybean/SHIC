@@ -19,4 +19,5 @@ public interface ShoppingListItemRepository extends JpaRepository<ItemStorage, L
     @Transactional
     void insert(@Param("shoppingListId") Long shoppingListId, @Param("itemId") Long itemId);
 
+
 }

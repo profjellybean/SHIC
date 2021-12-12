@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ShoppingListCreationDto;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Item;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
@@ -170,4 +171,21 @@ public class ShoppingListServiceImpl implements ShoppingListService {
             return null;
         }
     }
+
+    @Override
+    public List<ItemStorage> workOffShoppingList(Long shoppingListId, Long storageId, List<ItemStorage> boughtItems) {
+        LOGGER.debug("Work Off Shoppinglist {}", boughtItems);
+
+        for (ItemStorage item : boughtItems) {
+            ItemStorage itemStorage = itemStorageRepository.getById(item.getId());
+            if(itemStorage.getShoppingListId().equals(shoppingListId)) {
+                itemStorage.setShoppingListId(null);
+                itemStorage.setStorageId(storageId);
+                shoppingListItemRepository.saveAndFlush(itemStorage);
+            }
+        }
+
+        return boughtItems;
+    }
+
 }

@@ -61,4 +61,5 @@ public interface ShoppingListService {
      */
     Long findShoppingListById(Long id);
 
+    List<ItemStorage> workOffShoppingList(Long shoppingListId, Long storageId, List<ItemStorage> boughtItems);
 }
