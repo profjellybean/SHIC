@@ -16,7 +16,7 @@ public class ShoppingList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 200)
+    @Column(length = 200)
     private String name;
 
     @Column(length = 10000)
@@ -32,6 +32,13 @@ public class ShoppingList {
     @OneToOne
     //@Column(nullable = true, name = "owner")
     private ApplicationUser owner;
+
+    public ShoppingList(String name) {
+        this.name = name;
+    }
+
+    public ShoppingList() {
+    }
 
     public Long getId() {
         return id;
