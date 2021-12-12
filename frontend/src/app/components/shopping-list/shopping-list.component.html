@@ -1,0 +1,18 @@
+
+<div class="tabs">
+
+  <input type="radio"  name="tabs" id="tab1" checked />
+  <label style="margin-left: 0.5em" for="tab1">Public</label>
+
+  <input type="radio" name="tabs" id="tab2" />
+  <label for="tab2" (click)="getShoppingList()">Private</label>
+
+</div>
+<div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+  <strong>Error! </strong> {{ errorMessage }}
+  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<p>shopping-list works!</p>
