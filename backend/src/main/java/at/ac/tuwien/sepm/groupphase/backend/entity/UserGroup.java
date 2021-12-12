@@ -18,7 +18,21 @@ public class UserGroup {
     private Set<ApplicationUser> user;
     @Column
     private Long storageId;
+    @Column
+    private Long publicShoppingListId;
 
+    public UserGroup(Long storageId, Long publicShoppingListId) {
+        this.storageId = storageId;
+        this.publicShoppingListId = publicShoppingListId;
+    }
+
+    public Long getPublicShoppingListId() {
+        return publicShoppingListId;
+    }
+
+    public void setPublicShoppingListId(Long publicShoppingListId) {
+        this.publicShoppingListId = publicShoppingListId;
+    }
 
     public UserGroup() {
     }
