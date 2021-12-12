@@ -1,16 +1,14 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
-
-import java.util.Arrays;
+import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.UnitOfQuantity;
 import java.util.Date;
 
-public class ItemStorageDto {
-    private Long storageId;
-    private Long shoppingListId;
+public class ItemStorageDto{
+    private Long StorageId;
     private Long id;
     private String name;
-    private Long quantity;
+    private UnitOfQuantity quantity;
     private String notes;
     private byte[] image;
     private Date expDate;
@@ -18,23 +16,14 @@ public class ItemStorageDto {
     private Location locationTag;
 
 
-    public ItemStorageDto() {
-    }
+    public ItemStorageDto(){}
 
     public Long getStorageId() {
-        return storageId;
+        return StorageId;
     }
 
     public void setStorageId(Long storageId) {
-        this.storageId = storageId;
-    }
-
-    public Long getShoppingListId() {
-        return shoppingListId;
-    }
-
-    public void setShoppingListId(Long shoppingListId) {
-        this.shoppingListId = shoppingListId;
+        StorageId = storageId;
     }
 
     public Long getId() {
@@ -93,37 +82,11 @@ public class ItemStorageDto {
         this.locationTag = locationTag;
     }
 
-    public Long getQuantity() {
+    public UnitOfQuantity getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Long quantity) {
+    public void setQuantity(UnitOfQuantity quantity) {
         this.quantity = quantity;
-    }
-
-
-    @Override
-    public String toString() {
-        return "ItemStorageDto{"
-            +
-            "storageId=" + storageId
-            +
-            ", id=" + id
-            +
-            ", name='" + name + '\''
-            +
-            ", quantity=" + quantity
-            +
-            ", notes='" + notes + '\''
-            +
-            ", image=" + Arrays.toString(image)
-            +
-            ", expDate=" + expDate
-            +
-            ", amount=" + amount
-            +
-            ", locationTag=" + locationTag
-            +
-            '}';
     }
 }
