@@ -24,7 +24,7 @@ public class UserGroupEndpoint {
 
     @PostMapping
     @PermitAll
-    @Operation(summary = "Generate a new Group") //TODO: add security
+    @Operation(summary = "Generate a new Group")
     public Long generateUserGroup() {
         LOGGER.info("POST group");
         return groupService.generateUserGroup();
