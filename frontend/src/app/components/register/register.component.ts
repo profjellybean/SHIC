@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {RegisterService} from '../../services/register.service';
 import {ActivatedRoute} from '@angular/router';
 import {Bill} from '../../dtos/bill';
-import {ApplikationUser} from '../../dtos/applikationUser';
+import {ApplicationUser} from '../../dtos/applicationUser';
 import {BillService} from '../../services/bill.service';
 import {Register} from '../../dtos/register';
 
@@ -26,8 +26,8 @@ export class RegisterComponent implements OnInit {
   counter = 1;
   secondCounter = 1;
   billArray: Bill[] = [];
-  names: ApplikationUser[] = [];
-  notPaidNames: ApplikationUser[] = [];
+  names: ApplicationUser[] = [];
+  notPaidNames: ApplicationUser[] = [];
 
   help: string;
 
@@ -45,7 +45,7 @@ export class RegisterComponent implements OnInit {
     notPaidNameList: ''
   };
 
-  user: ApplikationUser = {
+  user: ApplicationUser = {
     id: 3,
     username: 'tom@email.com',
     password: 'password'

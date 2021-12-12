@@ -1,13 +1,13 @@
 import {Item} from './item';
-import {User} from './user';
+import {ApplicationUser} from './applicationUser';
 
 export interface Bill {
   id: number;
   registerId: number;
   groceries: Set<Item>;
   notes: string;
-  names: Set<ApplikationUser>;
-  notPaidNames: Set<ApplikationUser>;
+  names: Set<ApplicationUser>;
+  notPaidNames: Set<ApplicationUser>;
   sum: number;
   sumPerPerson: number;
   date: Date;
