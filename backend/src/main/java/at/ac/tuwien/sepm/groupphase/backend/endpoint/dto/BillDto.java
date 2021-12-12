@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Item;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 
 import java.time.LocalDate;
@@ -153,26 +152,31 @@ public class BillDto {
             this.groceries = groceries;
             return this;
         }
+
         public BillDtoBuilder withNotes(String notes) {
             this.notes = notes;
             return this;
         }
+
         public BillDtoBuilder withNames(Set<ApplicationUser> names) {
             this.names = names;
             return this;
         }
+
         public BillDtoBuilder withNotPaidNames(Set<ApplicationUser> notPaidNames) {
             this.notPaidNames = notPaidNames;
             return this;
         }
-        public BillDtoBuilder withSum(double Sum) {
-            this.sum = sum;
+
+        public BillDtoBuilder withSum() {
             return this;
         }
+
         public BillDtoBuilder withSumPerPerson(double sumPerPerson) {
             this.sumPerPerson = sumPerPerson;
             return this;
         }
+
         public BillDtoBuilder withDate(LocalDate date) {
             this.date = date;
             return this;

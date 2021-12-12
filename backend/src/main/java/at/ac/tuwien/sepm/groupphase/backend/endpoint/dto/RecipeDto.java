@@ -1,10 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.Item;
-import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.RecipeCategory;
 
-import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
 
@@ -62,10 +59,15 @@ public class RecipeDto {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         RecipeDto recipeDto = (RecipeDto) o;
-        return Objects.equals(id, recipeDto.id) && Objects.equals(name, recipeDto.name) && Objects.equals(description, recipeDto.description) && Objects.equals(ingredients, recipeDto.ingredients) && Objects.equals(categories, recipeDto.categories);
+        return Objects.equals(id, recipeDto.id) && Objects.equals(name, recipeDto.name)
+            && Objects.equals(description, recipeDto.description) && Objects.equals(ingredients, recipeDto.ingredients) && Objects.equals(categories, recipeDto.categories);
     }
 
     @Override
@@ -75,12 +77,18 @@ public class RecipeDto {
 
     @Override
     public String toString() {
-        return "RecipeDto{" +
-            "id=" + id +
-            ", name='" + name + '\'' +
-            ", description='" + description + '\'' +
-            ", ingredients=" + ingredients +
-            ", categories=" + categories +
+        return "RecipeDto{"
+            +
+            "id=" + id
+            +
+            ", name='" + name + '\''
+            +
+            ", description='" + description + '\''
+            +
+            ", ingredients=" + ingredients
+            +
+            ", categories=" + categories
+            +
             '}';
     }
 }

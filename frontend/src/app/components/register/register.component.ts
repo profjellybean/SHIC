@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {RegisterService} from '../../services/register.service';
 import {ActivatedRoute} from '@angular/router';
 import {Bill} from '../../dtos/bill';
-import {User} from '../../dtos/user';
+import {ApplikationUser} from '../../dtos/applikationUser';
 import {BillService} from '../../services/bill.service';
 import {Register} from '../../dtos/register';
 
@@ -26,8 +26,8 @@ export class RegisterComponent implements OnInit {
   counter = 1;
   secondCounter = 1;
   billArray: Bill[] = [];
-  names: User[] = [];
-  notPaidNames: User[] = [];
+  names: ApplikationUser[] = [];
+  notPaidNames: ApplikationUser[] = [];
 
   help: string;
 
@@ -45,7 +45,7 @@ export class RegisterComponent implements OnInit {
     notPaidNameList: ''
   };
 
-  user: User = {
+  user: ApplikationUser = {
     id: 3,
     username: 'tom@email.com',
     password: 'password'
@@ -56,7 +56,9 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {
     //const id = +this.route.snapshot.paramMap.get('id');
     this.loadRegister(1);
-    console.log('after'+this.billArray);
+    console.log('names ' + this.bill.nameList);
+    console.log('notPaid ' + this.bill.notPaidNameList);
+    console.log('names array ' + this.names);
   }
 
   public confirmPayment(id: number) {
@@ -124,10 +126,9 @@ export class RegisterComponent implements OnInit {
           }
           this.billArray[this.counter] = bill;
           this.counter++;
-          console.log('names ' + bill.nameList);
-          console.log('notPaid ' + bill.notPaidNameList);
-          console.log(this.billArray);
         }
+        console.log('names ' + this.bill.nameList);
+        console.log('notPaid ' + this.bill.notPaidNameList);
       }, error: err => {
         this.defaultServiceErrorHandling(err);
       }

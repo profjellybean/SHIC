@@ -1,6 +1,14 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -133,23 +141,37 @@ public class Bill {
 
     @Override
     public String toString() {
-        return "Bill{" +
-            "id=" + id +
-            ", registerId=" + registerId +
-            ", groceries=" + groceries +
-            ", notes='" + notes + '\'' +
-            ", names=" + names +
-            ", notPaidNames=" + notPaidNames +
-            ", sum=" + sum +
-            ", sumPerPerson=" + sumPerPerson +
-            ", date=" + date +
+        return "Bill{"
+            +
+            "id=" + id
+            +
+            ", registerId=" + registerId
+            +
+            ", groceries=" + groceries
+            +
+            ", notes='" + notes + '\''
+            +
+            ", names=" + names
+            +
+            ", notPaidNames=" + notPaidNames
+            +
+            ", sum=" + sum
+            +
+            ", sumPerPerson=" + sumPerPerson
+            +
+            ", date=" + date
+            +
             '}';
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Bill bill = (Bill) o;
         return Double.compare(bill.sum, sum) == 0
             && Double.compare(bill.sumPerPerson, sumPerPerson) == 0

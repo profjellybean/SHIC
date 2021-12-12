@@ -10,7 +10,7 @@ import {RecipeComponent} from './components/recipe/recipe.component';
 import {ShoppingListComponent} from './components/shopping-list/shopping-list.component';
 import {RecipeDetailComponent} from './components/recipe-detail/recipe-detail.component';
 import {RegisterUserComponent} from './components/registerUser/registerUser.component';
-
+import {UserComponent} from './components/user/user.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -22,7 +22,9 @@ const routes: Routes = [
   {path: 'storage', component: StorageComponent},
   {path: 'recipe/:id', canActivate: [AuthGuard], component: RecipeDetailComponent},
   {path: 'recipe', canActivate: [AuthGuard], component: RecipeComponent},
-  {path: 'shopping-list', canActivate: [AuthGuard], component: ShoppingListComponent}
+  {path: 'shopping-list', canActivate: [AuthGuard], component: ShoppingListComponent},
+  {path: 'user', canActivate: [AuthGuard], component: UserComponent}
+
 ];
 
 @NgModule({
