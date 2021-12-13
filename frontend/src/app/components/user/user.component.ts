@@ -14,7 +14,7 @@ export class UserComponent implements OnInit {
   groupId = null;
 
 
-  private user: User = {
+  user: User = {
     // @ts-ignore
     username: jwt_decode(this.authService.getToken()).sub.trim(),
     password: null,
@@ -23,7 +23,7 @@ export class UserComponent implements OnInit {
     privList: null
   };
 
-  constructor(private groupService: GroupService, private authService: AuthService, private userService: UserService) { }
+  constructor(private groupService: GroupService, public authService: AuthService, private userService: UserService) { }
 
   ngOnInit(): void {
     this.getCurrentGroup();

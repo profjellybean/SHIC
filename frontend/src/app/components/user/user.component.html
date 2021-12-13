@@ -1,15 +1,16 @@
-<h1>ApplikationUser</h1>
+<p></p>
+<h1>User</h1>
 <p></p>
 <div>
-  ApplikationUser pic
-  ApplikationUser Name
+  ApplikationUser-pic <p></p>
+  {{this.user.username}}
 </div>
 
 
 
-<div align="right">
+<div align="left">
   <button *ngIf="groupId!==null" type="button" (click)="generateGroup()" class="close" data-dismiss="alert" aria-label="Close">Generate new Group</button> <p></p>
 <button>Edit user</button><p></p>
 <button>delete profile</button><p></p>
-<button>Logout</button>
+<button (click)="authService.logoutUser()" routerLink="/">Logout</button>
 </div>
