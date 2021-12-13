@@ -11,15 +11,20 @@ import {Injectable} from '@angular/core';
 export class UserService {
 
 
-  private userRegisterUri = 'http://localhost:8080/user';
+
+  private userRegisterUri: string = this.globals.backendUri + '/user';
   private httpClient: HttpClient;
 
   constructor(private globals: Globals, handler: HttpBackend) {
     this.httpClient = new HttpClient(handler);
   }
 
-  registerUser(registerRequest: RegisterRequest): Observable<object> {
+  confirmUser(confirmationToken: string): Observable<object> {
 
+    return this.httpClient.get(this.userRegisterUri +'?confirm=' + confirmationToken);
+  }
+
+  registerUser(registerRequest: RegisterRequest): Observable<object> {
 
     return this.httpClient.post(this.userRegisterUri, registerRequest);
   }

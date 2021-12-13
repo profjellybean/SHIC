@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
+
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegistrationDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -39,15 +40,34 @@ public interface UserService extends UserDetailsService {
      */
     Long getPrivateShoppingListIdByUsername(String username);
 
+
     /**
      * Find an application user based on the username.
      *
-     * @param userLoginDto the DTO of the user to be created
+     * @param userRegistrationDto the DTO of the user to be created
      *
      */
-    void createUser(UserLoginDto userLoginDto);
+    void createUserWithEmailVerification(UserRegistrationDto userRegistrationDto);
+
+    /**
+     * Find an application user based on the username.
+     * This method overloads createUser(UserRegistrationDto userRegistrationDto, Long confirmationToken)
+     * confirmationToken is set to 0
+     * @param userRegistrationDto the DTO of the user to be created
+     *
+     */
+    void createUserWithoutEmailVerification(UserRegistrationDto userRegistrationDto);
 
 
 
+    /**
+     * Find an application user based on the username.
+     *
+     * @param userRegistrationDto the DTO of the user to be created
+     *
+     */
+    void createUser(UserRegistrationDto userRegistrationDto, Long confirmationToken);
+
+    void confirmUser(String confirmationToken_encrypted);
 
 }

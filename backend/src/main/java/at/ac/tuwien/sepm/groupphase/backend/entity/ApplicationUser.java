@@ -1,6 +1,17 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import javax.persistence.*;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 
 @Entity
@@ -22,6 +33,12 @@ public class ApplicationUser {
     @Column(nullable = false, name = "PASSWORD")
     private String password;
 
+    @Column(nullable = false, name = "EMAIL")
+    private String email;
+
+    @Column(nullable = false, name = "CONFIRMATIONTOKEN")
+    private Long confirmationToken;
+
     @OneToOne
     private Group currGroup;
 
@@ -31,13 +48,21 @@ public class ApplicationUser {
     public ApplicationUser() {
     }
 
-    public ApplicationUser(String username, String password, Long shoppingListId) {
+    public ApplicationUser(String username, String password, Long shoppingListId, String email) {
         this.username = username;
         this.password = password;
         this.privList = shoppingListId;
+        this.email = email;
+        this.confirmationToken = 0L;
     }
 
-
+    public ApplicationUser(String username, String password, Long shoppingListId, String email,Long confirmationToken) {
+        this.username = username;
+        this.password = password;
+        this.privList = shoppingListId;
+        this.email = email;
+        this.confirmationToken = confirmationToken;
+    }
 
     public Long getPrivList() {return privList;}
 
@@ -73,6 +98,14 @@ public class ApplicationUser {
 
     public void setCurrGroup(Group currGroup) {
         this.currGroup = currGroup;
+    }
+
+    public Long getConfirmationToken() {
+        return confirmationToken;
+    }
+
+    public void setConfirmationToken(Long confirmationToken) {
+        this.confirmationToken = confirmationToken;
     }
 
     @Override

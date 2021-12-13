@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegistrationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Item;
@@ -41,8 +42,8 @@ public class UserDataGenerator {
     @PostConstruct
     void generateUser() {
 
-        UserLoginDto user = new UserLoginDto("user@email.com", "password");
-        UserLoginDto admin = new UserLoginDto("admin@email.com", "password");
+        UserRegistrationDto user = new UserRegistrationDto("user", "password","user@email.com");
+        UserRegistrationDto admin = new UserRegistrationDto("admin", "password","admin@email.com");
 
         Item item = new Item(null, "Döner", null);
         Long itemId = itemRepository.saveAndFlush(new Item(null, "Döner", null)).getId();
