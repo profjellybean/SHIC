@@ -20,6 +20,8 @@ import {RegisterUserComponent} from './components/registerUser/registerUser.comp
 import { RecipeDetailComponent } from './components/recipe-detail/recipe-detail.component';
 import { RecipeListComponent } from './components/recipe-list/recipe-list.component';
 import { UserComponent } from './components/user/user.component';
+import { ShoppingListAddComponent } from './components/shopping-list-add/shopping-list-add.component';
+import { ShoppingListListComponent } from './components/shopping-list-list/shopping-list-list.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +39,8 @@ import { UserComponent } from './components/user/user.component';
     RecipeDetailComponent,
     RecipeListComponent,
     UserComponent,
+    ShoppingListAddComponent,
+    ShoppingListListComponent,
   ],
   imports: [
     BrowserModule,

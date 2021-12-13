@@ -1,36 +1,24 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemStorageDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ShoppingListCreationDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ShoppingListDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.WorkOffShoppingListDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.*;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ItemMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ItemStorageMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemStorageDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ShoppingListMapper;
-import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
-import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.service.ShoppingListService;
-import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.data.repository.query.Param;
 
 import javax.annotation.security.PermitAll;
+import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.lang.invoke.MethodHandles;
-import java.util.LinkedList;
 import java.util.List;
 
 @RestController
@@ -40,20 +28,19 @@ public class ShoppingListEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final ShoppingListService shoppingListService;
     private final ShoppingListMapper shoppingListMapper;
-    private final UserService userService;
     private final ItemStorageMapper itemStorageMapper;
+    private final ItemMapper itemMapper;
 
     @Autowired
     public ShoppingListEndpoint(ShoppingListService shoppingListService, ShoppingListMapper shoppingListMapper,
-                                ItemStorageMapper itemStorageMapper, UserService userService) {
-
+                                ItemStorageMapper itemStorageMapper, ItemMapper itemMapper) {
         this.shoppingListService = shoppingListService;
         this.shoppingListMapper = shoppingListMapper;
         this.itemStorageMapper = itemStorageMapper;
+        this.itemMapper = itemMapper;
         this.userService = userService;
     }
 
-    @PermitAll
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Long createShoppingList(@RequestBody ShoppingListCreationDto shoppingListCreationDto) {
@@ -68,6 +55,11 @@ public class ShoppingListEndpoint {
     }
 
     @PermitAll
+    @Operation(summary = "Insert a new item into the storage") //TODO: add security
+    public ItemStorageDto saveItem(@Valid @RequestBody ItemStorageDto itemStorageDto) {
+        LOGGER.info("POST /item to shopping list: ", itemStorageDto.toString());
+        return itemStorageMapper.itemStorageToItemStorageDto(shoppingListService.saveItem(itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto), itemStorageDto.getShoppingListId()));
+    }
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ShoppingListDto getShoppingListByid(@PathVariable Long id) {
@@ -81,7 +73,7 @@ public class ShoppingListEndpoint {
 
     }
 
-    /*
+
         @PostMapping
         @PermitAll
         @Operation(summary = "Insert a new item into the storage") //TODO: add security /// TEMPLATE
@@ -90,6 +82,13 @@ public class ShoppingListEndpoint {
             return itemStorageMapper.itemStorageToItemStorageDto(shoppingListService.saveItem(itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto), itemStorageDto.getShoppingListId()));
         }
 
+    @GetMapping
+    @PermitAll
+    @Operation(summary = "Get all items from the shopping list") //TODO: add security
+    public List<ItemStorageDto> findAllByShoppingListId(@Param("id") Long id) {
+        LOGGER.info("findAllByShoppingListId, endpoint");
+        return itemStorageMapper.itemsStorageToItemsStorageDto(shoppingListService.findAllByShoppingListId(id));
+    }
         @GetMapping
         @PermitAll
         @Operation(summary = "Get all items from the shopping list") //TODO: add security
@@ -98,7 +97,7 @@ public class ShoppingListEndpoint {
             return itemStorageMapper.itemsStorageToItemsStorageDto(shoppingListService.findAllByStorageId(id));
         }
 
-    */
+
     @PermitAll //TODO: add security
     //@Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.OK)
@@ -109,6 +108,15 @@ public class ShoppingListEndpoint {
         LOGGER.info("Endpoint: POST /api/v1/shoppinglist/recipeId={},userId={}", recipeId, userId);
         return itemStorageMapper.itemsStorageToItemsStorageDto(
             shoppingListService.planRecipe(recipeId, userId));
+    }
+
+    @GetMapping(value= "/items")
+    @PermitAll
+    @Transactional
+    @Operation(summary = "Get list of all items") //TODO: add security
+    public List<ItemDto> findAllItems() {
+        LOGGER.info("GET /items");
+        return itemMapper.itemsToItemsDto(shoppingListService.findAllItems());
     }
 
 

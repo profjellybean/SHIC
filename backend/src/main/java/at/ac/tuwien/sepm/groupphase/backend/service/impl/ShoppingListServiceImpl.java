@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.List;
 
 @Service
 public class ShoppingListServiceImpl implements ShoppingListService {
@@ -34,16 +35,19 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     private final RecipeRepository recipeRepository;
     private final ItemStorageRepository itemStorageRepository;
     private final ShoppingListItemRepository shoppingListItemRepository;
+    private final ItemRepository itemRepository;
 
     @Autowired
     public ShoppingListServiceImpl(ShoppingListRepository shoppingListRepository,
                                    RecipeRepository recipeRepository,
                                    ItemStorageRepository itemStorageRepository,
-                                   ShoppingListItemRepository shoppingListItemRepository) {
+                                   ShoppingListItemRepository shoppingListItemRepository,
+                                   ItemRepository itemRepository) {
         this.recipeRepository = recipeRepository;
         this.itemStorageRepository = itemStorageRepository;
         this.shoppingListItemRepository = shoppingListItemRepository;
         this.shoppingListRepository = shoppingListRepository;
+        this.itemRepository = itemRepository;
     }
 
 
@@ -157,9 +161,22 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     }
 
     @Override
-    public List<ItemStorage> findAllByStorageId(Long storageId) {
+    public Long createNewShoppingList() {
+        LOGGER.debug("Creating a new shopping list");
+        return shoppingListRepository.saveAndFlush(new ShoppingList()).getId();
+    }
+
+    @Override
+    public List<Item> findAllItems() {
+        LOGGER.debug("Find all items");
+        return itemRepository.findAll();
+    }
+
+
+    @Override
+    public List<ItemStorage> findAllByShoppingListId(Long storageId) {
         LOGGER.debug("find all storage items of shopping list");
-        return shoppingListItemRepository.findAllByStorageId(storageId);
+        return shoppingListItemRepository.findAllByShoppingListId(storageId);
     }
 
     @Override

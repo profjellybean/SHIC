@@ -1,8 +1,11 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ShoppingListCreationDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
+
+import java.util.List;
+
+import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 
 import java.util.List;
 
@@ -52,7 +55,7 @@ public interface ShoppingListService {
      *
      * @return returns list of storage items
      */
-    List<ItemStorage> findAllByStorageId(Long storageId);
+    List<ItemStorage> findAllByShoppingListId(Long storageId);
 
     /**
      * Checks if shoppinglist exists.
@@ -60,6 +63,20 @@ public interface ShoppingListService {
      * @return returns id of the shopping list
      */
     Long findShoppingListById(Long id);
+
+    /**
+     * creates new shoppinglist if not existing
+     *
+     * @return returns id of the shopping list
+     */
+    Long createNewShoppingList();
+
+    /**
+     * Find all item entries:
+     *
+     * @return ordered list of all item entries
+     */
+    List<Item>findAllItems();
 
     List<ItemStorage> workOffShoppingList(Long shoppingListId, Long storageId, List<ItemStorage> boughtItems);
 }
