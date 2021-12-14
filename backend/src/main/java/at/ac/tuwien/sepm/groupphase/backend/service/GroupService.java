@@ -13,8 +13,8 @@ public interface GroupService {
     /**
      * Adds the application user to the list of users in the group.
      *
-     * @param groupId         the group where to add to
-     * @param applicationUser the application user
+     * @param groupId  the group where to add to
+     * @param username the application username
      */
-    void addUser(Long groupId, ApplicationUser applicationUser);
+    void addUser(Long groupId, String username);
 }

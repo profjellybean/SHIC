@@ -5,12 +5,24 @@
   ApplikationUser-pic <p></p>
   {{this.user.username}}
 </div>
-
+<div align="right">
+  <button>Edit user</button><p></p>
+  <button>delete profile</button><p></p>
+  <button (click)="authService.logoutUser()" routerLink="/">Logout</button>
+</div>
 
 
 <div align="left">
-  <button *ngIf="groupId!==null" type="button" (click)="generateGroup()" class="close" data-dismiss="alert" aria-label="Close">Generate new Group</button> <p></p>
-<button>Edit user</button><p></p>
-<button>delete profile</button><p></p>
-<button (click)="authService.logoutUser()" routerLink="/">Logout</button>
+  <button *ngIf="groupId===null || groupId === undefined" type="button" (click)="generateGroup()" class="close" data-dismiss="alert" aria-label="Close">Generate new Group</button> <p></p>
+  Add a new user to your group {{groupId.valueOf()}}: <p></p>
+  <input [(ngModel)] = "userToAdd" placeholder="enter username"> <button (click)="addUser()">add user</button>
+
+</div>
+<div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+<h4 class="alert-heading">Error adding user
+  <button type="button" class="btn btn-dark" (click)="vanishError()" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</h4>
+<p>{{error}}</p>
 </div>

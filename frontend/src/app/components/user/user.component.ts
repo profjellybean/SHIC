@@ -12,6 +12,8 @@ import {User} from '../../dtos/user';
 })
 export class UserComponent implements OnInit {
   groupId = null;
+  userToAdd: string;
+  error: string;
 
 
   user: User = {
@@ -27,6 +29,7 @@ export class UserComponent implements OnInit {
 
   ngOnInit(): void {
     this.getCurrentGroup();
+    console.log(this.groupId);
   }
 
   generateGroup(){
@@ -46,10 +49,41 @@ export class UserComponent implements OnInit {
       next: data => {
         console.log('received items', data);
         this.user = data;
+        this.groupId = this.user.currGroup.id;
+        console.log(this.groupId);
       },
       error: error => {
         console.error(error.message);
       }
     });
+  }
+
+  addUser() {
+    if(this.userToAdd === undefined || this.userToAdd === null){
+      this.showError('Username cannot be null or empty');
+      return;
+    }
+    if(this.userToAdd.length > 100){
+      this.showError('Username must be < 100 characters');
+      return;
+    }
+    this.groupService.addUser(this.userToAdd, this.groupId).subscribe({
+      next: data => {
+        console.log('added user {} to group {}', this.userToAdd, this.groupId);
+      },
+      error: error => {
+        console.error(error.message);
+        this.showError('Error while adding user to group: ' + error.error.message);
+      }
+    });
+  }
+  public vanishError(): void {
+    console.log('vanishError');
+    this.error = null;
+  }
+
+  private showError(msg: string) {
+    console.log('show error' + msg);
+    this.error = msg;
   }
 }

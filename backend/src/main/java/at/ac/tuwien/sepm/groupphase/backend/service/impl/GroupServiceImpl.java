@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Storage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserGroupRepository;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
+import java.rmi.server.ServerCloneException;
 import java.util.Optional;
 import java.util.Set;
 
@@ -42,18 +44,22 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public void addUser(Long groupId, ApplicationUser applicationUser) {
-        LOGGER.debug("Add user {} to group {}", applicationUser.getUsername(), groupId);
+    public void addUser(Long groupId, String username) {
+        LOGGER.debug("Add user {} to group {}", username, groupId);
         UserGroup userGroup = this.userGroupRepository.getById(groupId);
         Set<ApplicationUser> user = userGroup.getUser();
-        Optional<ApplicationUser> temp = this.userRepository.findUserByUsername(applicationUser.getUsername());
+        for (ApplicationUser u : user) {
+            if (u.getUsername().equals(username)) {
+                throw new ServiceException("The User " + username + " is already in the group.");
+            }
+        }
+        Optional<ApplicationUser> temp = this.userRepository.findUserByUsername(username);
         if (temp.isPresent()) {
-            user.add(applicationUser);
+            user.add(temp.get());
             userGroup.setUser(user);
             this.userGroupRepository.saveAndFlush(userGroup);
         } else {
-            throw new NotFoundException("User " + applicationUser.getUsername() + " was not found!");
+            throw new NotFoundException("User " + username + " was not found!");
         }
-
     }
 }
