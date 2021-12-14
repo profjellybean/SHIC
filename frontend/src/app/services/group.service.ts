@@ -1,8 +1,8 @@
-import {RegisterRequest} from '../dtos/RegisterRequest';
 import {Observable} from 'rxjs';
 import {HttpBackend, HttpClient} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {Injectable} from '@angular/core';
+
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +23,7 @@ export class GroupService {
   }
 
 
-
-
+  addUser(username: string, groupId: number) {
+    return this.httpClient.put(this.userRegisterUri, {}, {params:{username, groupId}});
+  }
 }
