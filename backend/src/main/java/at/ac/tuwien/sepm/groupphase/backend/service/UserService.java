@@ -41,6 +41,7 @@ public interface UserService extends UserDetailsService {
     Long getPrivateShoppingListIdByUsername(String username);
 
 
+    void resendUserEmailConfirmation(String username);
     /**
      * Find an application user based on the username.
      *
@@ -70,4 +71,5 @@ public interface UserService extends UserDetailsService {
 
     void confirmUser(String confirmationToken_encrypted);
 
+    boolean getConfirmationStatusByName(String username);
 }

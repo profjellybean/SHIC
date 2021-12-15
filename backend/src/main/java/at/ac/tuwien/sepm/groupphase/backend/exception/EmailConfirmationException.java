@@ -1,8 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.exception;
 
-public class EmailConfirmationException extends RuntimeException {
-    public EmailConfirmationException() {
-    }
+import org.springframework.security.core.AuthenticationException;
+
+public class EmailConfirmationException  extends AuthenticationException {
 
     public EmailConfirmationException(String message) {
         super(message);
@@ -12,8 +12,5 @@ public class EmailConfirmationException extends RuntimeException {
         super(message, cause);
     }
 
-    public EmailConfirmationException(Exception e) {
-        super(e);
-    }
 
 }

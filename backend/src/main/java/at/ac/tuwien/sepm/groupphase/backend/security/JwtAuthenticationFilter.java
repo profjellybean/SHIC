@@ -2,6 +2,8 @@ package at.ac.tuwien.sepm.groupphase.backend.security;
 
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepm.groupphase.backend.exception.EmailConfirmationException;
+import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,11 +28,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final AuthenticationManager authenticationManager;
     private final JwtTokenizer jwtTokenizer;
+    private final UserService userService;
 
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager, SecurityProperties securityProperties,
-                                   JwtTokenizer jwtTokenizer) {
+                                   JwtTokenizer jwtTokenizer, UserService userService) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenizer = jwtTokenizer;
+        this.userService = userService;
         setFilterProcessesUrl(securityProperties.getLoginUri());
     }
 
@@ -39,11 +43,19 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         throws AuthenticationException {
         UserLoginDto user = null;
         try {
+
             user = new ObjectMapper().readValue(request.getInputStream(), UserLoginDto.class);
-            //Compares the user with CustomUserDetailService#loadUserByUsername and check if the credentials are correct
-            return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+
+            Authentication auth =  authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 user.getUsername(),
                 user.getPassword()));
+
+            if(!userService.getConfirmationStatusByName(user.getUsername())){
+                throw new EmailConfirmationException("Email confirmation needed");
+            }
+
+            return auth;
+
         } catch (IOException e) {
             throw new BadCredentialsException("Wrong API request or JSON schema", e);
         } catch (BadCredentialsException e) {
@@ -52,6 +64,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             }
             throw e;
         }
+
+
     }
 
     @Override

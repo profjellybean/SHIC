@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
 import at.ac.tuwien.sepm.groupphase.backend.exception.EmailConfirmationException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.EmailCooldownException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.PasswordValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.UsernameTakenException;
@@ -87,6 +88,34 @@ public class UserServiceImpl implements UserService {
         throw new NotFoundException(String.format("Could not find the user with the username %s", username));
     }
 
+    @Override
+    public void resendUserEmailConfirmation(String username){
+        Optional<ApplicationUser> applicationUser = userRepository.findUserByUsername(username);
+        if (applicationUser.isEmpty()) {
+            throw new NotFoundException("User not in database");
+        }
+        ApplicationUser user = applicationUser.get();
+        Long confirmationToken = System.currentTimeMillis();
+
+
+        if ( (confirmationToken-user.getConfirmationToken()) <= 300000L ){
+            throw new EmailCooldownException("Email confirmations can be sent only once in 5 minutes");
+        }
+        try {
+            emailService.sendEmailConfirmation(user.getEmail(), user.getUsername(),confirmationToken);
+            user.setConfirmationToken(confirmationToken);
+            LOGGER.info("::: " + user.getConfirmationToken());
+            userRepository.saveAndFlush(user);
+
+            applicationUser = userRepository.findUserByUsername(username);
+            LOGGER.info("::: " +applicationUser.get().getConfirmationToken());
+        }catch (Exception e){
+            LOGGER.error(e.getMessage());
+        }
+
+
+
+    }
 
     @Override
     public void createUserWithEmailVerification(UserRegistrationDto userRegistrationDto) {
@@ -94,7 +123,6 @@ public class UserServiceImpl implements UserService {
         Long confirmationToken = System.currentTimeMillis();
         createUser(userRegistrationDto,confirmationToken);
         try {
-
             emailService.sendEmailConfirmation(userRegistrationDto.getEmail(), userRegistrationDto.getUsername(),confirmationToken);
         }catch (Exception e){
             LOGGER.error(e.getMessage());
@@ -163,6 +191,18 @@ public class UserServiceImpl implements UserService {
 
 
 
+
+    }
+
+    @Override
+    public boolean getConfirmationStatusByName(String username) {
+        LOGGER.info("2:::");
+        Optional<ApplicationUser> user =  userRepository.findUserByUsername(username);
+        if(user.isEmpty()){
+            return false;
+        }
+        LOGGER.info("Ergebjis: " + (user.get().getConfirmationToken().equals(0L)) + "   " + user.get().getConfirmationToken());
+        return user.get().getConfirmationToken() == 0L;
 
     }
 

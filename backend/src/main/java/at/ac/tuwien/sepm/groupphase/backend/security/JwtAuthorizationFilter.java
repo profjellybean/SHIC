@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.security;
 
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
+import at.ac.tuwien.sepm.groupphase.backend.exception.EmailConfirmationException;
+import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -25,15 +27,17 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final SecurityProperties securityProperties;
-
-    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, SecurityProperties securityProperties) {
+    private final UserService userService;
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, SecurityProperties securityProperties, UserService userService) {
         super(authenticationManager);
         this.securityProperties = securityProperties;
+        this.userService = userService;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
         throws IOException, ServletException {
+
         try {
             UsernamePasswordAuthenticationToken authToken = getAuthToken(request);
             if (authToken != null) {
@@ -45,11 +49,12 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             response.getWriter().write("Invalid authorization header or token");
             return;
         }
+
         chain.doFilter(request, response);
     }
 
     private UsernamePasswordAuthenticationToken getAuthToken(HttpServletRequest request)
-        throws JwtException, IllegalArgumentException {
+        throws JwtException, IllegalArgumentException, EmailConfirmationException {
         String token = request.getHeader(securityProperties.getAuthHeader());
         if (token == null || token.isEmpty()) {
             return null;

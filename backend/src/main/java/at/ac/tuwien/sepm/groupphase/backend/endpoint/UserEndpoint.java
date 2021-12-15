@@ -1,17 +1,19 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UsernameDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegistrationDto;
 import at.ac.tuwien.sepm.groupphase.backend.exception.EmailConfirmationException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.EmailCooldownException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.PasswordValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.UsernameTakenException;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -65,6 +67,41 @@ public class UserEndpoint {
 
 
     }
+
+
+    @PermitAll
+    @PutMapping("/confirmation")
+    @ResponseStatus(HttpStatus.OK)
+    public void resendUserEmailConfirmation(@RequestBody UsernameDto usernameDto){
+        LOGGER.info("Endpoint: PUT /user/confirmation {}"+usernameDto.getUsername());
+
+
+        try {
+            userService.resendUserEmailConfirmation(usernameDto.getUsername());
+        }catch (NotFoundException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
+        }catch (EmailCooldownException e){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,e.getMessage());
+        }
+
+
+    }
+
+
+    @PermitAll
+    @GetMapping("/confirmation")
+    @ResponseStatus(HttpStatus.OK)
+    public boolean isUserConfirmed(Authentication authentication){
+        LOGGER.info("Endpoint: GET /user/confirmation");
+        try {
+            return userService.getConfirmationStatusByName(authentication.getName());
+        }catch (EmailConfirmationException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
+        }
+
+
+    }
+
     @PermitAll                   //TODO just for Tests
     @PatchMapping
     public void test(@RequestBody UserLoginDto userLoginDto){
