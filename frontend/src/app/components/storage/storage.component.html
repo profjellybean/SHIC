@@ -1,4 +1,9 @@
 <h1>Storage</h1>
+
+<div>
+  <label for="new-name">Search for name: </label>
+  <input #name (keyup) = "name.value= this.searchItem.name; this.searchItems(this.searchItem)" (change)="searchItems(this.searchItem)" id="new-name" [(ngModel)]="this.searchItem.name" placeholder="name"/>
+</div>
 <!--TABLE START-->
 <table class="table table-striped">
   <thead class="thead-dark">

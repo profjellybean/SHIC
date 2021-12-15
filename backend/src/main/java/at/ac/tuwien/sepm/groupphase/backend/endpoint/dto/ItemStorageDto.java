@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -13,7 +15,11 @@ public class ItemStorageDto {
     private Long quantity;
     private String notes;
     private byte[] image;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date expDate;
+
     private int amount;
     private Location locationTag;
 
