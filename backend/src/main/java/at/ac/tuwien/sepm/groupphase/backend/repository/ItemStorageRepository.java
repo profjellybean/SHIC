@@ -18,21 +18,6 @@ public interface ItemStorageRepository extends JpaRepository<ItemStorage, Long> 
 
     void deleteById(Long id);
 
-    List<ItemStorage> findAllByStorageIdAndAmountGreaterThanEqual(Long id, int amount);
-
-    List<ItemStorage> findAllByStorageIdAndExpDateAfterOrExpDateEquals(Long storageId, Date expDate, Date expDate2);
-
-    List<ItemStorage> findAllByStorageIdAndNotesContainingIgnoreCase(Long storageId, String notes);
-
-    List<ItemStorage> findAllByStorageIdAndLocationTagEquals(Long storageId, Location locationTag);
-
-    List<ItemStorage> findAllByStorageIdAndQuantityEquals(Long storageId, Long quantity);
-
-    List<ItemStorage> findAllByStorageIdAndShoppingListIdEquals(Long storageId, Long shoppingListId);
-
-    List<ItemStorage> findAllByStorageIdAndAmountGreaterThanEqualAndLocationTagEqualsAndNameContainingIgnoreCaseAndNotesContainingIgnoreCaseAndExpDateAfterAndExpDateIsNull(
-        Long storageId, int amount, Location locationTag, String name, String notes, Date expDate);
-
     @Modifying
     @Query(value = "SELECT * FROM ITEM_STORAGE WHERE (STORAGE_ID = :storageId) AND ((:amount = 0) OR (AMOUNT>= :amount)) AND ((:locationTag IS NULL) OR (LOCATION_TAG = :locationTag)) "
                                 + "AND ((:name IS NULL) OR (LOWER(NAME) like LOWER(:name))) "

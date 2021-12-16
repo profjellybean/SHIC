@@ -49,6 +49,21 @@ public class StorageServiceImpl implements StorageService {
     @Override
     public List<ItemStorage> searchItem(ItemStorage itemStorage) {
         LOGGER.info("Search for Items by ItemStorage {}", itemStorage);
+        if (itemStorage.getNotes() != null) {
+            if (itemStorage.getNotes().trim().equals("")) {
+                itemStorage.setNotes(null);
+            }
+        }
+        if (itemStorage.getName() != null) {
+            if (itemStorage.getName().trim().equals("")) {
+                itemStorage.setName(null);
+            }
+        }
+        if (itemStorage.getLocationTag() != null) {
+            if (itemStorage.getLocationTag().trim().equals("")) {
+                itemStorage.setLocationTag(null);
+            }
+        }
 
         return itemStorageRepository.findAllByItemStorage(
             itemStorage.getStorageId(), itemStorage.getAmount(), itemStorage.getLocationTag() == null ? null : itemStorage.getLocationTag(),

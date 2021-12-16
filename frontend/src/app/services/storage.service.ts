@@ -19,10 +19,10 @@ export class StorageService {
   /**
    * Loads items from the backend with specific parameters
    */
-  searchItems(params: Params): Observable<Item[]> {
+  searchItems(params: string): Observable<Item[]> {
     console.log('Search for items');
     return this.httpClient.get<Item[]>(
-      this.storageBaseUri+'/search', {params});
+      this.storageBaseUri+'/search'+params);
   }
 
 
