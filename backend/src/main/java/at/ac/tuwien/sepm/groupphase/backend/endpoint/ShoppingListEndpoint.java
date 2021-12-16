@@ -109,25 +109,6 @@ public class ShoppingListEndpoint {
     }
 
 
-    @PermitAll
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public ShoppingListDto getPrivateShoppingListForUser(Authentication authentication) {
-        try {
-
-
-            Long id = userService.getPrivateShoppingListIdByUsername(authentication.getName());
-
-            return shoppingListMapper.shoppingListToShoppingListDto(shoppingListService.getShoppingListByid(id));
-
-
-        } catch (NotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()); // Todo
-        }
-
-    }
 
     @PermitAll
     @PutMapping(value = "/{id}")
