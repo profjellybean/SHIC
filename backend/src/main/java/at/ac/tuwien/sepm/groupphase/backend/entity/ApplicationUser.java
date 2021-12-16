@@ -100,6 +100,7 @@ public class ApplicationUser {
             && Objects.equals(password, that.password)
             && Objects.equals(currGroup, that.currGroup)
             && Objects.equals(privList, that.privList);
+
     }
 
     @Override

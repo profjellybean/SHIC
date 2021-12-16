@@ -51,7 +51,7 @@ public class RegisterServiceImpl implements RegisterService {
         } else if (billOptional.isEmpty()) {
             throw new NotFoundException(String.format("Could not find bill with id %", billId));
         } else {
-            throw new NotFoundException(String.format("Could not find user with id %", userId));
+            throw new NotFoundException(String.format("Could not find user with id %s", userId));
         }
     }
 

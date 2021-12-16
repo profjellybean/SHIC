@@ -46,4 +46,10 @@ public interface UserService extends UserDetailsService {
     void createUser(UserLoginDto userLoginDto);
 
 
+    /**
+     * On successful login, sets the current groupId in User.
+     *
+     * @param username the name of the user
+     */
+    void setCurrUserGroup(String username);
 }

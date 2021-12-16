@@ -48,8 +48,7 @@ public class BillEndpoint {
     @Operation(summary = "Publish a new message", security = @SecurityRequirement(name = "apiKey"))
     public BillDto findById(@PathVariable Long id) {
         LOGGER.info("POST /api/v1/bill {}", id);
-        BillDto billDto = billMapper.billToBillDto(billService.findOne(id));
-        return billDto;
+        return billMapper.billToBillDto(billService.findOne(id));
     }
 
 }
