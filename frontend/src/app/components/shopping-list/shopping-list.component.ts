@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import {ShoppingListService} from '../../services/shoppinglist.service';
+import {Component, OnInit} from '@angular/core';
+import {ShoppingListService} from '../../services/shopping-list.service';
 
 import {MessageService} from '../../services/message.service';
+import {Item} from '../../dtos/item';
 
 
 @Component({
@@ -13,19 +14,17 @@ export class ShoppingListComponent implements OnInit {
 
   error = false;
   errorMessage = '';
-  constructor(private shoppingListService: ShoppingListService,private messageService: MessageService) { }
-
   itemsAdd: Item[] = null;
   itemToAdd: Item = null;
 
-  constructor(private messageService: MessageService,
-              private shoppingListService: ShoppingListService) { }
+  constructor(private shoppingListService: ShoppingListService,private messageService: MessageService) { }
+
 
   ngOnInit(): void {
     this.loadItemsToAdd();
   }
 
-  getShoppingList(){
+  getShoppingList() {
     this.shoppingListService.getShoppingList().subscribe({
         next: res => {
           console.log(res);
@@ -36,6 +35,19 @@ export class ShoppingListComponent implements OnInit {
       }
     );
   }
+
+  workOffShoppingist(boughtItems: Item[]) {
+    this.shoppingListService.workOffShoppingList(boughtItems).subscribe({
+        next: res => {
+          console.log(res);
+        },
+        error: err => {
+          console.log(err);
+        }
+      }
+    );
+  }
+
   /**
    * Error flag will be deactivated, which clears the error message
    */

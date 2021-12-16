@@ -12,10 +12,14 @@ import {ItemStorage} from '../dtos/itemStorage';
 })
 export class ShoppingListService {
 
-
   private shoppingListBaseUri: string = this.globals.backendUri + '/shoppinglist';
 
   constructor(private httpClient: HttpClient, private globals: Globals) {
+  }
+
+  getShoppingList(): Observable<string> {
+
+    return this.httpClient.get<string>(this.shoppingListBaseUri);
   }
 
 
@@ -41,5 +45,10 @@ export class ShoppingListService {
   findAllItems(): Observable<Item[]>{
     console.log('load items');
     return this.httpClient.get<Item[]>(this.shoppingListBaseUri + '/items');
+  }
+
+  workOffShoppingList(boughtItems: Item[]): Observable<Item[]> {
+    console.log('work off shopping-list: ' + boughtItems);
+    return this.httpClient.put<Item[]>(this.shoppingListBaseUri + boughtItems.toString(), boughtItems);
   }
 }

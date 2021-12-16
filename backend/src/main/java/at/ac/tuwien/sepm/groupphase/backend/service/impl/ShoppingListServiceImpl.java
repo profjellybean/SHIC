@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ItemRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListItemRepository;
@@ -161,12 +162,6 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     }
 
     @Override
-    public Long createNewShoppingList() {
-        LOGGER.debug("Creating a new shopping list");
-        return shoppingListRepository.saveAndFlush(new ShoppingList()).getId();
-    }
-
-    @Override
     public List<Item> findAllItems() {
         LOGGER.debug("Find all items");
         return itemRepository.findAll();
@@ -190,16 +185,16 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     }
 
     @Override
-    public List<ItemStorage> workOffShoppingList(Long shoppingListId, Long storageId, List<ItemStorage> boughtItems) {
+    public List<ItemStorage> workOffShoppingList(Long storageId, List<ItemStorage> boughtItems) {
         LOGGER.debug("Work Off Shoppinglist {}", boughtItems);
 
         for (ItemStorage item : boughtItems) {
             ItemStorage itemStorage = itemStorageRepository.getById(item.getId());
-            if(itemStorage.getShoppingListId().equals(shoppingListId)) {
-                itemStorage.setShoppingListId(null);
-                itemStorage.setStorageId(storageId);
-                shoppingListItemRepository.saveAndFlush(itemStorage);
-            }
+            //if (itemStorage.getShoppingListId().equals(shoppingListId)) {
+            item.setShoppingListId(null);
+            item.setStorageId(storageId);
+            shoppingListItemRepository.saveAndFlush(item);
+            //}
         }
 
         return boughtItems;
