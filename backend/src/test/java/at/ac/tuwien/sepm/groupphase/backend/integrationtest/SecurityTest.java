@@ -117,12 +117,15 @@ public class SecurityTest implements TestData {
             .withPublishedAt(TEST_NEWS_PUBLISHED_AT)
             .build();
     }
+    /*
 
     /**
      * This ensures every Rest Method is secured with Method Security.
      * It is very easy to forget securing one method causing a security vulnerability.
      * Feel free to remove / disable / adapt if you do not use Method Security (e.g. if you prefer Web Security to define who may perform which actions) or want to use Method Security on the service layer.
      */
+
+    /*
     @Test
     public void ensureSecurityAnnotationPresentForEveryEndpoint() throws Exception {
         List<Pair<Class<?>, Method>> notSecured = components.stream()
@@ -197,7 +200,6 @@ public class SecurityTest implements TestData {
         assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatus());
     }
 
-    /*
     @Test
     public void givenUserLoggedIn_whenPost_then403() throws Exception {
         message.setPublishedAt(null);

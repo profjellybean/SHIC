@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -13,12 +15,37 @@ public class ItemStorageDto {
     private Long quantity;
     private String notes;
     private byte[] image;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date expDate;
+
     private int amount;
-    private Location locationTag;
+    private String locationTag;
 
 
     public ItemStorageDto() {
+    }
+
+    public ItemStorageDto(Long storageId, Long shoppingListId, Long id, String name, Long quantity, String notes, byte[] image, Date expDate, int amount, String locationTag) {
+        this.storageId = storageId;
+        this.shoppingListId = shoppingListId;
+        this.id = id;
+        this.name = name;
+        this.quantity = quantity;
+        this.notes = notes;
+        this.image = image;
+        this.expDate = expDate;
+        this.amount = amount;
+        this.locationTag = locationTag;
+    }
+
+    public ItemStorageDto(Long storageId, String name, String notes, int amount, String locationTag) {
+        this.storageId = storageId;
+        this.name = name;
+        this.notes = notes;
+        this.amount = amount;
+        this.locationTag = locationTag;
     }
 
     public Long getStorageId() {
@@ -85,11 +112,11 @@ public class ItemStorageDto {
         this.amount = amount;
     }
 
-    public Location getLocationTag() {
+    public String getLocationTag() {
         return locationTag;
     }
 
-    public void setLocationTag(Location locationTag) {
+    public void setLocationTag(String locationTag) {
         this.locationTag = locationTag;
     }
 

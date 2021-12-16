@@ -7,4 +7,5 @@ export class ItemStorage {
   amount: number;
   locationTag: Location;
   storageId: number;
+  shoppingListId: number;
 }
