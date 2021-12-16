@@ -28,7 +28,7 @@ public class ItemStorageDataGenerator {
     private final UnitOfQuantityRepository unitOfQuantityRepository;
     private static final int NUMBER_OF_ITEMSTORAGES = 5;
     private static final Long ID_OF_STORAGE = 1L;
-    private static final Long ID_OF_SHOPPINGLIST = null;
+    private static final Long ID_OF_SHOPPINGLIST = 1L;
     private static final boolean CREATE_REAL_ITEMSTORAGES = true;
     private final StorageRepository storageRepository;
 

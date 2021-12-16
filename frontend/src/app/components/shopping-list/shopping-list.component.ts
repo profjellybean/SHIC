@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, TemplateRef} from '@angular/core';
 import {MessageService} from '../../services/message.service';
 import {ShoppingListService} from '../../services/shopping-list.service';
 import {Item} from '../../dtos/item';
 import {ItemStorage} from '../../dtos/itemStorage';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-shopping-list',
@@ -13,12 +14,15 @@ export class ShoppingListComponent implements OnInit {
 
   error = false;
   errorMessage = '';
+  submitted = false;
+
 
   itemsAdd: Item[] = null;
   itemToAdd: Item = null;
 
   constructor(private messageService: MessageService,
-              private shoppingListService: ShoppingListService) { }
+              private shoppingListService: ShoppingListService,
+              private modalService: NgbModal) { }
 
   ngOnInit(): void {
     this.loadItemsToAdd();
@@ -53,6 +57,27 @@ export class ShoppingListComponent implements OnInit {
         this.defaultServiceErrorHandling(err);
       }
     });
+  }
+
+  addItemForm(form) {
+    this.submitted = true;
+
+    if(form.valid) {
+      //this.storageService.addItem(this.item);
+      console.log('form item to add', this.itemToAdd);
+      this.addItemToShoppingList();
+      this.clearForm();
+    }
+  }
+
+  openAddModal(itemAddModal: TemplateRef<any>) {
+    this.itemToAdd = new Item();
+    this.modalService.open(itemAddModal, {ariaLabelledBy: 'modal-basic-title'});
+  }
+
+  private clearForm() {
+    this.itemToAdd = new Item();
+    this.submitted = false;
   }
 
   private defaultServiceErrorHandling(error: any) {

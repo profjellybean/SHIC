@@ -73,7 +73,7 @@ public class ShoppingListEndpoint {
     @Operation(summary = "Get list of all items") //TODO: add security
     public List<ItemDto> findAllItems() {
         LOGGER.info("GET /items");
-        return itemMapper.itemsToItemsDto(shoppingListService.findAllItems());
+        return itemMapper.itemsToItemDtos(shoppingListService.findAllItems());
     }
 
 }
