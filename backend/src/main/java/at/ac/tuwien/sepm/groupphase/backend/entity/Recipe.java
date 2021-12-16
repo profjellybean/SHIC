@@ -2,8 +2,17 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.RecipeCategory;
 
-import javax.persistence.*;
-import javax.transaction.Transactional;
+import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import java.util.Objects;
 import java.util.Set;
 
@@ -21,7 +30,7 @@ public class Recipe {
     @Column(nullable = false, name = "description")
     private String description;
 
-    @OneToMany(cascade=CascadeType.PERSIST)//(fetch=FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.PERSIST)//(fetch=FetchType.EAGER)
     @Column(nullable = true, name = "ingredients")
     private Set<ItemStorage> ingredients;
 
@@ -75,8 +84,12 @@ public class Recipe {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Recipe recipe = (Recipe) o;
         return Objects.equals(id, recipe.id) && Objects.equals(name, recipe.name) && Objects.equals(description, recipe.description) && Objects.equals(ingredients, recipe.ingredients) && Objects.equals(categories, recipe.categories);
     }
@@ -88,12 +101,18 @@ public class Recipe {
 
     @Override
     public String toString() {
-        return "Recipe{" +
-            "id=" + id +
-            ", name='" + name + '\'' +
-            ", description='" + description + '\'' +
-            ", ingredients=" + ingredients +
-            ", categories=" + categories +
+        return "Recipe{"
+            +
+            "id=" + id
+            +
+            ", name='" + name + '\''
+            +
+            ", description='" + description + '\''
+            +
+            ", ingredients=" + ingredients
+            +
+            ", categories=" + categories
+            +
             '}';
     }
 
@@ -104,26 +123,33 @@ public class Recipe {
         private Set<ItemStorage> ingredients;
         private Set<RecipeCategory> categories;
 
-        private RecipeBuilder() { }
+        private RecipeBuilder() {
+        }
 
-        public static RecipeBuilder aRecipe() {return new RecipeBuilder();}
+        public static RecipeBuilder aRecipe() {
+            return new RecipeBuilder();
+        }
 
         public RecipeBuilder withId(Long id) {
             this.id = id;
             return this;
         }
+
         public RecipeBuilder withName(String name) {
             this.name = name;
             return this;
         }
+
         public RecipeBuilder withDescription(String description) {
             this.description = description;
             return this;
         }
+
         public RecipeBuilder withIngredients(Set<ItemStorage> ingredients) {
             this.ingredients = ingredients;
             return this;
         }
+
         public RecipeBuilder withCategories(Set<RecipeCategory> categories) {
             this.categories = categories;
             return this;

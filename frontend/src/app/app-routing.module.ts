@@ -12,6 +12,8 @@ import {RecipeDetailComponent} from './components/recipe-detail/recipe-detail.co
 import {RegisterUserComponent} from './components/registerUser/registerUser.component';
 import {StorageAddItemComponent} from './components/storage-add-item/storage-add-item.component';
 
+import {UserComponent} from './components/user/user.component';
+import {HomeComponent} from './components/home/home.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -24,7 +26,9 @@ const routes: Routes = [
   {path: 'storage/add', component: StorageAddItemComponent},
   {path: 'recipe/:id', canActivate: [AuthGuard], component: RecipeDetailComponent},
   {path: 'recipe', canActivate: [AuthGuard], component: RecipeComponent},
-  {path: 'shopping-list', canActivate: [AuthGuard], component: ShoppingListComponent}
+  {path: 'shopping-list', canActivate: [AuthGuard], component: ShoppingListComponent},
+  {path: 'user', canActivate: [AuthGuard], component: UserComponent}
+
 ];
 
 @NgModule({

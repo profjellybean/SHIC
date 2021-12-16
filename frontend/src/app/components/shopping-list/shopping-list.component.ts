@@ -1,3 +1,6 @@
+import { Component, OnInit } from '@angular/core';
+import {ShoppingListService} from '../../services/shoppinglist.service';
+
 import {Component, OnInit, TemplateRef} from '@angular/core';
 import {MessageService} from '../../services/message.service';
 import {ShoppingListService} from '../../services/shopping-list.service';
@@ -14,7 +17,7 @@ export class ShoppingListComponent implements OnInit {
 
   error = false;
   errorMessage = '';
-  submitted = false;
+ submitted = false;
 
 
   itemsAdd: Item[] = null;
@@ -28,6 +31,17 @@ export class ShoppingListComponent implements OnInit {
     this.loadItemsToAdd();
   }
 
+  getShoppingList(){
+    this.shoppingListService.getShoppingList().subscribe({
+        next: res => {
+          console.log(res);
+        },
+        error: err => {
+          console.error(err);
+        }
+      }
+    );
+  }
   /**
    * Error flag will be deactivated, which clears the error message
    */

@@ -7,7 +7,6 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.ItemRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitOfQuantityRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -41,7 +40,7 @@ public class ItemDataGenerator {
 
     @PostConstruct
     void generateItem() {
-        if(itemRepository.findAll().size() > 0) {
+        if (itemRepository.findAll().size() > 0) {
             LOGGER.debug("Item already generated");
         } else {
             LOGGER.debug("generating Item entries");

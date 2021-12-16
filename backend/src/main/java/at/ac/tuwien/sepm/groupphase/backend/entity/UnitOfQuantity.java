@@ -1,10 +1,15 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Objects;
 
 @Entity
-@Table(name ="UnitOfQuantity")
+@Table(name = "UnitOfQuantity")
 public class UnitOfQuantity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,9 +18,10 @@ public class UnitOfQuantity {
     @Column(name = "Name")
     private String name;
 
-    public UnitOfQuantity(){}
+    public UnitOfQuantity() {
+    }
 
-    public UnitOfQuantity(String name){
+    public UnitOfQuantity(String name) {
         this.name = name;
     }
 
@@ -37,8 +43,12 @@ public class UnitOfQuantity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         UnitOfQuantity that = (UnitOfQuantity) o;
         return Objects.equals(name, that.name);
     }
@@ -50,9 +60,12 @@ public class UnitOfQuantity {
 
     @Override
     public String toString() {
-        return "UnitOfQuantity{" +
-            "id=" + id +
-            ", name='" + name + '\'' +
+        return "UnitOfQuantity{"
+            +
+            "id=" + id
+            +
+            ", name='" + name + '\''
+            +
             '}';
     }
 }
