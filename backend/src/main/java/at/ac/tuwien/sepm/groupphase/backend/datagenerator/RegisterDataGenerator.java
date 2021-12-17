@@ -121,6 +121,7 @@ public class RegisterDataGenerator {
                 {
                     add(user3);
                     add(user4);
+                    add(userRepository.getById(2L));
                 }
             });
 
@@ -131,6 +132,7 @@ public class RegisterDataGenerator {
                 {
                     add(user3);
                     add(user4);
+                    add(userRepository.getById(2L));
                 }
             });
 

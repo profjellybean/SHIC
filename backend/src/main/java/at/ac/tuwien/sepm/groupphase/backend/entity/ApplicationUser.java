@@ -95,13 +95,16 @@ public class ApplicationUser {
             return false;
         }
         ApplicationUser that = (ApplicationUser) o;
-        return Objects.equals(id, that.id) && Objects.equals(username, that.username) && Objects.equals(password, that.password) && Objects.equals(currGroup, that.currGroup);
+        return Objects.equals(id, that.id)
+            && Objects.equals(username, that.username)
+            && Objects.equals(password, that.password)
+            && Objects.equals(currGroup, that.currGroup)
+            && Objects.equals(privList, that.privList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, password);
+        return Objects.hash(id, username, password, currGroup, privList);
     }
-
 }
 
