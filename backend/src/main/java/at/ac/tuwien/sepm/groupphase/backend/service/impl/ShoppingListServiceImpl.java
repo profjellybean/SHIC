@@ -7,6 +7,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.RecipeRepository;
@@ -77,25 +78,24 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     @Transactional
     public List<ItemStorage> planRecipe(Long recipeId, Authentication authentication) {
         LOGGER.debug("Service: plan Recipe {} based on user {}.", recipeId, authentication.getName());
-
         if (recipeId == null) {
-            throw new ServiceException("Recipe does not exist");
+            throw new ValidationException("Recipe does not exist");
         }
         ApplicationUser user = userService.findApplicationUserByUsername(authentication.getName());
         if (user == null) {
-            throw new ServiceException("User does not exist");
+            throw new ValidationException("User does not exist");
         }
         UserGroup group = user.getCurrGroup();
         if (group == null) {
-            throw new ServiceException("Storage does not exist");
+            throw new ValidationException("Storage does not exist");
         }
         Long storageId = group.getStorageId();
         if (storageId == null) {
-            throw new ServiceException("Storage does not exist");
+            throw new ValidationException("Storage does not exist");
         }
         Long shoppingListId = group.getPublicShoppingListId();
         if (shoppingListId == null) {
-            throw new ServiceException("Public ShoppingList does not exist");
+            throw new ValidationException("Public ShoppingList does not exist");
         }
 
         Recipe recipe = null;

@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @ExtendWith(SpringExtension.class)
@@ -54,15 +55,14 @@ public class ShoppingListEndpointTest implements TestData {
     }
 
     @Test
-    public void givenNoRecipe_whenPlanRecipe_then500() throws Exception {
-        MvcResult mvcResult = this.mockMvc.perform(get(SHOPPINGLIST_ENDPOINT_URI)
+    public void givenNoRecipe_whenPlanRecipe_then400() throws Exception {
+        MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), response.getStatus());
-        //assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
 
     }
 }
