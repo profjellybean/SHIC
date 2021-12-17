@@ -33,11 +33,11 @@ public class RegisterServiceImpl implements RegisterService {
 
 
     @Override
-    public Register confirmPayment(Long registerId, Long billId, Long userId) {
-        LOGGER.debug("Service: confirm Payment {}{}", registerId, userId);
+    public Register confirmPayment(Long registerId, Long billId, String username) {
+        LOGGER.debug("Service: confirm Payment {}{}", registerId, username);
         Optional<Register> registerOptional = registerRepository.findById(registerId);
         Optional<Bill> billOptional = billRepository.findById(billId);
-        Optional<ApplicationUser> userOptional = userRepository.findById(userId);
+        Optional<ApplicationUser> userOptional = userRepository.findUserByUsername(username);
         if (registerOptional.isPresent() && billOptional.isPresent() && userOptional.isPresent()) {
             Register register = registerOptional.get();
             Bill bill = billOptional.get();
@@ -50,10 +50,10 @@ public class RegisterServiceImpl implements RegisterService {
             return register;
         } else if (registerOptional.isEmpty()) {
             throw new NotFoundException(String.format("Could not find register with id %s", registerId));
-        } else if(billOptional.isEmpty()) {
+        } else if (billOptional.isEmpty()) {
             throw new NotFoundException(String.format("Could not find bill with id %s", billId));
         } else {
-            throw new NotFoundException(String.format("Could not find user with id %s", userId));
+            throw new NotFoundException(String.format("Could not find user with username %s", username));
         }
     }
 

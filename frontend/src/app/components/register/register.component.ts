@@ -1,10 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {RegisterService} from '../../services/register.service';
 import {ActivatedRoute} from '@angular/router';
 import {Bill} from '../../dtos/bill';
 import {User} from '../../dtos/user';
 import {BillService} from '../../services/bill.service';
 import {Register} from '../../dtos/register';
+import {UserService} from '../../services/user.service';
+// @ts-ignore
+import jwt_decode from 'wt-decode';
+import {AuthService} from '../../services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -46,23 +50,25 @@ export class RegisterComponent implements OnInit {
   };
 
   user: User = {
-    id: 3,
-    username: 'tom@email.com',
-    password: 'password'
+    //@ts-ignore
+    username: jwt_decode(this.authService.getToken()).sub.trim(),
+    password: null,
+    id: null,
   };
 
-  constructor(private registerService: RegisterService, private billService: BillService, public route: ActivatedRoute) { }
+  constructor(private registerService: RegisterService, private billService: BillService, public route: ActivatedRoute,
+              private authService: AuthService) {
+  }
 
   ngOnInit(): void {
     //const id = +this.route.snapshot.paramMap.get('id');
     this.loadRegister(1);
-    console.log('after'+this.billArray);
   }
 
   public confirmPayment(id: number) {
     this.loadBill(id);
 
-    this.registerService.confirmPayment(1, this.user.id, 1).subscribe(
+    this.registerService.confirmPayment(this.bill.id, this.user.username, 1).subscribe(
       (register: Register) => {
         this.register.id = register.id;
         this.register.bills = register.bills;
@@ -76,7 +82,7 @@ export class RegisterComponent implements OnInit {
 
   private removeName(bill: Bill) {
     for (let i = 0; i < this.notPaidNames.length; i++) {
-      if(this.notPaidNames[i].id === this.user.id) {
+      if (this.notPaidNames[i].username === this.user.username) {
         this.notPaidNames.splice(i, 1);
       }
     }
