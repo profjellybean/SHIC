@@ -1,13 +1,3 @@
-
-<div class="tabs">
-
-  <input type="radio"  name="tabs" id="tab1" checked />
-  <label style="margin-left: 0.5em" for="tab1">Public</label>
-
-  <input type="radio" name="tabs" id="tab2" />
-  <label for="tab2" (click)="getShoppingList()">Private</label>
-
-</div>
 <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
   <strong>Error! </strong> {{ errorMessage }}
   <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
@@ -15,33 +5,29 @@
   </button>
 </div>
 
-<h1>Shopping List</h1>
-<!--
-<form (ngSubmit)="addItemToShoppingList()">
-
-  <div class="form-group">
-    <label for="itemToAdd">Add item: </label>
-    <select
-      class="form-control"
-      id="itemToAdd"
-      name="itemToAdd"
-      [(ngModel)]="this.itemToAdd">
-      <option *ngFor="let myItem of itemsAdd;" [ngValue]="myItem">{{myItem.name}}</option>
-      <option [ngValue]="null">none</option>
-    </select>
-  </div>
-  <button type="submit">add</button>
-</form>
-
--->
-
-<button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(itemAddModal)">Add new Item</button>
+<p>storage-add-item works!</p>
+<table class="table">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Unit of Quantity</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let item of items">
+    <td>{{item.id}}</td>
+    <td>{{item.name}}</td>
+    <td>{{item.quantity}}</td>
+    <td> <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(itemAddModal)">Add</button> </td>
+  </tr>
+  </tbody>
+</table>
 
 <div class="row p-2 mb-4">
   <!--
   <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(itemAddModal)">Add</button>
 -->
-
   <ng-template #itemAddModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Item</h5>
@@ -53,27 +39,9 @@
       <form (ngSubmit)="addItemForm(itemForm)" #itemForm="ngForm">
 
         <div class="form-group">
-          <label for="itemToAdd2">Add item: </label>
-          <select
-            class="form-control"
-            id="itemToAdd2"
-            name="itemToAdd2"
-            [(ngModel)]="this.itemToAdd">
-            <option *ngFor="let myItem of itemsAdd;" [ngValue]="myItem">{{myItem.name}}</option>
-            <option [ngValue]="null">none</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="inputName">Name</label>
-          <textarea rows="1" name="name" class="form-control" id="inputName" required
-                    aria-describedby="nameHelp" placeholder="Enter Name" [(ngModel)]="itemToAdd.name"></textarea>
-        </div>
-
-        <div class="form-group">
           <label for="inputAmount">Amount</label>
           <input type="number" name="amount" class="form-control" id="inputAmount" required
-                 aria-describedby="amountHelp" placeholder="Enter Amount" [(ngModel)]="itemToAdd.amount">
+                 aria-describedby="amountHelp" placeholder="Enter Amount" [(ngModel)]="item.amount">
           <div *ngIf="submitted && itemForm.controls.title.errors" class="error">
             <small class="form-text text-warning" *ngIf="itemForm.controls.title.errors.required">Amount
               is
@@ -85,14 +53,25 @@
         <div class="form-group">
           <label for="inputNotes">Notes</label>
           <textarea rows="3" name="notes" class="form-control" id="inputNotes" required
-                    aria-describedby="notesHelp" placeholder="Enter Notes" [(ngModel)]="itemToAdd.notes"></textarea>
+                    aria-describedby="notesHelp" placeholder="Enter Notes" [(ngModel)]="item.notes"></textarea>
         </div>
 
+        <div class="form-group">
+          <label for="inputLocation">Location</label>
+          <input type="text" name="location" class="form-control" id="inputLocation" required
+                 aria-describedby="locationHelp" placeholder="Enter Location" [(ngModel)]="item.locationTag">
+        </div>
+
+        <div class="form-group">
+          <label for="inputExpDate">Expiration Date</label>
+          <input type="date" name="expDate" class="form-control" id="inputExpDate" required
+                 aria-describedby="expDateHelp" placeholder="Enter expDate" [(ngModel)]="item.expDate">
+        </div>
 
         <div class="form-group">
           <label for="inputUnitOfQuantity">Unit of Quantity</label>
           <input type="number" name="quantity" class="form-control" id="inputUnitOfQuantity" required
-                 aria-describedby="quantityHelp" placeholder="Enter Unit of Quantity" [(ngModel)]="itemToAdd.quantity">
+                 aria-describedby="quantityHelp" placeholder="Enter Unit of Quantity" [(ngModel)]="item.quantity">
         </div>
 
         <button type="button" (click)="addItemForm(itemForm)" id="add-msg" class="btn btn-success float-right">Add item</button>
@@ -104,7 +83,6 @@
     </div>
   </ng-template>
 
+  <button type="button" (click)="addItem(testItem)" class="btn btn-success float-right">Add testItem</button>
 
 </div>
-
-<app-shopping-list-list></app-shopping-list-list>

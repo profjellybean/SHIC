@@ -1,9 +1,9 @@
-import {Component, OnInit} from '@angular/core';
-import {ShoppingListService} from '../../services/shopping-list.service';
-
+import { Component, OnInit } from '@angular/core';
 import {MessageService} from '../../services/message.service';
+import {ShoppingListService} from '../../services/shopping-list.service';
 import {Item} from '../../dtos/item';
-
+import {ItemStorage} from '../../dtos/itemStorage';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-shopping-list',
@@ -14,14 +14,24 @@ export class ShoppingListComponent implements OnInit {
 
   error = false;
   errorMessage = '';
+  submitted = false;
+
   itemsAdd: Item[] = null;
   itemToAdd: Item = null;
 
-  constructor(private shoppingListService: ShoppingListService,private messageService: MessageService) { }
-
+  constructor(private messageService: MessageService,
+              private shoppingListService: ShoppingListService,
+              private modalService: NgbModal) { }
 
   ngOnInit(): void {
     this.loadItemsToAdd();
+  }
+
+  /**
+   * Error flag will be deactivated, which clears the error message
+   */
+  vanishError() {
+    this.error = false;
   }
 
   getShoppingList() {
@@ -36,7 +46,7 @@ export class ShoppingListComponent implements OnInit {
     );
   }
 
-  workOffShoppingist(boughtItems: Item[]) {
+  workOffShoppingList(boughtItems: Item[]) {
     this.shoppingListService.workOffShoppingList(boughtItems).subscribe({
         next: res => {
           console.log(res);
@@ -46,13 +56,6 @@ export class ShoppingListComponent implements OnInit {
         }
       }
     );
-  }
-
-  /**
-   * Error flag will be deactivated, which clears the error message
-   */
-  vanishError() {
-    this.error = false;
   }
 
   loadItemsToAdd() {
@@ -69,7 +72,35 @@ export class ShoppingListComponent implements OnInit {
     this.itemToAdd.shoppingListId = 1;
     this.itemToAdd.id = null;
     console.log('item to add', this.itemToAdd);
-    this.shoppingListService.addItemToShoppingList(this.itemToAdd);
+    this.shoppingListService.addItemToShoppingList(this.itemToAdd).subscribe({
+      next: data => {
+        console.log('add item', data);
+      },
+      error: err => {
+        this.defaultServiceErrorHandling(err);
+      }
+    });
+  }
+
+  addItemForm(form) {
+    this.submitted = true;
+
+    if(form.valid) {
+      //this.storageService.addItem(this.item);
+      console.log('form item to add', this.itemToAdd);
+      this.addItemToShoppingList();
+      this.clearForm();
+    }
+  }
+
+  openAddModal(itemAddModal: TemplateRef<any>) {
+    this.itemToAdd = new Item();
+    this.modalService.open(itemAddModal, {ariaLabelledBy: 'modal-basic-title'});
+  }
+
+  private clearForm() {
+    this.itemToAdd = new Item();
+    this.submitted = false;
   }
 
   private defaultServiceErrorHandling(error: any) {

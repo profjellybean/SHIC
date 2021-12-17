@@ -117,8 +117,9 @@ public class ShoppingListServiceImpl implements ShoppingListService {
      * If they appear, the amount of the Items is compared.
      *
      * @param recipeIngredients set of items e.g. representing ingredients of a recipe
-     * @param storedItems       set of items e.g. representing the stored Items in a Storage
-     * @return Set of all Items that occur in recipeIngredients but not in storedItem or occur in both, but the amount in recipeIngredients is bigger than the amount in storedItems.
+     * @param storedItems set of items e.g. representing the stored Items in a Storage
+     * @return Set of all Items that occur in recipeIngredients but not in storedItems
+     *      OR occur in both, but the amount in recipeIngredients is bigger than the amount in storedItems
      */
     private List<ItemStorage> compareItemSets(Set<ItemStorage> recipeIngredients, List<ItemStorage> storedItems) {
         LOGGER.debug("Service: compareItemLists");

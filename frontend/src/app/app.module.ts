@@ -22,6 +22,7 @@ import { RecipeListComponent } from './components/recipe-list/recipe-list.compon
 import { UserComponent } from './components/user/user.component';
 import { ShoppingListAddComponent } from './components/shopping-list-add/shopping-list-add.component';
 import { ShoppingListListComponent } from './components/shopping-list-list/shopping-list-list.component';
+import { StorageAddItemComponent } from './components/storage-add-item/storage-add-item.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { ShoppingListListComponent } from './components/shopping-list-list/shopp
     ShoppingListComponent,
     RecipeDetailComponent,
     RecipeListComponent,
+    StorageAddItemComponent,
     UserComponent,
     ShoppingListAddComponent,
     ShoppingListListComponent,

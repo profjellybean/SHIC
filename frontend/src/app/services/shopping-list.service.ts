@@ -31,6 +31,7 @@ export class ShoppingListService {
 
   addItemToShoppingList(item: Item): Observable<Item>{
     console.log('service ', item);
+    console.log(this.shoppingListBaseUri);
     return this.httpClient.post<Item>(this.shoppingListBaseUri,item);
   }
 
