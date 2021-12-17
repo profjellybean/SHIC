@@ -27,7 +27,7 @@ public class ItemStorage {
     @Column
     private int amount;
     @Column
-    private Location locationTag;
+    private String locationTag;
     @Column
     private Long quantity;
     @Column
@@ -43,7 +43,7 @@ public class ItemStorage {
         this.id = id;
     }
 
-    public ItemStorage(String name, String notes, byte[] image, Date expDate, int amount, Location locationTag, Long quantity, Long storageId, Long shoppingListId) {
+    public ItemStorage(String name, String notes, byte[] image, Date expDate, int amount, String locationTag, Long quantity, Long storageId, Long shoppingListId) {
         this.name = name;
         this.notes = notes;
         this.image = image;
@@ -133,11 +133,11 @@ public class ItemStorage {
         this.amount = amount;
     }
 
-    public Location getLocationTag() {
+    public String getLocationTag() {
         return locationTag;
     }
 
-    public void setLocationTag(Location locationTag) {
+    public void setLocationTag(String locationTag) {
         this.locationTag = locationTag;
     }
 

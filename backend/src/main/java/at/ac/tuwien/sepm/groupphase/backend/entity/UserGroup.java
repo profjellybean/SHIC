@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import java.util.Set;
 
@@ -13,12 +14,26 @@ public class UserGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToMany
+    @ManyToMany
     @Column
     private Set<ApplicationUser> user;
     @Column
     private Long storageId;
+    @Column
+    private Long publicShoppingListId;
 
+    public UserGroup(Long storageId, Long publicShoppingListId) {
+        this.storageId = storageId;
+        this.publicShoppingListId = publicShoppingListId;
+    }
+
+    public Long getPublicShoppingListId() {
+        return publicShoppingListId;
+    }
+
+    public void setPublicShoppingListId(Long publicShoppingListId) {
+        this.publicShoppingListId = publicShoppingListId;
+    }
 
     public UserGroup() {
     }

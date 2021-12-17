@@ -19,5 +19,4 @@ public interface BillService {
      * @return a list of all bills
      */
     List<Bill> findAll();
-
 }

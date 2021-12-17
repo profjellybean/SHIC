@@ -1,8 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {RegisterService} from '../../services/register.service';
 import {ActivatedRoute} from '@angular/router';
 import {Bill} from '../../dtos/bill';
-import {User} from '../../dtos/user';
+import {ApplicationUser} from '../../dtos/applicationUser';
 import {BillService} from '../../services/bill.service';
 import {Register} from '../../dtos/register';
 import {UserService} from '../../services/user.service';
@@ -30,8 +30,8 @@ export class RegisterComponent implements OnInit {
   counter = 1;
   secondCounter = 1;
   billArray: Bill[] = [];
-  names: User[] = [];
-  notPaidNames: User[] = [];
+  names: ApplicationUser[] = [];
+  notPaidNames: ApplicationUser[] = [];
 
   help: string;
 
@@ -49,11 +49,10 @@ export class RegisterComponent implements OnInit {
     notPaidNameList: ''
   };
 
-  user: User = {
-    //@ts-ignore
-    username: jwt_decode(this.authService.getToken()).sub.trim(),
-    password: null,
-    id: null,
+  user: ApplicationUser = {
+    id: 3,
+    username: 'tom@email.com',
+    password: 'password'
   };
 
   constructor(private registerService: RegisterService, private billService: BillService, public route: ActivatedRoute,
@@ -130,9 +129,6 @@ export class RegisterComponent implements OnInit {
           }
           this.billArray[this.counter] = bill;
           this.counter++;
-          console.log('names ' + bill.nameList);
-          console.log('notPaid ' + bill.notPaidNameList);
-          console.log(this.billArray);
         }
       }, error: err => {
         this.defaultServiceErrorHandling(err);

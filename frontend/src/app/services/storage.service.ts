@@ -3,6 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
 import {Item} from '../dtos/item';
+import {ItemStorage} from '../dtos/itemStorage';
 import {Params} from '@angular/router';
 
 @Injectable({
@@ -14,6 +15,16 @@ export class StorageService {
 
   constructor(private httpClient: HttpClient, private globals: Globals) {
   }
+
+  /**
+   * Loads items from the backend with specific parameters
+   */
+  searchItems(params: string): Observable<Item[]> {
+    console.log('Search for items');
+    return this.httpClient.get<Item[]>(
+      this.storageBaseUri+'/search'+params);
+  }
+
 
   /**
    * Loads all items from the backend

@@ -19,6 +19,10 @@ public class Storage {
     public Storage() {
     }
 
+    public Storage(Long id) {
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }

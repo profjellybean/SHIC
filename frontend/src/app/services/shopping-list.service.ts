@@ -4,6 +4,7 @@ import {Globals} from '../global/globals';
 import {Observable} from 'rxjs';
 import {ShoppingList} from '../dtos/shopping-list';
 import {Item} from '../dtos/item';
+import {ItemStorage} from '../dtos/itemStorage';
 
 @Injectable({
   providedIn: 'root'

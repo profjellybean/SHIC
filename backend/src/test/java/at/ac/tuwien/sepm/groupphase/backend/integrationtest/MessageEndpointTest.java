@@ -220,4 +220,6 @@ public class MessageEndpointTest implements TestData {
             date.getHour() == today.getHour();
     }
 
+
+
 }
