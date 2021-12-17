@@ -2,13 +2,16 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
 
+import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.Date;
 
 public class ItemStorageDto {
+    @NotNull
     private Long storageId;
     private Long shoppingListId;
     private Long id;
+    @NotNull
     private String name;
     private Long quantity;
     private String notes;
@@ -20,6 +23,12 @@ public class ItemStorageDto {
 
     public ItemStorageDto() {
     }
+
+    public ItemStorageDto(long storageId, String name) {
+        this.storageId = storageId;
+        this.name = name;
+    }
+
 
     public Long getStorageId() {
         return storageId;

@@ -4,9 +4,12 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ItemStorageRepository extends JpaRepository<ItemStorage, Long> {
     List<ItemStorage> findAllByStorageId(Long id);
+
+    Optional<ItemStorage> findByName(String name);
 
     List<ItemStorage> findAllByStorageIdAndNameContainingIgnoreCase(Long id, String name);
 
