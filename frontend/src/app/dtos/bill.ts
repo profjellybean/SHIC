@@ -1,5 +1,5 @@
 import {Item} from './item';
-import {User} from './User';
+import {User} from './user';
 
 export interface Bill {
   id: number;
