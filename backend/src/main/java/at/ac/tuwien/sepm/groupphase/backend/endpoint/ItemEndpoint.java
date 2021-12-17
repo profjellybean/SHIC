@@ -2,8 +2,11 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UnitOfQuantityDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UnitsRelationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ItemMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UnitOfQuantityMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UnitsRelationMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.UnitsRelation;
 import at.ac.tuwien.sepm.groupphase.backend.service.ItemService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
@@ -27,12 +30,14 @@ public class ItemEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final ItemService itemService;
     private final UnitOfQuantityMapper unitOfQuantityMapper;
+    private final UnitsRelationMapper unitsRelationMapper;
     private final ItemMapper itemMapper;
 
     @Autowired
-    public ItemEndpoint(ItemService itemService, UnitOfQuantityMapper unitOfQuantityMapper, ItemMapper itemMapper) {
+    public ItemEndpoint(ItemService itemService, UnitOfQuantityMapper unitOfQuantityMapper, ItemMapper itemMapper, UnitsRelationMapper unitsRelationMapper) {
         this.itemService = itemService;
         this.unitOfQuantityMapper = unitOfQuantityMapper;
+        this.unitsRelationMapper = unitsRelationMapper;
         this.itemMapper = itemMapper;
     }
 
@@ -44,6 +49,24 @@ public class ItemEndpoint {
         return unitOfQuantityMapper.unitOfQuantityToUnitOfQuantityDto(itemService.addUnitOfQuantity(unitOfQuantityMapper.unitOfQuantityDtoToUnitOfQuantity(unitOfQuantityDto)));
 
     }
+
+    @PostMapping(value = "/unitsRelation")
+    @PermitAll
+    @Operation(summary = "create new Relation of Units")
+    public UnitsRelationDto createUnitsRelation(@Valid @RequestBody UnitsRelationDto unitsRelationDto) {
+        LOGGER.info("POST /unitsRelation: {}", unitsRelationDto.toString());
+        return unitsRelationMapper.unitsRelationToUnitsRelationDto(itemService.addUnitsRelation(unitsRelationMapper.unitsRelationDtoToUnitsRelation(unitsRelationDto)));
+
+    }
+
+    @GetMapping(value = "/unitsRelations")
+    @PermitAll
+    @Operation(summary = "Get all Units of quantity")
+    public List<UnitsRelationDto> getAllUnitsRelations() {
+        LOGGER.info("getAllunitsRelations, itemEndpoint");
+        return unitsRelationMapper.unitsRelationsToUnitsRelationsDto(itemService.getAllUnitsRelations());
+    }
+
 
     @GetMapping(value = "/unitOfQuantity")
     @PermitAll
