@@ -9,6 +9,8 @@ import java.util.List;
 @Mapper
 public interface UnitOfQuantityMapper {
     UnitOfQuantityDto unitOfQuantityToUnitOfQuantityDto(UnitOfQuantity unitOfQuantity);
+
     UnitOfQuantity unitOfQuantityDtoToUnitOfQuantity(UnitOfQuantityDto unitOfQuantityDto);
+
     List<UnitOfQuantityDto> unitsOfQuantityToUnitsOfQuantityDto(List<UnitOfQuantity> unitsOfQuantity);
 }

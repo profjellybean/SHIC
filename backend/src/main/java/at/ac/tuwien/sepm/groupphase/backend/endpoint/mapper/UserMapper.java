@@ -3,13 +3,14 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoggedInDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegistrationDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
+import org.mapstruct.Mapper;
 import java.lang.invoke.MethodHandles;
 
 @Component
@@ -23,24 +24,9 @@ public class UserMapper {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public ApplicationUser dtoToEntity(UserRegistrationDto user, Long shoppingListId, Long confirmationToken){
-        LOGGER.debug("Mapper: User dtoToEntity" );
-        return  new ApplicationUser(user.getUsername(),passwordEncoder.encode(user.getPassword()), shoppingListId,user.getEmail(), confirmationToken);
-    }
+@Mapper
+public interface UserMapper {
+    ApplicationUser userDtoToUser(UserDto userDto);
 
-    public ApplicationUser dtoToEntity(UserRegistrationDto user, Long shoppingListId){
-        LOGGER.debug("Mapper: User dtoToEntity" );
-        return  new ApplicationUser(user.getUsername(),passwordEncoder.encode(user.getPassword()), shoppingListId,user.getEmail());
-    }
-
-    public UserLoginDto entityToDto(ApplicationUser user){
-        LOGGER.debug("Mapper: User entityToDto" );
-        return  new UserLoginDto(user.getUsername(),user.getPassword());
-    }
-
-    public UserLoggedInDto entityToLoggedInDto(ApplicationUser user){
-        LOGGER.debug("Mapper: User entityToLoggedInDto" );
-        return new UserLoggedInDto(user.getId(),user.getUsername(), user.getPrivList());
-    }
-
+    UserDto userToUserDto(ApplicationUser user);
 }

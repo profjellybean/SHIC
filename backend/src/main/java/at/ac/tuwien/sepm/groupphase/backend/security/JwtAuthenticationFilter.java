@@ -43,7 +43,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         throws AuthenticationException {
         UserLoginDto user = null;
         try {
-
             user = new ObjectMapper().readValue(request.getInputStream(), UserLoginDto.class);
 
             Authentication auth =  authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
@@ -64,8 +63,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             }
             throw e;
         }
-
-
     }
 
     @Override
@@ -90,6 +87,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             .collect(Collectors.toList());
 
         response.getWriter().write(jwtTokenizer.getAuthToken(user.getUsername(), roles));
+        this.userService.setCurrUserGroup(user.getUsername());
         LOGGER.info("Successfully authenticated user {}", user.getUsername());
     }
 }

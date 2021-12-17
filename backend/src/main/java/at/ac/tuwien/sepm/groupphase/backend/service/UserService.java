@@ -7,8 +7,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import java.util.Map;
-
 public interface UserService extends UserDetailsService {
 
     /**
@@ -34,6 +32,7 @@ public interface UserService extends UserDetailsService {
     ApplicationUser findApplicationUserByUsername(String username);
 
     /**
+     * Gets the private shopping list by username.
      *
      * @param username username of User of required private shopping list
      * @return private shopping list
@@ -52,6 +51,8 @@ public interface UserService extends UserDetailsService {
 
     /**
      * Find an application user based on the username.
+     *
+     * @param userLoginDto the DTO of the user to be created
      * This method overloads createUser(UserRegistrationDto userRegistrationDto, Long confirmationToken)
      * confirmationToken is set to 0
      * @param userRegistrationDto the DTO of the user to be created
@@ -60,6 +61,12 @@ public interface UserService extends UserDetailsService {
     void createUserWithoutEmailVerification(UserRegistrationDto userRegistrationDto);
 
 
+    /**
+     * On successful login, sets the current groupId in User.
+     *
+     * @param username the name of the user
+     */
+    void setCurrUserGroup(String username);
 
     /**
      * Find an application user based on the username.

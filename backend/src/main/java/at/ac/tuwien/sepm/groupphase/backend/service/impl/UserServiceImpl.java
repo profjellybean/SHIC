@@ -3,16 +3,21 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.Email;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegistrationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserLoginMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
 import at.ac.tuwien.sepm.groupphase.backend.exception.EmailConfirmationException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.EmailCooldownException;
+import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.PasswordValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.UsernameTakenException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.CustomUserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.EmailService;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UserGroupRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
@@ -26,29 +31,36 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
-
-
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.PatternSyntaxException;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private final CustomUserRepository userRepository;
+    private final CustomUserRepository customUserRepository;
     private final ShoppingListRepository shoppingListRepository;
-    private final UserMapper userMapper;
+    private final UserLoginMapper userLoginMapper;
     private final EntityManager entityManager;
     private final EmailService emailService;
+    private final UserGroupRepository userGroupRepository;
+    private final UserRepository userRepository;
+
     @Autowired
-    public UserServiceImpl(CustomUserRepository userRepository,ShoppingListRepository shoppingListRepository, UserMapper userMapper, EntityManager entityManager,EmailService emailService) {
-        this.userRepository = userRepository;
+    public UserServiceImpl(CustomUserRepository userRepository,
+                           ShoppingListRepository shoppingListRepository,
+                           UserMapper userMapper, EntityManager entityManager, UserLoginMapper userLoginMapper,
+                           EmailService emailService) {
+        this.customUserRepository = userRepository;
         this.userMapper = userMapper;
         this.entityManager = entityManager;
         this.shoppingListRepository = shoppingListRepository;
         this.emailService = emailService;
+        this.userGroupRepository = userGroupRepository;
+
     }
 
     @Override
@@ -69,9 +81,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ApplicationUser findApplicationUserByUsername(String username) {
-
         LOGGER.debug("Service: Find application user by username");
-        Optional<ApplicationUser> applicationUser = userRepository.findUserByUsername(username);
+        Optional<ApplicationUser> applicationUser = customUserRepository.findUserByUsername(username);
         if (applicationUser.isPresent()) {
             return applicationUser.get();
         }
@@ -81,11 +92,31 @@ public class UserServiceImpl implements UserService {
     @Override
     public Long getPrivateShoppingListIdByUsername(String username) {
         LOGGER.debug("Service: Find private shoppinglist for user by username");
-        Optional<ApplicationUser> applicationUser = userRepository.findUserByUsername(username);
+        Optional<ApplicationUser> applicationUser = customUserRepository.findUserByUsername(username);
         if (applicationUser.isPresent()) {
             return applicationUser.get().getPrivList();
         }
         throw new NotFoundException(String.format("Could not find the user with the username %s", username));
+    }
+
+    @Override
+    public void createUser(UserLoginDto userLoginDto) {
+        LOGGER.debug("Service: Create new user: {}", userLoginDto.getUsername());
+
+        if (userLoginDto.getPassword().length() < 8) {
+            throw new PasswordTooShortException("The password must contain at least eight characters");
+        }
+
+        Optional<ApplicationUser> applicationUser = customUserRepository.findUserByUsername(userLoginDto.getUsername());
+        if (applicationUser.isPresent()) {
+            throw new UsernameTakenException("Username already taken");
+        }
+
+        Long shoppingListId = shoppingListRepository.saveAndFlush(ShoppingList.ShoppingListBuilder.aShoppingList().withName("Your private shopping list").build()).getId();
+        customUserRepository.save(userLoginMapper.dtoToEntity(userLoginDto, shoppingListId));
+
+
+
     }
 
     @Override
@@ -118,46 +149,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void createUserWithEmailVerification(UserRegistrationDto userRegistrationDto) {
-
-        Long confirmationToken = System.currentTimeMillis();
-        createUser(userRegistrationDto,confirmationToken);
-        try {
-            emailService.sendEmailConfirmation(userRegistrationDto.getEmail(), userRegistrationDto.getUsername(),confirmationToken);
-        }catch (Exception e){
-            LOGGER.error(e.getMessage());
+    public void setCurrUserGroup(String username) {
+        LOGGER.debug("Service: set current group in user: {}", username);
+        List<UserGroup> userGroups = userGroupRepository.findAll();
+        for (UserGroup u : userGroups) {
+            Set<ApplicationUser> users = u.getUser();
+            for (ApplicationUser applicationUser : users) {
+                if (applicationUser.getUsername().equals(username)) {
+                    Optional<ApplicationUser> temp = userRepository.findUserByUsername(username);
+                    if (temp.isPresent()) {
+                        temp.get().setCurrGroup(u);
+                        userRepository.saveAndFlush(temp.get());
+                    }
+                }
+            }
         }
     }
 
-    @Override
-    public void createUserWithoutEmailVerification(UserRegistrationDto userRegistrationDto) {
-        createUser(userRegistrationDto,0L);
-    }
 
-    @Override
-    public void createUser(UserRegistrationDto userRegistrationDto, Long confirmationToken) {
-        LOGGER.debug("Service: Create new user: {}",userRegistrationDto.getUsername());
-
-
-        if(!userRegistrationDto.getEmail().contains("@")){
-            throw new PasswordValidationException("Wrong email format");
-        }
-        if(userRegistrationDto.getPassword().length() < 8){
-            throw new PasswordValidationException("The password must contain at least eight characters");
-        }
-
-        Optional<ApplicationUser> applicationUser = userRepository.findUserByUsername(userRegistrationDto.getUsername());
-        if (applicationUser.isPresent()) {
-            throw new UsernameTakenException("Username already taken");
-        }
-
-        Long shoppingListId = shoppingListRepository.saveAndFlush(   ShoppingList.ShoppingListBuilder.aShoppingList().withName( "Your private shopping list").build()  ).getId();
-        userRepository.save(userMapper.dtoToEntity(userRegistrationDto,shoppingListId, confirmationToken));
-
-
-
-
-    }
 
     @Override
     public void confirmUser(String confirmationToken_encrypted) {
@@ -205,6 +214,7 @@ public class UserServiceImpl implements UserService {
         return user.get().getConfirmationToken() == 0L;
 
     }
+
 
 
 }

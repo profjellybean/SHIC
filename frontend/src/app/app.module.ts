@@ -19,6 +19,8 @@ import {RegisterComponent} from './components/register/register.component';
 import {RegisterUserComponent} from './components/registerUser/registerUser.component';
 import { RecipeDetailComponent } from './components/recipe-detail/recipe-detail.component';
 import { RecipeListComponent } from './components/recipe-list/recipe-list.component';
+import { UserComponent } from './components/user/user.component';
+import {HomeComponent} from './components/home/home.component';
 import { ConfirmUserEmailComponent } from './components/confirm-user-email/confirm-user-email.component';
 
 @NgModule({
@@ -30,6 +32,7 @@ import { ConfirmUserEmailComponent } from './components/confirm-user-email/confi
     LoginComponent,
     RegisterUserComponent,
     MessageComponent,
+    HomeComponent,
     StorageComponent,
     RegisterComponent,
     RecipeComponent,
@@ -37,6 +40,7 @@ import { ConfirmUserEmailComponent } from './components/confirm-user-email/confi
     RecipeDetailComponent,
     RecipeListComponent,
     ConfirmUserEmailComponent,
+    UserComponent,
   ],
   imports: [
     BrowserModule,

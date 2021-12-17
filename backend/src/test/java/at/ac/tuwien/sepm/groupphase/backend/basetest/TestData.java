@@ -17,6 +17,8 @@ public interface TestData {
     String MESSAGE_BASE_URI = BASE_URI + "/messages";
     String USERENDPOINT_URI = "/user";
     String ADMIN_USER = "admin";
+    String STORAGEENDPOINT_URI = BASE_URI + "/storage";
+    String USERGROUPENDPOINT_URI = BASE_URI + "/group";
     List<String> ADMIN_ROLES = new ArrayList<>() {
         {
             add("ROLE_ADMIN");

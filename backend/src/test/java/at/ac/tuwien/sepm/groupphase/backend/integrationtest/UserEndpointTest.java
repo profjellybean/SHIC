@@ -3,9 +3,6 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegistrationDto;
 import at.ac.tuwien.sepm.groupphase.backend.repository.CustomUserRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.MessageRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -28,7 +24,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
@@ -49,8 +46,9 @@ public class UserEndpointTest implements TestData {
     private final int GENERATE_USER_COUNT = 50; //Ein zu hoher Wert erhöht die Dauer des Testlaufes dramatisch
 
 
-    //@Test
+    @Test
     void registerUser() throws Exception {
+
         UserRegistrationDto testUser= new UserRegistrationDto("TestUser1", "passwort1245","TestUser1@email.com");
 
         MvcResult mvcResult = this.mockMvc.perform(post(USERENDPOINT_URI)
@@ -66,7 +64,7 @@ public class UserEndpointTest implements TestData {
 
     }
 
-    //@Test
+    @Test
     void registerUnprocessableUser() throws Exception {
         UserRegistrationDto unprocessableUser = new UserRegistrationDto("UnprocessableUser1", "shortpw","UnprocessableUser1@email.com");
 
@@ -82,7 +80,7 @@ public class UserEndpointTest implements TestData {
 
     }
 
-   // @Test
+    @Test
     void registerDuplicateUser() throws Exception {
         UserRegistrationDto testUser1= new UserRegistrationDto("Polo_G", "correctPassword","Polo_g@email.com");
         UserRegistrationDto testUser2= new UserRegistrationDto("Polo_G", "letMeIn2000","Polo_g@email.com");
@@ -108,7 +106,7 @@ public class UserEndpointTest implements TestData {
     }
 
 
-   // @Test
+    @Test
     void registerManyUsers() throws Exception {
         List<UserRegistrationDto> userList = new LinkedList<>();
         generateUsers(userList, GENERATE_USER_COUNT);
@@ -159,13 +157,14 @@ public class UserEndpointTest implements TestData {
             "Iuventas"
         };
         int x;
-        for(int c = 0; c < count; c++){
+        for (int c = 0; c < count; c++) {
             x = random.nextInt(gods.length);
             list.add(new UserRegistrationDto(gods[x] + c, "password" + c,gods[x] + c + "@email.com"));
         }
 
 
-
     }
+
+
 
 }

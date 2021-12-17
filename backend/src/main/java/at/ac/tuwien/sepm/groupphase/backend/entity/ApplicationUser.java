@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,10 +14,10 @@ import javax.validation.constraints.Size;
 import java.util.Objects;
 
 @Entity
-@Table(name="APPLICATION_USER",uniqueConstraints={@UniqueConstraint(columnNames={"USERNAME"})})
+@Table(name = "APPLICATION_USER", uniqueConstraints = {@UniqueConstraint(columnNames = {"USERNAME"})})
 @NamedQuery(
-    name="findByName",
-    query= "SELECT c FROM ApplicationUser c WHERE c.username = :username"
+    name = "findByName",
+    query = "SELECT c FROM ApplicationUser c WHERE c.username = :username"
 )
 public class ApplicationUser {
 
@@ -40,9 +39,9 @@ public class ApplicationUser {
     private Long confirmationToken;
 
     @OneToOne
-    private Group currGroup;
+    private UserGroup currGroup;
 
-    @Column(nullable = false, name = "PRIVLIST") // TODO Loading
+    //@Column(nullable = false, name = "PRIVLIST") // TODO Loading
     private Long privList;
 
     public ApplicationUser() {
@@ -56,6 +55,8 @@ public class ApplicationUser {
         this.confirmationToken = 0L;
     }
 
+
+
     public ApplicationUser(String username, String password, Long shoppingListId, String email,Long confirmationToken) {
         this.username = username;
         this.password = password;
@@ -64,9 +65,13 @@ public class ApplicationUser {
         this.confirmationToken = confirmationToken;
     }
 
-    public Long getPrivList() {return privList;}
+    public Long getPrivList() {
+        return privList;
+    }
 
-    public void setPrivList(Long privList) {this.privList = privList;}
+    public void setPrivList(Long privList) {
+        this.privList = privList;
+    }
 
     public Long getId() {
         return id;
@@ -92,6 +97,7 @@ public class ApplicationUser {
         this.password = password;
     }
 
+
     public String getEmail() {
         return email;
     }
@@ -100,11 +106,11 @@ public class ApplicationUser {
         this.email = email;
     }
 
-    public Group getCurrGroup() {
+    public UserGroup getCurrGroup() {
         return currGroup;
     }
 
-    public void setCurrGroup(Group currGroup) {
+    public void setCurrGroup(UserGroup currGroup) {
         this.currGroup = currGroup;
     }
 
@@ -118,10 +124,14 @@ public class ApplicationUser {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         ApplicationUser that = (ApplicationUser) o;
-        return Objects.equals(id, that.id) && Objects.equals(username, that.username) && Objects.equals(password, that.password);
+        return Objects.equals(id, that.id) && Objects.equals(username, that.username) && Objects.equals(password, that.password) && Objects.equals(currGroup, that.currGroup);
     }
 
     @Override
