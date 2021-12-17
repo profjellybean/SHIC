@@ -78,6 +78,9 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     public List<ItemStorage> planRecipe(Long recipeId, Authentication authentication) {
         LOGGER.debug("Service: plan Recipe {} based on user {}.", recipeId, authentication.getName());
 
+        if (recipeId == null) {
+            throw new ServiceException("Recipe does not exist");
+        }
         ApplicationUser user = userService.findApplicationUserByUsername(authentication.getName());
         if (user == null) {
             throw new ServiceException("User does not exist");
@@ -99,7 +102,6 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         List<ItemStorage> storageItems;
         List<ItemStorage> returnList = null;
 
-        // TODO: catch errors that might occur accessing the repository
         try {
             recipe = recipeRepository.findRecipeById(recipeId);
         } catch (EntityNotFoundException e) {
