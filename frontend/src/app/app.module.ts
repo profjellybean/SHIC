@@ -7,7 +7,6 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {HeaderComponent} from './components/header/header.component';
 import {FooterComponent} from './components/footer/footer.component';
-import {HomeComponent} from './components/home/home.component';
 import {LoginComponent} from './components/login/login.component';
 import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
@@ -19,6 +18,8 @@ import {RegisterComponent} from './components/register/register.component';
 import {RegisterUserComponent} from './components/registerUser/registerUser.component';
 import { RecipeDetailComponent } from './components/recipe-detail/recipe-detail.component';
 import { RecipeListComponent } from './components/recipe-list/recipe-list.component';
+import { UserComponent } from './components/user/user.component';
+import {HomeComponent} from './components/home/home.component';
 import { StorageAddItemComponent } from './components/storage-add-item/storage-add-item.component';
 
 @NgModule({
@@ -26,16 +27,17 @@ import { StorageAddItemComponent } from './components/storage-add-item/storage-a
     AppComponent,
     HeaderComponent,
     FooterComponent,
-    HomeComponent,
     LoginComponent,
     RegisterUserComponent,
     MessageComponent,
+    HomeComponent,
     StorageComponent,
     RegisterComponent,
     RecipeComponent,
     ShoppingListComponent,
     RecipeDetailComponent,
     RecipeListComponent,
+    UserComponent,
     StorageAddItemComponent,
   ],
   imports: [

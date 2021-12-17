@@ -15,5 +15,4 @@ public interface CustomUserRepository extends JpaRepository<ApplicationUser, Lon
     <S extends ApplicationUser> S save(S entity);
 
 
-
 }

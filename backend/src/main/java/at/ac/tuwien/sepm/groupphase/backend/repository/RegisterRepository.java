@@ -9,14 +9,14 @@ import java.util.Optional;
 @Repository
 public interface RegisterRepository extends JpaRepository<Register, Long> {
     /**
-     * Find a register by a given id
+     * Find a register by a given id.
      *
      * @return the requested register
      */
     Optional<Register> findRegisterById(Long id);
 
     /**
-     * Save a given register
+     * Save a given register.
      *
      * @return the saved register
      */

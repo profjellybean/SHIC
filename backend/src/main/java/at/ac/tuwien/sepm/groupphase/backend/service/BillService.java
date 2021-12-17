@@ -7,14 +7,14 @@ import java.util.List;
 public interface BillService {
 
     /**
-     * Find a bill by a given id
+     * Find a bill by a given id.
      *
      * @return the requested bill
      */
     Bill findOne(Long id);
 
     /**
-     * Find all bills
+     * Find all bills.
      *
      * @return a list of all bills
      */

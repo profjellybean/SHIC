@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Bill;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.BillRepository;
@@ -14,7 +13,6 @@ import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class BillServiceImpl implements BillService {
@@ -33,7 +31,7 @@ public class BillServiceImpl implements BillService {
     public Bill findOne(Long id) {
         LOGGER.debug("Service: find bill by id {}", id);
         Optional<Bill> bill = billRepository.findById(id);
-        if(bill.isPresent()) {
+        if (bill.isPresent()) {
             return bill.get();
         } else {
             throw new NotFoundException(String.format("Could not find bill with id %s", id));

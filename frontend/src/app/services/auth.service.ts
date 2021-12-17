@@ -6,14 +6,18 @@ import {tap} from 'rxjs/operators';
 // @ts-ignore
 import jwt_decode from 'jwt-decode';
 import {Globals} from '../global/globals';
+import {UserService} from './user.service';
+import {User} from '../dtos/user';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private user: User;
 
   private authBaseUri: string = this.globals.backendUri + '/authentication';
-  constructor(private httpClient: HttpClient, private globals: Globals) {
+
+  constructor(private httpClient: HttpClient, private globals: Globals, private userService: UserService) {
   }
 
   /**
@@ -39,6 +43,7 @@ export class AuthService {
   logoutUser() {
     console.log('Logout');
     localStorage.removeItem('authToken');
+    this.user = undefined;
   }
 
   getToken() {
@@ -61,6 +66,28 @@ export class AuthService {
     return 'UNDEFINED';
   }
 
+  hasCurrentGroup() {
+    if (this.isLoggedIn()) {// @ts-ignore
+      if (this.user === undefined) {
+        // @ts-ignore
+        this.userService.getCurrentUser({username: jwt_decode(this.getToken()).sub.trim()}).subscribe({
+          next: data => {
+            console.log('received items', data);
+            this.user = data;
+            return this.user.currGroup !== null;
+          },
+          error: error => {
+            console.error(error.message);
+          }
+        });
+      } else {
+        return this.user.currGroup !== null;
+      }
+    } else {
+      return false;
+    }
+  }
+
   private setToken(authResponse: string) {
     localStorage.setItem('authToken', authResponse);
   }
@@ -76,5 +103,4 @@ export class AuthService {
     date.setUTCSeconds(decoded.exp);
     return date;
   }
-
 }

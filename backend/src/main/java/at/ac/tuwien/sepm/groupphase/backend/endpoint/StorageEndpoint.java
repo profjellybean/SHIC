@@ -8,7 +8,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
@@ -45,11 +49,11 @@ public class StorageEndpoint {
         return itemStorageMapper.itemsStorageToItemsStorageDto(storageService.getAll(id));
     }
 
-    @GetMapping(value= "/search")
+    @GetMapping(value = "/search")
     @PermitAll
     @Operation(summary = "Search for items from the storage by name") //TODO: add security
-    public List<ItemStorageDto> searchItem(@Param("id") Long id,@Param("name") String name) {
+    public List<ItemStorageDto> searchItem(@Param("id") Long id, @Param("name") String name) {
         LOGGER.info("searchItem, endpoint");
-        return itemStorageMapper.itemsStorageToItemsStorageDto(storageService.searchItem(id,name));
+        return itemStorageMapper.itemsStorageToItemsStorageDto(storageService.searchItem(id, name));
     }
 }
