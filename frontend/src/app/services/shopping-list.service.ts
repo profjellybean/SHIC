@@ -16,10 +16,8 @@ export class ShoppingListService {
   constructor(private httpClient: HttpClient, private globals: Globals) {
   }
 
-
-  // TODO get user id
   planRecipe(id: number): Observable<Item[]> {
     console.log('plan recipe with id: ' + id);
-    return this.httpClient.put<Item[]>(this.shoppinListBaseUri+'/?recipeId='+id+'&userId=1', id);
+    return this.httpClient.put<Item[]>(this.shoppinListBaseUri+'/?recipeId='+id, id);
   }
 }

@@ -32,16 +32,27 @@ public class UserDataGenerator {
     private final UserLoginMapper userLoginMapper;
     private final UserGroupRepository userGroupRepository;
 
-    public UserDataGenerator(CustomUserRepository userRepository, UserLoginMapper userLoginMapper, ShoppingListRepository shoppingListRepository, ItemRepository itemRepository, UserGroupRepository userGroupRepository) {
+    private final ShoppingListDataGenerator shoppingListDataGenerator;
+    private final StorageDataGenerator storageDataGenerator;
+
+    public UserDataGenerator(CustomUserRepository userRepository, UserLoginMapper userLoginMapper,
+                             ShoppingListRepository shoppingListRepository, ItemRepository itemRepository,
+                             UserGroupRepository userGroupRepository,
+                             ShoppingListDataGenerator shoppingListDataGenerator,
+                             StorageDataGenerator storageDataGenerator) {
         this.userRepository = userRepository;
         this.shoppingListRepository = shoppingListRepository;
         this.userLoginMapper = userLoginMapper;
         this.itemRepository = itemRepository;
         this.userGroupRepository = userGroupRepository;
+        this.shoppingListDataGenerator = shoppingListDataGenerator;
+        this.storageDataGenerator = storageDataGenerator;
     }
 
     @PostConstruct
     void generateUser() {
+        shoppingListDataGenerator.generateShoppingList();
+        storageDataGenerator.generateStorage();
 
 
         Item item = new Item(null, "Döner", null);
@@ -54,7 +65,7 @@ public class UserDataGenerator {
         Long shoppingListId = shoppingListRepository.saveAndFlush(ShoppingList.ShoppingListBuilder.aShoppingList().withName("Your private shopping list").build()).getId();
         Optional<ApplicationUser> applicationUser = userRepository.findUserByUsername(user.getUsername());
         if (applicationUser.isEmpty()) {
-            UserGroup group = new UserGroup();
+            UserGroup group = new UserGroup(1L, 1L);
             group = userGroupRepository.saveAndFlush(group);
             ApplicationUser u = userLoginMapper.dtoToEntity(user, shoppingListId);
             u.setCurrGroup(group);
@@ -64,7 +75,7 @@ public class UserDataGenerator {
         shoppingListId = shoppingListRepository.saveAndFlush(ShoppingList.ShoppingListBuilder.aShoppingList().withName("Your private shopping list").build()).getId();
         applicationUser = userRepository.findUserByUsername(admin.getUsername());
         if (applicationUser.isEmpty()) {
-            UserGroup group = new UserGroup();
+            UserGroup group = new UserGroup(2L, 2L);
             group = userGroupRepository.saveAndFlush(group);
             ApplicationUser u = userLoginMapper.dtoToEntity(admin, shoppingListId);
             u.setCurrGroup(group);

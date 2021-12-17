@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -96,16 +97,16 @@ public class ShoppingListEndpoint {
         }
 
     */
-    @PermitAll //TODO: add security
-    //@Secured("ROLE_USER")
+
+    //@PermitAll
+    @Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.OK)
     @PutMapping
     @Operation(summary = "Plan a recipe: adds missing ingredients to shoppingList", security = @SecurityRequirement(name = "apiKey"))
-    // TODO: change paramteters to new Dto?
-    public List<ItemStorageDto> planRecipe(@RequestParam(name = "recipeId") Long recipeId, @RequestParam(name = "userId") Long userId) {
-        LOGGER.info("Endpoint: POST /api/v1/shoppinglist/recipeId={},userId={}", recipeId, userId);
+    public List<ItemStorageDto> planRecipe(Authentication authentication, @RequestParam(name = "recipeId") Long recipeId) {
+        LOGGER.info("Endpoint: POST /api/v1/shoppinglist/recipeId={},userName={}", recipeId, authentication.getName());
         return itemStorageMapper.itemsStorageToItemsStorageDto(
-            shoppingListService.planRecipe(recipeId, userId));
+            shoppingListService.planRecipe(recipeId, authentication));
     }
 
 

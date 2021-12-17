@@ -1,18 +1,23 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ShoppingListCreationDto;
-import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Recipe;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListItemRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.ShoppingListService;
+import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -33,16 +38,19 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     private final RecipeRepository recipeRepository;
     private final ItemStorageRepository itemStorageRepository;
     private final ShoppingListItemRepository shoppingListItemRepository;
+    private final UserService userService;
 
     @Autowired
     public ShoppingListServiceImpl(ShoppingListRepository shoppingListRepository,
                                    RecipeRepository recipeRepository,
                                    ItemStorageRepository itemStorageRepository,
-                                   ShoppingListItemRepository shoppingListItemRepository) {
+                                   ShoppingListItemRepository shoppingListItemRepository,
+                                   UserService userService) {
         this.recipeRepository = recipeRepository;
         this.itemStorageRepository = itemStorageRepository;
         this.shoppingListItemRepository = shoppingListItemRepository;
         this.shoppingListRepository = shoppingListRepository;
+        this.userService = userService;
     }
 
 
@@ -67,12 +75,25 @@ public class ShoppingListServiceImpl implements ShoppingListService {
 
     @Override
     @Transactional
-    public List<ItemStorage> planRecipe(Long recipeId, Long userId) {
-        LOGGER.debug("Service: plan Recipe {} based on user {}.", recipeId, userId);
+    public List<ItemStorage> planRecipe(Long recipeId, Authentication authentication) {
+        LOGGER.debug("Service: plan Recipe {} based on user {}.", recipeId, authentication.getName());
 
-        // TODO: check if user has access
-        Long storageId = userId;
-        Long shoppingListId = userId;
+        ApplicationUser user = userService.findApplicationUserByUsername(authentication.getName());
+        if (user == null) {
+            throw new ServiceException("User does not exist");
+        }
+        UserGroup group = user.getCurrGroup();
+        if (group == null) {
+            throw new ServiceException("Storage does not exist");
+        }
+        Long storageId = group.getStorageId();
+        if (storageId == null) {
+            throw new ServiceException("Storage does not exist");
+        }
+        Long shoppingListId = group.getPublicShoppingListId();
+        if (shoppingListId == null) {
+            throw new ServiceException("Public ShoppingList does not exist");
+        }
 
         Recipe recipe = null;
         List<ItemStorage> storageItems;
@@ -121,13 +142,13 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         Map<String, ItemStorage> storedItemsMap = storedItems.stream().collect(Collectors.toMap(ItemStorage::getName, Function.identity()));
         for (ItemStorage ingredient :
             recipeIngredients) {
-            if (!storedItems.contains(ingredient)) {
+            ItemStorage storedItem = storedItemsMap.get(ingredient.getName());
+            if (storedItem == null) {
                 // adds items that are not in the storage
                 returnSet.add(ingredient);
             } else {
-                ItemStorage storedItem = storedItemsMap.get(ingredient.getName());
                 if (ingredient.getQuantity().equals(storedItem.getQuantity())) {
-                    // adds items if there is not enough in the storage
+                    // adds items if there is not enough of them in the storage
                     if (ingredient.getAmount() > storedItem.getAmount()) {
                         returnSet.add(ingredient);
                     }
