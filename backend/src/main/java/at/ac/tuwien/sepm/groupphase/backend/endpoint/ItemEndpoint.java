@@ -58,7 +58,7 @@ public class ItemEndpoint {
     @GetMapping //(value="/item")
     @PermitAll // TODO add security
     @Operation(summary = "Get all Items")
-    List<ItemDto> getAllItems(){
+    List<ItemDto> getAllItems() {
         LOGGER.info("Endpoint: getAllItems()");
         return itemMapper.itemsToItemDtos(itemService.getAllItems());
     }

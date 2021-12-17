@@ -14,6 +14,7 @@ public class ItemDto {
     public ItemDto() {
 
     }
+
     public ItemDto(Long id, String name, Long quantity) {
         this.id = id;
         this.name = name;
@@ -50,10 +51,16 @@ public class ItemDto {
     }
 
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         ItemDto itemDto = (ItemDto) o;
-        return Objects.equals(id, itemDto.id) && Objects.equals(name, itemDto.name) && Objects.equals(quantity, itemDto.quantity);
+        return Objects.equals(id, itemDto.id)
+            && Objects.equals(name, itemDto.name)
+            && Objects.equals(quantity, itemDto.quantity);
     }
 
     @Override

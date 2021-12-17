@@ -9,6 +9,7 @@ public interface ItemService {
     UnitOfQuantity addUnitOfQuantity(UnitOfQuantity unitOfQuantity);
 
     List<UnitOfQuantity> getAll();
+
     List<Item> getAllItems();
 
     /**

@@ -18,7 +18,7 @@ export class ShoppingListService {
   }
 
   getShoppingList(): Observable<string> {
-
+    console.log('get shoppinglist with id: ');
     return this.httpClient.get<string>(this.shoppingListBaseUri);
   }
 

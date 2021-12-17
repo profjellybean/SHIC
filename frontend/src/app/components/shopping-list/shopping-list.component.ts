@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, TemplateRef} from '@angular/core';
 import {MessageService} from '../../services/message.service';
 import {ShoppingListService} from '../../services/shopping-list.service';
 import {Item} from '../../dtos/item';
@@ -18,6 +18,7 @@ export class ShoppingListComponent implements OnInit {
 
   itemsAdd: Item[] = null;
   itemToAdd: Item = null;
+  itemsToBuy: Item[] = [];
 
   constructor(private messageService: MessageService,
               private shoppingListService: ShoppingListService,
@@ -25,6 +26,7 @@ export class ShoppingListComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadItemsToAdd();
+    this.getShoppingList();
   }
 
   /**
@@ -98,6 +100,10 @@ export class ShoppingListComponent implements OnInit {
     this.modalService.open(itemAddModal, {ariaLabelledBy: 'modal-basic-title'});
   }
 
+  private buy(item: Item) {
+    this.itemsToBuy.push(item);
+  }
+
   private clearForm() {
     this.itemToAdd = new Item();
     this.submitted = false;
@@ -112,5 +118,4 @@ export class ShoppingListComponent implements OnInit {
       this.errorMessage = error.error;
     }
   }
-
 }
