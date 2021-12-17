@@ -10,9 +10,12 @@ import org.springframework.data.repository.query.Param;
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 public interface ItemStorageRepository extends JpaRepository<ItemStorage, Long> {
     List<ItemStorage> findAllByStorageId(Long id);
+
+    Optional<ItemStorage> findByName(String name);
 
     List<ItemStorage> findAllByStorageIdAndNameContainingIgnoreCase(Long id, String name);
 

@@ -4,13 +4,16 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.Date;
 
 public class ItemStorageDto {
+    @NotNull
     private Long storageId;
     private Long shoppingListId;
     private Long id;
+    @NotNull
     private String name;
     private Long quantity;
     private String notes;
@@ -19,13 +22,18 @@ public class ItemStorageDto {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date expDate;
-
     private int amount;
     private String locationTag;
 
 
     public ItemStorageDto() {
     }
+
+    public ItemStorageDto(long storageId, String name) {
+        this.storageId = storageId;
+        this.name = name;
+    }
+
 
     public ItemStorageDto(Long storageId, Long shoppingListId, Long id, String name, Long quantity, String notes, byte[] image, Date expDate, int amount, String locationTag) {
         this.storageId = storageId;
