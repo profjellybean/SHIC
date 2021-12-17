@@ -46,6 +46,7 @@ public class ItemServiceImpl implements ItemService {
         itemRepository.delete(item);
         return !itemRepository.existsById(item.getId());
     }
+
     @Override
     public List<Item> getAllItems() {
         LOGGER.debug("Getting all items");
