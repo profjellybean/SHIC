@@ -78,7 +78,6 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         List<ItemStorage> storageItems;
         List<ItemStorage> returnList = null;
 
-        // TODO: catch errors that might occur accessing the repository
         try {
             recipe = recipeRepository.findRecipeById(recipeId);
         } catch (EntityNotFoundException e) {
@@ -121,13 +120,13 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         Map<String, ItemStorage> storedItemsMap = storedItems.stream().collect(Collectors.toMap(ItemStorage::getName, Function.identity()));
         for (ItemStorage ingredient :
             recipeIngredients) {
-            if (!storedItems.contains(ingredient)) {
+            ItemStorage storedItem = storedItemsMap.get(ingredient.getName());
+            if (storedItem == null) {
                 // adds items that are not in the storage
                 returnSet.add(ingredient);
             } else {
-                ItemStorage storedItem = storedItemsMap.get(ingredient.getName());
                 if (ingredient.getQuantity().equals(storedItem.getQuantity())) {
-                    // adds items if there is not enough in the storage
+                    // adds items if there is not enough of them in the storage
                     if (ingredient.getAmount() > storedItem.getAmount()) {
                         returnSet.add(ingredient);
                     }
