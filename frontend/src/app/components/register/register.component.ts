@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {RegisterService} from '../../services/register.service';
 import {ActivatedRoute} from '@angular/router';
 import {Bill} from '../../dtos/bill';
-import {User} from '../../dtos/User';
+import {User} from '../../dtos/user';
 import {BillService} from '../../services/bill.service';
 import {Register} from '../../dtos/register';
 // @ts-ignore
