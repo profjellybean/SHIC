@@ -1,6 +1,9 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.*;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ShoppingListCreationDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ShoppingListDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.WorkOffShoppingListDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ItemMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ItemStorageMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemStorageDto;
@@ -15,8 +18,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.data.repository.query.Param;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.annotation.security.PermitAll;
@@ -114,6 +125,7 @@ public class ShoppingListEndpoint {
     @PutMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
     public List<ItemStorageDto> workOffShoppingList(@RequestBody WorkOffShoppingListDto workOffShoppingListDto) {
+        LOGGER.info("PUT workOffShoppingList{}", workOffShoppingListDto);
         return itemStorageMapper.itemsStorageToItemsStorageDto(shoppingListService.workOffShoppingList(
             workOffShoppingListDto.getStorageId(), workOffShoppingListDto.getBoughtItems()));
     }

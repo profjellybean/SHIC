@@ -9,11 +9,12 @@ import java.util.List;
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
     /**
-     * Find all item entries
+     * Find all item entries.
      *
      * @return orderd list of all item entities
      */
     List<Item> findAll();
+
     @Override
     Item save(Item item);
 }

@@ -7,6 +7,7 @@ public class ItemDto {
 
     public ItemDto() {
     }
+
     public ItemDto(Long id, String name, Long quantity) {
         this.id = id;
         this.name = name;

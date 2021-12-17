@@ -67,11 +67,11 @@ public interface ShoppingListService {
     Long findShoppingListById(Long id);
 
     /**
-     * Find all item entries:
+     * Find all item entries.
      *
      * @return ordered list of all item entries
      */
-    List<Item>findAllItems();
+    List<Item> findAllItems();
 
     List<ItemStorage> workOffShoppingList(Long storageId, List<ItemStorage> boughtItems);
 }
