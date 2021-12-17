@@ -45,7 +45,7 @@ public class UserEndpointTest implements TestData {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final int GENERATE_USER_COUNT = 50; //Ein zu hoher Wert erhöht die Dauer des Testlaufes dramatisch
 
-/*
+
     @Test
     void registerUser() throws Exception {
         UserLoginDto testUser = new UserLoginDto("TestUser1", "passwort1245");
@@ -166,6 +166,6 @@ public class UserEndpointTest implements TestData {
 
     }
 
- */
+
 
 }
