@@ -6,7 +6,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UnitsRelationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ItemMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UnitOfQuantityMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UnitsRelationMapper;
-import at.ac.tuwien.sepm.groupphase.backend.entity.UnitsRelation;
+import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
 import at.ac.tuwien.sepm.groupphase.backend.service.ItemService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;

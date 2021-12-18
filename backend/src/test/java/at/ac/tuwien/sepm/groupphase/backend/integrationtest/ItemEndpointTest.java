@@ -1,10 +1,14 @@
 package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
-
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemStorageDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UnitOfQuantityDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Storage;
+import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
+import at.ac.tuwien.sepm.groupphase.backend.entity.UnitsRelation;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UnitOfQuantityRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UnitsRelationRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,11 +23,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-
+import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.ITEMENDPOINT_UNITOFQUANTITY_URI;
 import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.STORAGEENDPOINT_URI;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
@@ -31,24 +34,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class StorageEndpointTest {
+public class ItemEndpointTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
-    private StorageRepository storageRepository;
+    private UnitsRelationRepository unitsRelationRepository;
+    @Autowired
+    private UnitOfQuantityRepository unitOfQuantityRepository;
     @Autowired
     private ItemStorageRepository itemStorageRepository;
     @Autowired
     private ObjectMapper objectMapper;
-
-
     @Test
-    public void insertItemWithEmptyOrNullStorageIdShouldThrowException() throws Exception {
-        ItemStorageDto itemStorageDto = new ItemStorageDto();
+    public void insertUnityOfQuantityWithEmptyOrNullBaseUnitShouldThrowException() throws Exception {
+        UnitOfQuantityDto unitOfQuantityDto = new UnitOfQuantityDto();
 
-        MvcResult mvcResult = this.mockMvc.perform(post(STORAGEENDPOINT_URI)
+        MvcResult mvcResult = this.mockMvc.perform(post(ITEMENDPOINT_UNITOFQUANTITY_URI)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(itemStorageDto)))
+                .content(objectMapper.writeValueAsString(unitOfQuantityDto)))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -58,36 +61,16 @@ public class StorageEndpointTest {
 
     @Test
     public void insertValidItem() throws Exception {
-        ItemStorageDto itemStorageDto = new ItemStorageDto(-1, "Test");
-        storageRepository.saveAndFlush(new Storage(-1L));
+        UnitOfQuantityDto unitOfQuantityDto = new UnitOfQuantityDto("test");
 
-
-        MvcResult mvcResult = this.mockMvc.perform(post(STORAGEENDPOINT_URI)
+        MvcResult mvcResult = this.mockMvc.perform(post(ITEMENDPOINT_UNITOFQUANTITY_URI)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(itemStorageDto)))
+                .content(objectMapper.writeValueAsString(unitOfQuantityDto)))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
         assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertTrue(itemStorageRepository.findByName("Test").isPresent());
+        assertTrue(unitOfQuantityRepository.findByName("test").isPresent());
     }
-/*
-    @Test
-    public void searchForExistingItem() throws Exception {
-        ItemStorageDto itemStorageDto = new ItemStorageDto(-1,"test2");
-        storageRepository.saveAndFlush(new Storage(-1L));
-
-        MvcResult mvcResult = this.mockMvc.perform(get(STORAGEENDPOINT_URI+"/search")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(itemStorageDto)))
-            .andDo(print())
-            .andReturn();
-        MockHttpServletResponse response = mvcResult.getResponse();
-
-        assertEquals(HttpStatus.OK.value(),response.getStatus());
-
-    }
-
- */
 }

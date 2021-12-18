@@ -83,6 +83,6 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public String getUnitOfQuantityById(Long id) {
         LOGGER.debug("Find Unit of Quantity by id: {}", id);
-        return unitOfQuantityRepository.getById(id).getName();
+        return unitOfQuantityRepository.getUnitOfQuantityById(id).getName();
     }
 }
