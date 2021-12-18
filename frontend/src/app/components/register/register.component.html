@@ -28,12 +28,11 @@
   <tr *ngFor="let bill of billArray;">
     <td>{{bill.nameList}}</td>
     <td>{{bill.notPaidNameList}}</td>
-    <td>{{bill.sum}}</td>
-    <td>{{bill.sumPerPerson}}</td>
+    <td>{{bill.sum}} €</td>
+    <td>{{bill.sumPerPerson}} €</td>
     <td>
       <div>
         <button type="button" style="BACKGROUND-COLOR:green;" class="btn btn-secondary" (click)="confirmPayment(bill.id);">Confirm Payment</button>
-        {{bill.id}}
       </div>
     </td>
   </tr>
