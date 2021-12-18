@@ -48,11 +48,6 @@ export class ShoppingListService {
     return this.httpClient.get<Item[]>(this.shoppingListBaseUri + '/items');
   }
 
-  getShoppingList(): Observable<string> {
-
-    return this.httpClient.get<string>(this.shoppingListBaseUri);
-  }
-
   workOffShoppingList(boughtItems: Item[]): Observable<Item[]> {
     console.log('work off shopping-list: ' + boughtItems);
     return this.httpClient.put<Item[]>(this.shoppingListBaseUri + boughtItems.toString(), boughtItems);

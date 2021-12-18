@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemStorageDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ShoppingListCreationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ShoppingListDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.WorkOffShoppingListDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ItemStorageMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ItemMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ItemStorageMapper;
@@ -20,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.data.repository.query.Param;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -94,7 +94,7 @@ public class ShoppingListEndpoint {
 
     }
 
-    @GetMapping
+    @GetMapping(value = "/{id}/items")
     @PermitAll
     @Operation(summary = "Get all items from the shopping list") //TODO: add security
     public List<ItemStorageDto> findAllByShoppingListId(@Param("id") Long id) {
@@ -113,14 +113,6 @@ public class ShoppingListEndpoint {
 
 
      */
-
-    @GetMapping(value = "/shoppingListItems")
-    @PermitAll
-    @Operation(summary = "Get all items from the shopping list") //TODO: add security
-    public List<ItemStorageDto> findAllByShoppingListId(@Param("id") Long id) {
-        LOGGER.info("findAllByShoppingListId, endpoint");
-        return itemStorageMapper.itemsStorageToItemsStorageDto(shoppingListService.findAllByShoppingListId(id));
-    }
     /*
 
     @GetMapping
@@ -160,7 +152,7 @@ public class ShoppingListEndpoint {
         try {
 
 
-            Long id = userService.getPrivateShoppingListIdByUsername(authentication.getName());
+            Long id = userService.getPrivateShoppingListIdByUsername(authentication.name());
 
             return shoppingListMapper.shoppingListToShoppingListDto(shoppingListService.getShoppingListByid(id));
 

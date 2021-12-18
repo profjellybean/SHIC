@@ -1,10 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
-<<<<<<<<< Temporary merge branch 1
-=========
 import java.util.Objects;
 
->>>>>>>>> Temporary merge branch 2
 public class ItemDto {
     private Long id;
     private String name;
