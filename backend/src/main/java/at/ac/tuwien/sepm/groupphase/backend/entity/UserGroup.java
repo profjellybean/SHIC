@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -64,5 +65,40 @@ public class UserGroup {
 
     public void setStorageId(Long storageId) {
         this.storageId = storageId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        UserGroup userGroup = (UserGroup) o;
+        return Objects.equals(id, userGroup.id)
+            && Objects.equals(user, userGroup.user)
+            && Objects.equals(storageId, userGroup.storageId)
+            && Objects.equals(publicShoppingListId, userGroup.publicShoppingListId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, user, storageId, publicShoppingListId);
+    }
+
+    @Override
+    public String toString() {
+        return "UserGroup{"
+            +
+            "id=" + id
+            +
+            ", user=" + user
+            +
+            ", storageId=" + storageId
+            +
+            ", publicShoppingListId=" + publicShoppingListId
+            +
+            '}';
     }
 }
