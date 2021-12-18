@@ -12,7 +12,9 @@ import java.util.List;
 
 @Repository
 public interface ShoppingListItemRepository extends JpaRepository<ItemStorage, Long> {
+
     List<ItemStorage> findAllByStorageId(Long storageId);
+
     List<ItemStorage> findAllByShoppingListId(Long shoppingListId);
 
     @Modifying

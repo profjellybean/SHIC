@@ -45,8 +45,12 @@ public class ItemDto {
     }
 
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         ItemDto itemDto = (ItemDto) o;
         return Objects.equals(id, itemDto.id) && Objects.equals(name, itemDto.name) && Objects.equals(quantity, itemDto.quantity);
     }
@@ -58,10 +62,12 @@ public class ItemDto {
 
     @Override
     public String toString() {
-        return "ItemDto{" +
-            "id=" + id +
-            ", name='" + name + '\'' +
-            ", quantity=" + quantity +
-            '}';
+        return "ItemDto{"
+            + "id="
+            + id
+            + ", name='" + name + '\''
+            + ", quantity="
+            + quantity
+            + '}';
     }
 }

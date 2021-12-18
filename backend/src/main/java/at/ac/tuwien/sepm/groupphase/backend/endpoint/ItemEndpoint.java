@@ -25,7 +25,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 @RestController
-@RequestMapping(value="/api/v1/item")
+@RequestMapping(value = "/api/v1/item")
 public class ItemEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final ItemService itemService;
@@ -63,10 +63,11 @@ public class ItemEndpoint {
         LOGGER.info("Delete item {}", itemDto.getName());
         return itemService.delete(itemMapper.itemDtoToItem(itemDto));
     }
+
     @GetMapping //(value="/item")
     @PermitAll // TODO add security
     @Operation(summary = "Get all Items")
-    List<ItemDto> getAllItems(){
+    List<ItemDto> getAllItems() {
         LOGGER.info("Endpoint: getAllItems()");
         return itemMapper.itemsToItemDtos(itemService.getAllItems());
     }
