@@ -35,7 +35,6 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public UnitOfQuantity addUnitOfQuantity(UnitOfQuantity unitOfQuantity) {
         LOGGER.debug("Save unitOfQuanity");
-        System.out.println(unitOfQuantity.toString());
         unitOfQuantityRepository.save(unitOfQuantity);
         return unitOfQuantity;
     }
@@ -47,16 +46,18 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Item> getAllItems() {
-        LOGGER.debug("Getting all items");
-        return itemRepository.findAll();
-    }
-
-    @Override
     public boolean delete(Item item) {
         LOGGER.debug("Delete item {}", item.getName());
         itemRepository.delete(item);
         return !itemRepository.existsById(item.getId());
     }
+
+    @Override
+    public List<Item> getAllItems() {
+        LOGGER.debug("Getting all items");
+        return itemRepository.findAll();
+    }
+
+
 
 }

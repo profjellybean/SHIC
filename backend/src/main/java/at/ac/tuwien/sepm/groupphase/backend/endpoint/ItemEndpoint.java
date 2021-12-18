@@ -55,6 +55,14 @@ public class ItemEndpoint {
         return unitOfQuantityMapper.unitsOfQuantityToUnitsOfQuantityDto(itemService.getAll());
     }
 
+    @DeleteMapping
+    @PermitAll
+    @Operation(summary = "Deletes the item")
+    public boolean deleteItem(@Valid @RequestBody ItemDto itemDto) {
+        LOGGER.info("Delete item {}", itemDto.getName());
+        return itemService.delete(itemMapper.itemDtoToItem(itemDto));
+    }
+
     @GetMapping //(value="/item")
     @PermitAll // TODO add security
     @Operation(summary = "Get all Items")
@@ -63,12 +71,6 @@ public class ItemEndpoint {
         return itemMapper.itemsToItemDtos(itemService.getAllItems());
     }
 
-    @DeleteMapping
-    @PermitAll
-    @Operation(summary = "Deletes the item")
-    public boolean deleteItem(@Valid @RequestBody ItemDto itemDto) {
-        LOGGER.info("Delete item {}", itemDto.getName());
-        return itemService.delete(itemMapper.itemDtoToItem(itemDto));
-    }
+
 
 }

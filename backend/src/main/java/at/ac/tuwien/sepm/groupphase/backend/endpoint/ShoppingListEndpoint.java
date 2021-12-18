@@ -1,9 +1,10 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemStorageDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ShoppingListCreationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ShoppingListDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.WorkOffShoppingListDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ItemStorageMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ItemMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ItemStorageMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemStorageDto;
@@ -19,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,9 +45,9 @@ public class ShoppingListEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final ShoppingListService shoppingListService;
     private final ShoppingListMapper shoppingListMapper;
+    private final UserService userService;
     private final ItemStorageMapper itemStorageMapper;
     private final ItemMapper itemMapper;
-    private final UserService userService;
 
     @Autowired
     public ShoppingListEndpoint(ShoppingListService shoppingListService, ShoppingListMapper shoppingListMapper,
@@ -57,6 +59,7 @@ public class ShoppingListEndpoint {
         this.userService = userService;
     }
 
+    @PermitAll
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Long createShoppingList(@RequestBody ShoppingListCreationDto shoppingListCreationDto) {
@@ -70,6 +73,7 @@ public class ShoppingListEndpoint {
 
     }
 
+    @PostMapping("/newItem")
     @PermitAll
     @Operation(summary = "Insert a new item into the storage") //TODO: add security
     public ItemStorageDto saveItem(@RequestBody ItemStorageDto itemStorageDto) {
@@ -98,6 +102,36 @@ public class ShoppingListEndpoint {
         return itemStorageMapper.itemsStorageToItemsStorageDto(shoppingListService.findAllByShoppingListId(id));
     }
 
+    /*
+        @PostMapping
+        @PermitAll
+        @Operation(summary = "Insert a new item into the storage") //TODO: add security /// TEMPLATE
+        public ItemStorageDto saveItem(@Valid @RequestBody ItemStorageDto itemStorageDto) {
+            LOGGER.info("POST /storagy body: ", itemStorageDto.toString());
+            return itemStorageMapper.itemStorageToItemStorageDto(shoppingListService.saveItem(itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto), itemStorageDto.getShoppingListId()));
+        }
+
+
+     */
+
+    @GetMapping(value = "/shoppingListItems")
+    @PermitAll
+    @Operation(summary = "Get all items from the shopping list") //TODO: add security
+    public List<ItemStorageDto> findAllByShoppingListId(@Param("id") Long id) {
+        LOGGER.info("findAllByShoppingListId, endpoint");
+        return itemStorageMapper.itemsStorageToItemsStorageDto(shoppingListService.findAllByShoppingListId(id));
+    }
+    /*
+
+    @GetMapping
+    @PermitAll
+    @Operation(summary = "Get all items from the shopping list") //TODO: add security
+    public List<ItemStorageDto> findAllByStorageId(@Param("id") Long id) {
+        LOGGER.info("findAllByStorageId, endpoint");
+        return itemStorageMapper.itemsStorageToItemsStorageDto(shoppingListService.findAllByStorageId(id));
+    }
+    */
+
     @PermitAll //TODO: add security
     //@Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.OK)
@@ -119,6 +153,25 @@ public class ShoppingListEndpoint {
     }
 
 
+    @PermitAll
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public ShoppingListDto getPrivateShoppingListForUser(Authentication authentication) {
+        try {
+
+
+            Long id = userService.getPrivateShoppingListIdByUsername(authentication.getName());
+
+            return shoppingListMapper.shoppingListToShoppingListDto(shoppingListService.getShoppingListByid(id));
+
+
+        } catch (NotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()); // Todo
+        }
+
+    }
 
     @PermitAll
     @PutMapping(value = "/{id}")
@@ -128,5 +181,4 @@ public class ShoppingListEndpoint {
         return itemStorageMapper.itemsStorageToItemsStorageDto(shoppingListService.workOffShoppingList(
             workOffShoppingListDto.getStorageId(), workOffShoppingListDto.getBoughtItems()));
     }
-
 }

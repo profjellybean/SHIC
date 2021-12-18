@@ -162,6 +162,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
 
     }
 
+    @Transactional
     @Override
     public List<Item> findAllItems() {
         LOGGER.debug("Find all items");
