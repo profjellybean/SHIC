@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemStorageDto;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Storage;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
@@ -65,12 +66,31 @@ public class StorageEndpointTest {
         MvcResult mvcResult = this.mockMvc.perform(post(STORAGEENDPOINT_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(itemStorageDto)))
-            .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertTrue(itemStorageRepository.findByName("Test").isPresent());
+    }
+
+
+    @Test
+    public void insertItemsThenGetAll() throws Exception {
+        ItemStorage itemStorageDto = new ItemStorage(-1, "Test1");
+        ItemStorage itemStorageDto1 = new ItemStorage(-1, "Test2");
+        ItemStorage itemStorageDto2 = new ItemStorage(-1, "Test3");
+        storageRepository.saveAndFlush(new Storage(-1L));
+        itemStorageRepository.saveAndFlush(itemStorageDto);
+        itemStorageRepository.saveAndFlush(itemStorageDto1);
+        itemStorageRepository.saveAndFlush(itemStorageDto2);
+
+        MvcResult mvcResult = this.mockMvc.perform(get(STORAGEENDPOINT_URI + "?id=", -1)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(3, itemStorageRepository.findAll().size());
     }
 /*
     @Test
