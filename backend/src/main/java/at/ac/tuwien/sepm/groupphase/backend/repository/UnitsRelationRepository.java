@@ -13,5 +13,6 @@ public interface UnitsRelationRepository extends JpaRepository<UnitsRelation, Lo
 
     List<UnitsRelation> findAllByBaseUnitOrCalculatedUnit(Long baseUnit, Long calculatedUnit);
 
-
+    @Override
+    void deleteAll();
 }

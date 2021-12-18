@@ -9,4 +9,7 @@ public interface UnitOfQuantityRepository extends JpaRepository<UnitOfQuantity, 
     Optional<UnitOfQuantity> findByName(String name);
 
     UnitOfQuantity getUnitOfQuantityById(Long id);
+
+    @Override
+    void deleteAll();
 }
