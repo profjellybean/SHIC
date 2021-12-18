@@ -33,6 +33,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -133,17 +134,19 @@ public class RegisterEndpointTest implements TestData {
 
     @Test
     public void return_RegisterDtoWhen_GivenValidUsername_RegisterId_AndBillId() throws Exception {
-        String body = REGISTERENDPOINT_URI + "/?id=" + savedRegister.getId() + "&additionalId=" + savedBill.getId() +
+        String body = REGISTERENDPOINT_URI + "?id=" + savedRegister.getId() + "&additionalId=" + savedBill.getId() +
             "&additionalString=" + userRepository.getById(2L).getUsername();
-        MvcResult mvcResult = this.mockMvc.perform(put(REGISTERENDPOINT_URI)
-                .content(body)
-            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+        System.out.println(body);
+        MvcResult mvcResult = this.mockMvc.perform(put(body)
+                .contentType(MediaType.APPLICATION_JSON))
             .andReturn();
+            //.header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+
         MockHttpServletResponse response = mvcResult.getResponse();
 
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         //assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
-        assert(billRepository.getById(1L).getNotPaidNames().isEmpty());
+        assertTrue(billRepository.getById(1L).getNotPaidNames().isEmpty());
 /*
         RegisterDto registerDto2 = objectMapper.readValue(response.getContentAsString(),
             RegisterDto.class);

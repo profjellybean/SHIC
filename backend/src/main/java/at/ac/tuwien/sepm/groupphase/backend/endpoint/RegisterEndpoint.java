@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,9 +49,9 @@ public class RegisterEndpoint {
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get detailed information about a specific register", security = @SecurityRequirement(name = "apiKey"))
-    public RegisterDto confirmPayment(IdStringCollectionDto idStringCollectionDto) {
-        LOGGER.info("PUT /api/v1/register/{}", idStringCollectionDto);
-        return registerMapper.registerToRegisterDto(registerService.confirmPayment(idStringCollectionDto.getId(),
-            idStringCollectionDto.getAdditionalId(), idStringCollectionDto.getAdditionalString()));
+    public RegisterDto confirmPayment(@Param("id") Long id, @Param("additionalId") Long additionalId,
+                                      @Param("additionalString") String additionalString) {
+        LOGGER.info("PUT /api/v1/register {}", id);
+        return registerMapper.registerToRegisterDto(registerService.confirmPayment(id, additionalId, additionalString));
     }
 }
