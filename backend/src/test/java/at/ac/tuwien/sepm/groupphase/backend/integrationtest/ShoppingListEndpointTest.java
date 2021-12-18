@@ -2,6 +2,8 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
+import at.ac.tuwien.sepm.groupphase.backend.datagenerator.MasterDataGenerator;
+import at.ac.tuwien.sepm.groupphase.backend.datagenerator.RecipeDataGenerator;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ShoppingListMapper;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
@@ -49,6 +51,11 @@ public class ShoppingListEndpointTest implements TestData {
     @Autowired
     private SecurityProperties securityProperties;
 
+    //@Autowired
+    //MasterDataGenerator masterDataGenerator;
+    @Autowired
+    RecipeDataGenerator recipeDataGenerator;
+
     @BeforeEach
     public void beforeEach() {
         shoppingListRepository.deleteAll();
@@ -58,11 +65,40 @@ public class ShoppingListEndpointTest implements TestData {
     public void givenNoRecipe_whenPlanRecipe_then400() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
-            .andDo(print())
+            //.andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
 
     }
+
+    @Test
+    public void givenInvalidRecipeId_whenPlanRecipe_then404() throws Exception {
+        MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI)
+                .param("recipeId", "-1")
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            //.andDo(print())
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
+    }
+
+    @Test
+    public void givenValidRecipe_whenPlanRecipe_then400() throws Exception {
+       // masterDataGenerator.generateData_planRecipe();
+        recipeDataGenerator.generateRecipes();
+
+        MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI)
+                .param("recipeId", "1")
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            //.andDo(print())
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
+
+
 }

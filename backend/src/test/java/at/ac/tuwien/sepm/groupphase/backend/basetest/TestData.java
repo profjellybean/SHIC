@@ -1,5 +1,11 @@
 package at.ac.tuwien.sepm.groupphase.backend.basetest;
 
+import at.ac.tuwien.sepm.groupphase.backend.datagenerator.MasterDataGenerator;
+import at.ac.tuwien.sepm.groupphase.backend.datagenerator.ShoppingListDataGenerator;
+import at.ac.tuwien.sepm.groupphase.backend.datagenerator.StorageDataGenerator;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

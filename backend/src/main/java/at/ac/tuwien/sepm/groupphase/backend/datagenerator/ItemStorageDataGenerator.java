@@ -29,7 +29,7 @@ public class ItemStorageDataGenerator {
     private static final Long ID_OF_STORAGE = 1L;
     private static final Long ID_OF_SHOPPINGLIST = null;
     private static final boolean CREATE_REAL_ITEMSTORAGES = true;
-    private final StorageRepository storageRepository;
+    private final StorageDataGenerator storageDataGenerator;
 
     private final UnitOfQuantityDataGenerator unitOfQuantityDataGenerator;
 
@@ -37,12 +37,12 @@ public class ItemStorageDataGenerator {
     public ItemStorageDataGenerator(ItemStorageRepository itemStorageRepository,
                                     UnitOfQuantityRepository unitOfQuantityRepository,
                                     UnitOfQuantityDataGenerator unitOfQuantityDataGenerator,
-                                    StorageRepository storageRepository) {
+                                    StorageDataGenerator storageDataGenerator) {
         this.itemStorageRepository = itemStorageRepository;
         this.unitOfQuantityRepository = unitOfQuantityRepository;
         this.unitOfQuantityDataGenerator = unitOfQuantityDataGenerator;
 
-        this.storageRepository = storageRepository;
+        this.storageDataGenerator = storageDataGenerator;
     }
 
     @PostConstruct
@@ -53,6 +53,7 @@ public class ItemStorageDataGenerator {
             LOGGER.debug("generating ItemStorage");
 
             this.unitOfQuantityDataGenerator.generateUnitOfQuantity();
+            this.storageDataGenerator.generateStorage();
 
             List<UnitOfQuantity> unitList = unitOfQuantityRepository.findAll();
             Map<String, Long> mappedUnits = new HashMap<>();

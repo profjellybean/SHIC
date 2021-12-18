@@ -8,20 +8,19 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
-import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListItemRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.ShoppingListService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
+import org.hibernate.ObjectNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.util.LinkedList;
@@ -104,13 +103,19 @@ public class ShoppingListServiceImpl implements ShoppingListService {
 
         try {
             recipe = recipeRepository.findRecipeById(recipeId);
-        } catch (EntityNotFoundException e) {
+            if (recipe == null) {
+                throw new NotFoundException("Could not find recipe with id " + recipeId);
+            }
+        } catch (ObjectNotFoundException e) {
             throw new NotFoundException("Could not find recipe with id " + recipeId, e);
         }
 
         try {
             storageItems = itemStorageRepository.findAllByStorageId(storageId);
-        } catch (EntityNotFoundException e) {
+            if (storageItems == null) {
+                throw new NotFoundException("Could not find storage with id " + storageId);
+            }
+        } catch (ObjectNotFoundException e) {
             throw new NotFoundException("Could not find storage with id " + storageId, e);
         }
 
@@ -156,6 +161,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
                     }
                 } else {
                     // TODO recalculate unitOfQuantity
+
                 }
             }
         }
