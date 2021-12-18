@@ -27,7 +27,7 @@ public class ItemStorage {
     @Column
     private String locationTag;
     @Column
-    private Long quantity;
+    private String quantity;
     @Column
     private Long storageId;
     @Column
@@ -41,7 +41,7 @@ public class ItemStorage {
         this.id = id;
     }
 
-    public ItemStorage(String name, String notes, byte[] image, Date expDate, int amount, String locationTag, Long quantity, Long storageId, Long shoppingListId) {
+    public ItemStorage(String name, String notes, byte[] image, Date expDate, int amount, String locationTag, String quantity, Long storageId, Long shoppingListId) {
         this.name = name;
         this.notes = notes;
         this.image = image;
@@ -144,11 +144,11 @@ public class ItemStorage {
         this.locationTag = locationTag;
     }
 
-    public Long getQuantity() {
+    public String getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Long quantity) {
+    public void setQuantity(String quantity) {
         this.quantity = quantity;
     }
 

@@ -62,22 +62,22 @@ public class ItemStorageDataGenerator {
             }
 
             //ItemStorage feta = new ItemStorage("Feta", null, null, null, 1, Location.fridge, UnitOfQuantity.pieces, ID_OF_STORAGE);
-            ItemStorage feta = new ItemStorage("Feta", null, null, null, 1, Location.fridge.toString(), mappedUnits.get("pieces"), ID_OF_STORAGE, ID_OF_SHOPPINGLIST);
+            ItemStorage feta = new ItemStorage("Feta", null, null, null, 1, Location.fridge.toString(), "pieces", ID_OF_STORAGE, ID_OF_SHOPPINGLIST);
             LOGGER.debug("saving ItemStorage {}", feta);
             itemStorageRepository.save(feta);
 
             //ItemStorage noodles = new ItemStorage("Noodles", null, null, null, 500, Location.shelf, UnitOfQuantity.g, ID_OF_STORAGE);
-            ItemStorage noodles = new ItemStorage("Noodles", null, null, null, 500, Location.shelf.toString(), mappedUnits.get("g"), ID_OF_STORAGE, ID_OF_SHOPPINGLIST);
+            ItemStorage noodles = new ItemStorage("Noodles", null, null, null, 500, Location.shelf.toString(), "g", ID_OF_STORAGE, ID_OF_SHOPPINGLIST);
             LOGGER.debug("saving ItemStorage {}", noodles);
             itemStorageRepository.save(noodles);
 
             //ItemStorage milk = new ItemStorage("Milk", null, null, null, 2, Location.fridge, UnitOfQuantity.L, ID_OF_STORAGE);
-            ItemStorage milk = new ItemStorage("Milk", null, null, null, 2, Location.fridge.toString(), mappedUnits.get("L"), ID_OF_STORAGE, ID_OF_SHOPPINGLIST);
+            ItemStorage milk = new ItemStorage("Milk", null, null, null, 2, Location.fridge.toString(), "L", ID_OF_STORAGE, ID_OF_SHOPPINGLIST);
             LOGGER.debug("saving ItemStorage {}", milk);
             itemStorageRepository.save(milk);
 
             //ItemStorage pesto = new ItemStorage("Pesto", "Genovese", null, null, 200, Location.fridge, UnitOfQuantity.g, ID_OF_STORAGE);
-            ItemStorage pesto = new ItemStorage("Pesto", "Genovese", null, null, 200, Location.fridge.toString(), mappedUnits.get("g"), ID_OF_STORAGE, ID_OF_SHOPPINGLIST);
+            ItemStorage pesto = new ItemStorage("Pesto", "Genovese", null, null, 200, Location.fridge.toString(), "g", ID_OF_STORAGE, ID_OF_SHOPPINGLIST);
             LOGGER.debug("saving ItemStorage {}", pesto);
             itemStorageRepository.save(pesto);
 
