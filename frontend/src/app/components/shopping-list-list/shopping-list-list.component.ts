@@ -19,14 +19,16 @@ export class ShoppingListListComponent implements OnInit {
   }
 
   loadItems() {
-    this.shoppingListService.findAll(1).subscribe({
+    this.shoppingListService.findAll(7).subscribe({
       next: data => {
         console.log('received items', data);
+
         this.items = data;
       }
     });
   }
-  addItem(item: Item) {
+
+  public addItem(item: Item) {
     this.items.push(item);
   }
 

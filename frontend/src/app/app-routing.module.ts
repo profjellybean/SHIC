@@ -13,7 +13,6 @@ import {RegisterUserComponent} from './components/registerUser/registerUser.comp
 import {StorageAddItemComponent} from './components/storage-add-item/storage-add-item.component';
 
 import {UserComponent} from './components/user/user.component';
-import {HomeComponent} from './components/home/home.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -22,7 +21,6 @@ const routes: Routes = [
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
   {path: 'storage', component: StorageComponent},
   {path: 'register', component: RegisterComponent},
-  {path: 'storage', component: StorageComponent},
   {path: 'storage/add', component: StorageAddItemComponent},
   {path: 'recipe/:id', canActivate: [AuthGuard], component: RecipeDetailComponent},
   {path: 'recipe', canActivate: [AuthGuard], component: RecipeComponent},

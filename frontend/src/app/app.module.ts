@@ -23,7 +23,6 @@ import { ShoppingListAddComponent } from './components/shopping-list-add/shoppin
 import { ShoppingListListComponent } from './components/shopping-list-list/shopping-list-list.component';
 import { StorageAddItemComponent } from './components/storage-add-item/storage-add-item.component';
 import { UserComponent } from './components/user/user.component';
-import {HomeComponent} from './components/home/home.component';
 
 @NgModule({
   declarations: [

@@ -27,8 +27,8 @@ export class ShoppingListService {
 
   addItemToShoppingList(item: Item): Observable<Item>{
     console.log('service ', item);
-    console.log(this.shoppingListBaseUri);
-    return this.httpClient.post<Item>(this.shoppingListBaseUri,item);
+    console.log(this.shoppingListBaseUri + '/newItem');
+    return this.httpClient.post<Item>(this.shoppingListBaseUri + '/newItem', item);
   }
 
   findAll(id: number): Observable<Item[]>{
@@ -36,11 +36,17 @@ export class ShoppingListService {
 
     const params = new HttpParams()
       .set('id', id);
-    return this.httpClient.get<Item[]>(this.shoppingListBaseUri, {params});
+    return this.httpClient.get<Item[]>(this.shoppingListBaseUri + '/shoppingListItems', {params});
   }
 
   findAllItems(): Observable<Item[]>{
     console.log('load items');
     return this.httpClient.get<Item[]>(this.shoppingListBaseUri + '/items');
+  }
+
+
+  getShoppingList(): Observable<string> {
+
+    return this.httpClient.get<string>(this.shoppingListBaseUri);
   }
 }

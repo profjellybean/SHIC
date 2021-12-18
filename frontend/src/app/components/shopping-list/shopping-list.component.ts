@@ -1,12 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import {ShoppingListService} from '../../services/shoppinglist.service';
-
 import {Component, OnInit, TemplateRef} from '@angular/core';
 import {MessageService} from '../../services/message.service';
 import {ShoppingListService} from '../../services/shopping-list.service';
 import {Item} from '../../dtos/item';
-import {ItemStorage} from '../../dtos/itemStorage';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {ShoppingList} from '../../dtos/shopping-list';
+import {ShoppingListListComponent} from '../shopping-list-list/shopping-list-list.component';
 
 @Component({
   selector: 'app-shopping-list',
@@ -17,21 +15,24 @@ export class ShoppingListComponent implements OnInit {
 
   error = false;
   errorMessage = '';
- submitted = false;
-
+  submitted = false;
+  shoppingList: ShoppingList;
 
   itemsAdd: Item[] = null;
   itemToAdd: Item = null;
+  items: Item[] = null;
 
   constructor(private messageService: MessageService,
               private shoppingListService: ShoppingListService,
-              private modalService: NgbModal) { }
+              private modalService: NgbModal) {
+  }
 
   ngOnInit(): void {
     this.loadItemsToAdd();
+    this.loadItems();
   }
 
-  getShoppingList(){
+  getShoppingList() {
     this.shoppingListService.getShoppingList().subscribe({
         next: res => {
           console.log(res);
@@ -42,6 +43,7 @@ export class ShoppingListComponent implements OnInit {
       }
     );
   }
+
   /**
    * Error flag will be deactivated, which clears the error message
    */
@@ -58,13 +60,25 @@ export class ShoppingListComponent implements OnInit {
     });
   }
 
+  loadItems() {
+    this.shoppingListService.findAll(7).subscribe({
+      next: data => {
+        console.log('received items', data);
+
+        this.items = data;
+      }
+    });
+  }
+
   addItemToShoppingList() {
     console.log('item to add', this.itemToAdd);
-    this.itemToAdd.shoppingListId = 1;
+    this.itemToAdd.shoppingListId = 7;
     this.itemToAdd.id = null;
     console.log('item to add', this.itemToAdd);
     this.shoppingListService.addItemToShoppingList(this.itemToAdd).subscribe({
       next: data => {
+        this.items.push(this.itemToAdd);
+        this.loadItems();
         console.log('add item', data);
       },
       error: err => {
@@ -76,7 +90,7 @@ export class ShoppingListComponent implements OnInit {
   addItemForm(form) {
     this.submitted = true;
 
-    if(form.valid) {
+    if (form.valid) {
       //this.storageService.addItem(this.item);
       console.log('form item to add', this.itemToAdd);
       this.addItemToShoppingList();
