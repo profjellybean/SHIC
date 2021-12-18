@@ -9,10 +9,12 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.security.PermitAll;
@@ -44,6 +46,7 @@ public class RegisterEndpoint {
     //@Secured("ROLE_USER")
     @PermitAll
     @PutMapping
+    @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get detailed information about a specific register", security = @SecurityRequirement(name = "apiKey"))
     public RegisterDto confirmPayment(IdStringCollectionDto idStringCollectionDto) {
         LOGGER.info("PUT /api/v1/register/{}", idStringCollectionDto);
