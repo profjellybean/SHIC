@@ -45,6 +45,11 @@ public class ApplicationUser {
         this.privList = shoppingListId;
     }
 
+    public ApplicationUser(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
 
     public Long getPrivList() {
         return privList;

@@ -1,7 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -66,6 +64,11 @@ public class ItemStorage {
         this.quantity = itemStorage.quantity;
         this.storageId = itemStorage.storageId;
         this.shoppingListId = itemStorage.shoppingListId;
+    }
+
+    public ItemStorage(long storageId, String name) {
+        this.storageId = storageId;
+        this.name = name;
     }
 
 
