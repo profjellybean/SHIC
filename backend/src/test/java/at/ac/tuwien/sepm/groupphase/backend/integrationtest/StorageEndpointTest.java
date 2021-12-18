@@ -92,4 +92,50 @@ public class StorageEndpointTest {
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertEquals(3, itemStorageRepository.findAll().size());
     }
+
+    @Test
+    public void insertItemStorageAndFindIt() throws Exception {
+        storageRepository.saveAndFlush(new Storage(-1L));
+        ItemStorage itemStorageDto = new ItemStorage(-1, "Test123");
+        itemStorageRepository.saveAndFlush(itemStorageDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(get(STORAGEENDPOINT_URI + "?name=", "Test123")
+                .contentType(MediaType.APPLICATION_JSON))
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(1, itemStorageRepository.findAllByStorageIdAndNameContainingIgnoreCase(-1L,"Test123").size());
+    }
+
+    @Test
+    public void tryToFindNonExistingItem() throws Exception {
+        MvcResult mvcResult = this.mockMvc.perform(get(STORAGEENDPOINT_URI + "?name=", "Test1234567890")
+                .contentType(MediaType.APPLICATION_JSON))
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(0, itemStorageRepository.findAllByStorageIdAndNameContainingIgnoreCase(-1L,"Test123456786").size());
+    }
+
+
+/*
+    @Test
+    public void searchForExistingItem() throws Exception {
+        ItemStorageDto itemStorageDto = new ItemStorageDto(-1,"test2");
+        storageRepository.saveAndFlush(new Storage(-1L));
+
+        MvcResult mvcResult = this.mockMvc.perform(get(STORAGEENDPOINT_URI+"/search")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(itemStorageDto)))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.OK.value(),response.getStatus());
+
+    }
+
+ */
 }
