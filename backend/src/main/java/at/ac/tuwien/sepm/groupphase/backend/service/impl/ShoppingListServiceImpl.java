@@ -4,11 +4,13 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ShoppingListCreationDto
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
+import at.ac.tuwien.sepm.groupphase.backend.entity.UnitsRelation;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.RecipeRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListItemRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UnitsRelationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.RecipeRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListItemRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.ShoppingListService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,16 +35,18 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     private final RecipeRepository recipeRepository;
     private final ItemStorageRepository itemStorageRepository;
     private final ShoppingListItemRepository shoppingListItemRepository;
+    private final UnitsRelationRepository unitsRelationRepository;
 
     @Autowired
     public ShoppingListServiceImpl(ShoppingListRepository shoppingListRepository,
                                    RecipeRepository recipeRepository,
                                    ItemStorageRepository itemStorageRepository,
-                                   ShoppingListItemRepository shoppingListItemRepository) {
+                                   ShoppingListItemRepository shoppingListItemRepository, UnitsRelationRepository unitsRelationRepository) {
         this.recipeRepository = recipeRepository;
         this.itemStorageRepository = itemStorageRepository;
         this.shoppingListItemRepository = shoppingListItemRepository;
         this.shoppingListRepository = shoppingListRepository;
+        this.unitsRelationRepository = unitsRelationRepository;
     }
 
 
@@ -132,7 +136,13 @@ public class ShoppingListServiceImpl implements ShoppingListService {
                         returnSet.add(ingredient);
                     }
                 } else {
-                    // TODO recalculate unitOfQuantity
+                    UnitsRelation unitsRelation = unitsRelationRepository.findUnitsRelationByBaseUnitAndCalculatedUnit(ingredient.getQuantity(), storedItem.getQuantity());
+                    if (unitsRelation != null) {
+                        Double relation = unitsRelation.getRelation();
+                        if (ingredient.getAmount() * relation > storedItem.getAmount()) {
+                            returnSet.add(ingredient);
+                        }
+                    }
                 }
             }
         }

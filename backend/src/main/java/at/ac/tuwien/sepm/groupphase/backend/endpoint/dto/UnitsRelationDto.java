@@ -1,8 +1,12 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
+import javax.validation.constraints.NotNull;
+
 public class UnitsRelationDto {
     private Long id;
+    @NotNull
     private Long baseUnit;
+    @NotNull
     private Long calculatedUnit;
     private Double relation;
 

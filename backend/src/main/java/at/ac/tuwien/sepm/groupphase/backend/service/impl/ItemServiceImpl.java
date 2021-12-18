@@ -44,6 +44,12 @@ public class ItemServiceImpl implements ItemService {
         unitsRelation1.setRelation(1 / unitsRelation.getRelation());
         unitsRelation1.setBaseUnit(unitsRelation.getCalculatedUnit());
         unitsRelation1.setCalculatedUnit(unitsRelation.getBaseUnit());
+        if (unitsRelationRepository.findUnitsRelationByBaseUnitAndCalculatedUnit(unitsRelation1.getBaseUnit(), unitsRelation1.getCalculatedUnit()) != null) {
+            return null;
+        }
+        if (unitsRelationRepository.findUnitsRelationByBaseUnitAndCalculatedUnit(unitsRelation.getBaseUnit(), unitsRelation.getCalculatedUnit()) != null) {
+            return null;
+        }
         unitsRelationRepository.save(unitsRelation);
         unitsRelationRepository.save(unitsRelation1);
         return unitsRelation1;
@@ -53,6 +59,12 @@ public class ItemServiceImpl implements ItemService {
     public List<UnitsRelation> getAllUnitsRelations() {
         LOGGER.debug("Getting all UnitsRelations");
         return unitsRelationRepository.findAll();
+    }
+
+    @Override
+    public UnitsRelation getSpecificRelation(Long baseUnit, Long calculatedUnit) {
+        LOGGER.debug("get specific Relation between two units {} and {}", baseUnit, calculatedUnit);
+        return unitsRelationRepository.findUnitsRelationByBaseUnitAndCalculatedUnit(baseUnit, calculatedUnit);
     }
 
     @Override
@@ -66,5 +78,11 @@ public class ItemServiceImpl implements ItemService {
         LOGGER.debug("Delete item {}", item.getName());
         itemRepository.delete(item);
         return !itemRepository.existsById(item.getId());
+    }
+
+    @Override
+    public String getUnitOfQuantityById(Long id) {
+        LOGGER.debug("Find Unit of Quantity by id: {}", id);
+        return unitOfQuantityRepository.getById(id).getName();
     }
 }

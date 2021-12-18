@@ -38,10 +38,26 @@ public interface ItemService {
     List<UnitsRelation> getAllUnitsRelations();
 
     /**
+     * Finds specific Relation between BaseUnit and CalculatedUnit.
+     *
+     * @param baseUnit and calculatedUnit
+     * @return unitsRelations
+     */
+    UnitsRelation getSpecificRelation(Long baseUnit, Long calculatedUnit);
+
+    /**
      * Deletes the item from the database.
      *
      * @param itemDto the item to delete
      * @return true if successful
      */
     boolean delete(Item itemDto);
+
+    /**
+     * get unit of quantity by id from the database.
+     *
+     * @param id the unitOfQuantity
+     * @return unitOfQuantity name
+     */
+    String getUnitOfQuantityById(Long id);
 }
