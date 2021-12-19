@@ -3,9 +3,10 @@ import {MessageService} from '../../services/message.service';
 import {ShoppingListService} from '../../services/shopping-list.service';
 import {Item} from '../../dtos/item';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {User} from '../../dtos/user';
 // @ts-ignore
 import jwt_decode from 'jwt-decode';
-import {User} from '../../dtos/user';
+import {AuthService} from '../../services/auth.service';
 
 @Component({
   selector: 'app-shopping-list',
@@ -35,7 +36,8 @@ export class ShoppingListComponent implements OnInit {
 
   constructor(private messageService: MessageService,
               private shoppingListService: ShoppingListService,
-              private modalService: NgbModal) {
+              private modalService: NgbModal,
+              private authService: AuthService) {
   }
 
   ngOnInit(): void {
