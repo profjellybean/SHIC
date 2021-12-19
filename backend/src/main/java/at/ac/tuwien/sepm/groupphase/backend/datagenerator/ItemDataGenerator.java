@@ -38,7 +38,7 @@ public class ItemDataGenerator {
     }
 
 
-    @PostConstruct
+    //@PostConstruct
     void generateItem() {
         if (itemRepository.findAll().size() > 0) {
             LOGGER.debug("Item already generated");

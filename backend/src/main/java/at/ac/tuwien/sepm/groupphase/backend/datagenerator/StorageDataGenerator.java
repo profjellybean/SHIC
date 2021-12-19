@@ -28,7 +28,7 @@ public class StorageDataGenerator {
         this.storageRepository = storageRepository;
     }
 
-    @PostConstruct
+    //@PostConstruct
     void generateStorage() {
         if (storageRepository.findAll().size() > 0) {
             LOGGER.debug("storage already generated");

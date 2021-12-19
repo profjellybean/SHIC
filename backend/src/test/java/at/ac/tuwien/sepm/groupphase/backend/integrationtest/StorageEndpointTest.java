@@ -44,11 +44,11 @@ public class StorageEndpointTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @AfterEach
-    public void afterEach() {
-        storageRepository.deleteAll();
-        itemStorageRepository.deleteAll();
-    }
+    // @AfterEach
+    // public void afterEach() {
+    //     storageRepository.deleteAll();
+    //     itemStorageRepository.deleteAll();
+    // }
 
     @Test
     public void insertItemWithEmptyOrNullStorageIdShouldThrowException() throws Exception {

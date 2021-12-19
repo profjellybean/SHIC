@@ -39,7 +39,9 @@ public class TestDataGenerator {
     }
 
     /**
-     * generates Data used in Tests for the planRecipe(Long recipeId, Authentication auth) method.
+     * generates Data used in Tests for the method
+     * planRecipe(Long recipeId, Authentication auth) method
+     * in ShoppingListService.
      */
     public void generateData_planRecipe() {
         LOGGER.debug("Generating Data for planning Recipe");

@@ -43,7 +43,9 @@ public class MasterDataGenerator {
     public void generateData() {
         LOGGER.debug("Generating Data");
         unitOfQuantityDataGenerator.generateUnitOfQuantity();
+        unitOfQuantityDataGenerator.generateUnitsRelations();
         userDataGenerator.generateUser();
+        userDataGenerator.generateApplicationUser();
         itemDataGenerator.generateItem();
         itemStorageDataGenerator.generateItemStorage();
         storageDataGenerator.generateStorage();

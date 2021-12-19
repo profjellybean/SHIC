@@ -45,7 +45,7 @@ public class ItemStorageDataGenerator {
         this.storageDataGenerator = storageDataGenerator;
     }
 
-    @PostConstruct
+    //@PostConstruct
     void generateItemStorage() {
         if (itemStorageRepository.findAll().size() > 0) {
             LOGGER.debug("ItemStorage already generated");

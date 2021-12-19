@@ -30,7 +30,7 @@ public class ShoppingListDataGenerator {
         this.shoppingListRepository = shoppingListRepository;
     }
 
-    @PostConstruct
+    //@PostConstruct
     void generateShoppingList() {
         if (shoppingListRepository.findAll().size() > 0) {
             LOGGER.debug("shoppinglist already generated");

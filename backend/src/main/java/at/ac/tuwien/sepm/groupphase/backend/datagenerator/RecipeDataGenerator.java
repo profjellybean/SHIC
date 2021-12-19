@@ -52,7 +52,7 @@ public class RecipeDataGenerator {
         this.unitOfQuantityRepository = unitOfQuantityRepository;
     }
 
-    @PostConstruct
+    //@PostConstruct
     public void generateRecipes() {
         if (recipeRepository.findAll().size() > 0) {
             LOGGER.debug("recipes already generated");

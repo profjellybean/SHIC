@@ -49,8 +49,8 @@ public class UserDataGenerator {
         this.storageDataGenerator = storageDataGenerator;
     }
 
-    @PostConstruct
-    void generateUser() { //TODO remove
+    //@PostConstruct
+    void generateUser() {
         shoppingListDataGenerator.generateShoppingList();
         storageDataGenerator.generateStorage();
 
