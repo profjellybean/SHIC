@@ -52,10 +52,10 @@ public class ShoppingListDataGenerator {
         this.unitOfQuantityDataGenerator.generateUnitOfQuantity();
 
         List<UnitOfQuantity> unitList = unitOfQuantityRepository.findAll();
-        Map<String, Long> mappedUnits = new HashMap<>();
+        Map<String, UnitOfQuantity> mappedUnits = new HashMap<>();
         for (UnitOfQuantity unit :
             unitList) {
-            mappedUnits.put(unit.getName(), unit.getId());
+            mappedUnits.put(unit.getName(), unit);
         }
 
 
@@ -77,16 +77,16 @@ public class ShoppingListDataGenerator {
 
             //ItemStorage
             ItemStorage mushrooms = new ItemStorage("Mushrooms", null, null, null, 200,
-                Location.fridge, mappedUnits.get("g"), null, ID_OF_SHOPPINGLIST);
+                Location.fridge.toString(), mappedUnits.get("g"), null, ID_OF_SHOPPINGLIST);
             itemStorageRepository.save(mushrooms);
             ItemStorage pasta = new ItemStorage("Pasta", null, null, null, 500,
-                Location.shelf, mappedUnits.get("g"), null, ID_OF_SHOPPINGLIST);
+                Location.shelf.toString(), mappedUnits.get("g"), null, ID_OF_SHOPPINGLIST);
             itemStorageRepository.save(pasta);
             ItemStorage whippedCream = new ItemStorage("Whipped Cream", null, null, null,
-                1, Location.fridge, mappedUnits.get("L"), null, ID_OF_SHOPPINGLIST);
+                1, Location.fridge.toString(), mappedUnits.get("L"), null, ID_OF_SHOPPINGLIST);
             itemStorageRepository.save(whippedCream);
             ItemStorage parsley = new ItemStorage("Parsley", "Genovese", null, null,
-                200, Location.fridge, mappedUnits.get("g"), null, ID_OF_SHOPPINGLIST);
+                200, Location.fridge.toString(), mappedUnits.get("g"), null, ID_OF_SHOPPINGLIST);
             itemStorageRepository.save(parsley);
 
             testShoppingListItems = new HashSet<ItemStorage>();

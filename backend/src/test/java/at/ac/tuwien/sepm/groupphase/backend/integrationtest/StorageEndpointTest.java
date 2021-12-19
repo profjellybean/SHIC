@@ -90,7 +90,7 @@ public class StorageEndpointTest {
         MockHttpServletResponse response = mvcResult.getResponse();
 
         assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals(3, itemStorageRepository.findAll().size());
+        assertEquals(3, itemStorageRepository.findAllByStorageId(-1L).size());
     }
 
     @Test

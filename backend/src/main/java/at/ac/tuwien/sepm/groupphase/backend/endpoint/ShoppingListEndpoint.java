@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemStorageDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ShoppingListDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UsernameDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ItemStorageMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ShoppingListCreationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ShoppingListDto;
@@ -176,9 +177,9 @@ public class ShoppingListEndpoint {
     @PermitAll
     @PutMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public List<ItemStorageDto> workOffShoppingList(Authentication authentication, @RequestBody List<ItemStorageDto> boughtItems) {
+    public List<ItemStorageDto> workOffShoppingList(@RequestParam String username, @RequestBody List<ItemStorageDto> boughtItems) {
         LOGGER.info("PUT workOffShoppingList{}", boughtItems);
         return itemStorageMapper.itemsStorageToItemsStorageDto(shoppingListService.workOffShoppingList(
-            authentication.name(), itemStorageMapper.itemsStorageDtoToItemsStorage(boughtItems)));
+            username, itemStorageMapper.itemsStorageDtoToItemsStorage(boughtItems)));
     }
 }

@@ -5,8 +5,8 @@ import {Item} from '../../dtos/item';
 import {ItemStorage} from '../../dtos/itemStorage';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ShoppingList} from '../../dtos/shopping-list';
-import {User} from "../../dtos/user";
-import jwt_decode from "jwt-decode";
+import {User} from '../../dtos/user';
+import jwt_decode from 'jwt-decode';
 
 @Component({
   selector: 'app-shopping-list',
@@ -33,6 +33,7 @@ export class ShoppingListComponent implements OnInit {
     currGroup: null,
     privList: null
   };
+
 
   constructor(private messageService: MessageService,
               private shoppingListService: ShoppingListService,
@@ -65,7 +66,7 @@ export class ShoppingListComponent implements OnInit {
   }
 
   workOffShoppingList() {
-    this.shoppingListService.workOffShoppingList(this.itemsToBuy, 7, {username: this.user.username}).subscribe({
+    this.shoppingListService.workOffShoppingList(this.itemsToBuy, 7, this.user.username).subscribe({
         next: res => {
           console.log(res);
           for (const item of this.itemsToBuy) {

@@ -31,8 +31,6 @@ public class ItemStorage {
     @OneToOne
     private UnitOfQuantity unitOfQuantity;
     @Column
-    private Long quantity;
-    @Column
     private Long storageId;
     @Column
     private Long shoppingListId;
