@@ -2,11 +2,10 @@ import {Component, OnInit, TemplateRef} from '@angular/core';
 import {MessageService} from '../../services/message.service';
 import {ShoppingListService} from '../../services/shopping-list.service';
 import {Item} from '../../dtos/item';
-import {ItemStorage} from '../../dtos/itemStorage';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {ShoppingList} from '../../dtos/shopping-list';
-import {User} from '../../dtos/user';
+// @ts-ignore
 import jwt_decode from 'jwt-decode';
+import {User} from '../../dtos/user';
 
 @Component({
   selector: 'app-shopping-list',
@@ -18,7 +17,6 @@ export class ShoppingListComponent implements OnInit {
   error = false;
   errorMessage = '';
   submitted = false;
-  shoppingList: ShoppingList;
 
   itemsAdd: Item[] = null;
   itemToAdd: Item = null;
