@@ -3,11 +3,13 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.datagenerator.RegisterDataGenerator;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.DetailedMessageDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.RegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.RegisterMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Bill;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Register;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.BillRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.RegisterRepository;
@@ -32,7 +34,9 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.HashSet;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -75,6 +79,8 @@ public class RegisterEndpointTest implements TestData {
     private ShoppingListRepository shoppingListRepository;
 
     private Register register;
+
+    private Register register2;
 
     private Register savedRegister;
 
@@ -124,35 +130,60 @@ public class RegisterEndpointTest implements TestData {
         billset.add(savedBill);
         savedRegister.setBills(billset);
         savedRegister = registerRepository.saveAndFlush(savedRegister);
-        /*
-        RegisterDataGenerator dataGenerator = new RegisterDataGenerator(itemStorageRepository, userRepository,
-            billRepository, registerRepository, shoppingListRepository);
-        dataGenerator.generateRegister();
 
-         */
+        register2 = Register.RegisterBuilder.aRegister()
+            .withBills(new HashSet<Bill>())
+            .withMonthlyPayment(300)
+            .withMonthlyBudget(500)
+            .build();
+        registerRepository.saveAndFlush(register2);
     }
 
     @Test
     public void return_RegisterDtoWhen_GivenValidUsername_RegisterId_AndBillId() throws Exception {
         String body = REGISTERENDPOINT_URI + "?id=" + savedRegister.getId() + "&additionalId=" + savedBill.getId() +
             "&additionalString=" + userRepository.getById(2L).getUsername();
-        System.out.println(body);
+
         MvcResult mvcResult = this.mockMvc.perform(put(body)
                 .contentType(MediaType.APPLICATION_JSON))
-            .andReturn();
             //.header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            .andReturn();
 
         MockHttpServletResponse response = mvcResult.getResponse();
 
         assertEquals(HttpStatus.OK.value(), response.getStatus());
-        //assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
         assertTrue(billRepository.getById(1L).getNotPaidNames().isEmpty());
-/*
-        RegisterDto registerDto2 = objectMapper.readValue(response.getContentAsString(),
-            RegisterDto.class);
-        System.out.println(registerDto2.toString());
+    }
 
- */
+    @Test
+    public void throwNotFoundException_When_GivenRegisterWithUnknownId() throws Exception {
+        Long unknownRegisterId = -100L;
+        String body = REGISTERENDPOINT_URI + "?id=" + unknownRegisterId + "&additionalId=" + savedBill.getId() +
+            "&additionalString=" + userRepository.getById(2L).getUsername();
+
+        MvcResult mvcResult = this.mockMvc.perform(put(body)
+                .contentType(MediaType.APPLICATION_JSON))
+            //.header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            .andReturn();
+    }
+
+    @Test
+    public void returnRegisterWhenGivenKnownId() throws Exception {
+
+        MvcResult mvcResult = this.mockMvc.perform(get(REGISTERENDPOINT_URI + "/{id}", register2.getId())
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertAll(
+            () -> assertEquals(HttpStatus.OK.value(), response.getStatus()),
+            () -> assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType())
+        );
+
+        RegisterDto registerDto = objectMapper.readValue(response.getContentAsString(),
+            RegisterDto.class);
+
+        assertEquals(register2, registerMapper.registerDtoToRegister(registerDto));
     }
 
 }
