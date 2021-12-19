@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.IdCollectionDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.IdStringCollectionDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.RegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.RegisterMapper;
 import at.ac.tuwien.sepm.groupphase.backend.service.RegisterService;
@@ -45,11 +45,9 @@ public class RegisterEndpoint {
     @PermitAll
     @PutMapping
     @Operation(summary = "Get detailed information about a specific register", security = @SecurityRequirement(name = "apiKey"))
-    public RegisterDto confirmPayment(IdCollectionDto idCollectionDto) {
-        LOGGER.info("PUT /api/v1/register/{}", idCollectionDto);
-        return registerMapper.registerToRegisterDto(registerService.confirmPayment(idCollectionDto.getId(),
-            idCollectionDto.getFirstAdditionalId(), idCollectionDto.getSecondAdditionalId()));
+    public RegisterDto confirmPayment(IdStringCollectionDto idStringCollectionDto) {
+        LOGGER.info("PUT /api/v1/register/{}", idStringCollectionDto);
+        return registerMapper.registerToRegisterDto(registerService.confirmPayment(idStringCollectionDto.getId(),
+            idStringCollectionDto.getAdditionalId(), idStringCollectionDto.getAdditionalString()));
     }
-
-
 }

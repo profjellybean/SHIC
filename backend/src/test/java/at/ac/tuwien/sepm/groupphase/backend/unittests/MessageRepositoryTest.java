@@ -24,7 +24,7 @@ public class MessageRepositoryTest implements TestData {
     @Autowired
     private MessageRepository messageRepository;
 
-/*
+
     @Test
     public void givenNothing_whenSaveMessage_thenFindListWithOneElementAndFindMessageById() {
         Message message = Message.MessageBuilder.aMessage()
@@ -41,5 +41,7 @@ public class MessageRepositoryTest implements TestData {
             () -> assertNotNull(messageRepository.findById(message.getId()))
         );
     }
-*/
+
+
+
 }

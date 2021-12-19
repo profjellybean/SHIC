@@ -24,12 +24,11 @@ public interface StorageService {
     /**
      * Searches for items in the storage (specified with the id) by name.
      *
-     * @param id   the id of the storage
-     * @param name the name of the search
+     * @param itemStorage to search for
      * @return a list of the items or none
      */
 
-    List<ItemStorage> searchItem(Long id, String name);
+    List<ItemStorage> searchItem(ItemStorage itemStorage);
 
     /**
      * Gets all items from the storage (specified with the id).
@@ -55,4 +54,25 @@ public interface StorageService {
      * @return the id of the new storage.
      */
     Long createNewStorage();
+
+    /**
+     * Searches for items in the storage (specified with the id) by name.
+     *
+     * @param id   the id of the storage
+     * @param name the name of the search
+     * @return a list of the items or none
+     */
+
+    List<ItemStorage> searchItemName(Long id, String name);
+
+    /**
+     * Filters itemStorages of itemStoragesAll which are not in item itemStoragesFilter.
+     *
+     * @param itemStoragesAll the id of the storage
+     * @param itemStoragesFilter the name of the search
+     * @return a list of the items or none
+     */
+
+    List<ItemStorage> deleteItemsWhichDoNotExists(List<ItemStorage> itemStoragesAll, List<ItemStorage> itemStoragesFilter);
+
 }

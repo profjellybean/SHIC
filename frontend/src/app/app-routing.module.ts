@@ -1,6 +1,5 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {HomeComponent} from './components/home/home.component';
 import {LoginComponent} from './components/login/login.component';
 import {AuthGuard} from './guards/auth.guard';
 import {MessageComponent} from './components/message/message.component';
@@ -11,8 +10,9 @@ import {ShoppingListComponent} from './components/shopping-list/shopping-list.co
 import {RecipeDetailComponent} from './components/recipe-detail/recipe-detail.component';
 import {RegisterUserComponent} from './components/registerUser/registerUser.component';
 import {StorageAddItemComponent} from './components/storage-add-item/storage-add-item.component';
-
 import {UserComponent} from './components/user/user.component';
+import {HomeComponent} from './components/home/home.component';
+import {ConfirmUserEmailComponent} from './components/confirm-user-email/confirm-user-email.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -21,6 +21,8 @@ const routes: Routes = [
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
   {path: 'storage', component: StorageComponent},
   {path: 'register', component: RegisterComponent},
+  {path: 'confirm', component: ConfirmUserEmailComponent},
+  {path: 'storage', component: StorageComponent},
   {path: 'storage/add', component: StorageAddItemComponent},
   {path: 'recipe/:id', canActivate: [AuthGuard], component: RecipeDetailComponent},
   {path: 'recipe', canActivate: [AuthGuard], component: RecipeComponent},

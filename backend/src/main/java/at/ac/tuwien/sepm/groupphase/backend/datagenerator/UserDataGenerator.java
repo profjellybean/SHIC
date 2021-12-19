@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegistrationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserLoginMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Item;
@@ -41,15 +41,14 @@ public class UserDataGenerator {
     }
 
     @PostConstruct
-    void generateUser() {
-
+    void generateUser() { //TODO remove
 
         Item item = new Item(null, "Döner", null);
         Long itemId = itemRepository.saveAndFlush(new Item(null, "Döner", null)).getId();
+        UserRegistrationDto user = new UserRegistrationDto("user", "password", "user@email.com");
+
         Set<Item> items = new HashSet<>();
         items.add(itemRepository.getById(itemId));
-        UserLoginDto user = new UserLoginDto("user@email.com", "password");
-        UserLoginDto admin = new UserLoginDto("admin@email.com", "password");
         // Long shoppingListId = shoppingListRepository.saveAndFlush(   ShoppingList.ShoppingListBuilder.aShoppingList().withName("Your private shopping list").withItems(items).build()  ).getId();
         Long shoppingListId = shoppingListRepository.saveAndFlush(ShoppingList.ShoppingListBuilder.aShoppingList().withName("Your private shopping list").build()).getId();
         Optional<ApplicationUser> applicationUser = userRepository.findUserByUsername(user.getUsername());
@@ -61,6 +60,7 @@ public class UserDataGenerator {
             userRepository.saveAndFlush(u);
         }
 
+        UserRegistrationDto admin = new UserRegistrationDto("admin", "password", "admin@email.com");
         shoppingListId = shoppingListRepository.saveAndFlush(ShoppingList.ShoppingListBuilder.aShoppingList().withName("Your private shopping list").build()).getId();
         applicationUser = userRepository.findUserByUsername(admin.getUsername());
         if (applicationUser.isEmpty()) {
@@ -69,7 +69,28 @@ public class UserDataGenerator {
             ApplicationUser u = userLoginMapper.dtoToEntity(admin, shoppingListId);
             u.setCurrGroup(group);
             userRepository.saveAndFlush(u);
+
         }
 
     }
+
+
+    void generateApplicationUser() {
+        Long shoppingListIdUser = shoppingListRepository.saveAndFlush(ShoppingList.ShoppingListBuilder.aShoppingList().withName("Your private shopping list").build()).getId();
+        Long shoppingListIdAdmin = shoppingListRepository.saveAndFlush(ShoppingList.ShoppingListBuilder.aShoppingList().withName("Your private shopping list").build()).getId();
+        UserGroup userGroup = new UserGroup();
+        userGroup = userGroupRepository.saveAndFlush(userGroup);
+        ApplicationUser user = new ApplicationUser("user@email.com", "password", userGroup, shoppingListIdUser);
+        ApplicationUser admin = new ApplicationUser("admin@email.com", "password", userGroup, shoppingListIdAdmin);
+        userRepository.saveAndFlush(user);
+        userRepository.saveAndFlush(admin);
+
+        /*
+        Set<ApplicationUser> users = userGroup.getUser();
+        users.add(user);
+        users.add(admin);
+        userGroup.setUser(users);
+        userGroupRepository.saveAndFlush(userGroup);*/
+    }
 }
+

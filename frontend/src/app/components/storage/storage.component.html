@@ -1,4 +1,9 @@
 <h1>Storage</h1>
+
+<div>
+  <label for="new-name">Search for name: </label>
+  <input #name (keyup) = "name.value= this.searchItem.name; this.searchItems()" (change)="searchItems()" id="new-name" [(ngModel)]="this.searchItem.name" placeholder="name"/>
+</div>
 <!--TABLE START-->
 
 <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(itemAddModal)">Add new Item</button>
@@ -102,7 +107,7 @@
   <tr *ngFor="let item of $any(items)">
     <td>{{item.name}}</td>
     <td>{{item.amount}}</td>
-    <td>{{item.quantity}}</td>
+    <td>{{item.quantity.name}}</td>
     <td>{{item.notes}}</td>
     <td>{{item.expDate}}</td>
     <td>{{item.locationTag}}</td>

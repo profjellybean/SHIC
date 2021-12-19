@@ -55,10 +55,10 @@ public class ItemStorageDataGenerator {
             this.unitOfQuantityDataGenerator.generateUnitOfQuantity();
 
             List<UnitOfQuantity> unitList = unitOfQuantityRepository.findAll();
-            Map<String, Long> mappedUnits = new HashMap<>();
+            Map<String, UnitOfQuantity> mappedUnits = new HashMap<>();
             for (UnitOfQuantity unit :
                 unitList) {
-                mappedUnits.put(unit.getName(), unit.getId());
+                mappedUnits.put(unit.getName(), unit);
             }
 
             //ItemStorage feta = new ItemStorage("Feta", null, null, null, 1, Location.fridge, UnitOfQuantity.pieces, ID_OF_STORAGE);

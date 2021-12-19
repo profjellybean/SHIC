@@ -5,6 +5,9 @@ import {Item} from '../../dtos/item';
 import {RecipeService} from '../../services/recipe.service';
 import {ActivatedRoute} from '@angular/router';
 import {ShoppingListService} from '../../services/shopping-list.service';
+import {elementAt, Observable} from 'rxjs';
+import {UnitOfQuantity} from '../../dtos/unitOfQuantity';
+import {ShowItem} from '../../dtos/ShowItem';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -16,11 +19,18 @@ export class RecipeDetailComponent implements OnInit {
   recipe: Recipe = {
     id: null, name: null, description: null, ingredients: [], categories: []
   };
-
+  name: string;
+  quantities: number[];
+  unitOfQuantity: string;
+  ingredients: Item[];
   items; // = [];
+  ingredientsShow: ShowItem[];
+  showItem: ShowItem;
+
 
   error = false;
   errorMessage = '';
+  private expDate: number;
 
   constructor(private messageService: MessageService, private recipeService: RecipeService,
               private route: ActivatedRoute,
@@ -30,6 +40,22 @@ export class RecipeDetailComponent implements OnInit {
     this.recipe.id = this.route.snapshot.params.id;
     this.findRecipeById(this.recipe.id);
   }
+/*
+  changeItemsToShowItems(){
+    this.recipe.ingredients.forEach(element => this.ingredientsShow.push(this.changeItemToShowItem(element)));
+  }
+
+  changeItemToShowItem(item: Item): ShowItem{
+    this.showItem.name= item.name;
+    this.showItem.id=item.id;
+    this.showItem.amount=item.amount;
+    this.findUnitOfQuantityById(item.quantity);
+    this.showItem.quantity=this.unitOfQuantity;
+    return this.showItem;
+  }
+*/
+
+
 
 
   planRecipe() {
@@ -46,6 +72,7 @@ export class RecipeDetailComponent implements OnInit {
 
   }
 
+
   findRecipeById(id: number) {
     this.recipeService.findRecipeById(id).subscribe({
       next: data => {
@@ -57,12 +84,20 @@ export class RecipeDetailComponent implements OnInit {
       }
     });
   }
+  getValue(id: number) {
+    let result: string;
+    this.recipeService.findUnitOfQuantityById(id).subscribe(res=> result= res);
+    return result;
+  }
 
   /**
    * Error flag will be deactivated, which clears the error message
    */
   vanishError() {
     this.error = false;
+  }
+  findUnitOfQuantityById(id: number){
+    return this.recipeService.findUnitOfQuantityById(id);
   }
 
   private defaultServiceErrorHandling(error: any) {

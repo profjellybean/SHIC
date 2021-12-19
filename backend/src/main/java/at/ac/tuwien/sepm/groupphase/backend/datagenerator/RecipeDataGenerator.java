@@ -61,10 +61,10 @@ public class RecipeDataGenerator {
             this.unitOfQuantityDataGenerator.generateUnitOfQuantity();
 
             List<UnitOfQuantity> unitList = unitOfQuantityRepository.findAll();
-            Map<String, Long> mappedUnits = new HashMap<>();
+            Map<String, UnitOfQuantity> mappedUnits = new HashMap<>();
             for (UnitOfQuantity unit :
                 unitList) {
-                mappedUnits.put(unit.getName(), unit.getId());
+                mappedUnits.put(unit.getName(), unit);
             }
             // FETA NOODLES
             // generate recipe

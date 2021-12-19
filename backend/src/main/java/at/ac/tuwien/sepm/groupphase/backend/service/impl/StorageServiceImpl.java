@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Storage;
+import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
@@ -9,6 +10,7 @@ import at.ac.tuwien.sepm.groupphase.backend.service.StorageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
@@ -46,6 +48,40 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
+    public List<ItemStorage> searchItem(ItemStorage itemStorage) {
+        LOGGER.info("Search for Items by ItemStorage {}", itemStorage);
+        if (itemStorage.getNotes() != null) {
+            if (itemStorage.getNotes().trim().equals("")) {
+                itemStorage.setNotes(null);
+            }
+        }
+        if (itemStorage.getName() != null) {
+            if (itemStorage.getName().trim().equals("")) {
+                itemStorage.setName(null);
+            }
+        }
+        if (itemStorage.getLocationTag() != null) {
+            if (itemStorage.getLocationTag().trim().equals("")) {
+                itemStorage.setLocationTag(null);
+            }
+        }
+
+        return itemStorageRepository.findAllByItemStorage(
+            itemStorage.getStorageId(), itemStorage.getAmount(), itemStorage.getLocationTag() == null ? null : itemStorage.getLocationTag(),
+            itemStorage.getName() == null ? null : "%" + itemStorage.getName() + "%",
+            itemStorage.getNotes() == null ? null : "%" + itemStorage.getNotes() + "%",
+            itemStorage.getExpDate());
+
+    }
+
+
+    @Override
+    public List<ItemStorage> deleteItemsWhichDoNotExists(List<ItemStorage> itemStoragesAll, List<ItemStorage> itemStoragesFilter) {
+        itemStoragesAll.removeIf(i -> !itemStoragesFilter.contains(i));
+        return itemStoragesAll;
+    }
+
+    @Override
     public List<ItemStorage> getAll(Long id) {
         LOGGER.debug("Getting all items");
         return itemStorageRepository.findAllByStorageId(id);
@@ -57,7 +93,7 @@ public class StorageServiceImpl implements StorageService {
         if (storageRepository.findById(id).isPresent()) {
             return id;
         } else {
-            return null;
+            throw new NotFoundException();
         }
     }
 
@@ -68,9 +104,10 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public List<ItemStorage> searchItem(Long id, String name) {
+    public List<ItemStorage> searchItemName(Long id, String name) {
         LOGGER.debug("search for items");
         return itemStorageRepository.findAllByStorageIdAndNameContainingIgnoreCase(id, name);
     }
+
 
 }
