@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.config;
 
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtAuthenticationFilter;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtAuthorizationFilter;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
@@ -45,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().and()
             .csrf().disable()
             .addFilter(new JwtAuthenticationFilter(authenticationManager(), securityProperties, jwtTokenizer, userService))
-            .addFilter(new JwtAuthorizationFilter(authenticationManager(), securityProperties));
+            .addFilter(new JwtAuthorizationFilter(authenticationManager(), securityProperties, userService));
     }
 
     @Override

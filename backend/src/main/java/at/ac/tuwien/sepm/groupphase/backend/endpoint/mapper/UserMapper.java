@@ -7,10 +7,10 @@ import org.mapstruct.Mapper;
 import java.util.Set;
 
 @Mapper
-public interface UserMapper {
-    ApplicationUser userDtoToUser(UserDto userDto);
+public interface UserMapper { // ApplicationUser userDtoToUser(UserDto userDto);
 
     UserDto userToUserDto(ApplicationUser user);
 
     Set<UserDto> usersToUsersDto(Set<ApplicationUser> allUsers);
+
 }

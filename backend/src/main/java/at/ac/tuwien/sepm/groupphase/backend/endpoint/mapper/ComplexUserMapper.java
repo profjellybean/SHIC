@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoggedInDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegistrationDto;
@@ -11,26 +12,33 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
+import java.util.Set;
 
 @Component
-public class UserLoginMapper {
+public class ComplexUserMapper {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserLoginMapper(PasswordEncoder passwordEncoder) {
+    public ComplexUserMapper(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public ApplicationUser dtoToEntity(UserRegistrationDto user, Long shoppingListId) {
+
+    public ApplicationUser registrationDtoToApplicationUser(UserRegistrationDto user, Long shoppingListId, Long confirmationToken) {
         LOGGER.debug("Mapper: User dtoToEntity");
-        return new ApplicationUser(user.getUsername(), passwordEncoder.encode(user.getPassword()), shoppingListId, user.getEmail());
+        return new ApplicationUser(user.getUsername(), passwordEncoder.encode(user.getPassword()), shoppingListId, user.getEmail(), confirmationToken);
+    }
+
+    public ApplicationUser registrationDtoToApplicationUser(UserRegistrationDto user, Long shoppingListId) {
+        LOGGER.debug("Mapper: User dtoToEntity");
+        return  new ApplicationUser(user.getUsername(), passwordEncoder.encode(user.getPassword()), shoppingListId, user.getEmail());
     }
 
     public UserLoginDto entityToDto(ApplicationUser user) {
         LOGGER.debug("Mapper: User entityToDto");
-        return new UserLoginDto(user.getUsername(), user.getPassword());
+        return  new UserLoginDto(user.getUsername(), user.getPassword());
     }
 
     public UserLoggedInDto entityToLoggedInDto(ApplicationUser user) {
