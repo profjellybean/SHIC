@@ -13,6 +13,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitOfQuantityRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitsRelationRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +73,11 @@ public class ItemEndpointTest {
 
 */
 
-
+    @BeforeEach
+    public void beforeEach() {
+        unitsRelationRepository.deleteAll();
+        unitOfQuantityRepository.deleteAll();
+    }
 
     @Test
     public void insertValidUnitOfQuantity() throws Exception {
@@ -94,7 +99,7 @@ public class ItemEndpointTest {
 
     @Test
     public void insertValidUnitRelation() throws Exception {
-        unitOfQuantityRepository.deleteAll();
+        // unitOfQuantityRepository.deleteAll(); TODO
         unitsRelationRepository.deleteAll();
         UnitOfQuantityDto unitOfQuantityDto = new UnitOfQuantityDto("UoQ1");
         UnitOfQuantityDto unitOfQuantityDto2 = new UnitOfQuantityDto("UoQ2");
@@ -134,7 +139,7 @@ public class ItemEndpointTest {
 
     @Test
     public void insertUnitsOfQuantitiesThenGetAll() throws Exception {
-        unitOfQuantityRepository.deleteAll();
+        //unitOfQuantityRepository.deleteAll(); TODO
 
         UnitOfQuantity unitOfQuantity1 = new UnitOfQuantity("test1");
         UnitOfQuantity unitOfQuantity2 = new UnitOfQuantity("test2");
@@ -155,7 +160,7 @@ public class ItemEndpointTest {
 
     @Test
     public void insertUnitsRelationsThenGetAll() throws Exception {
-        unitOfQuantityRepository.deleteAll();
+        //unitOfQuantityRepository.deleteAll(); TODO
         unitsRelationRepository.deleteAll();
 
         UnitOfQuantity unitOfQuantity1 = new UnitOfQuantity("test1");
@@ -182,7 +187,7 @@ public class ItemEndpointTest {
 
     @Test
     public void GetNonExistingUnitOfQuantity() throws Exception {
-        unitOfQuantityRepository.deleteAll();
+        //unitOfQuantityRepository.deleteAll(); TODO
 
         MvcResult mvcResult = this.mockMvc.perform(get(ITEMENDPOINT_UNITOFQUANTITY_URI)
                 .contentType(MediaType.APPLICATION_JSON))
