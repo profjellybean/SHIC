@@ -69,5 +69,5 @@ public interface ShoppingListService {
      */
     List<Item> findAllItems();
 
-    List<ItemStorage> workOffShoppingList(Long storageId, List<ItemStorage> boughtItems);
+    List<ItemStorage> workOffShoppingList(String username, List<ItemStorage> boughtItems);
 }

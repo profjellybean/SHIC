@@ -5,6 +5,7 @@ import {Observable} from 'rxjs';
 import {ShoppingList} from '../dtos/shopping-list';
 import {Item} from '../dtos/item';
 import {ItemStorage} from '../dtos/itemStorage';
+import {Params} from '@angular/router';
 
 
 @Injectable({
@@ -48,8 +49,8 @@ export class ShoppingListService {
     return this.httpClient.get<Item[]>(this.shoppingListBaseUri + '/items');
   }
 
-  workOffShoppingList(boughtItems: Item[]): Observable<Item[]> {
+  workOffShoppingList(boughtItems: Item[], shoppinglistId: number, params: Params): Observable<Item[]> {
     console.log('work off shopping-list: ' + boughtItems);
-    return this.httpClient.put<Item[]>(this.shoppingListBaseUri + boughtItems.toString(), boughtItems);
+    return this.httpClient.put<Item[]>(this.shoppingListBaseUri + '/' + shoppinglistId, boughtItems, {params});
   }
 }

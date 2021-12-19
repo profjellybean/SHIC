@@ -1,16 +1,19 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ShoppingListCreationDto;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Item;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
+import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListItemRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.ShoppingListService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,10 +26,10 @@ import java.lang.invoke.MethodHandles;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.List;
 
 @Service
 public class ShoppingListServiceImpl implements ShoppingListService {
@@ -37,18 +40,20 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     private final ItemStorageRepository itemStorageRepository;
     private final ShoppingListItemRepository shoppingListItemRepository;
     private final ItemRepository itemRepository;
+    private final UserRepository userRepository;
 
     @Autowired
     public ShoppingListServiceImpl(ShoppingListRepository shoppingListRepository,
                                    RecipeRepository recipeRepository,
                                    ItemStorageRepository itemStorageRepository,
                                    ShoppingListItemRepository shoppingListItemRepository,
-                                   ItemRepository itemRepository) {
+                                   ItemRepository itemRepository, UserRepository userRepository) {
         this.recipeRepository = recipeRepository;
         this.itemStorageRepository = itemStorageRepository;
         this.shoppingListItemRepository = shoppingListItemRepository;
         this.shoppingListRepository = shoppingListRepository;
         this.itemRepository = itemRepository;
+        this.userRepository = userRepository;
     }
 
 
@@ -117,7 +122,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
      * If they appear, the amount of the Items is compared.
      *
      * @param recipeIngredients set of items e.g. representing ingredients of a recipe
-     * @param storedItems set of items e.g. representing the stored Items in a Storage
+     * @param storedItems       set of items e.g. representing the stored Items in a Storage
      * @return Set of all Items that occur in recipeIngredients but not in storedItems
      *      OR occur in both, but the amount in recipeIngredients is bigger than the amount in storedItems
      */
@@ -187,16 +192,23 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     }
 
     @Override
-    public List<ItemStorage> workOffShoppingList(Long storageId, List<ItemStorage> boughtItems) {
+    public List<ItemStorage> workOffShoppingList(String username, List<ItemStorage> boughtItems) {
         LOGGER.debug("Work Off Shoppinglist {}", boughtItems);
 
-        for (ItemStorage item : boughtItems) {
-            ItemStorage itemStorage = itemStorageRepository.getById(item.getId());
-            //if (itemStorage.getShoppingListId().equals(shoppingListId)) {
-            item.setShoppingListId(null);
-            item.setStorageId(storageId);
-            shoppingListItemRepository.saveAndFlush(item);
-            //}
+        Optional<ApplicationUser> userOptional = userRepository.findUserByUsername(username);
+        if (userOptional.isPresent()) {
+            ApplicationUser user = userOptional.get();
+            UserGroup group = user.getCurrGroup();
+            Long stroageId = group.getStorageId();
+
+            for (ItemStorage item : boughtItems) {
+                ItemStorage itemStorage = itemStorageRepository.getById(item.getId());
+
+                item.setShoppingListId(null);
+                item.setStorageId(1L);
+
+                shoppingListItemRepository.saveAndFlush(item);
+            }
         }
 
         return boughtItems;

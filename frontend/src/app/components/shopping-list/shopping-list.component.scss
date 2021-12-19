@@ -1,5 +1,5 @@
 button {
-  background-color: #eee;
+  background-color: #465;
   border: none;
   padding: 5px 10px;
   border-radius: 4px;
@@ -20,9 +20,9 @@ button.delete {
   color: white;
 }
 
-input { display: none; }
+[type="radio"] { display: none; }
 
-input + label {
+[type="radio"] + label {
   width: 6em;
   border: 1px solid #999;
   background: #EEE;
@@ -32,16 +32,23 @@ input + label {
   top: 1px;
   margin-top: 1em;
 }
-input:checked + label {
+[type="radio"]:checked + label {
   background: #FFF;
   border-bottom: 1px solid transparent;
 }
-input ~ .tab {
+[type="radio"] ~ .tab {
   border-top: 1px solid #999;
   padding: 12px;
 }
 
+[type="checkbox"] {
+  width: 17px;
+  height: 17px;
+}
 
 .tabs{
   background-color: #EEE;
 }
+
+
+

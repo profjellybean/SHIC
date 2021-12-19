@@ -5,7 +5,8 @@ import {Item} from '../../dtos/item';
 import {ItemStorage} from '../../dtos/itemStorage';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ShoppingList} from '../../dtos/shopping-list';
-import {ShoppingListListComponent} from '../shopping-list-list/shopping-list-list.component';
+import {User} from "../../dtos/user";
+import jwt_decode from "jwt-decode";
 
 @Component({
   selector: 'app-shopping-list',
@@ -23,6 +24,15 @@ export class ShoppingListComponent implements OnInit {
   itemToAdd: Item = null;
   itemsToBuy: Item[] = [];
   items: Item[] = null;
+
+  user: User = {
+    // @ts-ignore
+    username: jwt_decode(this.authService.getToken()).sub.trim(),
+    password: null,
+    id: null,
+    currGroup: null,
+    privList: null
+  };
 
   constructor(private messageService: MessageService,
               private shoppingListService: ShoppingListService,
@@ -54,16 +64,23 @@ export class ShoppingListComponent implements OnInit {
     );
   }
 
-  workOffShoppingList(boughtItems: Item[]) {
-    this.shoppingListService.workOffShoppingList(boughtItems).subscribe({
+  workOffShoppingList() {
+    this.shoppingListService.workOffShoppingList(this.itemsToBuy, 7, {username: this.user.username}).subscribe({
         next: res => {
           console.log(res);
+          for (const item of this.itemsToBuy) {
+            this.removeItemFromShoppingList(item);
+          }
         },
         error: err => {
           console.log(err);
         }
       }
     );
+  }
+
+  checkCheckbox(item: Item) {
+    this.itemsToBuy.push(item);
   }
 
   loadItemsToAdd() {
@@ -109,7 +126,7 @@ export class ShoppingListComponent implements OnInit {
       //this.storageService.addItem(this.item);
       console.log('form item to add', this.itemToAdd);
       this.addItemToShoppingList();
-      this.clearForm();
+      //this.clearForm();
     }
   }
 
@@ -118,8 +135,12 @@ export class ShoppingListComponent implements OnInit {
     this.modalService.open(itemAddModal, {ariaLabelledBy: 'modal-basic-title'});
   }
 
-  private buy(item: Item) {
-    this.itemsToBuy.push(item);
+  private removeItemFromShoppingList(item: Item) {
+    for (let i = 0; i < this.items.length; i++) {
+      if(this.items[i].id === item.id) {
+        this.items.splice(i, 1);
+      }
+    }
   }
 
   private clearForm() {
