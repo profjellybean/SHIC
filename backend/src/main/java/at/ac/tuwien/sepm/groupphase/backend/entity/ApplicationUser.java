@@ -57,13 +57,14 @@ public class ApplicationUser {
 
 
 
-    public ApplicationUser(String username, String password, Long shoppingListId, String email,Long confirmationToken) {
+    public ApplicationUser(String username, String password, Long shoppingListId, String email, Long confirmationToken) {
         this.username = username;
         this.password = password;
         this.privList = shoppingListId;
         this.email = email;
         this.confirmationToken = confirmationToken;
     }
+
 
     public Long getPrivList() {
         return privList;

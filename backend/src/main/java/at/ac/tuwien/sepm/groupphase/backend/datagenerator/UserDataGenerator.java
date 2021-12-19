@@ -1,8 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegistrationDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserLoginMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Item;
@@ -45,11 +43,12 @@ public class UserDataGenerator {
     @PostConstruct
     void generateUser() {
 
-        UserRegistrationDto user = new UserRegistrationDto("user", "password","user@email.com");
-        UserRegistrationDto admin = new UserRegistrationDto("admin", "password","admin@email.com");
+
 
         Item item = new Item(null, "Döner", null);
         Long itemId = itemRepository.saveAndFlush(new Item(null, "Döner", null)).getId();
+        UserRegistrationDto user = new UserRegistrationDto("user", "password", "user@email.com");
+
         Set<Item> items = new HashSet<>();
         items.add(itemRepository.getById(itemId));
         // Long shoppingListId = shoppingListRepository.saveAndFlush(   ShoppingList.ShoppingListBuilder.aShoppingList().withName("Your private shopping list").withItems(items).build()  ).getId();
@@ -63,6 +62,7 @@ public class UserDataGenerator {
             userRepository.saveAndFlush(u);
         }
 
+        UserRegistrationDto admin = new UserRegistrationDto("admin", "password", "admin@email.com");
         shoppingListId = shoppingListRepository.saveAndFlush(ShoppingList.ShoppingListBuilder.aShoppingList().withName("Your private shopping list").build()).getId();
         applicationUser = userRepository.findUserByUsername(admin.getUsername());
         if (applicationUser.isEmpty()) {

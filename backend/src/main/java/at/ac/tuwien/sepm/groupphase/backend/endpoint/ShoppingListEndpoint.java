@@ -119,7 +119,6 @@ public class ShoppingListEndpoint {
 
 
             Long id = userService.getPrivateShoppingListIdByUsername(authentication.getName());
-            Long id = userService.getPrivateShoppingListIdByUsername( authentication.getName() );
 
             return shoppingListMapper.shoppingListToShoppingListDto(shoppingListService.getShoppingListByid(id));
 

@@ -49,7 +49,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 user.getUsername(),
                 user.getPassword()));
 
-            if(!userService.getConfirmationStatusByName(user.getUsername())){
+            if (!userService.getConfirmationStatusByName(user.getUsername())) {
                 throw new EmailConfirmationException("Email confirmation needed");
             }
 

@@ -24,7 +24,7 @@ export class UserService {
 
   confirmUser(confirmationToken: string): Observable<object> {
 
-    return this.httpClient.get(this.userRegisterUri +'?confirm=' + confirmationToken);
+    return this.httpClient.get(this.userRegisterUri +'/confirm?tkn=' + confirmationToken);
   }
 
   resendConfirmation(username: Username): Observable<object> {

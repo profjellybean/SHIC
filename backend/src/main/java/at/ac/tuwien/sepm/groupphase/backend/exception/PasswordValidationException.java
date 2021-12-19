@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.exception;
 
-public class PasswordValidationException extends RuntimeException{
+public class PasswordValidationException extends RuntimeException {
     public PasswordValidationException() {
     }
 

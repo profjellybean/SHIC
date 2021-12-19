@@ -47,16 +47,15 @@ public interface UserService extends UserDetailsService {
      * @param userRegistrationDto the DTO of the user to be created
      *
      */
+
     void createUserWithEmailVerification(UserRegistrationDto userRegistrationDto);
 
     /**
      * Find an application user based on the username.
-     *
-     * @param userLoginDto the DTO of the user to be created
      * This method overloads createUser(UserRegistrationDto userRegistrationDto, Long confirmationToken)
      * confirmationToken is set to 0
-     * @param userRegistrationDto the DTO of the user to be created
      *
+     * @param userRegistrationDto the DTO of the user to be created
      */
     void createUserWithoutEmailVerification(UserRegistrationDto userRegistrationDto);
 
@@ -74,9 +73,12 @@ public interface UserService extends UserDetailsService {
      * @param userRegistrationDto the DTO of the user to be created
      *
      */
+
     void createUser(UserRegistrationDto userRegistrationDto, Long confirmationToken);
 
-    void confirmUser(String confirmationToken_encrypted);
+
+
+    void confirmUser(String confirmationTokenEncrypted);
 
     boolean getConfirmationStatusByName(String username);
 }

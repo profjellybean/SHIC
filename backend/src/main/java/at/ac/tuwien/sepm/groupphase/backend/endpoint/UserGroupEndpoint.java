@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapperImpl;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.service.GroupService;
@@ -12,14 +11,11 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.annotation.security.PermitAll;
-import javax.validation.Valid;
 import java.lang.invoke.MethodHandles;
 
 @RestController
@@ -27,10 +23,10 @@ import java.lang.invoke.MethodHandles;
 public class UserGroupEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final GroupService groupService;
-    private final UserMapper userMapper;
+    private final UserMapperImpl userMapper;
 
 
-    public UserGroupEndpoint(GroupService groupService, UserMapper userMapper) {
+    public UserGroupEndpoint(GroupService groupService, UserMapperImpl userMapper) {
         this.groupService = groupService;
         this.userMapper = userMapper;
     }

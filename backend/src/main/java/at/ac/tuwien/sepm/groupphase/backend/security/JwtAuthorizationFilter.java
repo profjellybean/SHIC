@@ -28,6 +28,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final SecurityProperties securityProperties;
     private final UserService userService;
+
     public JwtAuthorizationFilter(AuthenticationManager authenticationManager, SecurityProperties securityProperties, UserService userService) {
         super(authenticationManager);
         this.securityProperties = securityProperties;

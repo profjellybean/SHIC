@@ -1,8 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.Email;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegistrationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapperImpl;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserLoginMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
@@ -11,6 +11,7 @@ import at.ac.tuwien.sepm.groupphase.backend.exception.EmailConfirmationException
 import at.ac.tuwien.sepm.groupphase.backend.exception.EmailCooldownException;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.PasswordTooShortException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.PasswordValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.UsernameTakenException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.CustomUserRepository;
@@ -41,19 +42,18 @@ import java.util.regex.PatternSyntaxException;
 public class UserServiceImpl implements UserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private final CustomUserRepository customUserRepository;
     private final ShoppingListRepository shoppingListRepository;
-    private final UserLoginMapper userLoginMapper;
     private final EntityManager entityManager;
     private final EmailService emailService;
     private final UserGroupRepository userGroupRepository;
-    private final UserRepository userRepository;
+    private final CustomUserRepository customUserRepository;
+    private final UserMapper userMapper;
 
     @Autowired
     public UserServiceImpl(CustomUserRepository userRepository,
                            ShoppingListRepository shoppingListRepository,
-                           UserMapper userMapper, EntityManager entityManager, UserLoginMapper userLoginMapper,
-                           EmailService emailService) {
+                           UserMapperImpl userMapper, EntityManager entityManager, UserLoginMapper userLoginMapper,
+                           EmailService emailService, UserGroupRepository userGroupRepository) {
         this.customUserRepository = userRepository;
         this.userMapper = userMapper;
         this.entityManager = entityManager;
@@ -100,28 +100,32 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void createUser(UserLoginDto userLoginDto) {
-        LOGGER.debug("Service: Create new user: {}", userLoginDto.getUsername());
+    public void createUser(UserRegistrationDto userRegistrationDto, Long confirmationToken) {
+        LOGGER.debug("Service: Create new user: {}", userRegistrationDto.getUsername());
 
-        if (userLoginDto.getPassword().length() < 8) {
-            throw new PasswordTooShortException("The password must contain at least eight characters");
+
+        if (!userRegistrationDto.getEmail().contains("@")) {
+            throw new PasswordValidationException("Wrong email format");
+        }
+        if (userRegistrationDto.getPassword().length() < 8) {
+            throw new PasswordValidationException("The password must contain at least eight characters");
         }
 
-        Optional<ApplicationUser> applicationUser = customUserRepository.findUserByUsername(userLoginDto.getUsername());
+        Optional<ApplicationUser> applicationUser = customUserRepository.findUserByUsername(userRegistrationDto.getUsername());
         if (applicationUser.isPresent()) {
             throw new UsernameTakenException("Username already taken");
         }
 
         Long shoppingListId = shoppingListRepository.saveAndFlush(ShoppingList.ShoppingListBuilder.aShoppingList().withName("Your private shopping list").build()).getId();
-        customUserRepository.save(userLoginMapper.dtoToEntity(userLoginDto, shoppingListId));
-
+        customUserRepository.save(userMapper.dtoToEntity(userRegistrationDto, shoppingListId, confirmationToken));
 
 
     }
 
+
     @Override
-    public void resendUserEmailConfirmation(String username){
-        Optional<ApplicationUser> applicationUser = userRepository.findUserByUsername(username);
+    public void resendUserEmailConfirmation(String username) {
+        Optional<ApplicationUser> applicationUser = customUserRepository.findUserByUsername(username);
         if (applicationUser.isEmpty()) {
             throw new NotFoundException("User not in database");
         }
@@ -129,24 +133,42 @@ public class UserServiceImpl implements UserService {
         Long confirmationToken = System.currentTimeMillis();
 
 
-        if ( (confirmationToken-user.getConfirmationToken()) <= 300000L ){
+        if ((confirmationToken - user.getConfirmationToken()) <= 300000L) {
             throw new EmailCooldownException("Email confirmations can be sent only once in 5 minutes");
         }
         try {
-            emailService.sendEmailConfirmation(user.getEmail(), user.getUsername(),confirmationToken);
+            emailService.sendEmailConfirmation(user.getEmail(), user.getUsername(), confirmationToken);
             user.setConfirmationToken(confirmationToken);
             LOGGER.info("::: " + user.getConfirmationToken());
-            userRepository.saveAndFlush(user);
+            customUserRepository.saveAndFlush(user);
 
-            applicationUser = userRepository.findUserByUsername(username);
-            LOGGER.info("::: " +applicationUser.get().getConfirmationToken());
-        }catch (Exception e){
+            applicationUser = customUserRepository.findUserByUsername(username);
+            LOGGER.info("::: " + applicationUser.get().getConfirmationToken());
+        } catch (Exception e) {
             LOGGER.error(e.getMessage());
         }
 
 
 
     }
+
+    @Override
+    public void createUserWithEmailVerification(UserRegistrationDto userRegistrationDto) {
+
+        Long confirmationToken = System.currentTimeMillis();
+        createUser(userRegistrationDto, confirmationToken);
+        try {
+            emailService.sendEmailConfirmation(userRegistrationDto.getEmail(), userRegistrationDto.getUsername(), confirmationToken);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+        }
+    }
+
+    @Override
+    public void createUserWithoutEmailVerification(UserRegistrationDto userRegistrationDto) {
+        createUser(userRegistrationDto, 0L);
+    }
+
 
     @Override
     public void setCurrUserGroup(String username) {
@@ -156,10 +178,10 @@ public class UserServiceImpl implements UserService {
             Set<ApplicationUser> users = u.getUser();
             for (ApplicationUser applicationUser : users) {
                 if (applicationUser.getUsername().equals(username)) {
-                    Optional<ApplicationUser> temp = userRepository.findUserByUsername(username);
+                    Optional<ApplicationUser> temp = customUserRepository.findUserByUsername(username);
                     if (temp.isPresent()) {
                         temp.get().setCurrGroup(u);
-                        userRepository.saveAndFlush(temp.get());
+                        customUserRepository.saveAndFlush(temp.get());
                     }
                 }
             }
@@ -169,32 +191,32 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public void confirmUser(String confirmationToken_encrypted) {
-        LOGGER.debug(confirmationToken_encrypted);
-        String confirmationToken_decrypted = new String(Base64.decodeBase64(confirmationToken_encrypted));
-        LOGGER.debug(confirmationToken_decrypted);
+    public void confirmUser(String confirmationTokenEncrypted) {
+        LOGGER.debug(confirmationTokenEncrypted);
+        String confirmationTokenDecrypted = new String(Base64.decodeBase64(confirmationTokenEncrypted));
+        LOGGER.debug(confirmationTokenDecrypted);
 
-        String username = confirmationToken_decrypted.split(":")[0];
-        try{
-            Long confirmationToken = Long.parseLong(confirmationToken_decrypted.split(":")[1]);
-            if((System.currentTimeMillis() - confirmationToken) > 86400000){
+        String username = confirmationTokenDecrypted.split(":")[0];
+        try {
+            Long confirmationToken = Long.parseLong(confirmationTokenDecrypted.split(":")[1]);
+            if ((System.currentTimeMillis() - confirmationToken) > 86400000) {
                 throw new EmailConfirmationException("Confirmation token expired");
             }
 
-            Optional<ApplicationUser> user =  userRepository.findUserByUsername(username);
-            if(user.isEmpty()){
+            Optional<ApplicationUser> user =  customUserRepository.findUserByUsername(username);
+            if (user.isEmpty()) {
                 throw new EmailConfirmationException("User does not exist");
             }
 
-            if(!user.get().getConfirmationToken().equals(confirmationToken)){
+            if (!user.get().getConfirmationToken().equals(confirmationToken)) {
                 throw new EmailConfirmationException("Wrong confirmation token");
             }
 
             ApplicationUser updatedUser = user.get();
             updatedUser.setConfirmationToken(0L);
-            userRepository.save(updatedUser);
+            customUserRepository.save(updatedUser);
 
-        }catch (NumberFormatException | PatternSyntaxException | ArrayIndexOutOfBoundsException | IllegalStateException e){
+        } catch (NumberFormatException | PatternSyntaxException | ArrayIndexOutOfBoundsException | IllegalStateException e) {
             throw new EmailConfirmationException("Wrong confirmation token");
         }
 
@@ -206,8 +228,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean getConfirmationStatusByName(String username) {
         LOGGER.info("2:::");
-        Optional<ApplicationUser> user =  userRepository.findUserByUsername(username);
-        if(user.isEmpty()){
+        Optional<ApplicationUser> user =  customUserRepository.findUserByUsername(username);
+        if (user.isEmpty()) {
             return false;
         }
         LOGGER.info("Ergebjis: " + (user.get().getConfirmationToken().equals(0L)) + "   " + user.get().getConfirmationToken());

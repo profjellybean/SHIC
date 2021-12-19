@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UsernameDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegistrationDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapperImpl;
 import at.ac.tuwien.sepm.groupphase.backend.exception.EmailConfirmationException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.EmailCooldownException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
@@ -18,16 +19,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.annotation.security.PermitAll;
-import javax.validation.Valid;
 import java.lang.invoke.MethodHandles;
 
 
@@ -36,10 +37,10 @@ import java.lang.invoke.MethodHandles;
 public class UserEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserService userService;
-    private final UserMapper userMapper;
+    private final UserMapperImpl userMapper;
 
     @Autowired
-    public UserEndpoint(UserService userService, UserMapper userMapper) {
+    public UserEndpoint(UserService userService, UserMapperImpl userMapper) {
         this.userService = userService;
         this.userMapper = userMapper;
     }
@@ -48,33 +49,35 @@ public class UserEndpoint {
     @PermitAll
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createUser(@RequestBody UserRegistrationDto userRegistrationDto){
+    public void createUser(@RequestBody UserRegistrationDto userRegistrationDto) {
         LOGGER.info("Endpoint: POST /user");
         try {
-            if(userRegistrationDto.getEmail().contains("email.com")){           // Users in Testdata have an @email.com domain. (No email confirmation is sent)
+            if (userRegistrationDto.getEmail().contains("email.com")) { // Users in Testdata have an @email.com domain. (No email confirmation is sent)
+
                 userService.createUserWithoutEmailVerification(userRegistrationDto);
-            }else{
+            } else {
                 userService.createUserWithEmailVerification(userRegistrationDto);
             }
 
-
-        }catch (UsernameTakenException | PasswordValidationException e) {
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,e.getMessage());
-        }catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,e.getMessage());
+        } catch (UsernameTakenException | PasswordValidationException e) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
 
 
     }
+
     @PermitAll
-    @GetMapping
+    @GetMapping("/confirm")
     @ResponseStatus(HttpStatus.OK)
-    public void confirmUser(@RequestParam(value="confirm") String confirmationToken_encrypted){
-        LOGGER.info("Endpoint: GET /user?confirmation={}",confirmationToken_encrypted);
+    public void confirmUser(@RequestParam(value = "tkn") String confirmationTokenEncrypted) {
+        LOGGER.info("Endpoint: GET /user/confirm?tkn={}", confirmationTokenEncrypted);
         try {
-            userService.confirmUser(confirmationToken_encrypted);
-        }catch (EmailConfirmationException e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
+            userService.confirmUser(confirmationTokenEncrypted);
+        } catch (EmailConfirmationException e) {
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
 
 
@@ -84,16 +87,16 @@ public class UserEndpoint {
     @PermitAll
     @PutMapping("/confirmation")
     @ResponseStatus(HttpStatus.OK)
-    public void resendUserEmailConfirmation(@RequestBody UsernameDto usernameDto){
-        LOGGER.info("Endpoint: PUT /user/confirmation {}"+usernameDto.getUsername());
+    public void resendUserEmailConfirmation(@RequestBody UsernameDto usernameDto) {
+        LOGGER.info("Endpoint: PUT /user/confirmation {}" + usernameDto.getUsername());
 
 
         try {
             userService.resendUserEmailConfirmation(usernameDto.getUsername());
-        }catch (NotFoundException e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
-        }catch (EmailCooldownException e){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN,e.getMessage());
+        } catch (NotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch (EmailCooldownException e) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }
 
 
@@ -103,16 +106,18 @@ public class UserEndpoint {
     @PermitAll
     @GetMapping("/confirmation")
     @ResponseStatus(HttpStatus.OK)
-    public boolean isUserConfirmed(Authentication authentication){
+    public boolean isUserConfirmed(Authentication authentication) {
         LOGGER.info("Endpoint: GET /user/confirmation");
         try {
             return userService.getConfirmationStatusByName(authentication.getName());
-        }catch (EmailConfirmationException e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
+        } catch (EmailConfirmationException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
 
 
     }
+
+
 
     @PermitAll                   //TODO just for Tests
     @PatchMapping

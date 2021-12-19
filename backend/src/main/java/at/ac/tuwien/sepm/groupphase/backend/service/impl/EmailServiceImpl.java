@@ -39,7 +39,7 @@ public class EmailServiceImpl implements EmailService {
 
         MimeMessage mimeMessage = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
-        try{
+        try {
             mimeMessage.setContent(mail.getMailContent(), "text/html");
             helper.setTo(mail.getMailTo());
             helper.setSubject(mail.getMailSubject());
@@ -56,17 +56,17 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void sendEmailConfirmation(String to, String username, Long confirmationToken) {
 
-        String confirmationToken_encrypted = Base64.encodeBase64String((username +":"+Long.toString(confirmationToken)).getBytes(StandardCharsets.UTF_8));
+        String confirmationTokenEncrypted = Base64.encodeBase64String((username + ":" + confirmationToken).getBytes(StandardCharsets.UTF_8));
 
         Email registrationMail = new Email();
         registrationMail.setMailFrom("shicregistrator@gmail.com");
         registrationMail.setMailTo(to);
         registrationMail.setMailSubject("SHIC Confirmation");
-        registrationMail.setMailContent("<html><body>Hello " + username + "!<h2>Click this link to complete the registration process: </h2>      <h3><a href=\""+CONFIRMATION_URL+confirmationToken_encrypted+"\"> Confirm </a></h3></b></body></html>");
+        registrationMail.setMailContent("<html><body>Hello " + username + "!<h2>Click this link to complete the registration process: </h2>      <h3><a href=\"" + CONFIRMATION_URL + confirmationTokenEncrypted + "\"> Confirm </a></h3></b></body></html>");
 
-        try{
+        try {
             sendEmail(registrationMail);
-        }catch (MailSendException e){
+        } catch (MailSendException e) {
             LOGGER.error(e.getMessage());
         }
 

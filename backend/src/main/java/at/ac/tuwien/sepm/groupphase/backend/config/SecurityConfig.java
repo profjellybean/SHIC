@@ -30,6 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final PasswordEncoder passwordEncoder;
     private final SecurityProperties securityProperties;
     private final JwtTokenizer jwtTokenizer;
+
     @Autowired
     public SecurityConfig(UserService userService,
                           PasswordEncoder passwordEncoder,
@@ -44,8 +45,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and()
             .csrf().disable()
-            .addFilter(new JwtAuthenticationFilter(authenticationManager(), securityProperties, jwtTokenizer,userService))
-            .addFilter(new JwtAuthorizationFilter(authenticationManager(), securityProperties,userService));
+            .addFilter(new JwtAuthenticationFilter(authenticationManager(), securityProperties, jwtTokenizer, userService))
+            .addFilter(new JwtAuthorizationFilter(authenticationManager(), securityProperties, userService));
     }
 
     @Override

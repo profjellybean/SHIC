@@ -15,7 +15,7 @@ public interface TestData {
 
     String BASE_URI = "/api/v1";
     String MESSAGE_BASE_URI = BASE_URI + "/messages";
-    String USERENDPOINT_URI = "/user";
+    String USERENDPOINT_URI = BASE_URI + "/user";
     String ADMIN_USER = "admin";
     String STORAGEENDPOINT_URI = BASE_URI + "/storage";
     String USERGROUPENDPOINT_URI = BASE_URI + "/group";
