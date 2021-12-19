@@ -77,6 +77,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     @Transactional
     public List<ItemStorage> planRecipe(Long recipeId, Authentication authentication) {
         LOGGER.debug("Service: plan Recipe {} based on user {}.", recipeId, authentication.getName());
+
         if (recipeId == null) {
             throw new ValidationException("Recipe does not exist");
         }
@@ -130,6 +131,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
             shoppingListItem = itemStorageRepository.saveAndFlush(shoppingListItem);
             saveItem(shoppingListItem, shoppingListId);
         }
+
         return returnList;
     }
 
