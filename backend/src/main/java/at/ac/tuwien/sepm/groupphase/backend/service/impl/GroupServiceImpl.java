@@ -11,12 +11,14 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserGroupRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.GroupService;
+import org.h2.engine.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
 import java.rmi.server.ServerCloneException;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -60,6 +62,17 @@ public class GroupServiceImpl implements GroupService {
             this.userGroupRepository.saveAndFlush(userGroup);
         } else {
             throw new NotFoundException("User " + username + " was not found!");
+        }
+    }
+
+    @Override
+    public Set<ApplicationUser> getAllUsers(Long groupId) {
+        LOGGER.debug("Get all users from group {}", groupId);
+        Optional<UserGroup> group = this.userGroupRepository.findById(groupId);
+        if (group.isPresent()) {
+            return group.get().getUser();
+        } else {
+            throw new NotFoundException("Group doesn't exist");
         }
     }
 }

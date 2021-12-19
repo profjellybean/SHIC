@@ -18,6 +18,8 @@ public interface TestData {
     String USERENDPOINT_URI = BASE_URI + "/user";
     String ADMIN_USER = "admin";
     String STORAGEENDPOINT_URI = BASE_URI + "/storage";
+    String ITEMENDPOINT_UNITOFQUANTITY_URI = BASE_URI + "/item/unitOfQuantity";
+    String ITEMENDPOINT_UNITRELATION_URI = BASE_URI + "/item/unitsRelation";
     String USERGROUPENDPOINT_URI = BASE_URI + "/group";
     List<String> ADMIN_ROLES = new ArrayList<>() {
         {

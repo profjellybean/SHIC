@@ -1,9 +1,7 @@
-import {UnitOfQuantity} from './unitOfQuantity';
-
-export interface Item {
+export interface ShowItem {
   id: number;
   name: string;
-  quantity: UnitOfQuantity;
+  quantity: string;
   notes: string;
   image: ImageBitmap;
   expDate: Date;

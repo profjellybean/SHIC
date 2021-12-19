@@ -18,9 +18,9 @@ export class RegisterService {
     return this.httpClient.get<Register>(this.registerBaseUri + '/' + id);
   }
 
-  confirmPayment(billId: number, userId: number, registerId: number): Observable<Register> {
-    console.log('Confirm Payment with bill id ' + billId + ' and user id ' + userId);
-    return this.httpClient.put<Register>(this.registerBaseUri + '/?id=' + registerId + '&firstAdditionalId=' + billId +
-      '&secondAdditionalId=' + userId, registerId);
+  confirmPayment(billId: number, username: string, registerId: number): Observable<Register> {
+    console.log('Confirm Payment with bill id ' + billId + ' and user id ' + username);
+    return this.httpClient.put<Register>(this.registerBaseUri + '/?id=' + registerId + '&additionalId=' + billId +
+      '&additionalString=' + username, registerId);
   }
 }

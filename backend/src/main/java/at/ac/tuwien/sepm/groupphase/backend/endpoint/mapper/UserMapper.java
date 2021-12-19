@@ -5,11 +5,15 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegistrationDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import org.mapstruct.Mapper;
 
+import java.util.Set;
 
+@Mapper
 public interface UserMapper {
     ApplicationUser userDtoToUser(UserDto userDto);
 
     UserDto userToUserDto(ApplicationUser user);
+
+    Set<UserDto> usersToUsersDto(Set<ApplicationUser> allUsers);
 
     ApplicationUser dtoToEntity(UserRegistrationDto userRegistrationDto, Long shoppingListId, Long confirmationToken);
 }

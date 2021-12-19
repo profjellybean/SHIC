@@ -41,9 +41,7 @@ public class UserDataGenerator {
     }
 
     @PostConstruct
-    void generateUser() {
-
-
+    void generateUser() { //TODO remove
 
         Item item = new Item(null, "Döner", null);
         Long itemId = itemRepository.saveAndFlush(new Item(null, "Döner", null)).getId();
@@ -71,7 +69,28 @@ public class UserDataGenerator {
             ApplicationUser u = userLoginMapper.dtoToEntity(admin, shoppingListId);
             u.setCurrGroup(group);
             userRepository.saveAndFlush(u);
+
         }
 
     }
+
+
+    void generateApplicationUser() {
+        Long shoppingListIdUser = shoppingListRepository.saveAndFlush(ShoppingList.ShoppingListBuilder.aShoppingList().withName("Your private shopping list").build()).getId();
+        Long shoppingListIdAdmin = shoppingListRepository.saveAndFlush(ShoppingList.ShoppingListBuilder.aShoppingList().withName("Your private shopping list").build()).getId();
+        UserGroup userGroup = new UserGroup();
+        userGroup = userGroupRepository.saveAndFlush(userGroup);
+        ApplicationUser user = new ApplicationUser("user@email.com", "password", userGroup, shoppingListIdUser);
+        ApplicationUser admin = new ApplicationUser("admin@email.com", "password", userGroup, shoppingListIdAdmin);
+        userRepository.saveAndFlush(user);
+        userRepository.saveAndFlush(admin);
+
+        /*
+        Set<ApplicationUser> users = userGroup.getUser();
+        users.add(user);
+        users.add(admin);
+        userGroup.setUser(users);
+        userGroupRepository.saveAndFlush(userGroup);*/
+    }
 }
+

@@ -10,6 +10,7 @@ import at.ac.tuwien.sepm.groupphase.backend.service.StorageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
@@ -92,7 +93,7 @@ public class StorageServiceImpl implements StorageService {
         if (storageRepository.findById(id).isPresent()) {
             return id;
         } else {
-            return null;
+            throw new NotFoundException();
         }
     }
 
