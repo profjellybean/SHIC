@@ -12,11 +12,11 @@ public class UnitsRelation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long baseUnit;
-    private Long calculatedUnit;
+    private String baseUnit;
+    private String calculatedUnit;
     private Double relation;
 
-    public UnitsRelation(Long baseUnit, Long calculatedUnit, Double relation) {
+    public UnitsRelation(String baseUnit, String calculatedUnit, Double relation) {
         this.baseUnit = baseUnit;
         this.calculatedUnit = calculatedUnit;
         this.relation = relation;
@@ -25,19 +25,19 @@ public class UnitsRelation {
     public UnitsRelation() {
     }
 
-    public Long getBaseUnit() {
+    public String getBaseUnit() {
         return baseUnit;
     }
 
-    public void setBaseUnit(Long baseUnit) {
+    public void setBaseUnit(String baseUnit) {
         this.baseUnit = baseUnit;
     }
 
-    public Long getCalculatedUnit() {
+    public String getCalculatedUnit() {
         return calculatedUnit;
     }
 
-    public void setCalculatedUnit(Long calculatedUnit) {
+    public void setCalculatedUnit(String calculatedUnit) {
         this.calculatedUnit = calculatedUnit;
     }
 

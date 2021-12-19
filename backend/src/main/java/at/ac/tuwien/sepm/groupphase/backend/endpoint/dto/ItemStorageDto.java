@@ -16,7 +16,7 @@ public class ItemStorageDto {
     private Long id;
     @NotNull
     private String name;
-    private String quantity;
+    private UnitOfQuantityDto unitOfQuantity;
     private String notes;
     private byte[] image;
 
@@ -36,12 +36,12 @@ public class ItemStorageDto {
     }
 
 
-    public ItemStorageDto(Long storageId, Long shoppingListId, Long id, String name, String quantity, String notes, byte[] image, Date expDate, int amount, String locationTag) {
+    public ItemStorageDto(Long storageId, Long shoppingListId, Long id, String name, UnitOfQuantityDto unitOfQuantityDto, String notes, byte[] image, Date expDate, int amount, String locationTag) {
         this.storageId = storageId;
         this.shoppingListId = shoppingListId;
         this.id = id;
         this.name = name;
-        this.quantity = quantity;
+        this.unitOfQuantity = unitOfQuantity;
         this.notes = notes;
         this.image = image;
         this.expDate = expDate;
@@ -129,12 +129,12 @@ public class ItemStorageDto {
         this.locationTag = locationTag;
     }
 
-    public String getQuantity() {
-        return quantity;
+    public UnitOfQuantityDto getQuantity() {
+        return unitOfQuantity;
     }
 
-    public void setQuantity(String quantity) {
-        this.quantity = quantity;
+    public void setQuantity(UnitOfQuantityDto quantity) {
+        this.unitOfQuantity = unitOfQuantity;
     }
 
 
@@ -148,7 +148,7 @@ public class ItemStorageDto {
             +
             ", name='" + name + '\''
             +
-            ", quantity=" + quantity
+            ", unitOfQuantity=" + unitOfQuantity
             +
             ", notes='" + notes + '\''
             +

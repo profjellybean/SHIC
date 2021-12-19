@@ -71,7 +71,7 @@ public class ItemEndpoint {
     @GetMapping(value = "/unitsRelation/specificRelation")
     @PermitAll
     @Operation(summary = "Get specific Relation between Units")
-    public UnitsRelationDto getSpecificUnitsRelations(@Param("baseUnit") Long baseUnit, @Param("calculatedUnit") Long calculatedUnit) {
+    public UnitsRelationDto getSpecificUnitsRelations(@Param("baseUnit") String baseUnit, @Param("calculatedUnit") String calculatedUnit) {
         LOGGER.info("getSpecificUnitsRelation, itemEndpoint");
         return unitsRelationMapper.unitsRelationToUnitsRelationDto(itemService.getSpecificRelation(baseUnit, calculatedUnit));
     }

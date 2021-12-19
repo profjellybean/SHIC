@@ -5,40 +5,40 @@ import javax.validation.constraints.NotNull;
 public class UnitsRelationDto {
     private Long id;
     @NotNull
-    private Long baseUnit;
+    private String baseUnit;
     @NotNull
-    private Long calculatedUnit;
+    private String calculatedUnit;
     private Double relation;
 
     public UnitsRelationDto() {
     }
 
-    public UnitsRelationDto(Long id, Long baseUnit, Long calculatedUnit, Double relation) {
+    public UnitsRelationDto(Long id, String baseUnit, String calculatedUnit, Double relation) {
         this.id = id;
         this.baseUnit = baseUnit;
         this.calculatedUnit = calculatedUnit;
         this.relation = relation;
     }
 
-    public UnitsRelationDto(Long baseUnit, Long calculatedUnit, Double relation) {
+    public UnitsRelationDto(String baseUnit, String calculatedUnit, Double relation) {
         this.baseUnit = baseUnit;
         this.calculatedUnit = calculatedUnit;
         this.relation = relation;
     }
 
-    public Long getBaseUnit() {
+    public String getBaseUnit() {
         return baseUnit;
     }
 
-    public void setBaseUnit(Long baseUnit) {
+    public void setBaseUnit(String baseUnit) {
         this.baseUnit = baseUnit;
     }
 
-    public Long getCalculatedUnit() {
+    public String getCalculatedUnit() {
         return calculatedUnit;
     }
 
-    public void setCalculatedUnit(Long calculatedUnit) {
+    public void setCalculatedUnit(String calculatedUnit) {
         this.calculatedUnit = calculatedUnit;
     }
 

@@ -62,7 +62,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public UnitsRelation getSpecificRelation(Long baseUnit, Long calculatedUnit) {
+    public UnitsRelation getSpecificRelation(String baseUnit, String calculatedUnit) {
         LOGGER.debug("get specific Relation between two units {} and {}", baseUnit, calculatedUnit);
         return unitsRelationRepository.findUnitsRelationByBaseUnitAndCalculatedUnit(baseUnit, calculatedUnit);
     }

@@ -43,7 +43,7 @@ public interface ItemService {
      * @param baseUnit and calculatedUnit
      * @return unitsRelations
      */
-    UnitsRelation getSpecificRelation(Long baseUnit, Long calculatedUnit);
+    UnitsRelation getSpecificRelation(String baseUnit, String calculatedUnit);
 
     /**
      * Deletes the item from the database.

@@ -9,7 +9,7 @@ public interface UnitsRelationRepository extends JpaRepository<UnitsRelation, Lo
 
     List<UnitsRelation> findAll();
 
-    UnitsRelation findUnitsRelationByBaseUnitAndCalculatedUnit(Long baseUnit, Long calculatedUnit);
+    UnitsRelation findUnitsRelationByBaseUnitAndCalculatedUnit(String baseUnit, String calculatedUnit);
 
     List<UnitsRelation> findAllByBaseUnitOrCalculatedUnit(Long baseUnit, Long calculatedUnit);
 

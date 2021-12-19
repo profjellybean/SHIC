@@ -23,8 +23,8 @@ public class UnitOfQuantityDataGenerator {
     private final UnitsRelationRepository unitsRelationRepository;
     private final ItemService itemService;
     private static final String[] UNITS = {"kg", "g", "L", "ml", "pieces", "can", "cup"};
-    private static final UnitsRelation unitsRelation = new UnitsRelation((long) 1, (long) 2, 1000.0);
-    private static final UnitsRelation unitsRelation2 = new UnitsRelation((long) 3, (long) 4, 1000.0);
+    private static final UnitsRelation unitsRelation = new UnitsRelation("kg", "g", 1000.0);
+    private static final UnitsRelation unitsRelation2 = new UnitsRelation("L", "ml", 1000.0);
 
     public UnitOfQuantityDataGenerator(UnitOfQuantityRepository unitOfQuantityRepository, UnitsRelationRepository unitsRelationRepository, ItemService itemService) {
         this.unitOfQuantityRepository = unitOfQuantityRepository;
