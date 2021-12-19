@@ -149,15 +149,9 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     @Override
     public ItemStorage saveItem(ItemStorage itemStorage, Long id) {
         LOGGER.debug("save item in shopping list");
+        shoppingListItemRepository.saveAndFlush(itemStorage);
+        shoppingListItemRepository.insert(id, itemStorage.getId());
 
-        if (findShoppingListById(id) != null) {
-            shoppingListItemRepository.saveAndFlush(itemStorage);
-            shoppingListItemRepository.insert(id, itemStorage.getId());
-        } else {
-            Long newStorage = createNewShoppingList();
-            shoppingListItemRepository.saveAndFlush(itemStorage);
-            shoppingListItemRepository.insert(newStorage, itemStorage.getId());
-        }
         return itemStorage;
 
     }
