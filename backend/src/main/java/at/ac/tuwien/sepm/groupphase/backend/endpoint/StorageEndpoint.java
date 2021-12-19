@@ -1,10 +1,10 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemStorageDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UnitOfQuantityDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ItemStorageMapper;
-import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UnitOfQuantityMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
-import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
 import at.ac.tuwien.sepm.groupphase.backend.service.StorageService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
@@ -23,9 +23,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
 import java.lang.invoke.MethodHandles;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -34,11 +31,13 @@ public class StorageEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final StorageService storageService;
     private final ItemStorageMapper itemStorageMapper;
+    private final UnitOfQuantityMapper unitOfQuantityMapper;
 
     @Autowired
-    public StorageEndpoint(StorageService storageService, ItemStorageMapper itemStorageMapper) {
+    public StorageEndpoint(StorageService storageService, ItemStorageMapper itemStorageMapper, UnitOfQuantityMapper unitOfQuantityMapper) {
         this.storageService = storageService;
         this.itemStorageMapper = itemStorageMapper;
+        this.unitOfQuantityMapper = unitOfQuantityMapper;
     }
 
 
@@ -73,5 +72,13 @@ public class StorageEndpoint {
     public List<ItemStorageDto> searchItem(@DateTimeFormat(pattern = "yyyy-MM-dd") ItemStorageDto itemStorageDto) {
         LOGGER.info("searchItem, endpoint");
         return itemStorageMapper.itemsStorageToItemsStorageDto(storageService.searchItem(itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto)));
+    }
+
+    @GetMapping(value = "/unitOfQuantity")
+    @PermitAll
+    @Operation(summary = "Get all units of quantity") //TODO: add security
+    public List<UnitOfQuantityDto> getAllUnitsOfQuantity() {
+        LOGGER.info("Get units of quantity, endpoint");
+        return unitOfQuantityMapper.unitsOfQuantityToUnitsOfQuantityDto(storageService.getAllUnitOfQuantity());
     }
 }

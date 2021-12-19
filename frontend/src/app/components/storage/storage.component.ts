@@ -6,6 +6,7 @@ import {ItemStorage} from '../../dtos/itemStorage';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ItemService} from '../../services/item.service';
 import {ShoppingListService} from '../../services/shopping-list.service';
+import {UnitOfQuantity} from '../../dtos/unitOfQuantity';
 
 
 @Component({
@@ -27,6 +28,8 @@ export class StorageComponent implements OnInit {
   itemToAdd: Item = new Item();
   itemsToAdd: Item[];
 
+  unitsOfQuantity: UnitOfQuantity[];
+
   constructor(private storageService: StorageService,
               private modalService: NgbModal,
               private shoppingListService: ShoppingListService,
@@ -36,12 +39,16 @@ export class StorageComponent implements OnInit {
   ngOnInit(): void {
     this.getAllItemsByStorageId({id: 1});
     this.loadItemsToAdd();
+    this.loadUnitsOfQuantity();
   }
 
 
   addItem(item: Item) {
     this.itemToAdd.storageId = 1;
     this.itemToAdd.id = null;
+    if(this.itemToAdd.quantity !== undefined) {
+      this.itemToAdd.quantity = null;
+    }
     console.log('item to add', this.itemToAdd);
     this.storageService.addItem(item).subscribe({
       next: data => {
@@ -80,22 +87,21 @@ export class StorageComponent implements OnInit {
     });
   }
 
+  loadUnitsOfQuantity() {
+    this.storageService.findAllUnitsOfQuantity().subscribe({
+      next: data => {
+        console.log('received units of quantity', data);
+        this.unitsOfQuantity = data;
+      }
+    });
+  }
+
 
   /**
    * Error flag will be deactivated, which clears the error message
    */
   vanishError() {
     this.error = false;
-  }
-
-  private defaultServiceErrorHandling(error: any) {
-    console.log(error);
-    this.error = true;
-    if (typeof error.error === 'object') {
-      this.errorMessage = error.error.error;
-    } else {
-      this.errorMessage = error.error;
-    }
   }
 
  searchItems() {
@@ -173,4 +179,15 @@ export class StorageComponent implements OnInit {
     this.itemToAdd = new Item();
     this.submitted = false;
   }
+
+  private defaultServiceErrorHandling(error: any) {
+    console.log(error);
+    this.error = true;
+    if (typeof error.error === 'object') {
+      this.errorMessage = error.error.error;
+    } else {
+      this.errorMessage = error.error;
+    }
+  }
+
 }

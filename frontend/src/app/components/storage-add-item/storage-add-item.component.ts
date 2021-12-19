@@ -99,7 +99,7 @@ export class StorageAddItemComponent implements OnInit {
     this.testItem.notes = 'testNotes';
     this.testItem.storageId = 1;
     this.testItem.amount = 10;
-    this.testItem.quantity = 1;
+    this.testItem.quantity = null;
     // this.testItem.locationTag = 1;
     // this.testItem.expDate = null;
     // this.testItem.image = null;

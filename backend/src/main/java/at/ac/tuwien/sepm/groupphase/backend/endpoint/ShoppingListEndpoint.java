@@ -83,6 +83,7 @@ public class ShoppingListEndpoint {
         return itemStorageMapper.itemStorageToItemStorageDto(shoppingListService.saveItem(itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto), itemStorageDto.getShoppingListId()));
     }
 
+    @PermitAll
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ShoppingListDto getShoppingListByid(@PathVariable Long id) {

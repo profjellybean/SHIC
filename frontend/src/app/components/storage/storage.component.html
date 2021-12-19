@@ -74,9 +74,14 @@
 
         <div class="form-group">
           <label for="inputUnitOfQuantity">Unit of Quantity</label>
-          <input type="number" name="quantity" class="form-control" id="inputUnitOfQuantity"
-                 aria-describedby="quantityHelp" placeholder="Enter Unit of Quantity" [(ngModel)]="itemToAdd.quantity">
-        </div>
+          <select
+            class="form-control"
+            id="inputUnitOfQuantity"
+            name="inputUnitOfQuantity"
+            [(ngModel)]="this.itemToAdd.quantity">
+            <option *ngFor="let myItem of unitsOfQuantity;" [ngValue]="myItem">{{myItem.name}}</option>
+          </select>
+          </div>
 
         <button type="button" (click)="addItemForm(itemForm)" id="add-msg" class="btn btn-success float-right">Add item</button>
 
@@ -107,7 +112,8 @@
   <tr *ngFor="let item of $any(items)">
     <td>{{item.name}}</td>
     <td>{{item.amount}}</td>
-    <td>{{item.quantity.name}}</td>
+    <td>
+      <div *ngIf="item.quantity !== null">{{item.quantity.name}}</div></td>
     <td>{{item.notes}}</td>
     <td>{{item.expDate}}</td>
     <td>{{item.locationTag}}</td>
