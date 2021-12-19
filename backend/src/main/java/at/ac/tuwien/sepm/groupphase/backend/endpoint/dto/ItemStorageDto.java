@@ -1,7 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
-import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -16,7 +14,7 @@ public class ItemStorageDto {
     private Long id;
     @NotNull
     private String name;
-    private UnitOfQuantityDto unitOfQuantity;
+    private UnitOfQuantityDto unitOfQuantityDto;
     private String notes;
     private byte[] image;
 
@@ -30,7 +28,7 @@ public class ItemStorageDto {
     public ItemStorageDto() {
     }
 
-    public ItemStorageDto(long storageId, String name) {
+    public ItemStorageDto(Long storageId, String name) {
         this.storageId = storageId;
         this.name = name;
     }
@@ -41,7 +39,7 @@ public class ItemStorageDto {
         this.shoppingListId = shoppingListId;
         this.id = id;
         this.name = name;
-        this.unitOfQuantity = unitOfQuantity;
+        this.unitOfQuantityDto = unitOfQuantityDto;
         this.notes = notes;
         this.image = image;
         this.expDate = expDate;
@@ -130,11 +128,11 @@ public class ItemStorageDto {
     }
 
     public UnitOfQuantityDto getQuantity() {
-        return unitOfQuantity;
+        return unitOfQuantityDto;
     }
 
-    public void setQuantity(UnitOfQuantityDto quantity) {
-        this.unitOfQuantity = unitOfQuantity;
+    public void setQuantity(UnitOfQuantityDto unitOfQuantityDto) {
+        this.unitOfQuantityDto = unitOfQuantityDto;
     }
 
 
@@ -148,7 +146,7 @@ public class ItemStorageDto {
             +
             ", name='" + name + '\''
             +
-            ", unitOfQuantity=" + unitOfQuantity
+            ", unitOfQuantity=" + unitOfQuantityDto
             +
             ", notes='" + notes + '\''
             +
