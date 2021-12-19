@@ -26,4 +26,8 @@ export class GroupService {
   addUser(username: string, groupId: number) {
     return this.httpClient.put(this.userRegisterUri, {}, {params:{username, groupId}});
   }
+
+  getAllUsers(groupId: number) {
+    return this.httpClient.get(this.userRegisterUri, {params: {groupId}});
+  }
 }

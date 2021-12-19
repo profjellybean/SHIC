@@ -112,9 +112,10 @@ public class RegisterDataGenerator {
 
 
             //user
-            ApplicationUser maleUser = new ApplicationUser("tom@email.com", "password", shoppingListIdOfTom);
+            ApplicationUser maleUser = new ApplicationUser("tom", "password", shoppingListIdOfTom, "tom@email.com");
             ApplicationUser user3 = userRepository.saveAndFlush(maleUser);
-            ApplicationUser femaleUser = new ApplicationUser("louise@email.com", "password", shoppingListIdOfLouise);
+            ApplicationUser femaleUser = new ApplicationUser("louise", "password", shoppingListIdOfLouise, "louise@email.com");
+
             ApplicationUser user4 = userRepository.saveAndFlush(femaleUser);
 
             savedBill2.setNames(new HashSet<ApplicationUser>() {

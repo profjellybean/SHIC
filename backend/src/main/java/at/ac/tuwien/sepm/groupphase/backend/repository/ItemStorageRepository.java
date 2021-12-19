@@ -17,6 +17,8 @@ public interface ItemStorageRepository extends JpaRepository<ItemStorage, Long> 
 
     Optional<ItemStorage> findByName(String name);
 
+    void deleteItemStorageByStorageId(Long id);
+
     List<ItemStorage> findAllByStorageIdAndNameContainingIgnoreCase(Long id, String name);
 
     void deleteById(Long id);

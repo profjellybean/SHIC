@@ -6,12 +6,15 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
+import at.ac.tuwien.sepm.groupphase.backend.entity.UnitsRelation;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
-import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.RecipeRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListItemRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UnitsRelationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.RecipeRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListItemRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.ShoppingListService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.hibernate.ObjectNotFoundException;
@@ -21,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.util.LinkedList;
@@ -38,6 +42,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     private final RecipeRepository recipeRepository;
     private final ItemStorageRepository itemStorageRepository;
     private final ShoppingListItemRepository shoppingListItemRepository;
+    private final UnitsRelationRepository unitsRelationRepository;
     private final UserService userService;
 
     @Autowired
@@ -45,11 +50,13 @@ public class ShoppingListServiceImpl implements ShoppingListService {
                                    RecipeRepository recipeRepository,
                                    ItemStorageRepository itemStorageRepository,
                                    ShoppingListItemRepository shoppingListItemRepository,
+                                   UnitsRelationRepository unitsRelationRepository,
                                    UserService userService) {
         this.recipeRepository = recipeRepository;
         this.itemStorageRepository = itemStorageRepository;
         this.shoppingListItemRepository = shoppingListItemRepository;
         this.shoppingListRepository = shoppingListRepository;
+        this.unitsRelationRepository = unitsRelationRepository;
         this.userService = userService;
     }
 
@@ -162,8 +169,13 @@ public class ShoppingListServiceImpl implements ShoppingListService {
                         returnSet.add(ingredient);
                     }
                 } else {
-                    // TODO recalculate unitOfQuantity
-
+                    UnitsRelation unitsRelation = unitsRelationRepository.findUnitsRelationByBaseUnitAndCalculatedUnit(ingredient.getQuantity().getName(), storedItem.getQuantity().getName());
+                    if (unitsRelation != null) {
+                        Double relation = unitsRelation.getRelation();
+                        if (ingredient.getAmount() * relation > storedItem.getAmount()) {
+                            returnSet.add(ingredient);
+                        }
+                    }
                 }
             }
         }
