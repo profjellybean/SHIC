@@ -6,9 +6,12 @@ import at.ac.tuwien.sepm.groupphase.backend.datagenerator.RecipeDataGenerator;
 import at.ac.tuwien.sepm.groupphase.backend.datagenerator.TestDataGenerator;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemStorageDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ShoppingListMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Recipe;
+import at.ac.tuwien.sepm.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,12 +25,18 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -43,6 +52,9 @@ public class ShoppingListEndpointTest implements TestData {
 
     @Autowired
     ShoppingListRepository shoppingListRepository;
+
+    @Autowired
+    RecipeRepository recipeRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -64,8 +76,35 @@ public class ShoppingListEndpointTest implements TestData {
 
     @BeforeEach
     public void beforeEach() {
-        //shoppingListRepository.deleteAll();
+        testDataGenerator.generateData_planRecipe();
     }
+    @AfterEach
+    public void afterEach() {
+        recipeRepository.deleteAll();
+    }
+
+
+    /*
+    @Autowired
+    PlatformTransactionManager txm;
+
+    TransactionStatus txstatus;
+
+    @BeforeEach
+    public void setupDBTransaction() {
+        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+        def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        txstatus = txm.getTransaction(def);
+        assumeTrue(txstatus.isNewTransaction());
+        txstatus.setRollbackOnly();
+    }
+
+    @AfterEach
+    public void tearDownDBData() {
+        txm.rollback(txstatus);
+    }
+
+     */
 
     @Test
     public void givenNoRecipe_whenPlanRecipe_then400() throws Exception {
@@ -94,9 +133,12 @@ public class ShoppingListEndpointTest implements TestData {
     @Test
     public void givenValidRecipe_notEnoughOfIngredient_whenPlanRecipe_then400() throws Exception {
         testDataGenerator.generateData_planRecipe();
+        Recipe recipe = recipeRepository.findByName("Feta Cheese Noodles");
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAA recipe by name: " + recipe); // TODO delete
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAA AllRecipes in test: " + recipeRepository.findAll()); // TODO delete
 
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI)
-                .param("recipeId", "1")
+                .param("recipeId", recipe.getId().toString())
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -107,21 +149,25 @@ public class ShoppingListEndpointTest implements TestData {
         List<ItemStorageDto> itemStorageDtos = Arrays.asList(objectMapper.readValue(response.getContentAsString(),
             ItemStorageDto[].class));
 
-        // assertEquals(1, itemStorageDtos.size()); TODO
+        assertEquals(1, itemStorageDtos.size()); // TODO
         ItemStorageDto itemStorageDto1 = itemStorageDtos.get(0);
-        //assertAll(
-        //    () -> assertEquals("Feta", itemStorageDto1.getName()),
-        //    () -> assertEquals(2, itemStorageDto1.getAmount())
-        //    () -> assertEquals(5L, itemStorageDto1.getQuantity()) // TODO
-        //);
+        assertAll(
+            () -> assertEquals("Feta", itemStorageDto1.getName()),
+            () -> assertEquals(2, itemStorageDto1.getAmount()),
+            () -> assertEquals("pieces", itemStorageDto1.getQuantity().getName()) // TODO
+        );
     }
 
     @Test
     public void givenValidRecipe_allIngredientsMissing_whenPlanRecipe_then400() throws Exception {
         testDataGenerator.generateData_planRecipe();
+        Recipe recipe = recipeRepository.findByName("Potato Wedges");
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAA recipe by name: " + recipe); // TODO delete
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAA AllRecipes in test: " + recipeRepository.findAll()); // TODO delete
 
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI)
-                .param("recipeId", "2")
+                .param("recipeId", recipe.getId().toString())
+                //.param("recipeId", "2")
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -132,23 +178,26 @@ public class ShoppingListEndpointTest implements TestData {
         List<ItemStorageDto> itemStorageDtos = Arrays.asList(objectMapper.readValue(response.getContentAsString(),
             ItemStorageDto[].class));
 
-        //assertEquals(1, itemStorageDtos.size()); // TODO check size
+        assertEquals(1, itemStorageDtos.size()); // TODO check size
         ItemStorageDto itemStorageDto = itemStorageDtos.get(0);
-        // assertAll(
-        //     () -> assertEquals("Potatoes", itemStorageDto.getName()),
-        //     () -> assertEquals("any kind", itemStorageDto.getNotes()),
-        //     () -> assertEquals(400, itemStorageDto.getAmount())
-        //     //() -> assertEquals(2L, itemStorageDto.getQuantity()) // TODO
-        // );
+        assertAll(
+            () -> assertEquals("Potatoes", itemStorageDto.getName()),
+            () -> assertEquals("any kind", itemStorageDto.getNotes()),
+            () -> assertEquals(400, itemStorageDto.getAmount()),
+            () -> assertEquals("g", itemStorageDto.getQuantity().getName()) // TODO
+        );
 
     }
 
     @Test
     public void givenValidRecipe_allIngredientsPresent_whenPlanRecipe_then400() throws Exception {
         testDataGenerator.generateData_planRecipe();
+        Recipe recipe = recipeRepository.findByName("Noodles with Pesto");
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAA recipe by name: " + recipe); // TODO delete
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAA AllRecipes in test: " + recipeRepository.findAll()); // TODO delete
 
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI)
-                .param("recipeId", "3")
+                .param("recipeId", recipe.getId().toString())
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -159,7 +208,7 @@ public class ShoppingListEndpointTest implements TestData {
         List<ItemStorageDto> itemStorageDtos = Arrays.asList(objectMapper.readValue(response.getContentAsString(),
             ItemStorageDto[].class));
 
-        // assertEquals(0, itemStorageDtos.size()); TODO check size
+        assertEquals(0, itemStorageDtos.size()); // TODO check size
 
     }
 

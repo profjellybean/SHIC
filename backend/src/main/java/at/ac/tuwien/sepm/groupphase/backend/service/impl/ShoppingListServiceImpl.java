@@ -128,9 +128,11 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         }
 
         returnList = compareItemSets(recipe.getIngredients(), storageItems);
+        // TODO DELETE
         System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAA storageId " + storageId);
         System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAA storageItems " + storageItems);
         System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAA returnList " + returnList);
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAA AllRecipes in service" + recipeRepository.findAll());
 
         String notes = "Ingredient required for recipe: " + recipe.getName();
         for (ItemStorage item :

@@ -45,8 +45,8 @@ public class TestDataGenerator {
      */
     public void generateData_planRecipe() {
         LOGGER.debug("Generating Data for planning Recipe");
+        itemStorageDataGenerator.generateItemStorage(); // includes UnitOfQuantity and Storage
         recipeDataGenerator.generateRecipes(); // includes UnitOfQuantity
         userDataGenerator.generateUser(); // includes ShoppingList and Storage
-        itemStorageDataGenerator.generateItemStorage(); // includes UnitOfQuantity and Storage
     }
 }
