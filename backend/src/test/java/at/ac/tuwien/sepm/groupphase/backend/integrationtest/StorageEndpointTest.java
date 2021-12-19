@@ -59,7 +59,7 @@ public class StorageEndpointTest {
 
     @Test
     public void insertValidItem() throws Exception {
-        ItemStorageDto itemStorageDto = new ItemStorageDto(-1, "Test");
+        ItemStorageDto itemStorageDto = new ItemStorageDto(-1L, "Test");
         storageRepository.saveAndFlush(new Storage(-1L));
 
 
@@ -76,9 +76,9 @@ public class StorageEndpointTest {
 
     @Test
     public void insertItemsThenGetAll() throws Exception {
-        ItemStorage itemStorageDto = new ItemStorage(-1, "Test1");
-        ItemStorage itemStorageDto1 = new ItemStorage(-1, "Test2");
-        ItemStorage itemStorageDto2 = new ItemStorage(-1, "Test3");
+        ItemStorage itemStorageDto = new ItemStorage(-1L, "Test1");
+        ItemStorage itemStorageDto1 = new ItemStorage(-1L, "Test2");
+        ItemStorage itemStorageDto2 = new ItemStorage(-1L, "Test3");
         storageRepository.saveAndFlush(new Storage(-1L));
         itemStorageRepository.saveAndFlush(itemStorageDto);
         itemStorageRepository.saveAndFlush(itemStorageDto1);
@@ -105,7 +105,7 @@ public class StorageEndpointTest {
         MockHttpServletResponse response = mvcResult.getResponse();
 
         assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals(1, itemStorageRepository.findAllByStorageIdAndNameContainingIgnoreCase(-1L,"Test123").size());
+        assertEquals(1, itemStorageRepository.findAllByStorageIdAndNameContainingIgnoreCase(-1L, "Test123").size());
     }
 
     @Test
@@ -116,7 +116,7 @@ public class StorageEndpointTest {
         MockHttpServletResponse response = mvcResult.getResponse();
 
         assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals(0, itemStorageRepository.findAllByStorageIdAndNameContainingIgnoreCase(-1L,"Test123456786").size());
+        assertEquals(0, itemStorageRepository.findAllByStorageIdAndNameContainingIgnoreCase(-1L, "Test123456786").size());
     }
 
 

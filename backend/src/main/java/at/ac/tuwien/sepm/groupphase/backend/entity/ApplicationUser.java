@@ -50,6 +50,12 @@ public class ApplicationUser {
         this.password = password;
     }
 
+    public ApplicationUser(String username, String password, UserGroup currGroup, Long privList) {
+        this.username = username;
+        this.password = password;
+        this.currGroup = currGroup;
+        this.privList = privList;
+    }
 
     public Long getPrivList() {
         return privList;
