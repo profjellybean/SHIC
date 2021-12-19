@@ -149,7 +149,7 @@ public class ItemStorage {
         return unitOfQuantity;
     }
 
-    public void setQuantity(UnitOfQuantity quantity) {
+    public void setQuantity(UnitOfQuantity unitOfQuantity) {
         this.unitOfQuantity = unitOfQuantity;
     }
 
