@@ -79,11 +79,11 @@ public class ItemEndpointTest {
 
 */
 
-    //@BeforeEach
-    //public void beforeEach() {
-    //    unitsRelationRepository.deleteAll();
-    //    unitOfQuantityRepository.deleteAll();
-    //}
+    @BeforeEach
+    public void beforeEach() {
+        unitsRelationRepository.deleteAll();
+        unitOfQuantityRepository.deleteAll();
+    }
 
     @Autowired
     PlatformTransactionManager txm;
