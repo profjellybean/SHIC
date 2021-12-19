@@ -205,7 +205,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         if (userOptional.isPresent()) {
             ApplicationUser user = userOptional.get();
             UserGroup group = user.getCurrGroup();
-            Long stroageId = group.getStorageId();
+            Long storageId = group.getStorageId();
 
             for (ItemStorage item : boughtItems) {
                 ItemStorage itemStorage = itemStorageRepository.getById(item.getId());
