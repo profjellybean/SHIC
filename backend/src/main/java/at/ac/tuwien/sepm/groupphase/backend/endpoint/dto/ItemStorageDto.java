@@ -1,24 +1,58 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.Date;
 
 public class ItemStorageDto {
+    @NotNull
     private Long storageId;
     private Long shoppingListId;
     private Long id;
+    @NotNull
     private String name;
-    private Long quantity;
+    private UnitOfQuantityDto unitOfQuantityDto;
     private String notes;
     private byte[] image;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date expDate;
     private int amount;
-    private Location locationTag;
+    private String locationTag;
 
 
     public ItemStorageDto() {
+    }
+
+    public ItemStorageDto(Long storageId, String name) {
+        this.storageId = storageId;
+        this.name = name;
+    }
+
+
+    public ItemStorageDto(Long storageId, Long shoppingListId, Long id, String name, UnitOfQuantityDto unitOfQuantityDto, String notes, byte[] image, Date expDate, int amount, String locationTag) {
+        this.storageId = storageId;
+        this.shoppingListId = shoppingListId;
+        this.id = id;
+        this.name = name;
+        this.unitOfQuantityDto = unitOfQuantityDto;
+        this.notes = notes;
+        this.image = image;
+        this.expDate = expDate;
+        this.amount = amount;
+        this.locationTag = locationTag;
+    }
+
+    public ItemStorageDto(Long storageId, String name, String notes, int amount, String locationTag) {
+        this.storageId = storageId;
+        this.name = name;
+        this.notes = notes;
+        this.amount = amount;
+        this.locationTag = locationTag;
     }
 
     public Long getStorageId() {
@@ -85,20 +119,20 @@ public class ItemStorageDto {
         this.amount = amount;
     }
 
-    public Location getLocationTag() {
+    public String getLocationTag() {
         return locationTag;
     }
 
-    public void setLocationTag(Location locationTag) {
+    public void setLocationTag(String locationTag) {
         this.locationTag = locationTag;
     }
 
-    public Long getQuantity() {
-        return quantity;
+    public UnitOfQuantityDto getQuantity() {
+        return unitOfQuantityDto;
     }
 
-    public void setQuantity(Long quantity) {
-        this.quantity = quantity;
+    public void setQuantity(UnitOfQuantityDto unitOfQuantityDto) {
+        this.unitOfQuantityDto = unitOfQuantityDto;
     }
 
 
@@ -112,7 +146,7 @@ public class ItemStorageDto {
             +
             ", name='" + name + '\''
             +
-            ", quantity=" + quantity
+            ", unitOfQuantity=" + unitOfQuantityDto
             +
             ", notes='" + notes + '\''
             +

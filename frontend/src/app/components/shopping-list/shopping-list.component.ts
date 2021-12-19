@@ -106,6 +106,8 @@ export class ShoppingListComponent implements OnInit {
     console.log('item to add', this.itemToAdd);
     this.itemToAdd.shoppingListId = 7;
     this.itemToAdd.id = null;
+    this.itemToAdd.amount = null;
+    this.itemToAdd.quantity = null;
     console.log('item to add', this.itemToAdd);
     this.shoppingListService.addItemToShoppingList(this.itemToAdd).subscribe({
       next: data => {

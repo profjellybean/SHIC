@@ -7,7 +7,7 @@ public interface RegisterService {
     /**
      * Confirm an outstanding payment of a bill.
      */
-    Register confirmPayment(Long registerId, Long billId, Long userId);
+    Register confirmPayment(Long registerId, Long billId, String username);
 
     /**
      * Find a register by a given id.

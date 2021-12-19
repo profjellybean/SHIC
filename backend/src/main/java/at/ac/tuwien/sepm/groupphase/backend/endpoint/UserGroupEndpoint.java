@@ -10,17 +10,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.annotation.security.PermitAll;
-import javax.validation.Valid;
 import java.lang.invoke.MethodHandles;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/api/v1/group")
@@ -54,6 +53,18 @@ public class UserGroupEndpoint {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, n.getMessage());
         } catch (ServiceException s) {
             throw new ResponseStatusException(HttpStatus.ALREADY_REPORTED, s.getMessage());
+        }
+    }
+
+    @GetMapping
+    @PermitAll
+    @Operation(summary = "Get all users from group")
+    public Set<UserDto> getAllUsers(@Param("groupId") Long groupId) {
+        LOGGER.info("Get all users from group {}", groupId);
+        try {
+            return this.userMapper.usersToUsersDto(this.groupService.getAllUsers(groupId));
+        } catch (NotFoundException n) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, n.getMessage());
         }
     }
 }

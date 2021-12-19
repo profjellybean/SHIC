@@ -23,6 +23,7 @@ import { ShoppingListAddComponent } from './components/shopping-list-add/shoppin
 import { ShoppingListListComponent } from './components/shopping-list-list/shopping-list-list.component';
 import { StorageAddItemComponent } from './components/storage-add-item/storage-add-item.component';
 import { UserComponent } from './components/user/user.component';
+import { ConfirmUserEmailComponent } from './components/confirm-user-email/confirm-user-email.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { UserComponent } from './components/user/user.component';
     ShoppingListComponent,
     RecipeDetailComponent,
     RecipeListComponent,
+    ConfirmUserEmailComponent,
     StorageAddItemComponent,
     UserComponent,
     ShoppingListAddComponent,

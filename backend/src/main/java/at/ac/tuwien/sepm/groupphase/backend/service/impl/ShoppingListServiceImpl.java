@@ -6,8 +6,12 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Item;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
+import at.ac.tuwien.sepm.groupphase.backend.entity.UnitsRelation;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UnitsRelationRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.RecipeRepository;
@@ -40,6 +44,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     private final ItemStorageRepository itemStorageRepository;
     private final ShoppingListItemRepository shoppingListItemRepository;
     private final ItemRepository itemRepository;
+    private final UnitsRelationRepository unitsRelationRepository;
     private final UserRepository userRepository;
 
     @Autowired
@@ -47,11 +52,13 @@ public class ShoppingListServiceImpl implements ShoppingListService {
                                    RecipeRepository recipeRepository,
                                    ItemStorageRepository itemStorageRepository,
                                    ShoppingListItemRepository shoppingListItemRepository,
-                                   ItemRepository itemRepository, UserRepository userRepository) {
+                                   ItemRepository itemRepository, UnitsRelationRepository unitsRelationRepository,
+                                   UserRepository userRepository) {
         this.recipeRepository = recipeRepository;
         this.itemStorageRepository = itemStorageRepository;
         this.shoppingListItemRepository = shoppingListItemRepository;
         this.shoppingListRepository = shoppingListRepository;
+        this.unitsRelationRepository = unitsRelationRepository;
         this.itemRepository = itemRepository;
         this.userRepository = userRepository;
     }
@@ -123,8 +130,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
      *
      * @param recipeIngredients set of items e.g. representing ingredients of a recipe
      * @param storedItems       set of items e.g. representing the stored Items in a Storage
-     * @return Set of all Items that occur in recipeIngredients but not in storedItems
-     *      OR occur in both, but the amount in recipeIngredients is bigger than the amount in storedItems
+     * @return Set of all Items that occur in recipeIngredients but not in storedItem or occur in both, but the amount in recipeIngredients is bigger than the amount in storedItems.
      */
     private List<ItemStorage> compareItemSets(Set<ItemStorage> recipeIngredients, List<ItemStorage> storedItems) {
         LOGGER.debug("Service: compareItemLists");
@@ -144,7 +150,13 @@ public class ShoppingListServiceImpl implements ShoppingListService {
                         returnSet.add(ingredient);
                     }
                 } else {
-                    // TODO recalculate unitOfQuantity
+                    UnitsRelation unitsRelation = unitsRelationRepository.findUnitsRelationByBaseUnitAndCalculatedUnit(ingredient.getQuantity().getName(), storedItem.getQuantity().getName());
+                    if (unitsRelation != null) {
+                        Double relation = unitsRelation.getRelation();
+                        if (ingredient.getAmount() * relation > storedItem.getAmount()) {
+                            returnSet.add(ingredient);
+                        }
+                    }
                 }
             }
         }
@@ -154,15 +166,9 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     @Override
     public ItemStorage saveItem(ItemStorage itemStorage, Long id) {
         LOGGER.debug("save item in shopping list");
+        shoppingListItemRepository.saveAndFlush(itemStorage);
+        shoppingListItemRepository.insert(id, itemStorage.getId());
 
-        if (findShoppingListById(id) != null) {
-            shoppingListItemRepository.saveAndFlush(itemStorage);
-            shoppingListItemRepository.insert(id, itemStorage.getId());
-        } else {
-            Long newStorage = createNewShoppingList();
-            shoppingListItemRepository.saveAndFlush(itemStorage);
-            shoppingListItemRepository.insert(newStorage, itemStorage.getId());
-        }
         return itemStorage;
 
     }

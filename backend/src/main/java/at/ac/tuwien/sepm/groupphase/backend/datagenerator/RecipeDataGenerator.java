@@ -61,10 +61,10 @@ public class RecipeDataGenerator {
             this.unitOfQuantityDataGenerator.generateUnitOfQuantity();
 
             List<UnitOfQuantity> unitList = unitOfQuantityRepository.findAll();
-            Map<String, Long> mappedUnits = new HashMap<>();
+            Map<String, UnitOfQuantity> mappedUnits = new HashMap<>();
             for (UnitOfQuantity unit :
                 unitList) {
-                mappedUnits.put(unit.getName(), unit.getId());
+                mappedUnits.put(unit.getName(), unit);
             }
             // FETA NOODLES
             // generate recipe
@@ -150,7 +150,7 @@ public class RecipeDataGenerator {
                 LOGGER.debug("saving recipe {}", recipe);
                 Recipe storedRecipe = recipeRepository.save(recipe);
                 //ItemStorage itemStorage = new ItemStorage("recipe ingredient in recipe "+i, "notes for itemStorage "+i, null, null, 10, Location.fridge, UnitOfQuantity.kg, 1L);
-                ItemStorage itemStorage = new ItemStorage("recipe ingredient in recipe " + i, "notes for itemStorage " + i, null, null, 10, Location.fridge, null, null, null);
+                ItemStorage itemStorage = new ItemStorage("recipe ingredient in recipe " + i, "notes for itemStorage " + i, null, null, 10, Location.fridge.toString(), null, null, null);
                 itemStorage = itemStorageRepository.save(itemStorage);
                 storedRecipe.setIngredients(new HashSet<>(Arrays.asList(itemStorage)));
                 recipeRepository.save(storedRecipe);

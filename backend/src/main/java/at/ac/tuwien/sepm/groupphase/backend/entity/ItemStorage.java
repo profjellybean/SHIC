@@ -1,12 +1,12 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
@@ -27,7 +27,9 @@ public class ItemStorage {
     @Column
     private int amount;
     @Column
-    private Location locationTag;
+    private String locationTag;
+    @OneToOne
+    private UnitOfQuantity unitOfQuantity;
     @Column
     private Long quantity;
     @Column
@@ -43,14 +45,14 @@ public class ItemStorage {
         this.id = id;
     }
 
-    public ItemStorage(String name, String notes, byte[] image, Date expDate, int amount, Location locationTag, Long quantity, Long storageId, Long shoppingListId) {
+    public ItemStorage(String name, String notes, byte[] image, Date expDate, int amount, String locationTag,  UnitOfQuantity unitOfQuantity, Long storageId, Long shoppingListId) {
         this.name = name;
         this.notes = notes;
         this.image = image;
         this.expDate = expDate;
         this.amount = amount;
         this.locationTag = locationTag;
-        this.quantity = quantity;
+        this.unitOfQuantity = unitOfQuantity;
         this.storageId = storageId;
         this.shoppingListId = shoppingListId;
     }
@@ -63,9 +65,14 @@ public class ItemStorage {
         this.expDate = itemStorage.expDate;
         this.amount = itemStorage.amount;
         this.locationTag = itemStorage.locationTag;
-        this.quantity = itemStorage.quantity;
+        this.unitOfQuantity = itemStorage.unitOfQuantity;
         this.storageId = itemStorage.storageId;
         this.shoppingListId = itemStorage.shoppingListId;
+    }
+
+    public ItemStorage(long storageId, String name) {
+        this.storageId = storageId;
+        this.name = name;
     }
 
 
@@ -133,20 +140,20 @@ public class ItemStorage {
         this.amount = amount;
     }
 
-    public Location getLocationTag() {
+    public String getLocationTag() {
         return locationTag;
     }
 
-    public void setLocationTag(Location locationTag) {
+    public void setLocationTag(String locationTag) {
         this.locationTag = locationTag;
     }
 
-    public Long getQuantity() {
-        return quantity;
+    public UnitOfQuantity getQuantity() {
+        return unitOfQuantity;
     }
 
-    public void setQuantity(Long quantity) {
-        this.quantity = quantity;
+    public void setQuantity(UnitOfQuantity unitOfQuantity) {
+        this.unitOfQuantity = unitOfQuantity;
     }
 
     /**
@@ -166,13 +173,13 @@ public class ItemStorage {
         }
         ItemStorage that = (ItemStorage) o;
         return Objects.equals(name, that.name)
-            && quantity == that.quantity;
+            && unitOfQuantity == that.unitOfQuantity;
     }
 
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(id, name, notes, expDate, amount, locationTag, quantity, storageId);
+        int result = Objects.hash(id, name, notes, expDate, amount, locationTag, unitOfQuantity, storageId);
         result = 31 * result + Arrays.hashCode(image);
         return result;
     }
@@ -195,7 +202,7 @@ public class ItemStorage {
             +
             ", locationTag=" + locationTag
             +
-            ", quantity=" + quantity
+            ", unitOfQuantity=" + unitOfQuantity
             +
             ", storageId=" + storageId
             +

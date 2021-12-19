@@ -87,13 +87,13 @@ public class RegisterDataGenerator {
 
             //items
             ItemStorage itemStorage4 = new ItemStorage("name 4", "notes for itemStorage 1", null,
-                null, 10, Location.fridge, null, null, null);
+                null, 10, Location.fridge.toString(), null, null, null);
             ItemStorage item4 = itemStorageRepository.saveAndFlush(itemStorage4);
             ItemStorage itemStorage5 = new ItemStorage("name 5", "notes for itemStorage 2", null,
-                null, 10, Location.fridge, null, null, null);
+                null, 10, Location.fridge.toString(), null, null, null);
             ItemStorage item5 = itemStorageRepository.saveAndFlush(itemStorage5);
             ItemStorage itemStorage6 = new ItemStorage("name 6", "notes for itemStorage 3", null,
-                null, 10, Location.fridge, null, null, null);
+                null, 10, Location.fridge.toString(), null, null, null);
             ItemStorage item6 = itemStorageRepository.saveAndFlush(itemStorage6);
 
             savedBill2.setGroceries(new HashSet<ItemStorage>() {
@@ -112,15 +112,17 @@ public class RegisterDataGenerator {
 
 
             //user
-            ApplicationUser maleUser = new ApplicationUser("tom@email.com", "password", shoppingListIdOfTom);
+            ApplicationUser maleUser = new ApplicationUser("tom", "password", shoppingListIdOfTom, "tom@email.com");
             ApplicationUser user3 = userRepository.saveAndFlush(maleUser);
-            ApplicationUser femaleUser = new ApplicationUser("louise@email.com", "password", shoppingListIdOfLouise);
+            ApplicationUser femaleUser = new ApplicationUser("louise", "password", shoppingListIdOfLouise, "louise@email.com");
+
             ApplicationUser user4 = userRepository.saveAndFlush(femaleUser);
 
             savedBill2.setNames(new HashSet<ApplicationUser>() {
                 {
                     add(user3);
                     add(user4);
+                    add(userRepository.getById(2L));
                 }
             });
 
@@ -131,6 +133,7 @@ public class RegisterDataGenerator {
                 {
                     add(user3);
                     add(user4);
+                    add(userRepository.getById(2L));
                 }
             });
 

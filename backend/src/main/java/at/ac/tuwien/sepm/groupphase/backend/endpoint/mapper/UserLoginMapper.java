@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoggedInDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegistrationDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,9 +23,9 @@ public class UserLoginMapper {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public ApplicationUser dtoToEntity(UserLoginDto user, Long shoppingListId) {
+    public ApplicationUser dtoToEntity(UserRegistrationDto user, Long shoppingListId) {
         LOGGER.debug("Mapper: User dtoToEntity");
-        return new ApplicationUser(user.getUsername(), passwordEncoder.encode(user.getPassword()), shoppingListId);
+        return new ApplicationUser(user.getUsername(), passwordEncoder.encode(user.getPassword()), shoppingListId, user.getEmail());
     }
 
     public UserLoginDto entityToDto(ApplicationUser user) {
