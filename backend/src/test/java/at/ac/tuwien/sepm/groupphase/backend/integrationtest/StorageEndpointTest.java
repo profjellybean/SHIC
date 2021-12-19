@@ -120,20 +120,19 @@ public class StorageEndpointTest {
     }
 
 
-
     @Test
     public void searchForExistingItem() throws Exception {
-        ItemStorageDto itemStorageDto = new ItemStorageDto(-1,"test2");
+        ItemStorageDto itemStorageDto = new ItemStorageDto(-1L, "test2");
         storageRepository.saveAndFlush(new Storage(-1L));
 
-        MvcResult mvcResult = this.mockMvc.perform(get(STORAGEENDPOINT_URI+"/search")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(itemStorageDto)))
+        MvcResult mvcResult = this.mockMvc.perform(get(STORAGEENDPOINT_URI + "/search")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(itemStorageDto)))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
-        assertEquals(HttpStatus.OK.value(),response.getStatus());
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
 
     }
 

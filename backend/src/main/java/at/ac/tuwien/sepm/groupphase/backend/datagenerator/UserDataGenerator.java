@@ -40,7 +40,7 @@ public class UserDataGenerator {
         this.userGroupRepository = userGroupRepository;
     }
 
-
+    @PostConstruct
     void generateUser() { //TODO remove
         Item item = new Item(null, "Döner", null);
         Long itemId = itemRepository.saveAndFlush(new Item(null, "Döner", null)).getId();
@@ -72,7 +72,7 @@ public class UserDataGenerator {
 
     }
 
-    @PostConstruct
+
     void generateApplicationUser() {
         Long shoppingListIdUser = shoppingListRepository.saveAndFlush(ShoppingList.ShoppingListBuilder.aShoppingList().withName("Your private shopping list").build()).getId();
         Long shoppingListIdAdmin = shoppingListRepository.saveAndFlush(ShoppingList.ShoppingListBuilder.aShoppingList().withName("Your private shopping list").build()).getId();
