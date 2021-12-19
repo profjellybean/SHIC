@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapperImpl;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.service.GroupService;
@@ -25,10 +26,10 @@ import java.util.Set;
 public class UserGroupEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final GroupService groupService;
-    private final UserMapperImpl userMapper;
+    private final UserMapper userMapper;
 
 
-    public UserGroupEndpoint(GroupService groupService, UserMapperImpl userMapper) {
+    public UserGroupEndpoint(GroupService groupService, UserMapper userMapper) {
         this.groupService = groupService;
         this.userMapper = userMapper;
     }

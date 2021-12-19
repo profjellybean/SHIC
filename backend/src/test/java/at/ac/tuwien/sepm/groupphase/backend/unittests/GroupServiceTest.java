@@ -1,8 +1,10 @@
 package at.ac.tuwien.sepm.groupphase.backend.unittests;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserGroupRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.impl.GroupServiceImpl;
@@ -27,6 +29,8 @@ public class GroupServiceTest {
     private UserRepository userRepository;
     @Autowired
     private UserGroupRepository userGroupRepository;
+    @Autowired
+    private ShoppingListRepository shoppingListRepository;
 
     @Test
     public void generateNewUserGroup() {
@@ -37,7 +41,8 @@ public class GroupServiceTest {
     @Test
     public void addingUserToGroupWhenAlreadyInGroupShouldThrowServiceException() {
         long id = groupService.generateUserGroup();
-        ApplicationUser user = new ApplicationUser("Name", "12345678");
+        Long shoppingListId = shoppingListRepository.saveAndFlush(ShoppingList.ShoppingListBuilder.aShoppingList().withName("Your private shopping list").build()).getId();
+        ApplicationUser user = new ApplicationUser("Name", "12345678", shoppingListId, "name@email.com");
         userRepository.saveAndFlush(user);
 
         groupService.addUser(id, user.getUsername());

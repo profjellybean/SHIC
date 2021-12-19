@@ -12,25 +12,26 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
+import java.util.Set;
 
 @Component
-public class UserMapperImpl implements UserMapper {
+public class ComplexUserMapper {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserMapperImpl(PasswordEncoder passwordEncoder) {
+    public ComplexUserMapper(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @Override
-    public ApplicationUser dtoToEntity(UserRegistrationDto user, Long shoppingListId, Long confirmationToken) {
+
+    public ApplicationUser registrationDtoToApplicationUser(UserRegistrationDto user, Long shoppingListId, Long confirmationToken) {
         LOGGER.debug("Mapper: User dtoToEntity");
         return new ApplicationUser(user.getUsername(), passwordEncoder.encode(user.getPassword()), shoppingListId, user.getEmail(), confirmationToken);
     }
 
-    public ApplicationUser dtoToEntity(UserRegistrationDto user, Long shoppingListId) {
+    public ApplicationUser registrationDtoToApplicationUser(UserRegistrationDto user, Long shoppingListId) {
         LOGGER.debug("Mapper: User dtoToEntity");
         return  new ApplicationUser(user.getUsername(), passwordEncoder.encode(user.getPassword()), shoppingListId, user.getEmail());
     }
@@ -45,13 +46,4 @@ public class UserMapperImpl implements UserMapper {
         return new UserLoggedInDto(user.getId(), user.getUsername(), user.getPrivList());
     }
 
-    @Override
-    public ApplicationUser userDtoToUser(UserDto userDto) {
-        return null;
-    }
-
-    @Override
-    public UserDto userToUserDto(ApplicationUser user) {
-        return null;
-    }
 }

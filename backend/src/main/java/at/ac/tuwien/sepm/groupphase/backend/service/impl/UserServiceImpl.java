@@ -2,8 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegistrationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapperImpl;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ComplexUserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserLoginMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
@@ -11,14 +10,12 @@ import at.ac.tuwien.sepm.groupphase.backend.exception.EmailConfirmationException
 import at.ac.tuwien.sepm.groupphase.backend.exception.EmailCooldownException;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepm.groupphase.backend.exception.PasswordTooShortException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.PasswordValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.UsernameTakenException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.CustomUserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.EmailService;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserGroupRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
@@ -48,14 +45,16 @@ public class UserServiceImpl implements UserService {
     private final UserGroupRepository userGroupRepository;
     private final CustomUserRepository customUserRepository;
     private final UserMapper userMapper;
+    private final ComplexUserMapper userMapperImpl;
 
     @Autowired
     public UserServiceImpl(CustomUserRepository userRepository,
                            ShoppingListRepository shoppingListRepository,
-                           UserMapperImpl userMapper, EntityManager entityManager, UserLoginMapper userLoginMapper,
-                           EmailService emailService, UserGroupRepository userGroupRepository) {
+                           UserMapper userMapper, EntityManager entityManager, UserLoginMapper userLoginMapper,
+                           EmailService emailService, UserGroupRepository userGroupRepository, ComplexUserMapper userMapperImpl) {
         this.customUserRepository = userRepository;
         this.userMapper = userMapper;
+        this.userMapperImpl = userMapperImpl;
         this.entityManager = entityManager;
         this.shoppingListRepository = shoppingListRepository;
         this.emailService = emailService;
@@ -117,7 +116,7 @@ public class UserServiceImpl implements UserService {
         }
 
         Long shoppingListId = shoppingListRepository.saveAndFlush(ShoppingList.ShoppingListBuilder.aShoppingList().withName("Your private shopping list").build()).getId();
-        customUserRepository.save(userMapper.dtoToEntity(userRegistrationDto, shoppingListId, confirmationToken));
+        customUserRepository.save(userMapperImpl.registrationDtoToApplicationUser(userRegistrationDto, shoppingListId, confirmationToken));
 
 
     }

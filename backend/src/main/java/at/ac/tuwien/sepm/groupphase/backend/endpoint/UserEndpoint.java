@@ -4,7 +4,8 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UsernameDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegistrationDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapperImpl;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ComplexUserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.exception.EmailConfirmationException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.EmailCooldownException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
@@ -37,12 +38,14 @@ import java.lang.invoke.MethodHandles;
 public class UserEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserService userService;
-    private final UserMapperImpl userMapper;
+    private final ComplexUserMapper userMapperImpl;
+    private final UserMapper userMapper;
 
     @Autowired
-    public UserEndpoint(UserService userService, UserMapperImpl userMapper) {
+    public UserEndpoint(UserService userService, ComplexUserMapper userMapperImpl, UserMapper userMapper) {
         this.userService = userService;
         this.userMapper = userMapper;
+        this.userMapperImpl = userMapperImpl;
     }
 
 
