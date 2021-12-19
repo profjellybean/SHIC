@@ -5,7 +5,7 @@ import {Params} from '@angular/router';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ItemService} from '../../services/item.service';
 import {ShoppingListService} from '../../services/shopping-list.service';
-import {LocationTag} from '../../dtos/locationTag';
+
 
 @Component({
   selector: 'app-storage',
@@ -22,7 +22,6 @@ export class StorageComponent implements OnInit {
   item: Item = new Item();
   itemToAdd: Item = new Item();
   itemsToAdd: Item[];
-  locationTag: LocationTag;
 
   constructor(private storageService: StorageService,
               private modalService: NgbModal,
