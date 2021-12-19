@@ -45,9 +45,9 @@ public class ItemEndpoint {
     @PostMapping(value = "/unitOfQuantity")
     @PermitAll
     @Operation(summary = "create new Unit of Quantity")
-    public UnitOfQuantityDto createUnitOfQuantity(@Valid @RequestBody UnitOfQuantityDto unitOfQuantityDto) {
-        LOGGER.info("POST /unitOfQuantity: {}", unitOfQuantityDto.toString());
-        return unitOfQuantityMapper.unitOfQuantityToUnitOfQuantityDto(itemService.addUnitOfQuantity(unitOfQuantityMapper.unitOfQuantityDtoToUnitOfQuantity(unitOfQuantityDto)));
+    public UnitOfQuantityDto createUnitOfQuantity(@Param("name") String name) {
+        LOGGER.info("POST /unitOfQuantity: {}", name);
+        return unitOfQuantityMapper.unitOfQuantityToUnitOfQuantityDto(itemService.addUnitOfQuantity(unitOfQuantityMapper.unitOfQuantityDtoToUnitOfQuantity(new UnitOfQuantityDto(name.trim().equals("") ? null : name))));
 
     }
 

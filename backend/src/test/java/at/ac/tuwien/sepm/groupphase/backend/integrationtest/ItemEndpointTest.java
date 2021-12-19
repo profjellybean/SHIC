@@ -55,11 +55,12 @@ public class ItemEndpointTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+/*
     @Test
-    public void insertUnityOfQuantityWithEmptyOrNullBaseUnitShouldThrowException() throws Exception {
+    public void insertUnitOfQuantityWithEmptyOrNullNameShouldThrowException() throws Exception {
         UnitOfQuantityDto unitOfQuantityDto = new UnitOfQuantityDto();
 
-        MvcResult mvcResult = this.mockMvc.perform(post(ITEMENDPOINT_UNITOFQUANTITY_URI)
+        MvcResult mvcResult = this.mockMvc.perform(post(ITEMENDPOINT_UNITOFQUANTITY_URI+"?name=")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(unitOfQuantityDto)))
             .andDo(print())
@@ -69,11 +70,15 @@ public class ItemEndpointTest {
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
     }
 
+*/
+
+
+
     @Test
     public void insertValidUnitOfQuantity() throws Exception {
         UnitOfQuantityDto unitOfQuantityDto = new UnitOfQuantityDto("test");
 
-        MvcResult mvcResult = this.mockMvc.perform(post(ITEMENDPOINT_UNITOFQUANTITY_URI)
+        MvcResult mvcResult = this.mockMvc.perform(post(ITEMENDPOINT_UNITOFQUANTITY_URI+"?name=test")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(unitOfQuantityDto)))
             .andDo(print())
@@ -84,14 +89,16 @@ public class ItemEndpointTest {
         assertTrue(unitOfQuantityRepository.findByName("test").isPresent());
     }
 
-    /* TODO?
+
+
+
     @Test
     public void insertValidUnitRelation() throws Exception {
         unitOfQuantityRepository.deleteAll();
         unitsRelationRepository.deleteAll();
         UnitOfQuantityDto unitOfQuantityDto = new UnitOfQuantityDto("UoQ1");
-        UnitOfQuantityDto unitOfQuantityDto2 = new UnitOfQuantityDto("UoQ1");
-        UnitsRelationDto unitsRelationDto = new UnitsRelationDto("UoQ1", "UoQ1", 100.0);
+        UnitOfQuantityDto unitOfQuantityDto2 = new UnitOfQuantityDto("UoQ2");
+        UnitsRelationDto unitsRelationDto = new UnitsRelationDto("UoQ1", "UoQ2", 100.0);
 
         unitOfQuantityRepository.save(unitOfQuantityMapper.unitOfQuantityDtoToUnitOfQuantity(unitOfQuantityDto2));
         unitOfQuantityRepository.save(unitOfQuantityMapper.unitOfQuantityDtoToUnitOfQuantity(unitOfQuantityDto));
@@ -104,12 +111,15 @@ public class ItemEndpointTest {
 
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertNotNull(unitsRelationRepository.findUnitsRelationByBaseUnitAndCalculatedUnit(unitOfQuantityDto.getName(), unitOfQuantityDto2.getName()));
-    }*/
+    }
 
-    /*TODO?
+
+
+
     @Test
     public void insertInValidUnitRelation() throws Exception {
         UnitsRelationDto unitsRelationDto = new UnitsRelationDto();
+        UnitsRelationDto unitsRelation1= null;
 
         MvcResult mvcResult = this.mockMvc.perform(post(ITEMENDPOINT_UNITRELATION_URI)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -119,8 +129,8 @@ public class ItemEndpointTest {
         MockHttpServletResponse response = mvcResult.getResponse();
 
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-        assertNotNull(unitsRelationRepository.findUnitsRelationByBaseUnitAndCalculatedUnit(1L, 2L));
-    }*/
+        assertEquals(unitsRelation1,unitsRelationRepository.findUnitsRelationByBaseUnitAndCalculatedUnit("1L", "2L"));
+    }
 
     @Test
     public void insertUnitsOfQuantitiesThenGetAll() throws Exception {

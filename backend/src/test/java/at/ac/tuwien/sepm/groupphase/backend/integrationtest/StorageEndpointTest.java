@@ -120,7 +120,7 @@ public class StorageEndpointTest {
     }
 
 
-/*
+
     @Test
     public void searchForExistingItem() throws Exception {
         ItemStorageDto itemStorageDto = new ItemStorageDto(-1,"test2");
@@ -137,5 +137,5 @@ public class StorageEndpointTest {
 
     }
 
- */
+
 }

@@ -16,7 +16,8 @@
     <p class="card-text"><strong>Description:</strong> {{recipe.description}}</p>
     <p class="card-text"><strong>Ingredients:</strong> </p>
     <div class="col-xl-3 col-lg-4 p-2" *ngFor="let ingredient of recipe.ingredients">
-      <p>{{ingredient.name}} {{ingredient.amount}} {{ingredient.quantity}} </p>
+      <p >{{ingredient.name}} {{ingredient.amount}} {{ingredient.quantity.name}}</p>
+
     </div>
     <p class="card-text"><strong>Categories:</strong> </p>
     <div class="col-xl-3 col-lg-4 p-2" *ngFor="let category of recipe.categories">
@@ -41,7 +42,7 @@
     <div class="col-xl-3 col-lg-4 p-2" *ngFor="let item of items">
 
       <div class="card-body">
-        <p class="card-text"><strong>{{item.name}}</strong> {{item.amount}} {{item.quantity}} </p>
+        <p class="card-text"><strong>{{item.name}}</strong> {{item.amount}}  </p>
       </div>
 
     </div>
