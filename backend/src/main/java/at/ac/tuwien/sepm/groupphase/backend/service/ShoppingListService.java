@@ -71,5 +71,5 @@ public interface ShoppingListService {
      */
     List<Item> findAllItems();
 
-    List<ItemStorage> workOffShoppingList(String username, List<ItemStorage> boughtItems);
+    List<ItemStorage> workOffShoppingList(Authentication authentication, List<ItemStorage> boughtItems);
 }

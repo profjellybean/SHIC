@@ -47,8 +47,8 @@ export class ShoppingListService {
     return this.httpClient.get<Item[]>(this.shoppingListBaseUri + '/items');
   }
 
-  workOffShoppingList(boughtItems: Item[], shoppinglistId: number, username: string): Observable<Item[]> {
+  workOffShoppingList(boughtItems: Item[], shoppinglistId: number): Observable<Item[]> {
     console.log('work off shopping-list: ' + boughtItems);
-    return this.httpClient.put<Item[]>(this.shoppingListBaseUri + '/' + shoppinglistId + '?username=' + username, boughtItems);
+    return this.httpClient.put<Item[]>(this.shoppingListBaseUri + '/' + shoppinglistId, boughtItems);
   }
 }

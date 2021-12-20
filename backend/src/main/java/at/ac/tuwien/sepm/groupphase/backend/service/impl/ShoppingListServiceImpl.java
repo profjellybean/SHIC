@@ -5,23 +5,19 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Item;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
-import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Recipe;
-import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitsRelation;
-import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitsRelationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListItemRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
-import at.ac.tuwien.sepm.groupphase.backend.service.ItemService;
 import at.ac.tuwien.sepm.groupphase.backend.service.ShoppingListService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.hibernate.ObjectNotFoundException;
@@ -32,7 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.util.LinkedList;
@@ -58,7 +53,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
 
     @Autowired
     public ShoppingListServiceImpl(ShoppingListRepository shoppingListRepository,
-                                   RecipeRepository recipeRepository,
+                                   StorageRepository storageRepository, RecipeRepository recipeRepository,
                                    ItemStorageRepository itemStorageRepository,
                                    ShoppingListItemRepository shoppingListItemRepository,
                                    ItemRepository itemRepository, UnitsRelationRepository unitsRelationRepository,
@@ -232,10 +227,11 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     }
 
     @Override
-    public List<ItemStorage> workOffShoppingList(String username, List<ItemStorage> boughtItems) {
+    public List<ItemStorage> workOffShoppingList(Authentication authentication, List<ItemStorage> boughtItems) {
         LOGGER.debug("Work Off Shoppinglist {}", boughtItems);
 
-        Optional<ApplicationUser> userOptional = userRepository.findUserByUsername(username);
+        List<ItemStorage> storedItems = new LinkedList<ItemStorage>();
+        Optional<ApplicationUser> userOptional = userRepository.findUserByUsername(authentication.getName());
         if (userOptional.isPresent()) {
             ApplicationUser user = userOptional.get();
             UserGroup group = user.getCurrGroup();
@@ -243,15 +239,18 @@ public class ShoppingListServiceImpl implements ShoppingListService {
 
             for (ItemStorage item : boughtItems) {
                 ItemStorage itemStorage = itemStorageRepository.getById(item.getId());
+                Long shoppingListId = itemStorage.getShoppingListId();
 
-                item.setShoppingListId(null);
-                item.setStorageId(storageId);
+                itemStorage.setShoppingListId(null);
+                itemStorage.setStorageId(storageId);
 
-                shoppingListItemRepository.saveAndFlush(item);
+                shoppingListItemRepository.deleteFromTable(shoppingListId, itemStorage.getId());
+                itemStorageRepository.saveAndFlush(itemStorage);
+                storedItems.add(itemStorage);
             }
         }
 
-        return boughtItems;
+        return storedItems;
     }
 
 }
