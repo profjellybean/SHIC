@@ -23,12 +23,14 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListItemRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepm.groupphase.backend.service.ItemService;
 import at.ac.tuwien.sepm.groupphase.backend.service.ShoppingListService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.hibernate.ObjectNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+//import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -99,9 +101,12 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     public List<ItemStorage> planRecipe(Long recipeId, Authentication authentication) {
         LOGGER.debug("Service: plan Recipe {} based on user {}.", recipeId, authentication.getName());
 
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAA recipe by name: " + authentication.getName()); // TODO delete
+
         if (recipeId == null) {
             throw new ValidationException("Recipe does not exist");
         }
+
         ApplicationUser user = userService.findApplicationUserByUsername(authentication.getName());
         if (user == null) {
             throw new ValidationException("User does not exist");
@@ -121,7 +126,6 @@ public class ShoppingListServiceImpl implements ShoppingListService {
 
         Recipe recipe = null;
         List<ItemStorage> storageItems;
-        List<ItemStorage> returnList = null;
 
         try {
             recipe = recipeRepository.findRecipeById(recipeId);
@@ -131,6 +135,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         } catch (ObjectNotFoundException e) {
             throw new NotFoundException("Could not find recipe with id " + recipeId, e);
         }
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAA recipe by name: " + recipe); // TODO delete
 
         try {
             storageItems = itemStorageRepository.findAllByStorageId(storageId);
@@ -141,6 +146,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
             throw new NotFoundException("Could not find storage with id " + storageId, e);
         }
 
+        List<ItemStorage> returnList = null;
         returnList = compareItemSets(recipe.getIngredients(), storageItems);
 
         String notes = "Ingredient required for recipe: " + recipe.getName();

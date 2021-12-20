@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Item;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ShoppingListCreationDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
+//import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.security.core.Authentication;
 
 import java.util.List;
