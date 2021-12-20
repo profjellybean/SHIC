@@ -2,15 +2,14 @@ import {Component, OnInit, TemplateRef} from '@angular/core';
 import {Item} from '../../dtos/item';
 import {StorageService} from '../../services/storage.service';
 import {Params} from '@angular/router';
-import {ItemStorage} from '../../dtos/itemStorage';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ItemService} from '../../services/item.service';
 import {ShoppingListService} from '../../services/shopping-list.service';
 import {UnitOfQuantity} from '../../dtos/unitOfQuantity';
-import {UserService} from "../../services/user.service";
-import {User} from "../../dtos/user";
-import jwt_decode from "jwt-decode";
-import {AuthService} from "../../services/auth.service";
+import {UserService} from '../../services/user.service';
+import {User} from '../../dtos/user';
+import jwt_decode from 'jwt-decode';
+import {AuthService} from '../../services/auth.service';
 
 
 @Component({
