@@ -66,6 +66,7 @@ export class StorageComponent implements OnInit {
         console.log('received items', data);
         this.user = data;
         this.getAllItemsByStorageId({id: this.user.currGroup.storageId});
+        this.searchItem.storageId = this.user.currGroup.storageId;
       },
       error: error => {
         console.error(error.message);
