@@ -9,6 +9,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.RegisterMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Bill;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Register;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.BillRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
@@ -16,6 +17,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.RegisterRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
+import at.ac.tuwien.sepm.groupphase.backend.service.RegisterService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
@@ -77,6 +79,9 @@ public class RegisterEndpointTest implements TestData {
 
     @Autowired
     private ShoppingListRepository shoppingListRepository;
+
+    @Autowired
+    private RegisterService registerService;
 
     private Register register;
 
@@ -154,39 +159,54 @@ public class RegisterEndpointTest implements TestData {
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertTrue(billRepository.getById(1L).getNotPaidNames().isEmpty());
     }
-/*
+
     @Test
-    public void return_RegisterDtoWhen_GivenValidUsername_RegisterId_AndBillId() throws Exception {
-        String body = REGISTERENDPOINT_URI + "?id=" + savedRegister.getId() + "&additionalId=" + savedBill.getId() +
+    public void throwException_WhenGivenValidUsername_RegisterId_AndInvalidBillId() throws Exception {
+        String body = REGISTERENDPOINT_URI + "?id=" + savedRegister.getId() + "&additionalId=-10" +
             "&additionalString=" + userRepository.getById(2L).getUsername();
 
         MvcResult mvcResult = this.mockMvc.perform(put(body)
-                .contentType(MediaType.APPLICATION_JSON))
-            //.header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+                .contentType(MediaType.APPLICATION_JSON)
+            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andReturn();
 
         MockHttpServletResponse response = mvcResult.getResponse();
 
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertTrue(billRepository.getById(1L).getNotPaidNames().isEmpty());
+        assertThrows(NotFoundException.class, () -> registerService.confirmPayment(savedRegister.getId(),-10L, userRepository.getById(2L).getUsername()));
     }
 
-
- */
     @Test
-    public void throwNotFoundException_When_GivenRegisterWithUnknownId() throws Exception {
-        Long unknownRegisterId = -100L;
-        String body = REGISTERENDPOINT_URI + "?id=" + unknownRegisterId + "&additionalId=" + savedBill.getId() +
+    public void throwException_WhenGivenValidUsername_BillId_AndInvalidRegisterId() throws Exception {
+        String body = REGISTERENDPOINT_URI + "?id=-10" + "&additionalId=" + savedBill.getId() +
             "&additionalString=" + userRepository.getById(2L).getUsername();
 
         MvcResult mvcResult = this.mockMvc.perform(put(body)
-                .contentType(MediaType.APPLICATION_JSON))
-            //.header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+                .contentType(MediaType.APPLICATION_JSON)
+            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertThrows(NotFoundException.class, () -> registerService.confirmPayment(-10L,savedBill.getId(), userRepository.getById(2L).getUsername()));
     }
 
     @Test
-    public void returnRegisterWhenGivenKnownId() throws Exception {
+    public void throwException_WhenGivenValidRegisterId_BillId_AndInvalidUsername() throws Exception {
+        String body = REGISTERENDPOINT_URI + "?id=" + savedRegister.getId() + "&additionalId=" + savedBill.getId() +
+            "&additionalString=timothy";
+
+        MvcResult mvcResult = this.mockMvc.perform(put(body)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            .andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertThrows(NotFoundException.class, () -> registerService.confirmPayment(savedRegister.getId(),savedBill.getId(), "timothy"));
+    }
+
+    @Test
+    public void returnRegisterWhenGettingRegisterWithKnownId() throws Exception {
 
         MvcResult mvcResult = this.mockMvc.perform(get(REGISTERENDPOINT_URI + "/{id}", register2.getId())
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
@@ -202,6 +222,17 @@ public class RegisterEndpointTest implements TestData {
             RegisterDto.class);
 
         assertEquals(register2, registerMapper.registerDtoToRegister(registerDto));
+    }
+
+    @Test
+    public void throwExceptionWhenGettingRegisterWithUnknownId() throws Exception {
+
+        MvcResult mvcResult = this.mockMvc.perform(get(REGISTERENDPOINT_URI + "/{id}", -10L)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertThrows(NotFoundException.class, () -> registerService.findOne(-10L));
     }
 
 }
