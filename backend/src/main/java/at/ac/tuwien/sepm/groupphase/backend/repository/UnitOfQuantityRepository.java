@@ -3,6 +3,16 @@ package at.ac.tuwien.sepm.groupphase.backend.repository;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UnitOfQuantityRepository extends JpaRepository<UnitOfQuantity, Long> {
+import java.util.List;
+import java.util.Optional;
 
+public interface UnitOfQuantityRepository extends JpaRepository<UnitOfQuantity, Long> {
+    Optional<UnitOfQuantity> findByName(String name);
+
+    UnitOfQuantity getUnitOfQuantityById(Long id);
+
+    List<UnitOfQuantity> findAll();
+
+    @Override
+    void deleteAll();
 }

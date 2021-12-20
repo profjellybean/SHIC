@@ -1,12 +1,13 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
-
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
@@ -28,8 +29,8 @@ public class ItemStorage {
     private int amount;
     @Column
     private String locationTag;
-    @Column
-    private Long quantity;
+    @OneToOne
+    private UnitOfQuantity unitOfQuantity;
     @Column
     private Long storageId;
     @Column
@@ -43,14 +44,14 @@ public class ItemStorage {
         this.id = id;
     }
 
-    public ItemStorage(String name, String notes, byte[] image, Date expDate, int amount, String locationTag, Long quantity, Long storageId, Long shoppingListId) {
+    public ItemStorage(String name, String notes, byte[] image, Date expDate, int amount, String locationTag,  UnitOfQuantity unitOfQuantity, Long storageId, Long shoppingListId) {
         this.name = name;
         this.notes = notes;
         this.image = image;
         this.expDate = expDate;
         this.amount = amount;
         this.locationTag = locationTag;
-        this.quantity = quantity;
+        this.unitOfQuantity = unitOfQuantity;
         this.storageId = storageId;
         this.shoppingListId = shoppingListId;
     }
@@ -58,14 +59,20 @@ public class ItemStorage {
     public ItemStorage(ItemStorage itemStorage) {
         //this = itemStorage.clone();
         // this.id = itemStorage.getId();
+        this.name = itemStorage.getName();
         this.notes = itemStorage.notes;
         this.image = itemStorage.image;
         this.expDate = itemStorage.expDate;
         this.amount = itemStorage.amount;
         this.locationTag = itemStorage.locationTag;
-        this.quantity = itemStorage.quantity;
+        this.unitOfQuantity = itemStorage.unitOfQuantity;
         this.storageId = itemStorage.storageId;
         this.shoppingListId = itemStorage.shoppingListId;
+    }
+
+    public ItemStorage(long storageId, String name) {
+        this.storageId = storageId;
+        this.name = name;
     }
 
 
@@ -141,12 +148,12 @@ public class ItemStorage {
         this.locationTag = locationTag;
     }
 
-    public Long getQuantity() {
-        return quantity;
+    public UnitOfQuantity getQuantity() {
+        return unitOfQuantity;
     }
 
-    public void setQuantity(Long quantity) {
-        this.quantity = quantity;
+    public void setQuantity(UnitOfQuantity unitOfQuantity) {
+        this.unitOfQuantity = unitOfQuantity;
     }
 
     @Override
@@ -158,16 +165,17 @@ public class ItemStorage {
             return false;
         }
         ItemStorage that = (ItemStorage) o;
-        return amount == that.amount && Objects.equals(id, that.id) && Objects.equals(name, that.name)
+        return Objects.equals(name, that.name)
+            && unitOfQuantity == that.unitOfQuantity
+            && amount == that.amount && Objects.equals(id, that.id)
             && Objects.equals(notes, that.notes) && Arrays.equals(image, that.image)
             && Objects.equals(expDate, that.expDate) && Objects.equals(locationTag, that.locationTag)
-            && Objects.equals(quantity, that.quantity) && Objects.equals(storageId, that.storageId)
             && Objects.equals(shoppingListId, that.shoppingListId);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(id, name, notes, expDate, amount, locationTag, quantity, storageId);
+        int result = Objects.hash(id, name, notes, expDate, amount, locationTag, unitOfQuantity, storageId);
         result = 31 * result + Arrays.hashCode(image);
         return result;
     }
@@ -190,7 +198,7 @@ public class ItemStorage {
             +
             ", locationTag=" + locationTag
             +
-            ", quantity=" + quantity
+            ", unitOfQuantity=" + unitOfQuantity
             +
             ", storageId=" + storageId
             +

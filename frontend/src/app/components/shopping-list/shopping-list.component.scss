@@ -1,7 +1,28 @@
+button {
+  background-color: #465;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  cursor: hand;
+  font-family: Arial;
+}
 
-input { display: none; }
+button:hover {
+  background-color: #cfd8dc;
+}
 
-input + label {
+button.delete {
+  position: relative;
+  left: 194px;
+  top: -32px;
+  background-color: gray !important;
+  color: white;
+}
+
+[type="radio"] { display: none; }
+
+[type="radio"] + label {
   width: 6em;
   border: 1px solid #999;
   background: #EEE;
@@ -11,16 +32,23 @@ input + label {
   top: 1px;
   margin-top: 1em;
 }
-input:checked + label {
+[type="radio"]:checked + label {
   background: #FFF;
   border-bottom: 1px solid transparent;
 }
-input ~ .tab {
+[type="radio"] ~ .tab {
   border-top: 1px solid #999;
   padding: 12px;
 }
 
+[type="checkbox"] {
+  width: 17px;
+  height: 17px;
+}
 
 .tabs{
   background-color: #EEE;
 }
+
+
+

@@ -1,5 +1,99 @@
 <h1>Storage</h1>
+
+<div>
+  <label for="new-name">Search for name: </label>
+  <input #name (keyup) = "name.value= this.searchItem.name; this.searchItems()" (change)="searchItems()" id="new-name" [(ngModel)]="this.searchItem.name" placeholder="name"/>
+</div>
 <!--TABLE START-->
+
+<button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(itemAddModal)">Add new Item</button>
+
+<div class="row p-2 mb-4">
+  <!--
+  <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(itemAddModal)">Add</button>
+-->
+  <ng-template #itemAddModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Item</h5>
+      <button type="button" class="close" (click)="modal.dismiss('X')" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form (ngSubmit)="addItemForm(itemForm)" #itemForm="ngForm">
+
+        <div class="form-group">
+          <label for="itemToAdd2">Add item: </label>
+          <select
+            class="form-control"
+            id="itemToAdd2"
+            name="itemToAdd2"
+            [(ngModel)]="this.itemToAdd">
+            <option *ngFor="let myItem of itemsToAdd;" [ngValue]="myItem">{{myItem.name}}</option>
+            <option [ngValue]="null">none</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="inputName">Name</label>
+          <textarea rows="1" name="name" class="form-control" id="inputName" required
+                    aria-describedby="nameHelp" placeholder="Enter Name" [(ngModel)]="itemToAdd.name"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="inputAmount">Amount</label>
+          <input type="number" name="amount" class="form-control" id="inputAmount"
+                 aria-describedby="amountHelp" placeholder="Enter Amount" [(ngModel)]="itemToAdd.amount">
+        </div>
+
+        <div class="form-group">
+          <label for="inputNotes">Notes</label>
+          <textarea rows="3" name="notes" class="form-control" id="inputNotes"
+                    aria-describedby="notesHelp" placeholder="Enter Notes" [(ngModel)]="itemToAdd.notes"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="inputLocation">Location</label>
+          <select
+            class="form-control"
+            id="inputLocation"
+            name="location"
+            [(ngModel)]="this.itemToAdd.locationTag">
+            <option [ngValue]="null">none</option>
+            <option value="fridge">fridge</option>
+            <option value="freezer">freezer</option>
+            <option value="shelf">shelf</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="inputExpDate">Expiration Date</label>
+          <input type="date" name="expDate" class="form-control" id="inputExpDate"
+                 aria-describedby="expDateHelp" placeholder="Enter expDate" [(ngModel)]="itemToAdd.expDate">
+        </div>
+
+        <div class="form-group">
+          <label for="inputUnitOfQuantity">Unit of Quantity</label>
+          <select
+            class="form-control"
+            id="inputUnitOfQuantity"
+            name="inputUnitOfQuantity"
+            [(ngModel)]="this.itemToAdd.quantity">
+            <option *ngFor="let myItem of unitsOfQuantity;" [ngValue]="myItem">{{myItem.name}}</option>
+          </select>
+          </div>
+
+        <button type="button" (click)="addItemForm(itemForm)" id="add-msg" class="btn btn-success float-right">Add item</button>
+
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" id="close-modal-btn" (click)="modal.dismiss('close')">Close</button>
+    </div>
+  </ng-template>
+</div>
+
+
 <table class="table table-striped">
   <thead class="thead-dark">
   <tr>
@@ -18,7 +112,8 @@
   <tr *ngFor="let item of $any(items)">
     <td>{{item.name}}</td>
     <td>{{item.amount}}</td>
-    <td>{{item.quantity}}</td>
+    <td>
+      <div *ngIf="item.quantity !== null">{{item.quantity.name}}</div></td>
     <td>{{item.notes}}</td>
     <td>{{item.expDate}}</td>
     <td>{{item.locationTag}}</td>
@@ -28,5 +123,4 @@
   </tbody>
 </table>
 
-<button [routerLink]="['/storage/add']">Add Item</button>
 

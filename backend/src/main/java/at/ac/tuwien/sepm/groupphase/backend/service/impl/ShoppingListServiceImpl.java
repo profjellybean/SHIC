@@ -1,18 +1,35 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ShoppingListCreationDto;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Item;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Recipe;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
+import at.ac.tuwien.sepm.groupphase.backend.entity.UnitsRelation;
+import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UnitsRelationRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.RecipeRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ItemRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListItemRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepm.groupphase.backend.service.ItemService;
 import at.ac.tuwien.sepm.groupphase.backend.service.ShoppingListService;
+import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
+import org.hibernate.ObjectNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+//import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -21,6 +38,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -33,16 +51,27 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     private final RecipeRepository recipeRepository;
     private final ItemStorageRepository itemStorageRepository;
     private final ShoppingListItemRepository shoppingListItemRepository;
+    private final ItemRepository itemRepository;
+    private final UnitsRelationRepository unitsRelationRepository;
+    private final UserService userService;
+    private final UserRepository userRepository;
 
     @Autowired
     public ShoppingListServiceImpl(ShoppingListRepository shoppingListRepository,
                                    RecipeRepository recipeRepository,
                                    ItemStorageRepository itemStorageRepository,
-                                   ShoppingListItemRepository shoppingListItemRepository) {
+                                   ShoppingListItemRepository shoppingListItemRepository,
+                                   ItemRepository itemRepository, UnitsRelationRepository unitsRelationRepository,
+                                   UserRepository userRepository,
+                                   UserService userService) {
         this.recipeRepository = recipeRepository;
         this.itemStorageRepository = itemStorageRepository;
         this.shoppingListItemRepository = shoppingListItemRepository;
         this.shoppingListRepository = shoppingListRepository;
+        this.unitsRelationRepository = unitsRelationRepository;
+        this.itemRepository = itemRepository;
+        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
 
@@ -67,29 +96,52 @@ public class ShoppingListServiceImpl implements ShoppingListService {
 
     @Override
     @Transactional
-    public List<ItemStorage> planRecipe(Long recipeId, Long userId) {
-        LOGGER.debug("Service: plan Recipe {} based on user {}.", recipeId, userId);
+    public List<ItemStorage> planRecipe(Long recipeId, Authentication authentication) {
+        LOGGER.debug("Service: plan Recipe {} based on user {}.", recipeId, authentication.getName());
 
-        // TODO: check if user has access
-        Long storageId = userId;
-        Long shoppingListId = userId;
+        if (recipeId == null) {
+            throw new ValidationException("Recipe does not exist");
+        }
+
+        ApplicationUser user = userService.findApplicationUserByUsername(authentication.getName());
+        if (user == null) {
+            throw new ValidationException("User does not exist");
+        }
+        UserGroup group = user.getCurrGroup();
+        if (group == null) {
+            throw new ValidationException("Storage does not exist");
+        }
+        Long storageId = group.getStorageId();
+        if (storageId == null) {
+            throw new ValidationException("Storage does not exist");
+        }
+        Long shoppingListId = group.getPublicShoppingListId();
+        if (shoppingListId == null) {
+            throw new ValidationException("Public ShoppingList does not exist");
+        }
 
         Recipe recipe = null;
         List<ItemStorage> storageItems;
-        List<ItemStorage> returnList = null;
 
         try {
             recipe = recipeRepository.findRecipeById(recipeId);
-        } catch (EntityNotFoundException e) {
+            if (recipe == null) {
+                throw new NotFoundException("Could not find recipe with id " + recipeId);
+            }
+        } catch (ObjectNotFoundException e) {
             throw new NotFoundException("Could not find recipe with id " + recipeId, e);
         }
 
         try {
             storageItems = itemStorageRepository.findAllByStorageId(storageId);
-        } catch (EntityNotFoundException e) {
+            if (storageItems == null) {
+                throw new NotFoundException("Could not find storage with id " + storageId);
+            }
+        } catch (ObjectNotFoundException e) {
             throw new NotFoundException("Could not find storage with id " + storageId, e);
         }
 
+        List<ItemStorage> returnList = null;
         returnList = compareItemSets(recipe.getIngredients(), storageItems);
 
         String notes = "Ingredient required for recipe: " + recipe.getName();
@@ -101,6 +153,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
             shoppingListItem = itemStorageRepository.saveAndFlush(shoppingListItem);
             saveItem(shoppingListItem, shoppingListId);
         }
+
         return returnList;
     }
 
@@ -131,7 +184,13 @@ public class ShoppingListServiceImpl implements ShoppingListService {
                         returnSet.add(ingredient);
                     }
                 } else {
-                    // TODO recalculate unitOfQuantity
+                    UnitsRelation unitsRelation = unitsRelationRepository.findUnitsRelationByBaseUnitAndCalculatedUnit(ingredient.getQuantity().getName(), storedItem.getQuantity().getName());
+                    if (unitsRelation != null) {
+                        Double relation = unitsRelation.getRelation();
+                        if (ingredient.getAmount() * relation > storedItem.getAmount()) {
+                            returnSet.add(ingredient);
+                        }
+                    }
                 }
             }
         }
@@ -141,23 +200,25 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     @Override
     public ItemStorage saveItem(ItemStorage itemStorage, Long id) {
         LOGGER.debug("save item in shopping list");
+        shoppingListItemRepository.saveAndFlush(itemStorage);
+        shoppingListItemRepository.insert(id, itemStorage.getId());
 
-        if (findShoppingListById(id) != null) {
-            shoppingListItemRepository.saveAndFlush(itemStorage);
-            shoppingListItemRepository.insert(id, itemStorage.getId());
-        } else {
-            Long newStorage = createNewShoppingList();
-            shoppingListItemRepository.saveAndFlush(itemStorage);
-            shoppingListItemRepository.insert(newStorage, itemStorage.getId());
-        }
         return itemStorage;
 
     }
 
+    @Transactional
     @Override
-    public List<ItemStorage> findAllByStorageId(Long storageId) {
+    public List<Item> findAllItems() {
+        LOGGER.debug("Find all items");
+        return itemRepository.findAll();
+    }
+
+
+    @Override
+    public List<ItemStorage> findAllByShoppingListId(Long storageId) {
         LOGGER.debug("find all storage items of shopping list");
-        return shoppingListItemRepository.findAllByStorageId(storageId);
+        return shoppingListItemRepository.findAllByShoppingListId(storageId);
     }
 
     @Override
@@ -169,4 +230,28 @@ public class ShoppingListServiceImpl implements ShoppingListService {
             return null;
         }
     }
+
+    @Override
+    public List<ItemStorage> workOffShoppingList(String username, List<ItemStorage> boughtItems) {
+        LOGGER.debug("Work Off Shoppinglist {}", boughtItems);
+
+        Optional<ApplicationUser> userOptional = userRepository.findUserByUsername(username);
+        if (userOptional.isPresent()) {
+            ApplicationUser user = userOptional.get();
+            UserGroup group = user.getCurrGroup();
+            Long storageId = group.getStorageId();
+
+            for (ItemStorage item : boughtItems) {
+                ItemStorage itemStorage = itemStorageRepository.getById(item.getId());
+
+                item.setShoppingListId(null);
+                item.setStorageId(1L);
+
+                shoppingListItemRepository.saveAndFlush(item);
+            }
+        }
+
+        return boughtItems;
+    }
+
 }

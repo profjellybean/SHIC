@@ -40,15 +40,25 @@ public class MasterDataGenerator {
     }
 
     @PostConstruct
-    private void generateData() {
+    public void generateData() {
         LOGGER.debug("Generating Data");
+        storageDataGenerator.generateStorage();
         unitOfQuantityDataGenerator.generateUnitOfQuantity();
+        unitOfQuantityDataGenerator.generateUnitsRelations();
         userDataGenerator.generateUser();
+        //userDataGenerator.generateApplicationUser();
         itemDataGenerator.generateItem();
         itemStorageDataGenerator.generateItemStorage();
-        storageDataGenerator.generateStorage();
         recipeDataGenerator.generateRecipes();
         shoppingListDataGenerator.generateShoppingList();
     }
+
+    public void generateData_planRecipe() {
+        LOGGER.debug("Generating Data for planning Recipe");
+        recipeDataGenerator.generateRecipes(); // includes UnitOfQuantity
+        userDataGenerator.generateUser(); // includes ShoppingList and Storage
+        itemStorageDataGenerator.generateItemStorage(); // includes UnitOfQuantity and Storage
+    }
+
 
 }

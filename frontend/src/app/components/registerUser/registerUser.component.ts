@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {UserService} from '../../services/user.service';
 import {RegisterRequest} from '../../dtos/RegisterRequest';
-
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -21,12 +21,17 @@ export class RegisterUserComponent implements OnInit {
   success = false;
   successMessage = '';
 
+
   constructor(private formBuilder: FormBuilder, private userService: UserService, private router: Router) {
     this.registerForm = this.formBuilder.group({
       username: ['', [Validators.required]],
-      password: ['', [Validators.required, Validators.minLength(8)]]
+      password: ['', [Validators.required, Validators.minLength(8)]],
+      email: ['', [Validators.required]]
     });
   }
+
+  ngOnInit(): void {}
+
 
   /**
    * Form validation will start after the method is called, additionally an AuthRequest will be sent
@@ -34,8 +39,9 @@ export class RegisterUserComponent implements OnInit {
   registerUser() {
     this.submitted = true;
     if (this.registerForm.valid) {
-      const registerRequest: RegisterRequest = new RegisterRequest(this.registerForm.controls.username.value,
-                                                                   this.registerForm.controls.password.value);
+      const registerRequest: RegisterRequest = new RegisterRequest( this.registerForm.controls.username.value,
+        this.registerForm.controls.password.value,
+        this.registerForm.controls.email.value);
       this.sendUserRegistration(registerRequest);
     } else {
       console.log('Invalid input');
@@ -54,7 +60,7 @@ export class RegisterUserComponent implements OnInit {
         console.log('Successfully registered user: ' + registerRequest.username);
         this.success = true;
         this.successMessage = 'User registrated successfully! Redirect to login...';
-        setTimeout(()=> this.router.navigate(['/login']),900);
+        setTimeout(()=> this.router.navigate(['/login']),1000);
       },
       error => {
         console.log('Could not register due to:');
@@ -68,15 +74,11 @@ export class RegisterUserComponent implements OnInit {
       }
     );
   }
-
   /**
    * Error flag will be deactivated, which clears the error message
    */
   vanishError() {
     this.error = false;
-  }
-
-  ngOnInit() {
   }
 
 }

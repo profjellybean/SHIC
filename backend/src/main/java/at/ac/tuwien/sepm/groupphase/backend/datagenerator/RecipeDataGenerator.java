@@ -10,6 +10,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitOfQuantityRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@Profile("generateData")
+//@Profile("generateData")
 @Component
 public class RecipeDataGenerator {
 
@@ -51,8 +52,8 @@ public class RecipeDataGenerator {
         this.unitOfQuantityRepository = unitOfQuantityRepository;
     }
 
-    @PostConstruct
-    void generateRecipes() {
+    //@PostConstruct
+    public void generateRecipes() {
         if (recipeRepository.findAll().size() > 0) {
             LOGGER.debug("recipes already generated");
         } else if (CREATE_REAL_RECIPES) {
@@ -61,10 +62,10 @@ public class RecipeDataGenerator {
             this.unitOfQuantityDataGenerator.generateUnitOfQuantity();
 
             List<UnitOfQuantity> unitList = unitOfQuantityRepository.findAll();
-            Map<String, Long> mappedUnits = new HashMap<>();
+            Map<String, UnitOfQuantity> mappedUnits = new HashMap<>();
             for (UnitOfQuantity unit :
                 unitList) {
-                mappedUnits.put(unit.getName(), unit.getId());
+                mappedUnits.put(unit.getName(), unit);
             }
             // FETA NOODLES
             // generate recipe

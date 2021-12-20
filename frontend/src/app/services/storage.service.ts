@@ -3,7 +3,9 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
 import {Item} from '../dtos/item';
+import {ItemStorage} from '../dtos/itemStorage';
 import {Params} from '@angular/router';
+import {UnitOfQuantity} from '../dtos/unitOfQuantity';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +16,16 @@ export class StorageService {
 
   constructor(private httpClient: HttpClient, private globals: Globals) {
   }
+
+  /**
+   * Loads items from the backend with specific parameters
+   */
+  searchItems(params: string): Observable<Item[]> {
+    console.log('Search for items');
+    return this.httpClient.get<Item[]>(
+      this.storageBaseUri+'/search'+params);
+  }
+
 
   /**
    * Loads all items from the backend
@@ -33,7 +45,11 @@ export class StorageService {
   }
 
   addItem(item: Item): Observable<Item> {
-    console.log('Service: add item: ' + item);
     return this.httpClient.post<Item>(this.storageBaseUri, item);
+  }
+
+  findAllUnitsOfQuantity(): Observable<UnitOfQuantity[]>{
+    console.log('load UnitOfQuantity');
+    return this.httpClient.get<UnitOfQuantity[]>(this.storageBaseUri + '/unitOfQuantity');
   }
 }

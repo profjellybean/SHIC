@@ -3,6 +3,11 @@
   <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
   </button>
+
+    <button *ngIf="confirmEmailButton" type="button" style="margin-left: 1em" (click)="resendEmailConfirmation()" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true"> Resend </span>
+    </button>
+
 </div>
 
 <div class="pt-5">
