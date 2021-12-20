@@ -15,6 +15,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Storage;
 import at.ac.tuwien.sepm.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserGroupRepository;
@@ -54,6 +55,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @ExtendWith(SpringExtension.class)
@@ -169,6 +171,19 @@ public class ShoppinglistEndpointTest implements TestData {
         txm.rollback(txstatus);
     }
 
+    @Test
+    public void insertValidItemToShoppingList() throws Exception {
+        ItemStorageDto itemStorageDto = new ItemStorageDto(TEST_ITEMSTORAGE_NAME, 2L);
+        shoppingListRepository.saveAndFlush(new ShoppingList(2L,TEST_SHOPPINGLIST_NAME));
+
+        MvcResult mvcResult = this.mockMvc.perform(post(SHOPPINGLIST_ENDPOINT_URI + "/newItem")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(itemStorageDto)))
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
 
     @Test
     public void givenNoRecipe_whenPlanRecipe_then400() throws Exception {

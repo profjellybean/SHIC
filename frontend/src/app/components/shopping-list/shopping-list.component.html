@@ -58,7 +58,7 @@
             id="itemToAdd2"
             name="itemToAdd2"
             [(ngModel)]="this.itemToAdd">
-            <option *ngFor="let myItem of items;" [ngValue]="myItem">{{myItem.name}}</option>
+            <option *ngFor="let myItem of itemsAdd;" [ngValue]="myItem">{{myItem.name}}</option>
             <option [ngValue]="null">none</option>
 
 
@@ -69,12 +69,45 @@
           <label for="inputName">Name</label>
           <textarea rows="1" name="name" class="form-control" id="inputName" required
                     aria-describedby="nameHelp" placeholder="Enter Name" [(ngModel)]="itemToAdd.name"></textarea>
+          <div *ngIf="submitted && itemForm.controls.name.errors" class="error">
+            <small class="form-text text-warning" *ngIf="itemForm.controls.name.errors.required"> Name is
+              required!
+            </small>
+          </div>
         </div>
 
         <div class="form-group">
           <label for="inputNotes">Notes</label>
           <textarea rows="3" name="notes" class="form-control" id="inputNotes"
                     aria-describedby="notesHelp" placeholder="Enter Notes" [(ngModel)]="itemToAdd.notes"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="inputAmount">Amount</label>
+          <input type="number" name="amount" class="form-control" id="inputAmount" min="1" required
+                 aria-describedby="amountHelp" placeholder="Enter Amount" [(ngModel)]="itemToAdd.amount">
+          <div *ngIf="submitted && itemForm.controls.amount.errors" class="error">
+            <small class="form-text text-warning" *ngIf="itemForm.controls.amount.errors.required"> Amount is
+              required!
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="inputUnitOfQuantity">Unit of Quantity</label>
+          <select
+            class="form-control"
+            id="inputUnitOfQuantity"
+            name="inputUnitOfQuantity"
+            required="true"
+            [(ngModel)]="this.itemToAdd.quantity">
+            <option *ngFor="let myItem of unitsOfQuantity;" [ngValue]="myItem">{{myItem.name}}</option>
+          </select>
+          <div *ngIf="submitted && itemForm.controls.inputUnitOfQuantity.errors" class="error">
+            <small class="form-text text-warning" *ngIf="itemForm.controls.inputUnitOfQuantity.errors.required">Unit
+              of Quantity is required!
+            </small>
+          </div>
         </div>
 
         <button type="button" (click)="addItemForm(itemForm)" id="add-msg" class="btn btn-success float-right">Add item</button>
@@ -97,9 +130,9 @@
         <th> </th>
         <th>ID</th>
         <th>Name</th>
-        <th>Notes</th>
-        <th>Quantity</th>
         <th>Amount</th>
+        <th>Quantity</th>
+        <th>Notes</th>
       </tr>
       </thead>
       <tbody>
@@ -110,10 +143,11 @@
           </div>
         </td>
           <td>{{item.id}}</td>
-          <td>{{item.name}}</td>
-          <td>{{item.notes}}</td>
-          <td>{{item.quantity}}</td>
-          <td>{{item.amount}}</td>
+        <td>{{item.name}}</td>
+        <td>{{item.amount}}</td>
+        <td>
+          <div *ngIf="item.quantity !== null">{{item.quantity.name}}</div></td>
+        <td>{{item.notes}}</td>
         <td>
       </tr>
       </tbody>
