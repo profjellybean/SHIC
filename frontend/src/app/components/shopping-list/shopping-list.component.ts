@@ -7,6 +7,7 @@ import {User} from '../../dtos/user';
 // @ts-ignore
 import jwt_decode from 'jwt-decode';
 import {AuthService} from '../../services/auth.service';
+import {UserService} from '../../services/user.service';
 
 @Component({
   selector: 'app-shopping-list',
@@ -37,13 +38,27 @@ export class ShoppingListComponent implements OnInit {
   constructor(private messageService: MessageService,
               private shoppingListService: ShoppingListService,
               private modalService: NgbModal,
-              private authService: AuthService) {
+              private authService: AuthService,
+              private userService: UserService) {
   }
 
   ngOnInit(): void {
     this.loadItemsToAdd();
-    this.loadItems();
     this.getShoppingList();
+    this.getCurrUser();
+  }
+
+  getCurrUser(){
+    this.userService.getCurrentUser({username: this.user.username}).subscribe({
+      next: data => {
+        console.log('received items', data);
+        this.user = data;
+        this.loadItems();
+      },
+      error: error => {
+        console.error(error.message);
+      }
+    });
   }
 
   /**
@@ -94,7 +109,7 @@ export class ShoppingListComponent implements OnInit {
   }
 
   loadItems() {
-    this.shoppingListService.findAll(7).subscribe({
+    this.shoppingListService.findAll(this.user.currGroup.publicShoppingListId).subscribe({
       next: data => {
         console.log('received items', data);
 
@@ -105,7 +120,7 @@ export class ShoppingListComponent implements OnInit {
 
   addItemToShoppingList() {
     console.log('item to add', this.itemToAdd);
-    this.itemToAdd.shoppingListId = 7;
+    this.itemToAdd.shoppingListId = this.user.currGroup.publicShoppingListId;
     this.itemToAdd.id = null;
     this.itemToAdd.amount = null;
     this.itemToAdd.quantity = null;
