@@ -145,6 +145,22 @@ public class RegisterEndpointTest implements TestData {
             "&additionalString=" + userRepository.getById(2L).getUsername();
 
         MvcResult mvcResult = this.mockMvc.perform(put(body)
+                .contentType(MediaType.APPLICATION_JSON)
+            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            .andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertTrue(billRepository.getById(1L).getNotPaidNames().isEmpty());
+    }
+/*
+    @Test
+    public void return_RegisterDtoWhen_GivenValidUsername_RegisterId_AndBillId() throws Exception {
+        String body = REGISTERENDPOINT_URI + "?id=" + savedRegister.getId() + "&additionalId=" + savedBill.getId() +
+            "&additionalString=" + userRepository.getById(2L).getUsername();
+
+        MvcResult mvcResult = this.mockMvc.perform(put(body)
                 .contentType(MediaType.APPLICATION_JSON))
             //.header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andReturn();
@@ -155,6 +171,8 @@ public class RegisterEndpointTest implements TestData {
         assertTrue(billRepository.getById(1L).getNotPaidNames().isEmpty());
     }
 
+
+ */
     @Test
     public void throwNotFoundException_When_GivenRegisterWithUnknownId() throws Exception {
         Long unknownRegisterId = -100L;
