@@ -1,8 +1,17 @@
 package at.ac.tuwien.sepm.groupphase.backend.basetest;
 
+import at.ac.tuwien.sepm.groupphase.backend.datagenerator.MasterDataGenerator;
+import at.ac.tuwien.sepm.groupphase.backend.datagenerator.ShoppingListDataGenerator;
+import at.ac.tuwien.sepm.groupphase.backend.datagenerator.StorageDataGenerator;
+import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.RecipeCategory;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public interface TestData {
 
@@ -15,22 +24,41 @@ public interface TestData {
 
     String BASE_URI = "/api/v1";
     String MESSAGE_BASE_URI = BASE_URI + "/messages";
-    String USERENDPOINT_URI = "/user";
+    String USERENDPOINT_URI = BASE_URI + "/user";
+    String ADMIN_USER = "admin";
     String STORAGEENDPOINT_URI = BASE_URI + "/storage";
+    String SHOPPINGLISTENPOINDT_URI = BASE_URI + "/shopping-list";
+    String ITEMENDPOINT_UNITOFQUANTITY_URI = BASE_URI + "/item/unitOfQuantity";
+    String ITEMENDPOINT_UNITRELATION_URI = BASE_URI + "/item/unitsRelation";
     String USERGROUPENDPOINT_URI = BASE_URI + "/group";
     String REGISTERENDPOINT_URI = BASE_URI + "/register";
-    String ADMIN_USER = "admin@email.com";
+    String SHOPPINGLIST_ENDPOINT_URI = BASE_URI + "/shoppinglist";
+    //String ADMIN_USER = "admin@email.com";
     List<String> ADMIN_ROLES = new ArrayList<>() {
         {
             add("ROLE_ADMIN");
             add("ROLE_USER");
         }
     };
-    String DEFAULT_USER = "admin@email.com";
+    String DEFAULT_USER = "admin";
     List<String> USER_ROLES = new ArrayList<>() {
         {
             add("ROLE_USER");
         }
     };
+
+    // Values for Recipe Tests
+    String TEST_RECIPE_NAME = "RECIPE TEST NAME";
+    String TEST_RECIPE_DESCRIPTION = "RECIPE TEST DESCRIPTION";
+    Set<RecipeCategory> TEST_RECIPE_CATEGORIES = new HashSet<>() {
+        {
+            add(RecipeCategory.vegan);
+        }
+    };
+
+    // Values for ShoppingList Tests
+    String TEST_SHOPPINGLIST_NAME = "SHOPPINGLIST TEST NAME";
+    String TEST_SHOPPINGLIST_NOTES = "SHOPPINGLIST TEST NOTES";
+
 
 }

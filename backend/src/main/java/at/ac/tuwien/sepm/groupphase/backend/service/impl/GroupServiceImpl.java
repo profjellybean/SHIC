@@ -11,12 +11,14 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserGroupRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.GroupService;
+import org.h2.engine.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
 import java.rmi.server.ServerCloneException;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -55,11 +57,28 @@ public class GroupServiceImpl implements GroupService {
         }
         Optional<ApplicationUser> temp = this.userRepository.findUserByUsername(username);
         if (temp.isPresent()) {
-            user.add(temp.get());
-            userGroup.setUser(user);
-            this.userGroupRepository.saveAndFlush(userGroup);
+            if (temp.get().getCurrGroup() == null) {
+                userGroup.setUser(user);
+                userGroup = this.userGroupRepository.saveAndFlush(userGroup);
+                temp.get().setCurrGroup(userGroup);
+                this.userRepository.saveAndFlush(temp.get());
+
+            } else {
+                throw new ServiceException("This user is already in a group");
+            }
         } else {
             throw new NotFoundException("User " + username + " was not found!");
+        }
+    }
+
+    @Override
+    public Set<ApplicationUser> getAllUsers(Long groupId) {
+        LOGGER.debug("Get all users from group {}", groupId);
+        Optional<UserGroup> group = this.userGroupRepository.findById(groupId);
+        if (group.isPresent()) {
+            return group.get().getUser();
+        } else {
+            throw new NotFoundException("Group doesn't exist");
         }
     }
 }

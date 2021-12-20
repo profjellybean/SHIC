@@ -1,11 +1,12 @@
 
 <div class="tabs">
 
-  <input type="radio"  name="tabs" id="tab1" checked />
-  <label style="margin-left: 0.5em" for="tab1">Public</label>
+  <input type="radio" class="tabbutton" name="tabs" id="tab1" checked/>
+  <label for="tab1" class="tabLabel" style="margin-left: 0.5em" (click)="switchMode(true)">Public</label>
 
-  <input type="radio" name="tabs" id="tab2" />
-  <label for="tab2" (click)="getShoppingList()">Private</label>
+
+  <input type="radio" class="tabbutton" name="tabs" id="tab2" />
+  <label class="tabLabel" for="tab2" (click)="switchMode(false)" >Private</label>
 
 </div>
 <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -15,4 +16,112 @@
   </button>
 </div>
 
-<p>shopping-list works!</p>
+<h1>Shopping List</h1>
+
+<!--
+<form (ngSubmit)="addItemToShoppingList()">
+
+  <div class="form-group">
+    <label for="itemToAdd">Add item: </label>
+    <select
+      class="form-control"
+      id="itemToAdd"
+      name="itemToAdd"
+      [(ngModel)]="this.itemToAdd">
+      <option *ngFor="let myItem of itemsAdd;" [ngValue]="myItem">{{myItem.name}}</option>
+      <option [ngValue]="null">none</option>
+    </select>
+  </div>
+  <button type="submit">add</button>
+</form>
+
+-->
+
+<button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(itemAddModal)">Add new Item</button>
+
+<div class="row p-2 mb-4">
+
+  <ng-template #itemAddModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Item</h5>
+      <button type="button" class="close" (click)="modal.dismiss('X')" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form (ngSubmit)="addItemForm(itemForm)" #itemForm="ngForm">
+
+        <div class="form-group">
+          <label for="itemToAdd2">Add item: </label>
+          <select
+            class="form-control"
+            id="itemToAdd2"
+            name="itemToAdd2"
+            [(ngModel)]="this.itemToAdd">
+            <option *ngFor="let myItem of items;" [ngValue]="myItem">{{myItem.name}}</option>
+            <option [ngValue]="null">none</option>
+
+
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="inputName">Name</label>
+          <textarea rows="1" name="name" class="form-control" id="inputName" required
+                    aria-describedby="nameHelp" placeholder="Enter Name" [(ngModel)]="itemToAdd.name"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="inputNotes">Notes</label>
+          <textarea rows="3" name="notes" class="form-control" id="inputNotes"
+                    aria-describedby="notesHelp" placeholder="Enter Notes" [(ngModel)]="itemToAdd.notes"></textarea>
+        </div>
+
+        <button type="button" (click)="addItemForm(itemForm)" id="add-msg" class="btn btn-success float-right">Add item</button>
+
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" id="close-modal-btn" (click)="modal.dismiss('close')">Close</button>
+    </div>
+  </ng-template>
+
+
+</div>
+
+<div *ngIf="items!== null">
+  <div class="shopping-list-list">
+    <table class="table">
+      <thead>
+      <tr>
+        <th> </th>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Notes</th>
+        <th>Quantity</th>
+        <th>Amount</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let item of items">
+        <td>
+          <div class="form-check">
+            <input type="checkbox" name="item" id="item" (click)="checkCheckbox(item)">
+          </div>
+        </td>
+          <td>{{item.id}}</td>
+          <td>{{item.name}}</td>
+          <td>{{item.notes}}</td>
+          <td>{{item.quantity}}</td>
+          <td>{{item.amount}}</td>
+        <td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" id="buy-item" (click)="workOffShoppingList()">Buy these Items</button>
+</div>
+
+

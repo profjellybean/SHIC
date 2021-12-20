@@ -2,10 +2,13 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Storage;
+import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UnitOfQuantityRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.StorageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,11 +24,13 @@ public class StorageServiceImpl implements StorageService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final StorageRepository storageRepository;
     private final ItemStorageRepository itemStorageRepository;
+    private final UnitOfQuantityRepository unitOfQuantityRepository;
 
     @Autowired
-    public StorageServiceImpl(StorageRepository storageRepository, ItemStorageRepository itemStorageRepository) {
+    public StorageServiceImpl(StorageRepository storageRepository, ItemStorageRepository itemStorageRepository, UnitOfQuantityRepository unitOfQuantityRepository) {
         this.storageRepository = storageRepository;
         this.itemStorageRepository = itemStorageRepository;
+        this.unitOfQuantityRepository = unitOfQuantityRepository;
     }
 
     @Override
@@ -43,6 +48,14 @@ public class StorageServiceImpl implements StorageService {
     @Override
     public ItemStorage saveItem(ItemStorage itemStorage) {
         LOGGER.debug("Save item");
+        if (itemStorage.getLocationTag() != null) {
+            try {
+                Location.valueOf(itemStorage.getLocationTag());
+            } catch (IllegalArgumentException i) {
+                throw new ServiceException("Location is not valid");
+            }
+        }
+
         return itemStorageRepository.saveAndFlush(itemStorage);
     }
 
@@ -81,6 +94,12 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
+    public List<UnitOfQuantity> getAllUnitOfQuantity() {
+        LOGGER.debug("Getting all units of quantity");
+        return unitOfQuantityRepository.findAll();
+    }
+
+    @Override
     public List<ItemStorage> getAll(Long id) {
         LOGGER.debug("Getting all items");
         return itemStorageRepository.findAllByStorageId(id);
@@ -92,7 +111,7 @@ public class StorageServiceImpl implements StorageService {
         if (storageRepository.findById(id).isPresent()) {
             return id;
         } else {
-            return null;
+            throw new NotFoundException();
         }
     }
 

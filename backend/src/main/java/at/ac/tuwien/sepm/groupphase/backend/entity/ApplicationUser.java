@@ -9,6 +9,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 
 @Entity
@@ -30,6 +32,12 @@ public class ApplicationUser {
     @Column(nullable = false, name = "PASSWORD")
     private String password;
 
+    @Column(nullable = false, name = "EMAIL")
+    private String email;
+
+    @Column(nullable = false, name = "CONFIRMATIONTOKEN")
+    private Long confirmationToken;
+
     @OneToOne
     private UserGroup currGroup;
 
@@ -39,12 +47,35 @@ public class ApplicationUser {
     public ApplicationUser() {
     }
 
-    public ApplicationUser(String username, String password, Long shoppingListId) {
+    public ApplicationUser(String username, String password, Long shoppingListId, String email) {
         this.username = username;
         this.password = password;
         this.privList = shoppingListId;
+        this.email = email;
+        this.confirmationToken = 0L;
     }
 
+
+
+    public ApplicationUser(String username, String password, Long shoppingListId, String email, Long confirmationToken) {
+        this.username = username;
+        this.password = password;
+        this.privList = shoppingListId;
+        this.email = email;
+        this.confirmationToken = confirmationToken;
+    }
+
+    public ApplicationUser(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    public ApplicationUser(String username, String password, UserGroup currGroup, Long privList) {
+        this.username = username;
+        this.password = password;
+        this.currGroup = currGroup;
+        this.privList = privList;
+    }
 
     public Long getPrivList() {
         return privList;
@@ -78,12 +109,29 @@ public class ApplicationUser {
         this.password = password;
     }
 
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public UserGroup getCurrGroup() {
         return currGroup;
     }
 
     public void setCurrGroup(UserGroup currGroup) {
         this.currGroup = currGroup;
+    }
+
+    public Long getConfirmationToken() {
+        return confirmationToken;
+    }
+
+    public void setConfirmationToken(Long confirmationToken) {
+        this.confirmationToken = confirmationToken;
     }
 
     @Override

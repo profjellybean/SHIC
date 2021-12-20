@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {Observable} from 'rxjs';
-import {Item} from '../dtos/Item';
+import {Item} from '../dtos/item';
 
 
 @Injectable({
@@ -15,6 +15,17 @@ export class ItemService {
 
   constructor(private httpClient: HttpClient,
               private globals: Globals) {
+  }
+
+  findAll(): Observable<Item[]>{
+    console.log('load all items');
+    return this.httpClient.get<Item[]>(this.recipeBaseUri);
+  }
+
+  addItem(item: Item): Observable<Item> {
+    console.log('add item: ' + item);
+    return this.httpClient.post<Item>(this.recipeBaseUri, item);
+
   }
 
 }

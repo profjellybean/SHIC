@@ -5,6 +5,7 @@ import {UserService} from '../../services/user.service';
 import jwt_decode from 'jwt-decode';
 import {User} from '../../dtos/user';
 
+
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
@@ -35,7 +36,7 @@ export class UserComponent implements OnInit {
   generateGroup(){
     this.groupService.generateGroup().subscribe({
       next: data => {
-        console.log('received items', data);
+        console.log('received items10', data);
         this.groupId = data;
       },
       error: error => {
@@ -47,7 +48,7 @@ export class UserComponent implements OnInit {
   getCurrentGroup(){
     this.userService.getCurrentUser({username: this.user.username}).subscribe({
       next: data => {
-        console.log('received items', data);
+        console.log('received items11', data);
         this.user = data;
         this.groupId = this.user.currGroup.id;
         console.log(this.groupId);

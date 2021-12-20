@@ -1,0 +1,88 @@
+<div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+  <strong>Error! </strong> {{ errorMessage }}
+  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<p>storage-add-item works!</p>
+<table class="table">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Unit of Quantity</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let item of items">
+    <td>{{item.id}}</td>
+    <td>{{item.name}}</td>
+    <td>{{item.quantity}}</td>
+    <td> <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(itemAddModal)">Add</button> </td>
+  </tr>
+  </tbody>
+</table>
+
+<div class="row p-2 mb-4">
+  <!--
+  <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(itemAddModal)">Add</button>
+-->
+  <ng-template #itemAddModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Item</h5>
+      <button type="button" class="close" (click)="modal.dismiss('X')" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form (ngSubmit)="addItemForm(itemForm)" #itemForm="ngForm">
+
+        <div class="form-group">
+          <label for="inputAmount">Amount</label>
+          <input type="number" name="amount" class="form-control" id="inputAmount" required
+                 aria-describedby="amountHelp" placeholder="Enter Amount" [(ngModel)]="item.amount">
+          <div *ngIf="submitted && itemForm.controls.title.errors" class="error">
+            <small class="form-text text-warning" *ngIf="itemForm.controls.title.errors.required">Amount
+              is
+              required!
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="inputNotes">Notes</label>
+          <textarea rows="3" name="notes" class="form-control" id="inputNotes" required
+                    aria-describedby="notesHelp" placeholder="Enter Notes" [(ngModel)]="item.notes"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="inputLocation">Location</label>
+          <input type="text" name="location" class="form-control" id="inputLocation" required
+                 aria-describedby="locationHelp" placeholder="Enter Location" [(ngModel)]="item.locationTag">
+        </div>
+
+        <div class="form-group">
+          <label for="inputExpDate">Expiration Date</label>
+          <input type="date" name="expDate" class="form-control" id="inputExpDate" required
+                 aria-describedby="expDateHelp" placeholder="Enter expDate" [(ngModel)]="item.expDate">
+        </div>
+
+        <div class="form-group">
+          <label for="inputUnitOfQuantity">Unit of Quantity</label>
+          <input type="number" name="quantity" class="form-control" id="inputUnitOfQuantity" required
+                 aria-describedby="quantityHelp" placeholder="Enter Unit of Quantity" [(ngModel)]="item.quantity">
+        </div>
+
+        <button type="button" (click)="addItemForm(itemForm)" id="add-msg" class="btn btn-success float-right">Add item</button>
+
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" id="close-modal-btn" (click)="modal.dismiss('close')">Close</button>
+    </div>
+  </ng-template>
+
+  <button type="button" (click)="addItem(testItem)" class="btn btn-success float-right">Add testItem</button>
+
+</div>

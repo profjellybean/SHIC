@@ -12,11 +12,18 @@ import java.util.List;
 
 @Repository
 public interface ShoppingListItemRepository extends JpaRepository<ItemStorage, Long> {
+
     List<ItemStorage> findAllByStorageId(Long storageId);
+
+    List<ItemStorage> findAllByShoppingListId(Long shoppingListId);
 
     @Modifying
     @Query(value = "insert into SHOPPING_LIST_ITEMS (SHOPPING_LIST_ID, ITEMS_ID) VALUES (:shoppingListId, :itemId)", nativeQuery = true)
     @Transactional
     void insert(@Param("shoppingListId") Long shoppingListId, @Param("itemId") Long itemId);
 
+    @Modifying
+    @Query(value = "delete from SHOPPING_LIST_ITEMS where SHOPPING_LIST_ID = :shoppingListId and ITEMS_ID = :itemId", nativeQuery = true)
+    @Transactional
+    void deleteFromTable(@Param("shoppingListId") Long shoppingListId, @Param("itemId") Long itemId);
 }

@@ -10,6 +10,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitOfQuantityRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@Profile("generateData")
+//@Profile("generateData")
 @Component
 public class RecipeDataGenerator {
 
@@ -51,8 +52,8 @@ public class RecipeDataGenerator {
         this.unitOfQuantityRepository = unitOfQuantityRepository;
     }
 
-    @PostConstruct
-    void generateRecipes() {
+    //@PostConstruct
+    public void generateRecipes() {
         if (recipeRepository.findAll().size() > 0) {
             LOGGER.debug("recipes already generated");
         } else if (CREATE_REAL_RECIPES) {
@@ -61,10 +62,10 @@ public class RecipeDataGenerator {
             this.unitOfQuantityDataGenerator.generateUnitOfQuantity();
 
             List<UnitOfQuantity> unitList = unitOfQuantityRepository.findAll();
-            Map<String, Long> mappedUnits = new HashMap<>();
+            Map<String, UnitOfQuantity> mappedUnits = new HashMap<>();
             for (UnitOfQuantity unit :
                 unitList) {
-                mappedUnits.put(unit.getName(), unit.getId());
+                mappedUnits.put(unit.getName(), unit);
             }
             // FETA NOODLES
             // generate recipe
@@ -137,6 +138,49 @@ public class RecipeDataGenerator {
             storedPestoNoodles.setIngredients(new HashSet<>(Arrays.asList(pesto, noodlesForPesto)));
             recipeRepository.save(storedPestoNoodles);
 
+            // nutella cake
+            // generate recipe
+            Recipe nutellacake = Recipe.RecipeBuilder.aRecipe()
+                .withName("Nutella Cake")
+                .withDescription("For 12 Portions: First stir the eggs, than add hot nutella and mix both together. Last bake it for 175 Celcius")
+                .withCategories(new HashSet<>(Arrays.asList(RecipeCategory.vegetarian, RecipeCategory.dinner)))
+                .build();
+            LOGGER.debug("saving recipe {}", nutellacake);
+
+            // generate ingredients
+            //ItemStorage pesto = new ItemStorage("Pesto", "any kind", null, null, 100, null, UnitOfQuantity.g, null);
+            ItemStorage nutella = new ItemStorage("Nutella", "any kind", null, null, 250, null, mappedUnits.get("g"), null, null);
+            LOGGER.debug("saving ingredient {}", nutella);
+            nutella = itemStorageRepository.save(nutella);
+            //ItemStorage noodlesForPesto = new ItemStorage("Noodles", "any kind", null, null, 100, null, UnitOfQuantity.g, null);
+            ItemStorage eggs = new ItemStorage("Eggs", "any kind", null, null, 4, null, mappedUnits.get("pieces"), null, null);
+            LOGGER.debug("saving ingredient {}", eggs);
+            eggs = itemStorageRepository.save(eggs);
+            Recipe storedNutellaCake = recipeRepository.save(nutellacake);
+            storedNutellaCake.setIngredients(new HashSet<>(Arrays.asList(nutella, eggs)));
+            recipeRepository.save(storedNutellaCake);
+
+            // Pudding
+            // generate recipe
+            Recipe veganPudding = Recipe.RecipeBuilder.aRecipe()
+                .withName("vegan Pudding")
+                .withDescription("For 10 Portions: Mix both together and heat it in the microwave.")
+                .withCategories(new HashSet<>(Arrays.asList(RecipeCategory.vegetarian, RecipeCategory.dinner)))
+                .build();
+            LOGGER.debug("saving recipe {}", veganPudding);
+
+            // generate ingredients
+            //ItemStorage pesto = new ItemStorage("Pesto", "any kind", null, null, 100, null, UnitOfQuantity.g, null);
+            ItemStorage soyaMilk = new ItemStorage("Soya Milk", "any kind", null, null, 1200, null, mappedUnits.get("ml"), null, null);
+            LOGGER.debug("saving ingredient {}", soyaMilk);
+            soyaMilk = itemStorageRepository.save(soyaMilk);
+            //ItemStorage noodlesForPesto = new ItemStorage("Noodles", "any kind", null, null, 100, null, UnitOfQuantity.g, null);
+            ItemStorage puddingMix = new ItemStorage("Pudding Mix", "any kind", null, null, 7, null, mappedUnits.get("pieces"), null, null);
+            LOGGER.debug("saving ingredient {}", puddingMix);
+            puddingMix = itemStorageRepository.save(puddingMix);
+            Recipe storedVeganPudding = recipeRepository.save(veganPudding);
+            storedVeganPudding.setIngredients(new HashSet<>(Arrays.asList(soyaMilk, puddingMix)));
+            recipeRepository.save(storedVeganPudding);
 
         } else {
             LOGGER.debug("generating {} recipes", NUMBER_OF_RECIPES_TO_GENERATE);

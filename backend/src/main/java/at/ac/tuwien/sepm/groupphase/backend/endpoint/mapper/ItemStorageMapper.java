@@ -15,5 +15,7 @@ public interface ItemStorageMapper {
 
     ItemStorage itemStorageDtoToItemStorage(ItemStorageDto itemStorageDto);
 
+    List<ItemStorage> itemsStorageDtoToItemsStorage(List<ItemStorageDto> itemStorages);
+
 }
 

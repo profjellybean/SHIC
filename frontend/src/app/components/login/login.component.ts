@@ -2,7 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
+import {UserService} from '../../services/user.service';
 import {AuthRequest} from '../../dtos/auth-request';
+import {Username} from '../../dtos/username';
 
 
 @Component({
@@ -18,8 +20,13 @@ export class LoginComponent implements OnInit {
   // Error flag
   error = false;
   errorMessage = '';
+  confirmEmailButton = false;
 
-  constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router) {
+  resendConfirmationUsernameDto: Username = {username:null};
+
+  constructor(private formBuilder: FormBuilder, private authService: AuthService,
+              private userService: UserService, private router: Router) {
+
     this.loginForm = this.formBuilder.group({
       username: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(8)]]
@@ -38,7 +45,22 @@ export class LoginComponent implements OnInit {
       console.log('Invalid input');
     }
   }
+  resendEmailConfirmation(){
+    this.confirmEmailButton = false;
+    this.userService.resendConfirmation(this.resendConfirmationUsernameDto).subscribe(
+      () => {
+        this.confirmEmailButton = false;
+      },
+      error => {
+        if (typeof error.error === 'object') {
+          this.errorMessage = error.error.message;
+        } else {
+          this.errorMessage = error.error;
+        }
+      }
+    );
 
+  }
   /**
    * Send authentication data to the authService. If the authentication was successfully, the user will be forwarded to the message page
    *
@@ -49,11 +71,15 @@ export class LoginComponent implements OnInit {
     this.authService.loginUser(authRequest).subscribe(
       () => {
         console.log('Successfully logged in user: ' + authRequest.username);
-        this.router.navigate(['/message']);
+        this.router.navigate(['/user']);
       },
       error => {
         console.log('Could not log in due to:');
-        console.log(error);
+        console.log(error.error);
+        if(error.error === 'Email confirmation needed'){
+          this.confirmEmailButton = true;
+          this.resendConfirmationUsernameDto.username = authRequest.username;
+        }
         this.error = true;
         if (typeof error.error === 'object') {
           this.errorMessage = error.error.error;

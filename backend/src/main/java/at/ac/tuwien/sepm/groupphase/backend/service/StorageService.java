@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
+import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
 
 import java.util.List;
 
@@ -75,4 +76,9 @@ public interface StorageService {
 
     List<ItemStorage> deleteItemsWhichDoNotExists(List<ItemStorage> itemStoragesAll, List<ItemStorage> itemStoragesFilter);
 
+
+    /**
+     * Gets all units of quantity.
+     */
+    List<UnitOfQuantity> getAllUnitOfQuantity();
 }

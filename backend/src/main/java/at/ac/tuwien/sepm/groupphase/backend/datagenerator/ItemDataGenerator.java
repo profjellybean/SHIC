@@ -38,9 +38,9 @@ public class ItemDataGenerator {
     }
 
 
-    @PostConstruct
+    //@PostConstruct
     void generateItem() {
-        if (itemRepository.findAll().size() > 0) {
+        if (itemRepository.findAll().size() > 5) {
             LOGGER.debug("Item already generated");
         } else {
             LOGGER.debug("generating Item entries");
@@ -48,10 +48,10 @@ public class ItemDataGenerator {
             this.unitOfQuantityDataGenerator.generateUnitOfQuantity();
 
             List<UnitOfQuantity> unitList = unitOfQuantityRepository.findAll();
-            Map<String, Long> mappedUnits = new HashMap<>();
+            Map<String, UnitOfQuantity> mappedUnits = new HashMap<>();
             for (UnitOfQuantity unit :
                 unitList) {
-                mappedUnits.put(unit.getName(), unit.getId());
+                mappedUnits.put(unit.getName(), unit);
             }
 
             for (String name :

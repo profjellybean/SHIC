@@ -14,6 +14,7 @@ import {User} from '../dtos/user';
 })
 export class AuthService {
   private user: User;
+  private hasGroup = 0;
 
   private authBaseUri: string = this.globals.backendUri + '/authentication';
 
@@ -44,6 +45,7 @@ export class AuthService {
     console.log('Logout');
     localStorage.removeItem('authToken');
     this.user = undefined;
+    this.hasGroup = 0;
   }
 
   getToken() {
@@ -67,24 +69,34 @@ export class AuthService {
   }
 
   hasCurrentGroup() {
-    if (this.isLoggedIn()) {// @ts-ignore
-      if (this.user === undefined) {
-        // @ts-ignore
-        this.userService.getCurrentUser({username: jwt_decode(this.getToken()).sub.trim()}).subscribe({
-          next: data => {
-            console.log('received items', data);
-            this.user = data;
-            return this.user.currGroup !== null;
-          },
-          error: error => {
-            console.error(error.message);
-          }
-        });
+   // return true; // TODO bin fast ausgerastet wegen den ganzen Log meldungen
+    if (this.hasGroup === 0) {
+      if (this.isLoggedIn()) {
+        if (this.user === undefined) {
+          // @ts-ignore
+          this.userService.getCurrentUser({username: jwt_decode(this.getToken()).sub.trim()}).subscribe({
+            next: data => {
+              console.log('received items20', data);
+              this.user = data;
+              if (this.user.currGroup !== null) {
+                this.hasGroup = 1;
+              } else {
+                this.hasGroup = -1;
+              }
+              return this.user.currGroup !== null;
+            },
+            error: error => {
+              console.error(error.message);
+            }
+          });
+        } else {
+          return this.user.currGroup !== null;
+        }
       } else {
-        return this.user.currGroup !== null;
+        return false;
       }
     } else {
-      return false;
+      return this.hasGroup === 1;
     }
   }
 
