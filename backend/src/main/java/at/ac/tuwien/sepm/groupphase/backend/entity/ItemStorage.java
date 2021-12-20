@@ -173,7 +173,11 @@ public class ItemStorage {
         }
         ItemStorage that = (ItemStorage) o;
         return Objects.equals(name, that.name)
-            && unitOfQuantity == that.unitOfQuantity;
+            && unitOfQuantity == that.unitOfQuantity
+            && amount == that.amount && Objects.equals(id, that.id)
+            && Objects.equals(notes, that.notes) && Arrays.equals(image, that.image)
+            && Objects.equals(expDate, that.expDate) && Objects.equals(locationTag, that.locationTag)
+            && Objects.equals(shoppingListId, that.shoppingListId);
     }
 
 

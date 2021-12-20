@@ -17,11 +17,25 @@ export class ShoppingListService {
   constructor(private httpClient: HttpClient, private globals: Globals) {
   }
 
-  getShoppingList(): Observable<string> {
+  getPrivateShoppingList(): Observable<ShoppingList> {
     console.log('get shoppinglist with id: ');
-    return this.httpClient.get<string>(this.shoppingListBaseUri);
+    return this.httpClient.get<ShoppingList>(this.shoppingListBaseUri + '/private');
   }
 
+  getPublicShoppingList(): Observable<ShoppingList> {
+    console.log('get shoppinglist with id: ');
+    return this.httpClient.get<ShoppingList>(this.shoppingListBaseUri + '/public');
+  }
+
+  addToPrivateShoppingList(item: Item): Observable<ShoppingList> {
+    console.log('get shoppinglist with id: ');
+    return this.httpClient.post<ShoppingList>(this.shoppingListBaseUri + '/private', item);
+  }
+
+  addToPublicShoppingList(item: Item): Observable<ShoppingList> {
+    console.log('get shoppinglist with id: ');
+    return this.httpClient.post<ShoppingList>(this.shoppingListBaseUri + '/public', item);
+  }
 
   planRecipe(id: number): Observable<Item[]> {
     console.log('plan recipe with id: ' + id);
@@ -36,10 +50,7 @@ export class ShoppingListService {
 
   findAll(id: number): Observable<Item[]>{
     console.log('load items of shoppinglist');
-
-    const params = new HttpParams()
-      .set('id', id);
-    return this.httpClient.get<Item[]>(this.shoppingListBaseUri + '/shoppingListItems', {params});
+    return this.httpClient.get<Item[]>(this.shoppingListBaseUri + '/availableItems');
   }
 
   findAllItems(): Observable<Item[]>{

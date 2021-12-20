@@ -57,7 +57,6 @@ public class StorageEndpointTest {
         MvcResult mvcResult = this.mockMvc.perform(post(STORAGEENDPOINT_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(itemStorageDto)))
-            .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
@@ -135,7 +134,6 @@ public class StorageEndpointTest {
         MvcResult mvcResult = this.mockMvc.perform(get(STORAGEENDPOINT_URI + "/search")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(itemStorageDto)))
-            .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 

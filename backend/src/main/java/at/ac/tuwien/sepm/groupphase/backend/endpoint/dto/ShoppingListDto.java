@@ -18,6 +18,16 @@ public class ShoppingListDto {
     // TODO: change to UserDto
     private ApplicationUser owner;
 
+    public ShoppingListDto() { }
+
+    public ShoppingListDto(Long id, String name, String notes, Set<ItemStorageDto> items, ApplicationUser owner) {
+        this.id = id;
+        this.name = name;
+        this.notes = notes;
+        this.items = items;
+        this.owner = owner;
+    }
+
     public Long getId() {
         return id;
     }

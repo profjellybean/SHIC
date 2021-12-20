@@ -14,6 +14,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ItemStorageMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemStorageDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ShoppingListMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.service.ShoppingListService;
@@ -45,7 +46,10 @@ import javax.annotation.security.PermitAll;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.lang.invoke.MethodHandles;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping(value = "/api/v1/shoppinglist")
@@ -86,7 +90,7 @@ public class ShoppingListEndpoint {
     @PermitAll
     @Operation(summary = "Insert a new item into the storage") //TODO: add security
     public ItemStorageDto saveItem(@RequestBody ItemStorageDto itemStorageDto) {
-        LOGGER.info("POST /item to shopping list: ", itemStorageDto.toString());
+        LOGGER.info("POST /item to shopping list with id: {}", itemStorageDto.getStorageId());
         return itemStorageMapper.itemStorageToItemStorageDto(shoppingListService.saveItem(itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto), itemStorageDto.getShoppingListId()));
     }
 
@@ -105,12 +109,22 @@ public class ShoppingListEndpoint {
     }
 
 
-    @GetMapping(value = "/shoppingListItems")
+    @GetMapping(value = "/availableItems")
     @PermitAll
     @Operation(summary = "Get all items from the shopping list") //TODO: add security
-    public List<ItemStorageDto> findAllByShoppingListId(@Param("id") Long id) {
+    public List<ItemStorageDto> getAvailableItemsForUser(Authentication authentication) {
         LOGGER.info("findAllByShoppingListId, endpoint");
-        return itemStorageMapper.itemsStorageToItemsStorageDto(shoppingListService.findAllByShoppingListId(id));
+
+        List<ItemStorage> fullList = userService.getCombinedAvailableItemsWithoutDuplicates(authentication.getName());
+        List<ItemStorage> filteredList = new LinkedList<>();
+
+        for (ItemStorage element : fullList) {
+            if (!filteredList.contains(element)) {
+                filteredList.add(element);
+            }
+
+        }
+        return itemStorageMapper.itemsStorageToItemsStorageDto(filteredList);
     }
 
 
@@ -166,7 +180,43 @@ public class ShoppingListEndpoint {
 
 
     @PermitAll
-    @GetMapping
+    @PostMapping("/private")
+    @ResponseStatus(HttpStatus.OK)
+    public void addToPrivateShoppingListForUser(Authentication authentication, @RequestBody ItemStorageDto itemStorageDto) {
+        try {
+            Long id = userService.getPrivateShoppingListIdByUsername(authentication.getName());
+            itemStorageDto.setShoppingListId(id);
+            shoppingListService.saveItem(itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto), id);
+        } catch (NotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()); // Todo
+        }
+
+    }
+
+
+    @PermitAll
+    @PostMapping("/public")
+    @ResponseStatus(HttpStatus.OK)
+    public void addToPublicShoppingListForUser(Authentication authentication, @RequestBody ItemStorageDto itemStorageDto) {
+
+        try {
+            Long id = userService.getPublicShoppingListIdByUsername(authentication.getName());
+            itemStorageDto.setShoppingListId(id);
+            shoppingListService.saveItem(itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto), id);
+
+        } catch (NotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()); // Todo
+        }
+
+    }
+
+
+    @PermitAll
+    @GetMapping("/private")
     @ResponseStatus(HttpStatus.OK)
     public ShoppingListDto getPrivateShoppingListForUser(Authentication authentication) {
         try {
@@ -184,6 +234,22 @@ public class ShoppingListEndpoint {
         }
 
     }
+
+
+    @PermitAll
+    @GetMapping("/public")
+    @ResponseStatus(HttpStatus.OK)
+    public ShoppingListDto getPublicShoppingListForUser(Authentication authentication) {
+        try {
+            return shoppingListMapper.shoppingListToShoppingListDto(userService.getPublicShoppingListByUsername(authentication.getName()));
+        } catch (NotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()); // Todo
+        }
+
+    }
+
 
     @PermitAll
     @PutMapping(value = "/{id}")

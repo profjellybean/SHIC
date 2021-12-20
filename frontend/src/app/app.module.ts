@@ -9,7 +9,6 @@ import {HeaderComponent} from './components/header/header.component';
 import {FooterComponent} from './components/footer/footer.component';
 import {HomeComponent} from './components/home/home.component';
 import {LoginComponent} from './components/login/login.component';
-import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
 import { RecipeComponent } from './components/recipe/recipe.component';
@@ -33,7 +32,6 @@ import { ConfirmUserEmailComponent } from './components/confirm-user-email/confi
     HomeComponent,
     LoginComponent,
     RegisterUserComponent,
-    MessageComponent,
     StorageComponent,
     RegisterComponent,
     RecipeComponent,
@@ -45,6 +43,7 @@ import { ConfirmUserEmailComponent } from './components/confirm-user-email/confi
     UserComponent,
     ShoppingListAddComponent,
     ShoppingListListComponent,
+    StorageAddItemComponent,
   ],
   imports: [
     BrowserModule,

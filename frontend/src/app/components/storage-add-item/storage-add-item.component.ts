@@ -1,5 +1,4 @@
 import {Component, OnInit, TemplateRef} from '@angular/core';
-import {MessageService} from '../../services/message.service';
 import {ItemService} from '../../services/item.service';
 import {Item} from '../../dtos/item';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -20,7 +19,7 @@ export class StorageAddItemComponent implements OnInit {
   item: Item = new Item();
   testItem: Item = new Item();
 
-  constructor( private messageService: MessageService,
+  constructor(
                private itemService: ItemService,
                private storageService: StorageService,
                private modalService: NgbModal) { }
@@ -34,7 +33,7 @@ export class StorageAddItemComponent implements OnInit {
     this.itemService.findAll().subscribe({
       next: data => {
         // TODO add error
-        console.log('received items', data);
+        console.log('received items7', data);
         this.items = data;
       },
       error: error => {
