@@ -1,13 +1,18 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
+import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 import java.util.Date;
 
 public class ItemStorageDto {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     @NotNull
     private Long storageId;
     private Long shoppingListId;
@@ -135,6 +140,27 @@ public class ItemStorageDto {
         this.unitOfQuantityDto = unitOfQuantityDto;
     }
 
+    /**
+     * intentionally only compares name and unit of quantity,
+     * so it can be used in planRecipe to check if an ingredient is already in the storage.
+     *
+     * @param o object that this is compared to
+     * @return true if and only if name are the same
+     */
+    @Override
+    public boolean equals(Object o) {
+
+
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ItemStorageDto that = (ItemStorageDto) o;
+
+        return that.name.equals(name);
+    }
 
     @Override
     public String toString() {

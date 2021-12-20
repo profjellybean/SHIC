@@ -21,7 +21,7 @@ export class ShoppingListListComponent implements OnInit {
   loadItems() {
     this.shoppingListService.findAll(7).subscribe({
       next: data => {
-        console.log('received items', data);
+        console.log('Items received:', data);
 
         this.items = data;
       }

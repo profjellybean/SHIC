@@ -69,13 +69,14 @@ export class AuthService {
   }
 
   hasCurrentGroup() {
+   // return true; // TODO bin fast ausgerastet wegen den ganzen Log meldungen
     if (this.hasGroup === 0) {
       if (this.isLoggedIn()) {
         if (this.user === undefined) {
           // @ts-ignore
           this.userService.getCurrentUser({username: jwt_decode(this.getToken()).sub.trim()}).subscribe({
             next: data => {
-              console.log('received items', data);
+              console.log('received items20', data);
               this.user = data;
               if (this.user.currGroup !== null) {
                 this.hasGroup = 1;
