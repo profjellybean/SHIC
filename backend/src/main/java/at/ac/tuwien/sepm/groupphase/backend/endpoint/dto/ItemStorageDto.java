@@ -38,6 +38,12 @@ public class ItemStorageDto {
         this.name = name;
     }
 
+    public ItemStorageDto(String name, Long shoppingListId) {
+        this.shoppingListId = shoppingListId;
+        this.name = name;
+    }
+
+
 
     public ItemStorageDto(Long storageId, Long shoppingListId, Long id, String name, UnitOfQuantityDto unitOfQuantityDto, String notes, byte[] image, Date expDate, int amount, String locationTag) {
         this.storageId = storageId;

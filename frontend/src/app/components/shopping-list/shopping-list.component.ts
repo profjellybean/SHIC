@@ -45,7 +45,7 @@ export class ShoppingListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    //this.loadItemsToAdd();
+    this.loadItemsToAdd();
     this.getPrivateShoppingList();
     this.getPublicShoppingList();
     //this.getCurrUser();
@@ -216,7 +216,7 @@ export class ShoppingListComponent implements OnInit {
       //this.storageService.addItem(this.item);
       console.log('form item to add', this.itemToAdd);
       this.addItemToShoppingList();
-      //this.clearForm();
+      this.clearForm();
     }
   }
 

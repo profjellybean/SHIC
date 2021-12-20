@@ -3,6 +3,8 @@ package at.ac.tuwien.sepm.groupphase.backend.basetest;
 import at.ac.tuwien.sepm.groupphase.backend.datagenerator.MasterDataGenerator;
 import at.ac.tuwien.sepm.groupphase.backend.datagenerator.ShoppingListDataGenerator;
 import at.ac.tuwien.sepm.groupphase.backend.datagenerator.StorageDataGenerator;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UnitOfQuantityDto;
+import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.RecipeCategory;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,4 +61,13 @@ public interface TestData {
     String TEST_SHOPPINGLIST_NOTES = "SHOPPINGLIST TEST NOTES";
 
 
+    // Values for ItemStorage Tests
+    String TEST_ITEMSTORAGE_NAME = "ITEMSTORAGE TEST NAME";
+    String TEST_ITEMSTORAGE_NOTES = "ITEMSTORAGE TEST NOTES";
+    Long TEST_ITEMSTORAGE_ID = 1L;
+    int TEST_ITEMSTORAGE_AMOUNT = 3;
+    UnitOfQuantity TEST_ITEMSTORAGE_UNITOFQUANTITY = new UnitOfQuantity( "kg");
+    UnitOfQuantityDto TEST_ITEMSTORAGE_UNITOFQUANTITYDTO = new UnitOfQuantityDto("kg");
+    Long TEST_ITEMSTORAGE_STORAGEID = 2L;
+    Long TEST_ITEMSTORAGE_SHOPPINGLISTID = 3L;
 }
