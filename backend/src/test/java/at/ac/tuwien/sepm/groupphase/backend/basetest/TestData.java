@@ -3,12 +3,15 @@ package at.ac.tuwien.sepm.groupphase.backend.basetest;
 import at.ac.tuwien.sepm.groupphase.backend.datagenerator.MasterDataGenerator;
 import at.ac.tuwien.sepm.groupphase.backend.datagenerator.ShoppingListDataGenerator;
 import at.ac.tuwien.sepm.groupphase.backend.datagenerator.StorageDataGenerator;
+import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.RecipeCategory;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public interface TestData {
 
@@ -41,5 +44,19 @@ public interface TestData {
             add("ROLE_USER");
         }
     };
+
+    // Values for Recipe Tests
+    String TEST_RECIPE_NAME = "RECIPE TEST NAME";
+    String TEST_RECIPE_DESCRIPTION = "RECIPE TEST DESCRIPTION";
+    Set<RecipeCategory> TEST_RECIPE_CATEGORIES = new HashSet<>() {
+        {
+            add(RecipeCategory.vegan);
+        }
+    };
+
+    // Values for ShoppingList Tests
+    String TEST_SHOPPINGLIST_NAME = "SHOPPINGLIST TEST NAME";
+    String TEST_SHOPPINGLIST_NOTES = "SHOPPINGLIST TEST NOTES";
+
 
 }

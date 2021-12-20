@@ -40,6 +40,14 @@ public class ShoppingList {
     public ShoppingList() {
     }
 
+    public ShoppingList(Long id, String name, String notes, Set<ItemStorage> items, ApplicationUser owner) {
+        this.id = id;
+        this.name = name;
+        this.notes = notes;
+        this.items = items;
+        this.owner = owner;
+    }
+
     public Long getId() {
         return id;
     }

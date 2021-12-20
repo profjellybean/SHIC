@@ -33,7 +33,7 @@ export class StorageAddItemComponent implements OnInit {
     this.itemService.findAll().subscribe({
       next: data => {
         // TODO add error
-        console.log('received items', data);
+        console.log('received items7', data);
         this.items = data;
       },
       error: error => {

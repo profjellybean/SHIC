@@ -1,11 +1,12 @@
 
 <div class="tabs">
 
-  <input type="radio"  name="tabs" id="tab1" checked />
-  <label style="margin-left: 0.5em" for="tab1">Public</label>
+  <input type="radio" class="tabbutton" name="tabs" id="tab1" checked/>
+  <label for="tab1" class="tabLabel" style="margin-left: 0.5em" (click)="switchMode(true)">Public</label>
 
-  <input type="radio" name="tabs" id="tab2" />
-  <label for="tab2" (click)="getShoppingList()">Private</label>
+
+  <input type="radio" class="tabbutton" name="tabs" id="tab2" />
+  <label class="tabLabel" for="tab2" (click)="switchMode(false)" >Private</label>
 
 </div>
 <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -57,8 +58,10 @@
             id="itemToAdd2"
             name="itemToAdd2"
             [(ngModel)]="this.itemToAdd">
-            <option *ngFor="let myItem of itemsAdd;" [ngValue]="myItem">{{myItem.name}}</option>
+            <option *ngFor="let myItem of items;" [ngValue]="myItem">{{myItem.name}}</option>
             <option [ngValue]="null">none</option>
+
+
           </select>
         </div>
 
@@ -95,6 +98,8 @@
         <th>ID</th>
         <th>Name</th>
         <th>Notes</th>
+        <th>Quantity</th>
+        <th>Amount</th>
       </tr>
       </thead>
       <tbody>
@@ -104,9 +109,11 @@
             <input type="checkbox" name="item" id="item" (click)="checkCheckbox(item)">
           </div>
         </td>
-        <td>{{item.id}}</td>
-        <td>{{item.name}}</td>
-        <td>{{item.notes}}</td>
+          <td>{{item.id}}</td>
+          <td>{{item.name}}</td>
+          <td>{{item.notes}}</td>
+          <td>{{item.quantity}}</td>
+          <td>{{item.amount}}</td>
         <td>
       </tr>
       </tbody>

@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ComplexUserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserLoginMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
 import at.ac.tuwien.sepm.groupphase.backend.exception.EmailConfirmationException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.EmailCooldownException;
@@ -94,6 +95,46 @@ public class UserServiceImpl implements UserService {
         Optional<ApplicationUser> applicationUser = customUserRepository.findUserByUsername(username);
         if (applicationUser.isPresent()) {
             return applicationUser.get().getPrivList();
+        }
+        throw new NotFoundException(String.format("Could not find the user with the username %s", username));
+    }
+
+    @Override
+    public Long getPublicShoppingListIdByUsername(String username) {
+        LOGGER.debug("Service: Find private shoppinglist for user by username");
+        Optional<ApplicationUser> applicationUser = customUserRepository.findUserByUsername(username);
+        if (applicationUser.isPresent()) {
+            return customUserRepository.getPublicShoppingListIdByName(username);
+        }
+        throw new NotFoundException(String.format("Could not find the user with the username %s", username));
+    }
+
+    @Override
+    public ShoppingList getPublicShoppingListByUsername(String username) {
+        LOGGER.debug("Service: Find public shoppinglist for user by username");
+        Optional<ApplicationUser> applicationUser = customUserRepository.findUserByUsername(username);
+        if (applicationUser.isPresent()) {
+            return customUserRepository.getPublicShoppingListByName(username);
+        }
+        throw new NotFoundException(String.format("Could not find the user with the username %s", username));
+    }
+
+    @Override
+    public ShoppingList getPrivateShoppingListByUsername(String username) {
+        LOGGER.debug("Service: Find private shoppinglist for user by username");
+        Optional<ApplicationUser> applicationUser = customUserRepository.findUserByUsername(username);
+        if (applicationUser.isPresent()) {
+            return customUserRepository.getPrivateShoppingListByName(username);
+        }
+        throw new NotFoundException(String.format("Could not find the user with the username %s", username));
+    }
+
+    @Override
+    public List<ItemStorage> getCombinedAvailableItemsWithoutDuplicates(String username) {
+        LOGGER.debug("Service: Gather available items from both shopping lists");
+        Optional<ApplicationUser> applicationUser = customUserRepository.findUserByUsername(username);
+        if (applicationUser.isPresent()) {
+            return customUserRepository.getAvailableItems(username);
         }
         throw new NotFoundException(String.format("Could not find the user with the username %s", username));
     }
@@ -235,6 +276,7 @@ public class UserServiceImpl implements UserService {
         return user.get().getConfirmationToken() == 0L;
 
     }
+
 
 
 
