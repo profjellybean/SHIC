@@ -60,7 +60,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class ShoppingListEndpointTest implements TestData {
+public class ShoppinglistEndpointTest implements TestData {
 
     @Autowired
     private MockMvc mockMvc;

@@ -12,6 +12,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitsRelation;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitsRelationRepository;
@@ -243,16 +244,47 @@ public class ShoppingListServiceImpl implements ShoppingListService {
             UserGroup group = user.getCurrGroup();
             Long storageId = group.getStorageId();
 
+            List<ItemStorage> allItemsInStorage = itemStorageRepository.findAllByStorageId(storageId);
+            Map<String, ItemStorage> itemStorageMap = allItemsInStorage.stream()
+                .collect(Collectors.toMap(ItemStorage::getName, Function.identity()));
+
             for (ItemStorage item : boughtItems) {
-                ItemStorage itemStorage = itemStorageRepository.getById(item.getId());
-                Long shoppingListId = itemStorage.getShoppingListId();
+                ItemStorage storageItem = itemStorageMap.get(item.getName());
+                Optional<ItemStorage> itemOptional = itemStorageRepository.findById(item.getId());
+                if (itemOptional.isPresent()) {
+                    ItemStorage itemToStore = itemOptional.get();
+                    if (storageItem != null && storageItem.getQuantity().equals(itemToStore.getQuantity())) {
+                        int newAmount = storageItem.getAmount() + itemToStore.getAmount();
+                        storageItem.setAmount(newAmount);
+                        Long shoppingListId = itemToStore.getShoppingListId();
+                        shoppingListItemRepository.deleteFromTable(shoppingListId, itemToStore.getId());
+                        itemStorageRepository.saveAndFlush(storageItem);
+                        storedItems.add(itemToStore);
+                    } else if (storageItem != null && storageItem.getQuantity() != null) {
+                        UnitsRelation unitsRelation = unitsRelationRepository.findUnitsRelationByBaseUnitAndCalculatedUnit(
+                            storageItem.getQuantity().getName(), itemToStore.getQuantity().getName());
+                        if (unitsRelation != null) {
+                            double relation = unitsRelation.getRelation();
+                            int newAmount = (int) (storageItem.getAmount() * relation + itemToStore.getAmount());
+                            storageItem.setAmount(newAmount);
+                            Long shoppingListId = itemToStore.getShoppingListId();
+                            shoppingListItemRepository.deleteFromTable(shoppingListId, itemToStore.getId());
+                            itemStorageRepository.saveAndFlush(storageItem);
+                            storedItems.add(itemToStore);
+                        } else {
+                            throw new ServiceException("Incompatible units of quantity");
+                        }
+                    } else {
+                        Long shoppingListId = itemToStore.getShoppingListId();
 
-                itemStorage.setShoppingListId(null);
-                itemStorage.setStorageId(storageId);
+                        itemToStore.setShoppingListId(null);
+                        itemToStore.setStorageId(storageId);
 
-                shoppingListItemRepository.deleteFromTable(shoppingListId, itemStorage.getId());
-                itemStorageRepository.saveAndFlush(itemStorage);
-                storedItems.add(itemStorage);
+                        shoppingListItemRepository.deleteFromTable(shoppingListId, itemToStore.getId());
+                        itemStorageRepository.saveAndFlush(itemToStore);
+                        storedItems.add(itemToStore);
+                    }
+                }
             }
         }
 
