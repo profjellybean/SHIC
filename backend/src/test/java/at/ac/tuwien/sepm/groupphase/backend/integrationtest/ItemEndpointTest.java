@@ -70,7 +70,6 @@ public class ItemEndpointTest {
         MvcResult mvcResult = this.mockMvc.perform(post(ITEMENDPOINT_UNITOFQUANTITY_URI+"?name=")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(unitOfQuantityDto)))
-            .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
@@ -111,7 +110,6 @@ public class ItemEndpointTest {
         MvcResult mvcResult = this.mockMvc.perform(post(ITEMENDPOINT_UNITOFQUANTITY_URI+"?name=test")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(unitOfQuantityDto)))
-            .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
@@ -135,7 +133,6 @@ public class ItemEndpointTest {
         MvcResult mvcResult = this.mockMvc.perform(post(ITEMENDPOINT_UNITRELATION_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(unitsRelationDto)))
-            .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
@@ -154,7 +151,6 @@ public class ItemEndpointTest {
         MvcResult mvcResult = this.mockMvc.perform(post(ITEMENDPOINT_UNITRELATION_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(unitsRelationDto)))
-            .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
