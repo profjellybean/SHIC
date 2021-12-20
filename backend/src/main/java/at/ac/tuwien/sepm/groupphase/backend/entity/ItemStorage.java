@@ -75,6 +75,11 @@ public class ItemStorage {
         this.name = name;
     }
 
+    public ItemStorage(String name, long shoppingListId) {
+        this.shoppingListId = shoppingListId;
+        this.name = name;
+    }
+
 
     public Long getStorageId() {
         return storageId;
