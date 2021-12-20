@@ -34,8 +34,12 @@ public class UnitOfQuantityDto {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         UnitOfQuantityDto that = (UnitOfQuantityDto) o;
         return Objects.equals(id, that.id) && Objects.equals(name, that.name);
     }
@@ -47,9 +51,9 @@ public class UnitOfQuantityDto {
 
     @Override
     public String toString() {
-        return "UnitOfQuantityDto{" +
-            "id=" + id +
-            ", name='" + name + '\'' +
-            '}';
+        return "UnitOfQuantityDto{"
+            + "id=" + id
+            + ", name='" + name + '\''
+            + '}';
     }
 }
