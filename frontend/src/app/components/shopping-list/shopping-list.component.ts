@@ -80,7 +80,7 @@ export class ShoppingListComponent implements OnInit {
   }
 
   workOffShoppingList() {
-    this.shoppingListService.workOffShoppingList(this.itemsToBuy, 7, this.user.username).subscribe({
+    this.shoppingListService.workOffShoppingList(this.itemsToBuy, this.user.currGroup.storageId, this.user.username).subscribe({
         next: res => {
           console.log(res);
           for (const item of this.itemsToBuy) {
