@@ -54,12 +54,12 @@ public class UserDataGenerator {
         storageDataGenerator.generateStorage();
 
         UserGroup group = null;
-        Item item = new Item(null, "Döner", null);
-        Long itemId = itemRepository.saveAndFlush(new Item(null, "Döner", null)).getId();
+        //Item item = new Item(null, "Döner", null);
+        //Long itemId = itemRepository.saveAndFlush(new Item(null, "Döner", null)).getId();
         UserRegistrationDto user = new UserRegistrationDto("user", "password", "user@email.com");
 
         Set<Item> items = new HashSet<>();
-        items.add(itemRepository.getById(itemId));
+        //items.add(itemRepository.getById(itemId));
         // Long shoppingListId = shoppingListRepository.saveAndFlush(   ShoppingList.ShoppingListBuilder.aShoppingList().withName("Your private shopping list").withItems(items).build()  ).getId();
         Long shoppingListId = shoppingListRepository.saveAndFlush(ShoppingList.ShoppingListBuilder.aShoppingList().withName("Your private shopping list").build()).getId();
         Optional<ApplicationUser> applicationUser = userRepository.findUserByUsername(user.getUsername());
