@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Profile("generateData")
+//@Profile("generateData")
 @Component
 public class ItemStorageDataGenerator {
 
@@ -26,10 +26,12 @@ public class ItemStorageDataGenerator {
     private final ItemStorageRepository itemStorageRepository;
     private final UnitOfQuantityRepository unitOfQuantityRepository;
     private static final int NUMBER_OF_ITEMSTORAGES = 5;
-    private static final Long ID_OF_STORAGE = 1L;
+    private static final Long ID_OF_STORAGE = 6L;
+    private static final Long ID_OF_SECOND_STORAGE = 1L;
     private static final Long ID_OF_SHOPPINGLIST = 1L;
     private static final boolean CREATE_REAL_ITEMSTORAGES = true;
-    private final StorageRepository storageRepository;
+    private final StorageDataGenerator storageDataGenerator;
+    private final UserDataGenerator userDataGenerator;
 
     private final UnitOfQuantityDataGenerator unitOfQuantityDataGenerator;
 
@@ -37,22 +39,26 @@ public class ItemStorageDataGenerator {
     public ItemStorageDataGenerator(ItemStorageRepository itemStorageRepository,
                                     UnitOfQuantityRepository unitOfQuantityRepository,
                                     UnitOfQuantityDataGenerator unitOfQuantityDataGenerator,
-                                    StorageRepository storageRepository) {
+                                    StorageDataGenerator storageDataGenerator,
+                                    UserDataGenerator userDataGenerator) {
         this.itemStorageRepository = itemStorageRepository;
         this.unitOfQuantityRepository = unitOfQuantityRepository;
         this.unitOfQuantityDataGenerator = unitOfQuantityDataGenerator;
 
-        this.storageRepository = storageRepository;
+        this.storageDataGenerator = storageDataGenerator;
+        this.userDataGenerator = userDataGenerator;
     }
 
-    @PostConstruct
+    //@PostConstruct
     void generateItemStorage() {
         if (itemStorageRepository.findAll().size() > 0) {
             LOGGER.debug("ItemStorage already generated");
         } else if (CREATE_REAL_ITEMSTORAGES) {
             LOGGER.debug("generating ItemStorage");
 
+            this.storageDataGenerator.generateStorage();
             this.unitOfQuantityDataGenerator.generateUnitOfQuantity();
+            this.userDataGenerator.generateUser();
 
             List<UnitOfQuantity> unitList = unitOfQuantityRepository.findAll();
             Map<String, UnitOfQuantity> mappedUnits = new HashMap<>();
@@ -61,25 +67,39 @@ public class ItemStorageDataGenerator {
                 mappedUnits.put(unit.getName(), unit);
             }
 
-            //ItemStorage feta = new ItemStorage("Feta", null, null, null, 1, Location.fridge, UnitOfQuantity.pieces, ID_OF_STORAGE);
-            ItemStorage feta = new ItemStorage("Feta", null, null, null, 1, Location.fridge.toString(), mappedUnits.get("pieces"), ID_OF_STORAGE, ID_OF_SHOPPINGLIST);
+            // Items for fist Storage
+            ItemStorage feta = new ItemStorage("Feta", null, null, null, 1, Location.fridge.toString(), mappedUnits.get("pieces"), ID_OF_STORAGE, null);
             LOGGER.debug("saving ItemStorage {}", feta);
             itemStorageRepository.save(feta);
 
-            //ItemStorage noodles = new ItemStorage("Noodles", null, null, null, 500, Location.shelf, UnitOfQuantity.g, ID_OF_STORAGE);
-            ItemStorage noodles = new ItemStorage("Noodles", null, null, null, 500, Location.shelf.toString(), mappedUnits.get("g"), ID_OF_STORAGE, ID_OF_SHOPPINGLIST);
+            ItemStorage noodles = new ItemStorage("Noodles", null, null, null, 500, Location.shelf.toString(), mappedUnits.get("g"), ID_OF_STORAGE, null);
             LOGGER.debug("saving ItemStorage {}", noodles);
             itemStorageRepository.save(noodles);
 
-            //ItemStorage milk = new ItemStorage("Milk", null, null, null, 2, Location.fridge, UnitOfQuantity.L, ID_OF_STORAGE);
-            ItemStorage milk = new ItemStorage("Milk", null, null, null, 2, Location.fridge.toString(), mappedUnits.get("L"), ID_OF_STORAGE, ID_OF_SHOPPINGLIST);
+            ItemStorage milk = new ItemStorage("Milk", null, null, null, 2, Location.fridge.toString(), mappedUnits.get("L"), ID_OF_STORAGE, null);
             LOGGER.debug("saving ItemStorage {}", milk);
             itemStorageRepository.save(milk);
 
-            //ItemStorage pesto = new ItemStorage("Pesto", "Genovese", null, null, 200, Location.fridge, UnitOfQuantity.g, ID_OF_STORAGE);
-            ItemStorage pesto = new ItemStorage("Pesto", "Genovese", null, null, 200, Location.fridge.toString(), mappedUnits.get("g"), ID_OF_STORAGE, ID_OF_SHOPPINGLIST);
+            ItemStorage pesto = new ItemStorage("Pesto", "Genovese", null, null, 200, Location.fridge.toString(), mappedUnits.get("g"), ID_OF_STORAGE, null);
             LOGGER.debug("saving ItemStorage {}", pesto);
             itemStorageRepository.save(pesto);
+
+            // Items for second Storage
+            ItemStorage feta2 = new ItemStorage("Feta", null, null, null, 1, Location.fridge.toString(), mappedUnits.get("pieces"), ID_OF_SECOND_STORAGE, null);
+            LOGGER.debug("saving ItemStorage {}", feta2);
+            itemStorageRepository.save(feta2);
+
+            ItemStorage noodles2 = new ItemStorage("Noodles", null, null, null, 500, Location.shelf.toString(), mappedUnits.get("g"), ID_OF_SECOND_STORAGE, null);
+            LOGGER.debug("saving ItemStorage {}", noodles2);
+            itemStorageRepository.save(noodles2);
+
+            ItemStorage milk2 = new ItemStorage("Milk", null, null, null, 2, Location.fridge.toString(), mappedUnits.get("L"), ID_OF_SECOND_STORAGE, null);
+            LOGGER.debug("saving ItemStorage {}", milk2);
+            itemStorageRepository.save(milk2);
+
+            ItemStorage pesto2 = new ItemStorage("Pesto", "Genovese", null, null, 200, Location.fridge.toString(), mappedUnits.get("g"), ID_OF_SECOND_STORAGE, null);
+            LOGGER.debug("saving ItemStorage {}", pesto2);
+            itemStorageRepository.save(pesto2);
 
 
         } else {

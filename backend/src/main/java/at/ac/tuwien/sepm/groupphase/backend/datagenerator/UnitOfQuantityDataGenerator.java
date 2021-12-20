@@ -32,7 +32,7 @@ public class UnitOfQuantityDataGenerator {
         this.itemService = itemService;
     }
 
-    @PostConstruct
+    //@PostConstruct
     void generateUnitOfQuantity() {
         if (unitOfQuantityRepository.findAll().size() > 0) {
             LOGGER.debug("UnitOfQuantity already generated");
@@ -45,7 +45,7 @@ public class UnitOfQuantityDataGenerator {
         }
     }
 
-    @PostConstruct
+    //@PostConstruct
     void generateUnitsRelations() {
         if (unitsRelationRepository.findAll().size() > 0) {
             LOGGER.debug("UnitRelations already generated");

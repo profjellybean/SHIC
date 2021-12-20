@@ -22,4 +22,13 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
      * @return recipe with given id
      */
     Recipe findRecipeById(Long id);
+
+    /**
+     * find one recipe by its name.
+     *
+     * @param name of the recipe
+     *
+     * @return recipe with given name
+     */
+    Recipe findByName(String name);
 }

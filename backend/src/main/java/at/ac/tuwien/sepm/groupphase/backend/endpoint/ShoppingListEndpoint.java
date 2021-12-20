@@ -15,15 +15,19 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemStorageDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ShoppingListMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.service.ShoppingListService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+//import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import org.springframework.security.core.Authentication;
+import org.hibernate.ObjectNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -133,16 +137,23 @@ public class ShoppingListEndpoint {
     }
     */
 
-    @PermitAll //TODO: add security
-    //@Secured("ROLE_USER")
+    //@PermitAll
+    @Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.OK)
     @PutMapping
     @Operation(summary = "Plan a recipe: adds missing ingredients to shoppingList", security = @SecurityRequirement(name = "apiKey"))
-    // TODO: change paramteters to new Dto?
-    public List<ItemStorageDto> planRecipe(@RequestParam(name = "recipeId") Long recipeId, @RequestParam(name = "userId") Long userId) {
-        LOGGER.info("Endpoint: POST /api/v1/shoppinglist/recipeId={},userId={}", recipeId, userId);
-        return itemStorageMapper.itemsStorageToItemsStorageDto(
-            shoppingListService.planRecipe(recipeId, userId));
+    public List<ItemStorageDto> planRecipe(Authentication authentication, @RequestParam(name = "recipeId") Long recipeId) {
+        LOGGER.info("Endpoint: POST /api/v1/shoppinglist/recipeId={},userName={}", recipeId, authentication.getName());
+        try {
+            return itemStorageMapper.itemsStorageToItemsStorageDto(
+                shoppingListService.planRecipe(recipeId, authentication));
+        } catch (ValidationException e) {
+            LOGGER.error("Error during planning recipe", e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        } catch (ObjectNotFoundException e) {
+            LOGGER.error("Error during planning recipe", e);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        }
     }
 
     @GetMapping(value = "/items")
@@ -161,7 +172,7 @@ public class ShoppingListEndpoint {
         try {
 
 
-            Long id = userService.getPrivateShoppingListIdByUsername(authentication.name());
+            Long id = userService.getPrivateShoppingListIdByUsername(authentication.getName());
 
             return shoppingListMapper.shoppingListToShoppingListDto(shoppingListService.getShoppingListByid(id));
 

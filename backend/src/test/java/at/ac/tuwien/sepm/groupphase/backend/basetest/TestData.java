@@ -1,5 +1,11 @@
 package at.ac.tuwien.sepm.groupphase.backend.basetest;
 
+import at.ac.tuwien.sepm.groupphase.backend.datagenerator.MasterDataGenerator;
+import at.ac.tuwien.sepm.groupphase.backend.datagenerator.ShoppingListDataGenerator;
+import at.ac.tuwien.sepm.groupphase.backend.datagenerator.StorageDataGenerator;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +28,8 @@ public interface TestData {
     String ITEMENDPOINT_UNITOFQUANTITY_URI = BASE_URI + "/item/unitOfQuantity";
     String ITEMENDPOINT_UNITRELATION_URI = BASE_URI + "/item/unitsRelation";
     String USERGROUPENDPOINT_URI = BASE_URI + "/group";
+    String SHOPPINGLIST_ENDPOINT_URI = BASE_URI + "/shoppinglist";
+    //String ADMIN_USER = "admin@email.com";
     List<String> ADMIN_ROLES = new ArrayList<>() {
         {
             add("ROLE_ADMIN");

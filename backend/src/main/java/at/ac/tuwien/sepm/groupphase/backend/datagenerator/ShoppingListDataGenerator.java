@@ -46,7 +46,7 @@ public class ShoppingListDataGenerator {
         this.unitOfQuantityDataGenerator = unitOfQuantityDataGenerator;
     }
 
-    @PostConstruct
+    //@PostConstruct
     void generateShoppingList() {
 
         this.unitOfQuantityDataGenerator.generateUnitOfQuantity();

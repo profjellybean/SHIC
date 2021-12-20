@@ -1,18 +1,17 @@
 package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
-
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitOfQuantityRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.lang.invoke.MethodHandles;
 
-@Profile("generateData")
+/**
+ * class used to generate Data for specific test cases.
+ */
 @Component
-public class MasterDataGenerator {
+public class TestDataGenerator {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final RecipeDataGenerator recipeDataGenerator;
     private final ShoppingListDataGenerator shoppingListDataGenerator;
@@ -22,7 +21,7 @@ public class MasterDataGenerator {
     private final ItemDataGenerator itemDataGenerator;
     private final UnitOfQuantityDataGenerator unitOfQuantityDataGenerator;
 
-    public MasterDataGenerator(RecipeDataGenerator recipeDataGenerator,
+    public TestDataGenerator(RecipeDataGenerator recipeDataGenerator,
                                ShoppingListDataGenerator shoppingListDataGenerator,
                                StorageDataGenerator storageDataGenerator,
                                UserDataGenerator userDataGenerator,
@@ -39,26 +38,15 @@ public class MasterDataGenerator {
         this.unitOfQuantityDataGenerator = unitOfQuantityDataGenerator;
     }
 
-    @PostConstruct
-    public void generateData() {
-        LOGGER.debug("Generating Data");
-        storageDataGenerator.generateStorage();
-        unitOfQuantityDataGenerator.generateUnitOfQuantity();
-        unitOfQuantityDataGenerator.generateUnitsRelations();
-        userDataGenerator.generateUser();
-        //userDataGenerator.generateApplicationUser();
-        itemDataGenerator.generateItem();
-        itemStorageDataGenerator.generateItemStorage();
-        recipeDataGenerator.generateRecipes();
-        shoppingListDataGenerator.generateShoppingList();
-    }
-
+    /**
+     * generates Data used in Tests for the method
+     * planRecipe(Long recipeId, Authentication auth) method
+     * in ShoppingListService.
+     */
     public void generateData_planRecipe() {
         LOGGER.debug("Generating Data for planning Recipe");
+        itemStorageDataGenerator.generateItemStorage(); // includes UnitOfQuantity and Storage
         recipeDataGenerator.generateRecipes(); // includes UnitOfQuantity
         userDataGenerator.generateUser(); // includes ShoppingList and Storage
-        itemStorageDataGenerator.generateItemStorage(); // includes UnitOfQuantity and Storage
     }
-
-
 }

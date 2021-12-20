@@ -2,11 +2,14 @@ import {Component, OnInit, TemplateRef} from '@angular/core';
 import {Item} from '../../dtos/item';
 import {StorageService} from '../../services/storage.service';
 import {Params} from '@angular/router';
-import {ItemStorage} from '../../dtos/itemStorage';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ItemService} from '../../services/item.service';
 import {ShoppingListService} from '../../services/shopping-list.service';
 import {UnitOfQuantity} from '../../dtos/unitOfQuantity';
+import {UserService} from '../../services/user.service';
+import {User} from '../../dtos/user';
+import jwt_decode from 'jwt-decode';
+import {AuthService} from '../../services/auth.service';
 
 
 @Component({
@@ -15,12 +18,19 @@ import {UnitOfQuantity} from '../../dtos/unitOfQuantity';
   styleUrls: ['./storage.component.scss']
 })
 export class StorageComponent implements OnInit {
-
+  user: User = {
+    // @ts-ignore
+    username: jwt_decode(this.authService.getToken()).sub.trim(),
+    password: null,
+    id: null,
+    currGroup: null,
+    privList: null
+  };
   error = false;
   errorMessage = '';
   submitted = false;
   searchString='';
-  searchItem: Item = {image:null, id: null, storageId: 1, name: null,
+  searchItem: Item = {image:null, id: null, storageId: null, name: null,
     notes: null, expDate: null, amount: 0, locationTag: null, shoppingListId: null, quantity: null};
 
   items: Item[] = null;
@@ -30,21 +40,38 @@ export class StorageComponent implements OnInit {
 
   unitsOfQuantity: UnitOfQuantity[];
 
+
+
   constructor(private storageService: StorageService,
               private modalService: NgbModal,
               private shoppingListService: ShoppingListService,
-              private itemService: ItemService) {
+              private itemService: ItemService,
+              private userService: UserService,
+              private authService: AuthService) {
   }
 
   ngOnInit(): void {
-    this.getAllItemsByStorageId({id: 1});
+    this.getCurrUser();
     this.loadItemsToAdd();
     this.loadUnitsOfQuantity();
   }
 
+  getCurrUser(){
+    this.userService.getCurrentUser({username: this.user.username}).subscribe({
+      next: data => {
+        console.log('received items', data);
+        this.user = data;
+        this.getAllItemsByStorageId({id: this.user.currGroup.storageId});
+      },
+      error: error => {
+        console.error(error.message);
+      }
+    });
+  }
+
 
   addItem(item: Item) {
-    this.itemToAdd.storageId = 1;
+    item.storageId = this.user.currGroup.storageId;
     this.itemToAdd.id = null;
     if(this.itemToAdd.quantity !== undefined) {
       this.itemToAdd.quantity = null;
@@ -53,7 +80,7 @@ export class StorageComponent implements OnInit {
     this.storageService.addItem(item).subscribe({
       next: data => {
         this.items.push(item);
-        this.getAllItemsByStorageId({id: 1});
+        this.getAllItemsByStorageId({id: this.user.currGroup.storageId});
         console.log('added Item', data);
       },
       error: error => {

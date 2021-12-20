@@ -7,6 +7,8 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Storage;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +44,11 @@ public class StorageEndpointTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    // @AfterEach
+    // public void afterEach() {
+    //     storageRepository.deleteAll();
+    //     itemStorageRepository.deleteAll();
+    // }
 
     @Test
     public void insertItemWithEmptyOrNullStorageIdShouldThrowException() throws Exception {
