@@ -1,9 +1,11 @@
+import {UnitOfQuantity} from './unitOfQuantity';
+
 export class ItemStorage {
   //storageId: number;
   shoppingListId: number;
   id: number;
   name: string;
-  quantity: number;
+  quantity: UnitOfQuantity;
   notes: string;
   //image: ImageBitmap;
   expDate: Date;

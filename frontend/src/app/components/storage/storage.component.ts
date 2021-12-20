@@ -35,7 +35,11 @@ export class StorageComponent implements OnInit {
 
   items: Item[] = null;
   item: Item = new Item();
-  itemToAdd: Item = new Item();
+  nullQuantity: UnitOfQuantity = {id: null, name: null};
+  nullItem: Item = {image:null, id: null, storageId: null, name: null,
+    notes: null, expDate: null, amount: 0, locationTag: null, shoppingListId: null, quantity: this.nullQuantity};
+
+  itemToAdd: Item = this.nullItem;
   itemsToAdd: Item[];
 
   unitsOfQuantity: UnitOfQuantity[];
@@ -62,6 +66,7 @@ export class StorageComponent implements OnInit {
         console.log('received items6', data);
         this.user = data;
         this.getAllItemsByStorageId({id: this.user.currGroup.storageId});
+        this.searchItem.storageId = this.user.currGroup.storageId;
       },
       error: error => {
         console.error(error.message);
@@ -72,15 +77,19 @@ export class StorageComponent implements OnInit {
 
   addItem(item: Item) {
     item.storageId = this.user.currGroup.storageId;
-    this.itemToAdd.id = null;
-    if(this.itemToAdd.quantity !== undefined) {
-      this.itemToAdd.quantity = null;
+    item.id = null;
+    if(item.quantity === undefined) {
+      item.quantity = null;
+    }
+    if(item.amount === undefined) {
+      item.amount = null;
     }
     console.log('item to add', this.itemToAdd);
     this.storageService.addItem(item).subscribe({
       next: data => {
         this.items.push(item);
-        this.getAllItemsByStorageId({id: this.user.currGroup.storageId});
+        //this.getAllItemsByStorageId({id: this.user.currGroup.storageId});
+        this.itemToAdd = this.nullItem;
         console.log('added Item', data);
       },
       error: error => {
@@ -108,7 +117,11 @@ export class StorageComponent implements OnInit {
   loadItemsToAdd() {
     this.shoppingListService.findAllItems().subscribe({
       next: data => {
+<<<<<<< HEAD
         console.log('received items8', data);
+=======
+        console.log('received items to add', data);
+>>>>>>> origin/dev
         this.itemsToAdd = data;
       }
     });
@@ -192,7 +205,11 @@ export class StorageComponent implements OnInit {
   private getAllItemsByStorageId(params: Params) {
     this.storageService.getItems(params).subscribe({
       next: data => {
+<<<<<<< HEAD
         console.log('received items9', data);
+=======
+        console.log('received items in storage', data);
+>>>>>>> origin/dev
         this.items = data;
       },
       error: error => {

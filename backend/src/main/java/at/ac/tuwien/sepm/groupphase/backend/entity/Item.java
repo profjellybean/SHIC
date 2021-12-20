@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 
@@ -20,8 +21,8 @@ public class Item {
     @Column(name = "Name")
     private String name;
 
-    @Column(name = "Quantity")
-    private Long quantity;
+    @OneToOne //(name = "Quantity")
+    private UnitOfQuantity quantity;
 
     public Item(Long id) {
         this.id = id;
@@ -31,7 +32,7 @@ public class Item {
 
     }
 
-    public Item(Long id, String name, Long quantity) {
+    public Item(Long id, String name, UnitOfQuantity quantity) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
@@ -53,11 +54,11 @@ public class Item {
         this.name = name;
     }
 
-    public Long getQuantity() {
+    public UnitOfQuantity getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Long quantity) {
+    public void setQuantity(UnitOfQuantity quantity) {
         this.quantity = quantity;
     }
 

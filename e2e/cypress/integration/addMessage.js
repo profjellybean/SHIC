@@ -4,8 +4,5 @@ context('add message', () => {
     it('login', () => {
         cy.loginAdmin();
     });
-    it('create message', () => {
-        cy.createMessage(msgText);
-    })
 
 });

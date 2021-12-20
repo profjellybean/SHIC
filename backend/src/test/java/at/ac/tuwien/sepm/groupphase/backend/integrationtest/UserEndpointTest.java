@@ -71,7 +71,6 @@ public class UserEndpointTest implements TestData {
         MvcResult mvcResult = this.mockMvc.perform(post(USERENDPOINT_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(unprocessableUser)))
-            .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
@@ -88,7 +87,6 @@ public class UserEndpointTest implements TestData {
         MvcResult mvcResult1 = this.mockMvc.perform(post(USERENDPOINT_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(testUser1)))
-            .andDo(print())
             .andReturn();
         MockHttpServletResponse response1 = mvcResult1.getResponse();
         assertEquals(HttpStatus.CREATED.value(), response1.getStatus());
@@ -98,7 +96,6 @@ public class UserEndpointTest implements TestData {
         MvcResult mvcResult2 = this.mockMvc.perform(post(USERENDPOINT_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(testUser2)))
-            .andDo(print())
             .andReturn();
         MockHttpServletResponse response2 = mvcResult2.getResponse();
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), response2.getStatus());
@@ -127,7 +124,6 @@ public class UserEndpointTest implements TestData {
             MvcResult mvcResult1 = this.mockMvc.perform(post(USERENDPOINT_URI)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(user)))
-                .andDo(print())
                 .andReturn();
             MockHttpServletResponse response1 = mvcResult1.getResponse();
             assertEquals(HttpStatus.CREATED.value(), response1.getStatus());

@@ -1,8 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
-import ch.qos.logback.classic.util.StatusViaSLF4JLoggerFactory;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -167,7 +165,6 @@ public class ItemStorage {
      */
     @Override
     public boolean equals(Object o) {
-
         if (this == o) {
             return true;
         }
@@ -175,8 +172,12 @@ public class ItemStorage {
             return false;
         }
         ItemStorage that = (ItemStorage) o;
-        return that.name.equals(name)
-            && unitOfQuantity == that.unitOfQuantity;
+        return Objects.equals(name, that.name)
+            && unitOfQuantity == that.unitOfQuantity
+            && amount == that.amount && Objects.equals(id, that.id)
+            && Objects.equals(notes, that.notes) && Arrays.equals(image, that.image)
+            && Objects.equals(expDate, that.expDate) && Objects.equals(locationTag, that.locationTag)
+            && Objects.equals(shoppingListId, that.shoppingListId);
     }
 
 
