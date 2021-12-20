@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import {MessageService} from '../../services/message.service';
 import {Recipe} from '../../dtos/recipe';
 import {Item} from '../../dtos/item';
 import {RecipeService} from '../../services/recipe.service';
@@ -32,7 +31,7 @@ export class RecipeDetailComponent implements OnInit {
   errorMessage = '';
   private expDate: number;
 
-  constructor(private messageService: MessageService, private recipeService: RecipeService,
+  constructor( private recipeService: RecipeService,
               private route: ActivatedRoute,
               private shoppingListService: ShoppingListService) { }
 

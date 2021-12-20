@@ -2,7 +2,6 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {LoginComponent} from './components/login/login.component';
 import {AuthGuard} from './guards/auth.guard';
-import {MessageComponent} from './components/message/message.component';
 import {StorageComponent} from './components/storage/storage.component';
 import {RegisterComponent} from './components/register/register.component';
 import {RecipeComponent} from './components/recipe/recipe.component';
@@ -19,7 +18,6 @@ const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'login', component: LoginComponent},
   {path: 'registerUser', component: RegisterUserComponent},
-  {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
   {path: 'storage', component: StorageComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'confirm', component: ConfirmUserEmailComponent},
