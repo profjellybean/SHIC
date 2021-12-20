@@ -5,7 +5,7 @@ import java.util.Objects;
 public class ItemDto {
     private Long id;
     private String name;
-    private Long quantity;
+    private UnitOfQuantityDto quantity;
 
     public ItemDto(Long id) {
         this.id = id;
@@ -15,13 +15,13 @@ public class ItemDto {
 
     }
 
-    public ItemDto(Long id, String name, Long quantity) {
+    public ItemDto(Long id, String name, UnitOfQuantityDto quantity) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
     }
 
-    public ItemDto(String name, Long quantity) {
+    public ItemDto(String name, UnitOfQuantityDto quantity) {
         this.name = name;
         this.quantity = quantity;
     }
@@ -42,14 +42,15 @@ public class ItemDto {
         this.name = name;
     }
 
-    public Long getQuantity() {
+    public UnitOfQuantityDto getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Long quantity) {
+    public void setQuantity(UnitOfQuantityDto quantity) {
         this.quantity = quantity;
     }
 
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
