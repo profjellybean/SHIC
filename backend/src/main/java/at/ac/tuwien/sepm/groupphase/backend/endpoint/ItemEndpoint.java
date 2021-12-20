@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UnitOfQuantityDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UnitsRelationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ItemMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ItemStorageMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ItemMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UnitOfQuantityMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UnitsRelationMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
@@ -37,7 +38,8 @@ public class ItemEndpoint {
     private final ItemMapper itemMapper;
 
     @Autowired
-    public ItemEndpoint(ItemService itemService, UnitOfQuantityMapper unitOfQuantityMapper, ItemMapper itemMapper, UnitsRelationMapper unitsRelationMapper) {
+    public ItemEndpoint(ItemService itemService, UnitOfQuantityMapper unitOfQuantityMapper, ItemMapper itemMapper,
+                        UnitsRelationMapper unitsRelationMapper) {
         this.itemService = itemService;
         this.unitOfQuantityMapper = unitOfQuantityMapper;
         this.unitsRelationMapper = unitsRelationMapper;

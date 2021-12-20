@@ -13,6 +13,7 @@ import {UserComponent} from './components/user/user.component';
 import {HomeComponent} from './components/home/home.component';
 import {ConfirmUserEmailComponent} from './components/confirm-user-email/confirm-user-email.component';
 
+
 const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'login', component: LoginComponent},

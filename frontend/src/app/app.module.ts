@@ -43,6 +43,7 @@ import { ConfirmUserEmailComponent } from './components/confirm-user-email/confi
     UserComponent,
     ShoppingListAddComponent,
     ShoppingListListComponent,
+    StorageAddItemComponent,
   ],
   imports: [
     BrowserModule,
