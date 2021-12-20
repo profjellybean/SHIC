@@ -1,5 +1,4 @@
 import {Component, OnInit, TemplateRef} from '@angular/core';
-import {MessageService} from '../../services/message.service';
 import {ShoppingListService} from '../../services/shopping-list.service';
 import {Item} from '../../dtos/item';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -35,7 +34,7 @@ export class ShoppingListComponent implements OnInit {
   };
 
 
-  constructor(private messageService: MessageService,
+  constructor(
               private shoppingListService: ShoppingListService,
               private modalService: NgbModal,
               private authService: AuthService,

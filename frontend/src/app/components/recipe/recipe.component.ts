@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import {MessageService} from '../../services/message.service';
 import {Recipe} from '../../dtos/recipe';
 import {RecipeService} from '../../services/recipe.service';
 
@@ -16,7 +15,6 @@ export class RecipeComponent implements OnInit {
   errorMessage = '';
 
   constructor(
-    private messageService: MessageService,
     private recipeService: RecipeService
   ) { }
 
