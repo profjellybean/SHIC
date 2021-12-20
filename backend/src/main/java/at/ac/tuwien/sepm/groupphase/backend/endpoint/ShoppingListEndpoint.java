@@ -182,11 +182,11 @@ public class ShoppingListEndpoint {
     @PermitAll
     @PostMapping("/private")
     @ResponseStatus(HttpStatus.OK)
-    public void addToPrivateShoppingListForUser(Authentication authentication, @RequestBody ItemStorageDto itemStorageDto) {
+    public ItemStorageDto addToPrivateShoppingListForUser(Authentication authentication, @RequestBody ItemStorageDto itemStorageDto) {
         try {
             Long id = userService.getPrivateShoppingListIdByUsername(authentication.getName());
             itemStorageDto.setShoppingListId(id);
-            shoppingListService.saveItem(itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto), id);
+            return itemStorageMapper.itemStorageToItemStorageDto(shoppingListService.saveItem(itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto), id));
         } catch (NotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (Exception e) {
@@ -199,12 +199,13 @@ public class ShoppingListEndpoint {
     @PermitAll
     @PostMapping("/public")
     @ResponseStatus(HttpStatus.OK)
-    public void addToPublicShoppingListForUser(Authentication authentication, @RequestBody ItemStorageDto itemStorageDto) {
+    public ItemStorageDto addToPublicShoppingListForUser(Authentication authentication, @RequestBody ItemStorageDto itemStorageDto) {
 
         try {
             Long id = userService.getPublicShoppingListIdByUsername(authentication.getName());
             itemStorageDto.setShoppingListId(id);
-            shoppingListService.saveItem(itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto), id);
+
+            return itemStorageMapper.itemStorageToItemStorageDto(shoppingListService.saveItem(itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto), id));
 
         } catch (NotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());

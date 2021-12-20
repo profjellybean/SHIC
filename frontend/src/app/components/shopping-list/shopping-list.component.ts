@@ -8,6 +8,7 @@ import jwt_decode from 'jwt-decode';
 import {AuthService} from '../../services/auth.service';
 import {UserService} from '../../services/user.service';
 import {ShoppingList} from '../../dtos/shopping-list';
+import {GroupService} from '../../services/group.service';
 
 @Component({
   selector: 'app-shopping-list',
@@ -27,7 +28,7 @@ export class ShoppingListComponent implements OnInit {
   privateList: ShoppingList;
   publicList: ShoppingList;
   isInPublic: boolean;
-
+  groupStorageId: number;
   user: User = {
     // @ts-ignore
     username: jwt_decode(this.authService.getToken()).sub.trim(),
@@ -41,11 +42,12 @@ export class ShoppingListComponent implements OnInit {
   constructor(private shoppingListService: ShoppingListService,
               private modalService: NgbModal,
               private authService: AuthService,
-              private userService: UserService) {
+              private userService: UserService,
+              private groupService: GroupService) {
   }
 
   ngOnInit(): void {
-    //this.loadItemsToAdd();
+    this.loadGroupStorageId();
     this.getPrivateShoppingList();
     this.getPublicShoppingList();
     this.getCurrUser();
@@ -188,7 +190,7 @@ export class ShoppingListComponent implements OnInit {
     if(this.isInPublic){
       this.shoppingListService.addToPublicShoppingList(this.itemToAdd).subscribe({
         next: data => {
-          this.items.push(this.itemToAdd);
+          this.items.push(data);
           console.log('add item', data);
         },
         error: err => {
@@ -198,7 +200,7 @@ export class ShoppingListComponent implements OnInit {
     }else{
       this.shoppingListService.addToPrivateShoppingList(this.itemToAdd).subscribe({
         next: data => {
-          this.items.push(this.itemToAdd);
+          this.items.push(data);
           console.log('add item', data);
         },
         error: err => {
@@ -246,5 +248,16 @@ export class ShoppingListComponent implements OnInit {
     } else {
       this.errorMessage = error.error;
     }
+  }
+
+  private loadGroupStorageId() {
+    this.shoppingListService.getGroupStorageForUser().subscribe({
+      next: data => {
+        this.groupStorageId = data;
+      },
+      error: err => {
+        this.defaultServiceErrorHandling(err);
+      }
+    });
   }
 }

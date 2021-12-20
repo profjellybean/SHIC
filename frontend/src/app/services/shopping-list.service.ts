@@ -27,14 +27,14 @@ export class ShoppingListService {
     return this.httpClient.get<ShoppingList>(this.shoppingListBaseUri + '/public');
   }
 
-  addToPrivateShoppingList(item: Item): Observable<ShoppingList> {
+  addToPrivateShoppingList(item: Item): Observable<Item> {
     console.log('get shoppinglist with id: ');
-    return this.httpClient.post<ShoppingList>(this.shoppingListBaseUri + '/private', item);
+    return this.httpClient.post<Item>(this.shoppingListBaseUri + '/private', item);
   }
 
-  addToPublicShoppingList(item: Item): Observable<ShoppingList> {
+  addToPublicShoppingList(item: Item): Observable<Item> {
     console.log('get shoppinglist with id: ');
-    return this.httpClient.post<ShoppingList>(this.shoppingListBaseUri + '/public', item);
+    return this.httpClient.post<Item>(this.shoppingListBaseUri + '/public', item);
   }
 
   planRecipe(id: number): Observable<Item[]> {
@@ -61,5 +61,10 @@ export class ShoppingListService {
   workOffShoppingList(boughtItems: Item[], shoppinglistId: number): Observable<Item[]> {
     console.log('work off shopping-list: ' + boughtItems);
     return this.httpClient.put<Item[]>(this.shoppingListBaseUri + '/' + shoppinglistId, boughtItems);
+  }
+
+  getGroupStorageForUser(): Observable<number>{
+    console.log('get group storage for user');
+    return this.httpClient.get<number>(this.globals.backendUri+ '/group/storage');
   }
 }
