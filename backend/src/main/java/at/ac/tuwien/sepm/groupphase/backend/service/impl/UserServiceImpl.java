@@ -162,6 +162,11 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Override
+    public Long loadGroupStorageByUsername(String username) {
+        return customUserRepository.loadGroupStorageByUsername(username);
+    }
+
 
     @Override
     public void resendUserEmailConfirmation(String username) {

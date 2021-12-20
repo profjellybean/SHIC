@@ -5,11 +5,13 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.service.GroupService;
+import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -27,11 +29,12 @@ public class UserGroupEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final GroupService groupService;
     private final UserMapper userMapper;
+    private final UserService userService;
 
-
-    public UserGroupEndpoint(GroupService groupService, UserMapper userMapper) {
+    public UserGroupEndpoint(GroupService groupService, UserMapper userMapper, UserService userService) {
         this.groupService = groupService;
         this.userMapper = userMapper;
+        this.userService = userService;
     }
 
     @PostMapping
@@ -53,6 +56,21 @@ public class UserGroupEndpoint {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, n.getMessage());
         } catch (ServiceException s) {
             throw new ResponseStatusException(HttpStatus.ALREADY_REPORTED, s.getMessage());
+        }
+    }
+
+
+    @GetMapping("/storage")
+    @PermitAll
+    @Operation(summary = "Get the storageId of the currentgroup from user")
+    public Long getGroupStorageForUser(Authentication authentication) {
+        try {
+            return userService.loadGroupStorageByUsername(authentication.getName());
+
+        } catch (NotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()); // Todo
         }
     }
 

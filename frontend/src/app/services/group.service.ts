@@ -30,4 +30,6 @@ export class GroupService {
   getAllUsers(groupId: number) {
     return this.httpClient.get(this.userRegisterUri, {params: {groupId}});
   }
+
+
 }

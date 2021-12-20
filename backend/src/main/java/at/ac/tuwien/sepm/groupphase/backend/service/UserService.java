@@ -104,7 +104,7 @@ public interface UserService extends UserDetailsService {
 
     void createUser(UserRegistrationDto userRegistrationDto, Long confirmationToken);
 
-
+    Long loadGroupStorageByUsername(String username);
 
     void confirmUser(String confirmationTokenEncrypted);
 
