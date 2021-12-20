@@ -141,10 +141,6 @@ public class ShoppingListServiceImpl implements ShoppingListService {
             throw new NotFoundException("Could not find storage with id " + storageId, e);
         }
 
-        System.out.println("AAAAAAAAAA storageId: " + storageId); // TODO remove
-        System.out.println("AAAAAAAAAA storageItems: " + storageItems); // TODO remove
-
-
         List<ItemStorage> returnList = null;
         returnList = compareItemSets(recipe.getIngredients(), storageItems);
 
