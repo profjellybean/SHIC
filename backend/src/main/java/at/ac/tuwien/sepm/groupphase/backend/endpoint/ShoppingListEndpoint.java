@@ -88,9 +88,9 @@ public class ShoppingListEndpoint {
 
     @PostMapping("/newItem")
     @PermitAll
-    @Operation(summary = "Insert a new item into the storage") //TODO: add security
+    @Operation(summary = "Insert a new item into the ShoppingList") //TODO: add security
     public ItemStorageDto saveItem(@RequestBody ItemStorageDto itemStorageDto) {
-        LOGGER.info("POST /item to shopping list with id: {}", itemStorageDto.getStorageId());
+        LOGGER.info("Endpoint: POST /item to shopping list with id: {}", itemStorageDto.getStorageId());
         return itemStorageMapper.itemStorageToItemStorageDto(shoppingListService.saveItem(itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto), itemStorageDto.getShoppingListId()));
     }
 
@@ -98,6 +98,7 @@ public class ShoppingListEndpoint {
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ShoppingListDto getShoppingListByid(@PathVariable Long id) {
+        LOGGER.info("Endpoint: GET shoppingList by id: {}", id);
         try {
             return shoppingListMapper.shoppingListToShoppingListDto(shoppingListService.getShoppingListByid(id));
 

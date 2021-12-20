@@ -11,6 +11,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitsRelation;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
+import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
@@ -203,6 +204,45 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     @Override
     public ItemStorage saveItem(ItemStorage itemStorage, Long id) {
         LOGGER.debug("save item in shopping list");
+
+        if (itemStorage.getLocationTag() != null) {
+            try {
+                Location.valueOf(itemStorage.getLocationTag());
+            } catch (IllegalArgumentException i) {
+                throw new ValidationException("Location is not valid");
+            }
+        }
+
+        // check if there is already an item with the same name in the shoppinglist
+        if (itemStorage.getShoppingListId() != null) {
+            List<ItemStorage> itemsInShoppingList = itemStorageRepository.findAllByShoppingListId(itemStorage.getShoppingListId());
+            Map<String, ItemStorage> storedItemsMap = itemsInShoppingList.stream()
+                .collect(Collectors.toMap(ItemStorage::getName, Function.identity()));
+            ItemStorage storedItem = storedItemsMap.get(itemStorage.getName());
+            // if there is uch an item, compare the units of quantity
+            if (storedItem != null && storedItem.getQuantity().equals(itemStorage.getQuantity())) {
+                // if they are the same, add the amounts and save
+                int newAmount = storedItem.getAmount() + itemStorage.getAmount();
+                storedItem.setAmount(newAmount);
+                return itemStorageRepository.saveAndFlush(storedItem);
+            } else if (storedItem != null && storedItem.getQuantity() != null) {
+                // else recalculate the amount, then add the amounts and save
+                if (itemStorage.getQuantity() == null) {
+                    throw new ValidationException("Unit of Quantity has to be set");
+                }
+                UnitsRelation unitsRelation = unitsRelationRepository.findUnitsRelationByBaseUnitAndCalculatedUnit(
+                    storedItem.getQuantity().getName(), itemStorage.getQuantity().getName());
+                if (unitsRelation != null) {
+                    int newAmount = (int) (storedItem.getAmount() * unitsRelation.getRelation() + itemStorage.getAmount());
+                    storedItem.setAmount(newAmount);
+                    storedItem.setQuantity(itemStorage.getQuantity());
+                    return itemStorageRepository.saveAndFlush(storedItem);
+                } else {
+                    throw new ServiceException("incompatible Units of Quantity");
+                }
+            }
+        }
+
         shoppingListItemRepository.saveAndFlush(itemStorage);
         shoppingListItemRepository.insert(id, itemStorage.getId());
 

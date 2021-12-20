@@ -97,6 +97,7 @@ export class ShoppingListComponent implements OnInit {
   }
 
   getPublicShoppingList() {
+    console.log('getting public shoppingList');
     this.shoppingListService.getPublicShoppingList().subscribe({
         next: res => {
           this.publicList = res;
@@ -134,7 +135,7 @@ export class ShoppingListComponent implements OnInit {
   loadItemsToAdd() {
     this.shoppingListService.findAllItems().subscribe({
       next: data => {
-        console.log('received items2', data);
+        console.log('received items to add', data);
         this.itemsAdd = data;
       }
     });
@@ -144,7 +145,7 @@ export class ShoppingListComponent implements OnInit {
     if(this.isInPublic){
       this.shoppingListService.findAll(this.user.currGroup.publicShoppingListId).subscribe({
         next: data => {
-          console.log('received items3', data);
+          console.log('received items for public shoppingList', data);
 
           this.items = data;
         }
@@ -152,7 +153,7 @@ export class ShoppingListComponent implements OnInit {
     }else{
       this.shoppingListService.findAll(this.user.privList).subscribe({
         next: data => {
-          console.log('received items4', data);
+          console.log('received items for private shoppingList', data);
 
           this.items = data;
         }
