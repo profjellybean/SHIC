@@ -211,7 +211,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
                 ItemStorage itemStorage = itemStorageRepository.getById(item.getId());
 
                 item.setShoppingListId(null);
-                item.setStorageId(1L);
+                item.setStorageId(storageId);
 
                 shoppingListItemRepository.saveAndFlush(item);
             }

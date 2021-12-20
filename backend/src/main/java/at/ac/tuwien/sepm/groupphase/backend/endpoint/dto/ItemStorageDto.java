@@ -6,6 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Objects;
 
 public class ItemStorageDto {
     @NotNull
@@ -135,6 +136,33 @@ public class ItemStorageDto {
         this.unitOfQuantityDto = unitOfQuantityDto;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ItemStorageDto that = (ItemStorageDto) o;
+        return amount == that.amount
+            && Objects.equals(storageId, that.storageId)
+            && Objects.equals(shoppingListId, that.shoppingListId)
+            && Objects.equals(id, that.id)
+            && Objects.equals(name, that.name)
+            && Objects.equals(unitOfQuantityDto, that.unitOfQuantityDto)
+            && Objects.equals(notes, that.notes)
+            && Arrays.equals(image, that.image)
+            && Objects.equals(expDate, that.expDate)
+            && Objects.equals(locationTag, that.locationTag);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(storageId, shoppingListId, id, name, unitOfQuantityDto, notes, expDate, amount, locationTag);
+        result = 31 * result + Arrays.hashCode(image);
+        return result;
+    }
 
     @Override
     public String toString() {
