@@ -51,7 +51,6 @@ public class GroupServiceImpl implements GroupService {
         UserGroup userGroup = this.userGroupRepository.getById(groupId);
         Set<ApplicationUser> user = userGroup.getUser();
         for (ApplicationUser u : user) {
-            System.out.println(u.getUsername());
             if (u.getUsername().equals(username)) {
                 throw new ServiceException("The User " + username + " is already in the group.");
             }
@@ -59,9 +58,11 @@ public class GroupServiceImpl implements GroupService {
         Optional<ApplicationUser> temp = this.userRepository.findUserByUsername(username);
         if (temp.isPresent()) {
             if (temp.get().getCurrGroup() == null) {
-                user.add(temp.get());
                 userGroup.setUser(user);
-                this.userGroupRepository.saveAndFlush(userGroup);
+                userGroup = this.userGroupRepository.saveAndFlush(userGroup);
+                temp.get().setCurrGroup(userGroup);
+                this.userRepository.saveAndFlush(temp.get());
+
             } else {
                 throw new ServiceException("This user is already in a group");
             }

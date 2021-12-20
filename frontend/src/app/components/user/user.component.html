@@ -2,8 +2,9 @@
 <h1>User</h1>
 <p></p>
 <div>
-  ApplikationUser-pic <p></p>
-  {{this.user.username}}
+  User-picture: <p></p>
+  Username: {{this.user.username}}<p></p>
+  E-Mail of user
 </div>
 <div align="right">
   <button>Edit user</button><p></p>
@@ -15,7 +16,7 @@
 <div align="left">
   <button *ngIf="groupId===null || groupId === undefined" type="button" (click)="generateGroup()" class="close" data-dismiss="alert" aria-label="Close">Generate new Group</button> <p></p>
   Add a new user to your group {{groupId.valueOf()}}: <p></p>
-  <input [(ngModel)] = "userToAdd" placeholder="enter username"> <button (click)="addUser()">add user</button>
+  <input *ngIf="groupId!==null && groupId !== undefined" [(ngModel)] = "userToAdd" placeholder="enter username"> <button *ngIf="groupId!==null && groupId !== undefined" (click)="addUser()">add user</button>
 
 </div>
 <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
