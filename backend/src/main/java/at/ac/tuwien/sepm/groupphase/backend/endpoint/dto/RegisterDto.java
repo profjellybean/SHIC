@@ -15,6 +15,16 @@ public class RegisterDto {
 
     private double monthlyBudget;
 
+    public RegisterDto() {
+    }
+
+    public RegisterDto(Long id, Set<Bill> bills, double monthlyPayments, double monthlyBudget) {
+        this.id = id;
+        this.bills = bills;
+        this.monthlyPayments = monthlyPayments;
+        this.monthlyBudget = monthlyBudget;
+    }
+
     public Long getId() {
         return id;
     }

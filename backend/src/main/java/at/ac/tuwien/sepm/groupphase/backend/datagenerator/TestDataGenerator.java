@@ -1,11 +1,25 @@
 package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegistrationDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ItemStorageMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserLoginMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
+import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitOfQuantityRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UserGroupRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * class used to generate Data for specific test cases.
@@ -20,6 +34,16 @@ public class TestDataGenerator {
     private final ItemStorageDataGenerator itemStorageDataGenerator;
     private final ItemDataGenerator itemDataGenerator;
     private final UnitOfQuantityDataGenerator unitOfQuantityDataGenerator;
+    @Autowired
+    private ItemStorageRepository itemStorageRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private UserGroupRepository userGroupRepository;
+    @Autowired
+    private ItemStorageMapper itemStorageMapper;
+    @Autowired
+    UserLoginMapper userLoginMapper;
 
     public TestDataGenerator(RecipeDataGenerator recipeDataGenerator,
                                ShoppingListDataGenerator shoppingListDataGenerator,
@@ -49,4 +73,7 @@ public class TestDataGenerator {
         recipeDataGenerator.generateRecipes(); // includes UnitOfQuantity
         userDataGenerator.generateUser(); // includes ShoppingList and Storage
     }
+
+
+
 }

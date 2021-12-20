@@ -39,8 +39,7 @@ export class ShoppingListComponent implements OnInit {
   };
 
 
-  constructor(
-              private shoppingListService: ShoppingListService,
+  constructor(private shoppingListService: ShoppingListService,
               private modalService: NgbModal,
               private authService: AuthService,
               private userService: UserService,
@@ -52,7 +51,7 @@ export class ShoppingListComponent implements OnInit {
     this.loadGroupStorageId();
     this.getPrivateShoppingList();
     this.getPublicShoppingList();
-    //this.getCurrUser();
+    this.getCurrUser();
   }
 
   switchMode(publicMode: boolean){
@@ -115,7 +114,7 @@ export class ShoppingListComponent implements OnInit {
   }
 
   workOffShoppingList() {
-    this.shoppingListService.workOffShoppingList(this.itemsToBuy, this.groupStorageId, this.user.username).subscribe({
+    this.shoppingListService.workOffShoppingList(this.itemsToBuy, this.user.currGroup.publicShoppingListId).subscribe({
         next: res => {
           console.log(res);
           for (const item of this.itemsToBuy) {

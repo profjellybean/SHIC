@@ -45,7 +45,8 @@ public class RegisterDataGenerator {
     private final ShoppingListRepository shoppingListRepository;
 
     public RegisterDataGenerator(ItemStorageRepository itemStorageRepository, UserRepository userRepository,
-                                 BillRepository billRepository, RegisterRepository registerRepository, ShoppingListRepository shoppingListRepository) {
+                                 BillRepository billRepository, RegisterRepository registerRepository,
+                                 ShoppingListRepository shoppingListRepository) {
         this.itemStorageRepository = itemStorageRepository;
         this.userRepository = userRepository;
         this.billRepository = billRepository;
@@ -54,7 +55,7 @@ public class RegisterDataGenerator {
     }
 
     @PostConstruct
-    private void generateRegister() {
+    public void generateRegister() {
         if (registerRepository.findAll().size() > 0) {
             LOGGER.debug("register already generated");
         } else {

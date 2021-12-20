@@ -255,9 +255,10 @@ public class ShoppingListEndpoint {
     @PermitAll
     @PutMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public List<ItemStorageDto> workOffShoppingList(@RequestParam(name = "username") String username, @RequestBody List<ItemStorageDto> boughtItems) {
+    public List<ItemStorageDto> workOffShoppingList(Authentication authentication,
+                                                    @RequestBody List<ItemStorageDto> boughtItems) {
         LOGGER.info("PUT workOffShoppingList{}", boughtItems);
         return itemStorageMapper.itemsStorageToItemsStorageDto(shoppingListService.workOffShoppingList(
-            username, itemStorageMapper.itemsStorageDtoToItemsStorage(boughtItems)));
+            authentication, itemStorageMapper.itemsStorageDtoToItemsStorage(boughtItems)));
     }
 }

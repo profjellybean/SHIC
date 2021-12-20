@@ -12,7 +12,9 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitsRelation;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitsRelationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.RecipeRepository;
@@ -58,7 +60,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
 
     @Autowired
     public ShoppingListServiceImpl(ShoppingListRepository shoppingListRepository,
-                                   RecipeRepository recipeRepository,
+                                   StorageRepository storageRepository, RecipeRepository recipeRepository,
                                    ItemStorageRepository itemStorageRepository,
                                    ShoppingListItemRepository shoppingListItemRepository,
                                    ItemRepository itemRepository, UnitsRelationRepository unitsRelationRepository,
@@ -232,26 +234,61 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     }
 
     @Override
-    public List<ItemStorage> workOffShoppingList(String username, List<ItemStorage> boughtItems) {
+    public List<ItemStorage> workOffShoppingList(Authentication authentication, List<ItemStorage> boughtItems) {
         LOGGER.debug("Work Off Shoppinglist {}", boughtItems);
 
-        Optional<ApplicationUser> userOptional = userRepository.findUserByUsername(username);
+        List<ItemStorage> storedItems = new LinkedList<ItemStorage>();
+        Optional<ApplicationUser> userOptional = userRepository.findUserByUsername(authentication.getName());
         if (userOptional.isPresent()) {
             ApplicationUser user = userOptional.get();
             UserGroup group = user.getCurrGroup();
             Long storageId = group.getStorageId();
 
+            List<ItemStorage> allItemsInStorage = itemStorageRepository.findAllByStorageId(storageId);
+            Map<String, ItemStorage> itemStorageMap = allItemsInStorage.stream()
+                .collect(Collectors.toMap(ItemStorage::getName, Function.identity()));
+
             for (ItemStorage item : boughtItems) {
-                ItemStorage itemStorage = itemStorageRepository.getById(item.getId());
+                ItemStorage storageItem = itemStorageMap.get(item.getName());
+                Optional<ItemStorage> itemOptional = itemStorageRepository.findById(item.getId());
+                if (itemOptional.isPresent()) {
+                    ItemStorage itemToStore = itemOptional.get();
+                    if (storageItem != null && storageItem.getQuantity().equals(itemToStore.getQuantity())) {
+                        int newAmount = storageItem.getAmount() + itemToStore.getAmount();
+                        storageItem.setAmount(newAmount);
+                        Long shoppingListId = itemToStore.getShoppingListId();
+                        shoppingListItemRepository.deleteFromTable(shoppingListId, itemToStore.getId());
+                        itemStorageRepository.saveAndFlush(storageItem);
+                        storedItems.add(itemToStore);
+                    } else if (storageItem != null && storageItem.getQuantity() != null) {
+                        UnitsRelation unitsRelation = unitsRelationRepository.findUnitsRelationByBaseUnitAndCalculatedUnit(
+                            storageItem.getQuantity().getName(), itemToStore.getQuantity().getName());
+                        if (unitsRelation != null) {
+                            double relation = unitsRelation.getRelation();
+                            int newAmount = (int) (storageItem.getAmount() * relation + itemToStore.getAmount());
+                            storageItem.setAmount(newAmount);
+                            Long shoppingListId = itemToStore.getShoppingListId();
+                            shoppingListItemRepository.deleteFromTable(shoppingListId, itemToStore.getId());
+                            itemStorageRepository.saveAndFlush(storageItem);
+                            storedItems.add(itemToStore);
+                        } else {
+                            throw new ServiceException("Incompatible units of quantity");
+                        }
+                    } else {
+                        Long shoppingListId = itemToStore.getShoppingListId();
 
-                item.setShoppingListId(null);
-                item.setStorageId(storageId);
+                        itemToStore.setShoppingListId(null);
+                        itemToStore.setStorageId(storageId);
 
-                shoppingListItemRepository.saveAndFlush(item);
+                        shoppingListItemRepository.deleteFromTable(shoppingListId, itemToStore.getId());
+                        itemStorageRepository.saveAndFlush(itemToStore);
+                        storedItems.add(itemToStore);
+                    }
+                }
             }
         }
 
-        return boughtItems;
+        return storedItems;
     }
 
 }
