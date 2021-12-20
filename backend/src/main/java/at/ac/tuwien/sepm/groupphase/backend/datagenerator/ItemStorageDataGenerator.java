@@ -26,10 +26,11 @@ public class ItemStorageDataGenerator {
     private final ItemStorageRepository itemStorageRepository;
     private final UnitOfQuantityRepository unitOfQuantityRepository;
     private static final int NUMBER_OF_ITEMSTORAGES = 5;
-    private static final Long ID_OF_STORAGE = 2L;
+    private static final Long ID_OF_STORAGE = 6L;
     private static final Long ID_OF_SHOPPINGLIST = 1L;
     private static final boolean CREATE_REAL_ITEMSTORAGES = true;
     private final StorageDataGenerator storageDataGenerator;
+    private final UserDataGenerator userDataGenerator;
 
     private final UnitOfQuantityDataGenerator unitOfQuantityDataGenerator;
 
@@ -37,12 +38,14 @@ public class ItemStorageDataGenerator {
     public ItemStorageDataGenerator(ItemStorageRepository itemStorageRepository,
                                     UnitOfQuantityRepository unitOfQuantityRepository,
                                     UnitOfQuantityDataGenerator unitOfQuantityDataGenerator,
-                                    StorageDataGenerator storageDataGenerator) {
+                                    StorageDataGenerator storageDataGenerator,
+                                    UserDataGenerator userDataGenerator) {
         this.itemStorageRepository = itemStorageRepository;
         this.unitOfQuantityRepository = unitOfQuantityRepository;
         this.unitOfQuantityDataGenerator = unitOfQuantityDataGenerator;
 
         this.storageDataGenerator = storageDataGenerator;
+        this.userDataGenerator = userDataGenerator;
     }
 
     //@PostConstruct
@@ -52,8 +55,9 @@ public class ItemStorageDataGenerator {
         } else if (CREATE_REAL_ITEMSTORAGES) {
             LOGGER.debug("generating ItemStorage");
 
-            this.unitOfQuantityDataGenerator.generateUnitOfQuantity();
             this.storageDataGenerator.generateStorage();
+            this.unitOfQuantityDataGenerator.generateUnitOfQuantity();
+            this.userDataGenerator.generateUser();
 
             List<UnitOfQuantity> unitList = unitOfQuantityRepository.findAll();
             Map<String, UnitOfQuantity> mappedUnits = new HashMap<>();

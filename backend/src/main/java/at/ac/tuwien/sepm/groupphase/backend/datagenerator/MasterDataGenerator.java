@@ -42,13 +42,13 @@ public class MasterDataGenerator {
     @PostConstruct
     public void generateData() {
         LOGGER.debug("Generating Data");
+        storageDataGenerator.generateStorage();
         unitOfQuantityDataGenerator.generateUnitOfQuantity();
         unitOfQuantityDataGenerator.generateUnitsRelations();
         userDataGenerator.generateUser();
         //userDataGenerator.generateApplicationUser();
         itemDataGenerator.generateItem();
         itemStorageDataGenerator.generateItemStorage();
-        storageDataGenerator.generateStorage();
         recipeDataGenerator.generateRecipes();
         shoppingListDataGenerator.generateShoppingList();
     }

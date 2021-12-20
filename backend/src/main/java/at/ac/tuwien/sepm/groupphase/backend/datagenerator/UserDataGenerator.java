@@ -34,19 +34,24 @@ public class UserDataGenerator {
     private final UserLoginMapper userLoginMapper;
     private final UserGroupRepository userGroupRepository;
     private final StorageRepository storageRepository;
+    private final StorageDataGenerator storageDataGenerator;
 
     public UserDataGenerator(CustomUserRepository userRepository, UserLoginMapper userLoginMapper,
-                             ShoppingListRepository shoppingListRepository, ItemRepository itemRepository, UserGroupRepository userGroupRepository, StorageRepository storageRepository) {
+                             ShoppingListRepository shoppingListRepository, ItemRepository itemRepository,
+                             UserGroupRepository userGroupRepository, StorageRepository storageRepository,
+                             StorageDataGenerator storageDataGenerator) {
         this.userRepository = userRepository;
         this.shoppingListRepository = shoppingListRepository;
         this.userLoginMapper = userLoginMapper;
         this.itemRepository = itemRepository;
         this.userGroupRepository = userGroupRepository;
         this.storageRepository = storageRepository;
+        this.storageDataGenerator = storageDataGenerator;
     }
 
     @PostConstruct
     void generateUser() { //TODO remove
+        storageDataGenerator.generateStorage();
 
         UserGroup group = null;
         Item item = new Item(null, "Döner", null);
