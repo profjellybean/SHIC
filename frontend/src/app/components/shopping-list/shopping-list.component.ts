@@ -7,7 +7,7 @@ import {User} from '../../dtos/user';
 import jwt_decode from 'jwt-decode';
 import {AuthService} from '../../services/auth.service';
 import {UserService} from '../../services/user.service';
-import {ShoppingList} from "../../dtos/shopping-list";
+import {ShoppingList} from '../../dtos/shopping-list';
 
 @Component({
   selector: 'app-shopping-list',

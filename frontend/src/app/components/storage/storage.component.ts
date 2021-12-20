@@ -117,11 +117,9 @@ export class StorageComponent implements OnInit {
   loadItemsToAdd() {
     this.shoppingListService.findAllItems().subscribe({
       next: data => {
-<<<<<<< HEAD
-        console.log('received items8', data);
-=======
+
         console.log('received items to add', data);
->>>>>>> origin/dev
+
         this.itemsToAdd = data;
       }
     });
@@ -205,11 +203,8 @@ export class StorageComponent implements OnInit {
   private getAllItemsByStorageId(params: Params) {
     this.storageService.getItems(params).subscribe({
       next: data => {
-<<<<<<< HEAD
-        console.log('received items9', data);
-=======
         console.log('received items in storage', data);
->>>>>>> origin/dev
+
         this.items = data;
       },
       error: error => {
