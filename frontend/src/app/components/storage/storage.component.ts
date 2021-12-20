@@ -92,8 +92,8 @@ export class StorageComponent implements OnInit {
     console.log('item to add', this.itemToAdd);
     this.storageService.addItem(item).subscribe({
       next: data => {
-        this.items.push(item);
-        //this.getAllItemsByStorageId({id: this.user.currGroup.storageId});
+        //this.items.push(item);
+        this.getAllItemsByStorageId({id: this.user.currGroup.storageId});
         this.itemToAdd = this.nullItem;
         console.log('added Item', data);
       },

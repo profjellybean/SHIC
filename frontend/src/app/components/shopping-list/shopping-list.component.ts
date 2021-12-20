@@ -186,7 +186,7 @@ export class ShoppingListComponent implements OnInit {
     console.log('item to add', this.itemToAdd);
     this.shoppingListService.addItemToShoppingList(this.itemToAdd).subscribe({
       next: data => {
-        this.items.push(this.itemToAdd);
+        //this.items.push(this.itemToAdd);
         this.loadItems();
         console.log('add item', data);
       },
@@ -210,7 +210,8 @@ export class ShoppingListComponent implements OnInit {
     if(this.isInPublic){
       this.shoppingListService.addToPublicShoppingList(item).subscribe({
         next: data => {
-          this.items.push(data);
+          //this.items.push(data);
+          this.loadItems();
           console.log('add item', data);
         },
         error: err => {
@@ -220,7 +221,8 @@ export class ShoppingListComponent implements OnInit {
     }else{
       this.shoppingListService.addToPrivateShoppingList(item).subscribe({
         next: data => {
-          this.items.push(data);
+          //this.items.push(data);
+          this.loadItems();
           console.log('add item', data);
         },
         error: err => {
