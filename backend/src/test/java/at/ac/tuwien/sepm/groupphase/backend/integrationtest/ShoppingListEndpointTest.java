@@ -74,6 +74,7 @@ public class ShoppingListEndpointTest implements TestData {
     //@Autowired
     //RecipeDataGenerator recipeDataGenerator;
 
+    /*
     @BeforeEach
     public void beforeEach() {
         testDataGenerator.generateData_planRecipe();
@@ -82,9 +83,8 @@ public class ShoppingListEndpointTest implements TestData {
     public void afterEach() {
         recipeRepository.deleteAll();
     }
+     */
 
-
-    /*
     @Autowired
     PlatformTransactionManager txm;
 
@@ -104,7 +104,6 @@ public class ShoppingListEndpointTest implements TestData {
         txm.rollback(txstatus);
     }
 
-     */
 
     @Test
     public void givenNoRecipe_whenPlanRecipe_then400() throws Exception {
