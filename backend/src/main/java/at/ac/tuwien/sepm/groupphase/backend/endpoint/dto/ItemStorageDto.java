@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Objects;
 
 public class ItemStorageDto {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -140,17 +141,8 @@ public class ItemStorageDto {
         this.unitOfQuantityDto = unitOfQuantityDto;
     }
 
-    /**
-     * intentionally only compares name and unit of quantity,
-     * so it can be used in planRecipe to check if an ingredient is already in the storage.
-     *
-     * @param o object that this is compared to
-     * @return true if and only if name are the same
-     */
     @Override
     public boolean equals(Object o) {
-
-
         if (this == o) {
             return true;
         }
@@ -158,8 +150,23 @@ public class ItemStorageDto {
             return false;
         }
         ItemStorageDto that = (ItemStorageDto) o;
+        return amount == that.amount
+            && Objects.equals(storageId, that.storageId)
+            && Objects.equals(shoppingListId, that.shoppingListId)
+            && Objects.equals(id, that.id)
+            && Objects.equals(name, that.name)
+            && Objects.equals(unitOfQuantityDto, that.unitOfQuantityDto)
+            && Objects.equals(notes, that.notes)
+            && Arrays.equals(image, that.image)
+            && Objects.equals(expDate, that.expDate)
+            && Objects.equals(locationTag, that.locationTag);
+    }
 
-        return that.name.equals(name);
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(storageId, shoppingListId, id, name, unitOfQuantityDto, notes, expDate, amount, locationTag);
+        result = 31 * result + Arrays.hashCode(image);
+        return result;
     }
 
     @Override

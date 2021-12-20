@@ -5,10 +5,20 @@ import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties
 import at.ac.tuwien.sepm.groupphase.backend.datagenerator.RecipeDataGenerator;
 import at.ac.tuwien.sepm.groupphase.backend.datagenerator.TestDataGenerator;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemStorageDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegistrationDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ItemStorageMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ShoppingListMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserLoginMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Recipe;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
+import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UserGroupRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
@@ -31,11 +41,16 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -45,7 +60,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class ShoppingListEndpointTest implements TestData {
+public class ShoppinglistEndpointTest implements TestData {
 
     @Autowired
     private MockMvc mockMvc;
@@ -71,14 +86,64 @@ public class ShoppingListEndpointTest implements TestData {
     @Autowired
     TestDataGenerator testDataGenerator;
 
+    @Autowired
+    private ItemStorageRepository itemStorageRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private UserGroupRepository userGroupRepository;
+    @Autowired
+    private ItemStorageMapper itemStorageMapper;
+    @Autowired
+    UserLoginMapper userLoginMapper;
+
+    ShoppingList shoppingList;
+
+    Set<ItemStorage> itemList;
+
+    ApplicationUser user;
+
+    UserGroup userGroup;
+
+    ItemStorage mushrooms;
+
+    ItemStorage pasta;
+
     //@Autowired
     //RecipeDataGenerator recipeDataGenerator;
 
-    /*
+/*
     @BeforeEach
     public void beforeEach() {
-        testDataGenerator.generateData_planRecipe();
+        Optional<ApplicationUser> userOptional = userRepository.findUserByUsername(ADMIN_USER);
+        if(userOptional.isPresent()) {
+            ApplicationUser user = userOptional.get();
+        }
+        shoppingList = ShoppingList.ShoppingListBuilder.aShoppingList()
+            .withName("Test")
+            .withOwner(user)
+            .withNotes("test notes")
+            .withItems(null)
+            .build();
+        shoppingList = shoppingListRepository.saveAndFlush(shoppingList);
+
+        mushrooms = new ItemStorage("Mushrooms", null, null, null, 200,
+            null, null, null, shoppingList.getId());
+        itemStorageRepository.save(mushrooms);
+        pasta = new ItemStorage("Pasta", null, null, null, 500,
+            null, null, null, shoppingList.getId());
+        itemStorageRepository.save(pasta);
+
+        itemList = new HashSet<>();
+        itemList.add(mushrooms);
+        itemList.add(pasta);
+
+        shoppingList.setItems(itemList);
+        shoppingListRepository.saveAndFlush(shoppingList);
     }
+
+ */
+    /*
     @AfterEach
     public void afterEach() {
         recipeRepository.deleteAll();
@@ -203,5 +268,50 @@ public class ShoppingListEndpointTest implements TestData {
         assertEquals(0, itemStorageDtos.size());
 
     }
+/*
+    @Test
+    public void workOffShoppingList_ShouldReturn_shoppingListWithEmptyItems() throws Exception {
+
+        ItemStorageDto mushroomsDto = itemStorageMapper.itemStorageToItemStorageDto(mushrooms);
+        ItemStorageDto pastaDto = itemStorageMapper.itemStorageToItemStorageDto(pasta);
+
+        List<ItemStorageDto> itemsToBuy = new LinkedList<ItemStorageDto>();
+        itemsToBuy.add(mushroomsDto);
+        itemsToBuy.add(pastaDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLISTENPOINDT_URI + "/" + shoppingList.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(itemsToBuy))
+            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        //assertEquals(HttpStatus.OK.value(), response.getStatus());
+        Set emptySet = new HashSet<ItemStorage>();
+        ShoppingList workedOffList = shoppingListRepository.getById(shoppingList.getId());
+        assertEquals(emptySet, workedOffList.getItems());
+    }
+
+ */
+
+
+/*
+    @Test
+    public void workOffShoppingList_WithNoItems_ShouldThrowError() throws Exception {
+
+
+        MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLISTENPOINDT_URI + "/" + shoppingList.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(itemsToBuy))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(user.getUsername(), USER_ROLES)))
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        //assertEquals(HttpStatus.OK.value(), response.getStatus());
+        Set emptySet = new HashSet<ItemStorage>();
+        ShoppingList workedOffList = shoppingListRepository.getById(shoppingList.getId());
+        assertEquals(emptySet, workedOffList.getItems());
+    }
+    */
 
 }

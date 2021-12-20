@@ -71,5 +71,12 @@ public interface ShoppingListService {
      */
     List<Item> findAllItems();
 
-    List<ItemStorage> workOffShoppingList(String username, List<ItemStorage> boughtItems);
+    /**
+     * Work off shoppinglist. A list of items  will be transfered from shoppinglist to storage.
+     *
+     * @param authentication of the logged in user
+     * @param boughtItems the items which have been bought and will be transfered into the storage
+     * @return a list of items which were tranfered into the storage
+     */
+    List<ItemStorage> workOffShoppingList(Authentication authentication, List<ItemStorage> boughtItems);
 }
