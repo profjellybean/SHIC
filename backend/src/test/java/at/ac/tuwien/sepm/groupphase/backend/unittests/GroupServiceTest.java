@@ -46,7 +46,7 @@ public class GroupServiceTest {
         userRepository.saveAndFlush(user);
 
         groupService.addUser(id, user.getUsername());
-        assertThrows(ServiceException.class, () -> groupService.addUser(id, "Name"));
+        assertThrows(ServiceException.class, () -> groupService.addUser(id, user.getUsername()));
     }
 
     @Test
