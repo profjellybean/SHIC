@@ -1,11 +1,12 @@
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export class ItemStorage {
+  //storageId: number;
+  shoppingListId: number;
   id: number;
   name: string;
+  quantity: number;
   notes: string;
+  //image: ImageBitmap;
   expDate: Date;
   amount: number;
-  locationTag: Location;
-  storageId: number;
-  shoppingListId: number;
+  locationTag: string;
 }

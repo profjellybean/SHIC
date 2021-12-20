@@ -1,15 +1,27 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
+import java.util.Objects;
+
 public class ItemDto {
     private Long id;
     private String name;
     private Long quantity;
 
+    public ItemDto(Long id) {
+        this.id = id;
+    }
+
     public ItemDto() {
+
     }
 
     public ItemDto(Long id, String name, Long quantity) {
         this.id = id;
+        this.name = name;
+        this.quantity = quantity;
+    }
+
+    public ItemDto(String name, Long quantity) {
         this.name = name;
         this.quantity = quantity;
     }
@@ -36,6 +48,24 @@ public class ItemDto {
 
     public void setQuantity(Long quantity) {
         this.quantity = quantity;
+    }
+
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ItemDto itemDto = (ItemDto) o;
+        return Objects.equals(id, itemDto.id)
+            && Objects.equals(name, itemDto.name)
+            && Objects.equals(quantity, itemDto.quantity);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, quantity);
     }
 
     @Override

@@ -9,6 +9,7 @@ import {RecipeComponent} from './components/recipe/recipe.component';
 import {ShoppingListComponent} from './components/shopping-list/shopping-list.component';
 import {RecipeDetailComponent} from './components/recipe-detail/recipe-detail.component';
 import {RegisterUserComponent} from './components/registerUser/registerUser.component';
+import {StorageAddItemComponent} from './components/storage-add-item/storage-add-item.component';
 import {UserComponent} from './components/user/user.component';
 import {HomeComponent} from './components/home/home.component';
 import {ConfirmUserEmailComponent} from './components/confirm-user-email/confirm-user-email.component';
@@ -22,6 +23,7 @@ const routes: Routes = [
   {path: 'register', component: RegisterComponent},
   {path: 'confirm', component: ConfirmUserEmailComponent},
   {path: 'storage', component: StorageComponent},
+  {path: 'storage/add', component: StorageAddItemComponent},
   {path: 'recipe/:id', canActivate: [AuthGuard], component: RecipeDetailComponent},
   {path: 'recipe', canActivate: [AuthGuard], component: RecipeComponent},
   {path: 'shopping-list', canActivate: [AuthGuard], component: ShoppingListComponent},

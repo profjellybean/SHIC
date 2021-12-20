@@ -2,15 +2,17 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Storage;
+import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UnitOfQuantityRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.StorageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
@@ -22,11 +24,13 @@ public class StorageServiceImpl implements StorageService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final StorageRepository storageRepository;
     private final ItemStorageRepository itemStorageRepository;
+    private final UnitOfQuantityRepository unitOfQuantityRepository;
 
     @Autowired
-    public StorageServiceImpl(StorageRepository storageRepository, ItemStorageRepository itemStorageRepository) {
+    public StorageServiceImpl(StorageRepository storageRepository, ItemStorageRepository itemStorageRepository, UnitOfQuantityRepository unitOfQuantityRepository) {
         this.storageRepository = storageRepository;
         this.itemStorageRepository = itemStorageRepository;
+        this.unitOfQuantityRepository = unitOfQuantityRepository;
     }
 
     @Override
@@ -44,6 +48,14 @@ public class StorageServiceImpl implements StorageService {
     @Override
     public ItemStorage saveItem(ItemStorage itemStorage) {
         LOGGER.debug("Save item");
+        if (itemStorage.getLocationTag() != null) {
+            try {
+                Location.valueOf(itemStorage.getLocationTag());
+            } catch (IllegalArgumentException i) {
+                throw new ServiceException("Location is not valid");
+            }
+        }
+
         return itemStorageRepository.saveAndFlush(itemStorage);
     }
 
@@ -79,6 +91,12 @@ public class StorageServiceImpl implements StorageService {
     public List<ItemStorage> deleteItemsWhichDoNotExists(List<ItemStorage> itemStoragesAll, List<ItemStorage> itemStoragesFilter) {
         itemStoragesAll.removeIf(i -> !itemStoragesFilter.contains(i));
         return itemStoragesAll;
+    }
+
+    @Override
+    public List<UnitOfQuantity> getAllUnitOfQuantity() {
+        LOGGER.debug("Getting all units of quantity");
+        return unitOfQuantityRepository.findAll();
     }
 
     @Override

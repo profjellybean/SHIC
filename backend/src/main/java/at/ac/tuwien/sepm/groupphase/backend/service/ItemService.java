@@ -22,6 +22,8 @@ public interface ItemService {
      */
     List<UnitOfQuantity> getAll();
 
+    List<Item> getAllItems();
+
     /**
      * Adds UnitsRelation in database.
      *

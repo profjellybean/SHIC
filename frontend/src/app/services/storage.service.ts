@@ -5,6 +5,7 @@ import {Globals} from '../global/globals';
 import {Item} from '../dtos/item';
 import {ItemStorage} from '../dtos/itemStorage';
 import {Params} from '@angular/router';
+import {UnitOfQuantity} from '../dtos/unitOfQuantity';
 
 @Injectable({
   providedIn: 'root'
@@ -41,5 +42,14 @@ export class StorageService {
   createMessage(item: Item): Observable<Item> {
     console.log('Create item');
     return this.httpClient.post<Item>(this.storageBaseUri, item);
+  }
+
+  addItem(item: Item): Observable<Item> {
+    return this.httpClient.post<Item>(this.storageBaseUri, item);
+  }
+
+  findAllUnitsOfQuantity(): Observable<UnitOfQuantity[]>{
+    console.log('load UnitOfQuantity');
+    return this.httpClient.get<UnitOfQuantity[]>(this.storageBaseUri + '/unitOfQuantity');
   }
 }

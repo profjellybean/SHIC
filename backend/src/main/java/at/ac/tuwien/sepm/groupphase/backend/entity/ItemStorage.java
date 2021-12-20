@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -43,7 +44,7 @@ public class ItemStorage {
         this.id = id;
     }
 
-    public ItemStorage(String name, String notes, byte[] image, Date expDate, int amount, String locationTag, UnitOfQuantity unitOfQuantity, Long storageId, Long shoppingListId) {
+    public ItemStorage(String name, String notes, byte[] image, Date expDate, int amount, String locationTag,  UnitOfQuantity unitOfQuantity, Long storageId, Long shoppingListId) {
         this.name = name;
         this.notes = notes;
         this.image = image;
@@ -150,7 +151,7 @@ public class ItemStorage {
         return unitOfQuantity;
     }
 
-    public void setQuantity(UnitOfQuantity quantity) {
+    public void setQuantity(UnitOfQuantity unitOfQuantity) {
         this.unitOfQuantity = unitOfQuantity;
     }
 

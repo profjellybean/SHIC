@@ -1,6 +1,6 @@
 import {UnitOfQuantity} from './unitOfQuantity';
 
-export interface Item {
+export class Item {
   id: number;
   name: string;
   quantity: UnitOfQuantity;

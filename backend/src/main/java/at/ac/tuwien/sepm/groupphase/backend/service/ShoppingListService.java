@@ -1,7 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ShoppingListCreationDto;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Item;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ShoppingListCreationDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
 import org.springframework.security.core.Authentication;
 
@@ -53,7 +54,7 @@ public interface ShoppingListService {
      *
      * @return returns list of storage items
      */
-    List<ItemStorage> findAllByStorageId(Long storageId);
+    List<ItemStorage> findAllByShoppingListId(Long storageId);
 
     /**
      * Checks if shoppinglist exists.
@@ -62,4 +63,12 @@ public interface ShoppingListService {
      */
     Long findShoppingListById(Long id);
 
+    /**
+     * Find all item entries.
+     *
+     * @return ordered list of all item entries
+     */
+    List<Item> findAllItems();
+
+    List<ItemStorage> workOffShoppingList(String username, List<ItemStorage> boughtItems);
 }

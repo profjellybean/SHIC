@@ -4,10 +4,12 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UnitOfQuantityDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UnitsRelationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ItemMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ItemStorageMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UnitOfQuantityMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UnitsRelationMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
 import at.ac.tuwien.sepm.groupphase.backend.service.ItemService;
+import at.ac.tuwien.sepm.groupphase.backend.service.StorageService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -100,6 +102,15 @@ public class ItemEndpoint {
         LOGGER.info("Delete item {}", itemDto.getName());
         return itemService.delete(itemMapper.itemDtoToItem(itemDto));
     }
+
+    @GetMapping //(value="/item")
+    @PermitAll // TODO add security
+    @Operation(summary = "Get all Items")
+    List<ItemDto> getAllItems() {
+        LOGGER.info("Endpoint: getAllItems()");
+        return itemMapper.itemsToItemDtos(itemService.getAllItems());
+    }
+
 
 
 }
