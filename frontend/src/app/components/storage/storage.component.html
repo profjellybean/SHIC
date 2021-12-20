@@ -38,6 +38,11 @@
           <label for="inputName">Name</label>
           <textarea rows="1" name="name" class="form-control" id="inputName" required
                     aria-describedby="nameHelp" placeholder="Enter Name" [(ngModel)]="itemToAdd.name"></textarea>
+          <div *ngIf="submitted && itemForm.controls.name.errors" class="error">
+            <small class="form-text text-warning" *ngIf="itemForm.controls.name.errors.required"> Name is
+              required!
+            </small>
+          </div>
         </div>
 
         <div class="form-group">
