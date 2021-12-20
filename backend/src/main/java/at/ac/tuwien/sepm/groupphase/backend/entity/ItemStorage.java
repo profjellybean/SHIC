@@ -156,6 +156,13 @@ public class ItemStorage {
         this.unitOfQuantity = unitOfQuantity;
     }
 
+    /**
+     * intentionally only compares name and unit of quantity,
+     * so it can be used in planRecipe to check if an ingredient is already in the storage.
+     *
+     * @param o object that this is compared to
+     * @return true if and only if name AND quantity are the same
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -172,6 +179,7 @@ public class ItemStorage {
             && Objects.equals(expDate, that.expDate) && Objects.equals(locationTag, that.locationTag)
             && Objects.equals(shoppingListId, that.shoppingListId);
     }
+
 
     @Override
     public int hashCode() {

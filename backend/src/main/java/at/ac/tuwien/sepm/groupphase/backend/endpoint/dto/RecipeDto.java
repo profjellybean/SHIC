@@ -17,6 +17,17 @@ public class RecipeDto {
 
     private Set<RecipeCategory> categories;
 
+    public RecipeDto() { }
+
+    public RecipeDto(Long id, String name, String description,
+                     Set<ItemStorageDto> ingredients, Set<RecipeCategory> categories) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.ingredients = ingredients;
+        this.categories = categories;
+    }
+
     public Long getId() {
         return id;
     }

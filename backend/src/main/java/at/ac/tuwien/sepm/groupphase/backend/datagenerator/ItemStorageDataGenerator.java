@@ -84,6 +84,22 @@ public class ItemStorageDataGenerator {
             LOGGER.debug("saving ItemStorage {}", pesto);
             itemStorageRepository.save(pesto);
 
+            ItemStorage nutella = new ItemStorage("Nutella", "", null, null, 1, Location.fridge.toString(), mappedUnits.get("kg"), ID_OF_STORAGE, null);
+            LOGGER.debug("saving ItemStorage {}", nutella);
+            itemStorageRepository.save(nutella);
+
+            ItemStorage eggs = new ItemStorage("Eggs", "", null, null, 2, Location.fridge.toString(), mappedUnits.get("pieces"), ID_OF_STORAGE, null);
+            LOGGER.debug("saving ItemStorage {}", eggs);
+            itemStorageRepository.save(eggs);
+
+            ItemStorage soyamilk = new ItemStorage("Soya Milk", "", null, null, 1, Location.fridge.toString(), mappedUnits.get("L"), ID_OF_STORAGE, null);
+            LOGGER.debug("saving ItemStorage {}", soyamilk);
+            itemStorageRepository.save(soyamilk);
+
+            ItemStorage onions = new ItemStorage("Pudding Mix", "", null, null, 5, Location.shelf.toString(), mappedUnits.get("pieces"), ID_OF_STORAGE, null);
+            LOGGER.debug("saving ItemStorage {}", onions);
+            itemStorageRepository.save(onions);
+
             // Items for second Storage
             ItemStorage feta2 = new ItemStorage("Feta", null, null, null, 1, Location.fridge.toString(), mappedUnits.get("pieces"), ID_OF_SECOND_STORAGE, null);
             LOGGER.debug("saving ItemStorage {}", feta2);

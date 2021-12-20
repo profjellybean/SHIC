@@ -3,9 +3,13 @@ package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegistrationDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+import java.util.List;
 
 public interface UserService extends UserDetailsService {
 
@@ -39,6 +43,30 @@ public interface UserService extends UserDetailsService {
      */
     Long getPrivateShoppingListIdByUsername(String username);
 
+    /**
+     * Gets the public shopping list id by username. (Shopping list of current group)
+     *
+     * @param username username of User of required private shopping list
+     * @return Id of public shopping list
+     */
+    Long getPublicShoppingListIdByUsername(String username);
+
+
+    /**
+     * Gets the public shopping list by username. (Shopping list of current group)
+     *
+     * @param username username of User of required private shopping list
+     * @return public shopping list
+     */
+    ShoppingList getPublicShoppingListByUsername(String username);
+
+    /**
+     * Gets the private shopping list by username. (Shopping list of current group)
+     *
+     * @param username username of User of required private shopping list
+     * @return public shopping list
+     */
+    ShoppingList getPrivateShoppingListByUsername(String username);
 
     void resendUserEmailConfirmation(String username);
     /**
@@ -81,4 +109,6 @@ public interface UserService extends UserDetailsService {
     void confirmUser(String confirmationTokenEncrypted);
 
     boolean getConfirmationStatusByName(String username);
+
+    List<ItemStorage> getCombinedAvailableItemsWithoutDuplicates(String username);
 }

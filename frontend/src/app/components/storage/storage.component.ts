@@ -63,9 +63,10 @@ export class StorageComponent implements OnInit {
   getCurrUser(){
     this.userService.getCurrentUser({username: this.user.username}).subscribe({
       next: data => {
-        console.log('received items', data);
+        console.log('received items6', data);
         this.user = data;
         this.getAllItemsByStorageId({id: this.user.currGroup.storageId});
+        this.searchItem.storageId = this.user.currGroup.storageId;
       },
       error: error => {
         console.error(error.message);
@@ -116,7 +117,9 @@ export class StorageComponent implements OnInit {
   loadItemsToAdd() {
     this.shoppingListService.findAllItems().subscribe({
       next: data => {
+
         console.log('received items to add', data);
+
         this.itemsToAdd = data;
       }
     });
@@ -201,6 +204,7 @@ export class StorageComponent implements OnInit {
     this.storageService.getItems(params).subscribe({
       next: data => {
         console.log('received items in storage', data);
+
         this.items = data;
       },
       error: error => {
