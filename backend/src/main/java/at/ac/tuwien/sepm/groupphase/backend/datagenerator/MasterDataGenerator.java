@@ -45,7 +45,7 @@ public class MasterDataGenerator {
         unitOfQuantityDataGenerator.generateUnitOfQuantity();
         unitOfQuantityDataGenerator.generateUnitsRelations();
         userDataGenerator.generateUser();
-        userDataGenerator.generateApplicationUser();
+        //userDataGenerator.generateApplicationUser();
         itemDataGenerator.generateItem();
         itemStorageDataGenerator.generateItemStorage();
         storageDataGenerator.generateStorage();

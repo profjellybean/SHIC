@@ -133,8 +133,6 @@ public class ShoppingListEndpointTest implements TestData {
     public void givenValidRecipe_notEnoughOfIngredient_whenPlanRecipe_then400() throws Exception {
         testDataGenerator.generateData_planRecipe();
         Recipe recipe = recipeRepository.findByName("Feta Cheese Noodles");
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAA recipe by name: " + recipe); // TODO delete
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAA AllRecipes in test: " + recipeRepository.findAll()); // TODO delete
 
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI)
                 .param("recipeId", recipe.getId().toString())
@@ -148,7 +146,7 @@ public class ShoppingListEndpointTest implements TestData {
         List<ItemStorageDto> itemStorageDtos = Arrays.asList(objectMapper.readValue(response.getContentAsString(),
             ItemStorageDto[].class));
 
-        assertEquals(1, itemStorageDtos.size()); // TODO
+        assertEquals(1, itemStorageDtos.size());
         ItemStorageDto itemStorageDto1 = itemStorageDtos.get(0);
         assertAll(
             () -> assertEquals("Feta", itemStorageDto1.getName()),
@@ -161,8 +159,6 @@ public class ShoppingListEndpointTest implements TestData {
     public void givenValidRecipe_allIngredientsMissing_whenPlanRecipe_then400() throws Exception {
         testDataGenerator.generateData_planRecipe();
         Recipe recipe = recipeRepository.findByName("Potato Wedges");
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAA recipe by name: " + recipe); // TODO delete
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAA AllRecipes in test: " + recipeRepository.findAll()); // TODO delete
 
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI)
                 .param("recipeId", recipe.getId().toString())
@@ -177,13 +173,13 @@ public class ShoppingListEndpointTest implements TestData {
         List<ItemStorageDto> itemStorageDtos = Arrays.asList(objectMapper.readValue(response.getContentAsString(),
             ItemStorageDto[].class));
 
-        assertEquals(1, itemStorageDtos.size()); // TODO check size
+        assertEquals(1, itemStorageDtos.size());
         ItemStorageDto itemStorageDto = itemStorageDtos.get(0);
         assertAll(
             () -> assertEquals("Potatoes", itemStorageDto.getName()),
             () -> assertEquals("any kind", itemStorageDto.getNotes()),
             () -> assertEquals(400, itemStorageDto.getAmount()),
-            () -> assertEquals("g", itemStorageDto.getQuantity().getName()) // TODO
+            () -> assertEquals("g", itemStorageDto.getQuantity().getName())
         );
 
     }
@@ -192,8 +188,6 @@ public class ShoppingListEndpointTest implements TestData {
     public void givenValidRecipe_allIngredientsPresent_whenPlanRecipe_then400() throws Exception {
         testDataGenerator.generateData_planRecipe();
         Recipe recipe = recipeRepository.findByName("Noodles with Pesto");
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAA recipe by name: " + recipe); // TODO delete
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAA AllRecipes in test: " + recipeRepository.findAll()); // TODO delete
 
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI)
                 .param("recipeId", recipe.getId().toString())
@@ -207,7 +201,7 @@ public class ShoppingListEndpointTest implements TestData {
         List<ItemStorageDto> itemStorageDtos = Arrays.asList(objectMapper.readValue(response.getContentAsString(),
             ItemStorageDto[].class));
 
-        assertEquals(0, itemStorageDtos.size()); // TODO check size
+        assertEquals(0, itemStorageDtos.size());
 
     }
 

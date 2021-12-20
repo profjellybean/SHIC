@@ -9,7 +9,6 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
-import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitsRelation;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
@@ -21,7 +20,6 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.ItemRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListItemRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.ItemService;
 import at.ac.tuwien.sepm.groupphase.backend.service.ShoppingListService;
@@ -101,8 +99,6 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     public List<ItemStorage> planRecipe(Long recipeId, Authentication authentication) {
         LOGGER.debug("Service: plan Recipe {} based on user {}.", recipeId, authentication.getName());
 
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAA recipe by name: " + authentication.getName()); // TODO delete
-
         if (recipeId == null) {
             throw new ValidationException("Recipe does not exist");
         }
@@ -135,7 +131,6 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         } catch (ObjectNotFoundException e) {
             throw new NotFoundException("Could not find recipe with id " + recipeId, e);
         }
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAA recipe by name: " + recipe); // TODO delete
 
         try {
             storageItems = itemStorageRepository.findAllByStorageId(storageId);
