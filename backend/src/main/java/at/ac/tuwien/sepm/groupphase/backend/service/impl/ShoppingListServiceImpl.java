@@ -184,7 +184,8 @@ public class ShoppingListServiceImpl implements ShoppingListService {
                         returnSet.add(ingredient);
                     }
                 } else {
-                    UnitsRelation unitsRelation = unitsRelationRepository.findUnitsRelationByBaseUnitAndCalculatedUnit(ingredient.getQuantity().getName(), storedItem.getQuantity().getName());
+                    UnitsRelation unitsRelation = unitsRelationRepository.findUnitsRelationByBaseUnitAndCalculatedUnit(
+                        ingredient.getQuantity().getName(), storedItem.getQuantity().getName());
                     if (unitsRelation != null) {
                         Double relation = unitsRelation.getRelation();
                         if (ingredient.getAmount() * relation > storedItem.getAmount()) {

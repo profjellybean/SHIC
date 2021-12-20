@@ -10,6 +10,7 @@ import {UserService} from '../../services/user.service';
 import {User} from '../../dtos/user';
 import jwt_decode from 'jwt-decode';
 import {AuthService} from '../../services/auth.service';
+import {forEach} from "lodash";
 
 
 @Component({
@@ -84,6 +85,11 @@ export class StorageComponent implements OnInit {
     if(item.amount === undefined) {
       item.amount = null;
     }
+    this.unitsOfQuantity.forEach(unit => {
+      if(item.quantity.id === unit.id) {
+        item.quantity.name = unit.name;
+      }
+    });
     console.log('item to add', this.itemToAdd);
     this.storageService.addItem(item).subscribe({
       next: data => {
@@ -151,6 +157,7 @@ export class StorageComponent implements OnInit {
       },
       error: error => {
         console.error(error.message);
+        this.defaultServiceErrorHandling(error);
       }
     });
   }

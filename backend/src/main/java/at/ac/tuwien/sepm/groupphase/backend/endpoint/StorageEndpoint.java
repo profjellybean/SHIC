@@ -7,6 +7,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UnitOfQuantityMapper
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.service.StorageService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
@@ -55,6 +56,10 @@ public class StorageEndpoint {
         try {
             return itemStorageMapper.itemStorageToItemStorageDto(storageService.saveItem(itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto)));
         } catch (ServiceException s) {
+            LOGGER.error(s.getMessage());
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
+        } catch (ValidationException e) {
+            LOGGER.error(e.getMessage());
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
