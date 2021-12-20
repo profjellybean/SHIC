@@ -7,7 +7,13 @@ public class ItemDto {
     private String name;
     private Long quantity;
 
-    public ItemDto() {}
+    public ItemDto(Long id) {
+        this.id = id;
+    }
+
+    public ItemDto() {
+
+    }
 
     public ItemDto(Long id, String name, Long quantity) {
         this.id = id;
@@ -52,7 +58,9 @@ public class ItemDto {
             return false;
         }
         ItemDto itemDto = (ItemDto) o;
-        return Objects.equals(id, itemDto.id) && Objects.equals(name, itemDto.name) && Objects.equals(quantity, itemDto.quantity);
+        return Objects.equals(id, itemDto.id)
+            && Objects.equals(name, itemDto.name)
+            && Objects.equals(quantity, itemDto.quantity);
     }
 
     @Override
@@ -63,11 +71,13 @@ public class ItemDto {
     @Override
     public String toString() {
         return "ItemDto{"
-            + "id="
-            + id
-            + ", name='" + name + '\''
-            + ", quantity="
-            + quantity
-            + '}';
+            +
+            "id=" + id
+            +
+            ", name='" + name + '\''
+            +
+            ", quantity=" + quantity
+            +
+            '}';
     }
 }

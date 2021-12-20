@@ -42,9 +42,9 @@ import { ConfirmUserEmailComponent } from './components/confirm-user-email/confi
     RecipeListComponent,
     ConfirmUserEmailComponent,
     StorageAddItemComponent,
+    UserComponent,
     ShoppingListAddComponent,
     ShoppingListListComponent,
-    UserComponent,
   ],
   imports: [
     BrowserModule,

@@ -4,7 +4,7 @@ import {Globals} from '../global/globals';
 import {Observable} from 'rxjs';
 import {ShoppingList} from '../dtos/shopping-list';
 import {Item} from '../dtos/item';
-import {ItemStorage} from '../dtos/itemStorage';
+import {Username} from '../dtos/username';
 
 
 @Injectable({
@@ -12,10 +12,14 @@ import {ItemStorage} from '../dtos/itemStorage';
 })
 export class ShoppingListService {
 
-
   private shoppingListBaseUri: string = this.globals.backendUri + '/shoppinglist';
 
   constructor(private httpClient: HttpClient, private globals: Globals) {
+  }
+
+  getShoppingList(): Observable<string> {
+    console.log('get shoppinglist with id: ');
+    return this.httpClient.get<string>(this.shoppingListBaseUri);
   }
 
 
@@ -44,9 +48,8 @@ export class ShoppingListService {
     return this.httpClient.get<Item[]>(this.shoppingListBaseUri + '/items');
   }
 
-
-  getShoppingList(): Observable<string> {
-
-    return this.httpClient.get<string>(this.shoppingListBaseUri);
+  workOffShoppingList(boughtItems: Item[], shoppinglistId: number, username: string): Observable<Item[]> {
+    console.log('work off shopping-list: ' + boughtItems);
+    return this.httpClient.put<Item[]>(this.shoppingListBaseUri + '/' + shoppinglistId + '?username=' + username, boughtItems);
   }
 }

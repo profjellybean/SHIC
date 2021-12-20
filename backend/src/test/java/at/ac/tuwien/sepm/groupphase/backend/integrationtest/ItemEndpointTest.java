@@ -70,7 +70,7 @@ public class ItemEndpointTest {
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
     }
 
-*/
+
 
 
 
@@ -192,6 +192,8 @@ public class ItemEndpointTest {
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertNull(unitOfQuantityRepository.getUnitOfQuantityById(100000L));
     }
+
+ */
 
 
 }

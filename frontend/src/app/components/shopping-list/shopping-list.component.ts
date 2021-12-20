@@ -3,8 +3,10 @@ import {MessageService} from '../../services/message.service';
 import {ShoppingListService} from '../../services/shopping-list.service';
 import {Item} from '../../dtos/item';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {ShoppingList} from '../../dtos/shopping-list';
-import {ShoppingListListComponent} from '../shopping-list-list/shopping-list-list.component';
+import {User} from '../../dtos/user';
+// @ts-ignore
+import jwt_decode from 'jwt-decode';
+import {AuthService} from '../../services/auth.service';
 
 @Component({
   selector: 'app-shopping-list',
@@ -16,20 +18,39 @@ export class ShoppingListComponent implements OnInit {
   error = false;
   errorMessage = '';
   submitted = false;
-  shoppingList: ShoppingList;
 
   itemsAdd: Item[] = null;
   itemToAdd: Item = null;
+  itemsToBuy: Item[] = [];
   items: Item[] = null;
+
+  user: User = {
+    // @ts-ignore
+    username: jwt_decode(this.authService.getToken()).sub.trim(),
+    password: null,
+    id: null,
+    currGroup: null,
+    privList: null
+  };
+
 
   constructor(private messageService: MessageService,
               private shoppingListService: ShoppingListService,
-              private modalService: NgbModal) {
+              private modalService: NgbModal,
+              private authService: AuthService) {
   }
 
   ngOnInit(): void {
     this.loadItemsToAdd();
     this.loadItems();
+    this.getShoppingList();
+  }
+
+  /**
+   * Error flag will be deactivated, which clears the error message
+   */
+  vanishError() {
+    this.error = false;
   }
 
   getShoppingList() {
@@ -44,11 +65,23 @@ export class ShoppingListComponent implements OnInit {
     );
   }
 
-  /**
-   * Error flag will be deactivated, which clears the error message
-   */
-  vanishError() {
-    this.error = false;
+  workOffShoppingList() {
+    this.shoppingListService.workOffShoppingList(this.itemsToBuy, 7, this.user.username).subscribe({
+        next: res => {
+          console.log(res);
+          for (const item of this.itemsToBuy) {
+            this.removeItemFromShoppingList(item);
+          }
+        },
+        error: err => {
+          console.log(err);
+        }
+      }
+    );
+  }
+
+  checkCheckbox(item: Item) {
+    this.itemsToBuy.push(item);
   }
 
   loadItemsToAdd() {
@@ -96,13 +129,21 @@ export class ShoppingListComponent implements OnInit {
       //this.storageService.addItem(this.item);
       console.log('form item to add', this.itemToAdd);
       this.addItemToShoppingList();
-      this.clearForm();
+      //this.clearForm();
     }
   }
 
   openAddModal(itemAddModal: TemplateRef<any>) {
     this.itemToAdd = new Item();
     this.modalService.open(itemAddModal, {ariaLabelledBy: 'modal-basic-title'});
+  }
+
+  private removeItemFromShoppingList(item: Item) {
+    for (let i = 0; i < this.items.length; i++) {
+      if(this.items[i].id === item.id) {
+        this.items.splice(i, 1);
+      }
+    }
   }
 
   private clearForm() {
@@ -119,5 +160,4 @@ export class ShoppingListComponent implements OnInit {
       this.errorMessage = error.error;
     }
   }
-
 }
