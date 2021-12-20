@@ -7,6 +7,10 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ItemService} from '../../services/item.service';
 import {ShoppingListService} from '../../services/shopping-list.service';
 import {UnitOfQuantity} from '../../dtos/unitOfQuantity';
+import {UserService} from "../../services/user.service";
+import {User} from "../../dtos/user";
+import jwt_decode from "jwt-decode";
+import {AuthService} from "../../services/auth.service";
 
 
 @Component({
@@ -30,16 +34,40 @@ export class StorageComponent implements OnInit {
 
   unitsOfQuantity: UnitOfQuantity[];
 
+  user: User = {
+    // @ts-ignore
+    username: jwt_decode(this.authService.getToken()).sub.trim(),
+    password: null,
+    id: null,
+    currGroup: null,
+    privList: null
+  };
+
   constructor(private storageService: StorageService,
               private modalService: NgbModal,
               private shoppingListService: ShoppingListService,
-              private itemService: ItemService) {
+              private itemService: ItemService,
+              private userService: UserService,
+              private authService: AuthService) {
   }
 
   ngOnInit(): void {
-    this.getAllItemsByStorageId({id: 1});
+    this.getCurrUser();
     this.loadItemsToAdd();
     this.loadUnitsOfQuantity();
+  }
+
+  getCurrUser(){
+    this.userService.getCurrentUser({username: this.user.username}).subscribe({
+      next: data => {
+        console.log('received items', data);
+        this.user = data;
+        this.getAllItemsByStorageId({id: this.user.currGroup.storageId});
+      },
+      error: error => {
+        console.error(error.message);
+      }
+    });
   }
 
 

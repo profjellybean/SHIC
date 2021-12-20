@@ -48,7 +48,7 @@ public class UserDataGenerator {
     @PostConstruct
     void generateUser() { //TODO remove
 
-
+        UserGroup group = null;
         Item item = new Item(null, "Döner", null);
         Long itemId = itemRepository.saveAndFlush(new Item(null, "Döner", null)).getId();
         UserRegistrationDto user = new UserRegistrationDto("user", "password", "user@email.com");
@@ -61,26 +61,25 @@ public class UserDataGenerator {
         if (applicationUser.isEmpty()) {
             Long publicShoppingListId = shoppingListRepository.saveAndFlush(new ShoppingList()).getId();
             Long publicStorageId = storageRepository.saveAndFlush(new Storage()).getId();
-            UserGroup group = new UserGroup(publicStorageId, publicShoppingListId);
+            group = new UserGroup(publicStorageId, publicShoppingListId);
             group = userGroupRepository.saveAndFlush(group);
             ApplicationUser u = userLoginMapper.dtoToEntity(user, shoppingListId);
             u.setCurrGroup(group);
             userRepository.saveAndFlush(u);
 
         }
-
         UserRegistrationDto admin = new UserRegistrationDto("admin", "password", "admin@email.com");
         shoppingListId = shoppingListRepository.saveAndFlush(ShoppingList.ShoppingListBuilder.aShoppingList().withName("Your private shopping list").build()).getId();
         applicationUser = userRepository.findUserByUsername(admin.getUsername());
         if (applicationUser.isEmpty()) {
             Long publicShoppingListId = shoppingListRepository.saveAndFlush(new ShoppingList()).getId();
             Long publicStorageId = storageRepository.saveAndFlush(new Storage()).getId();
-            UserGroup group = new UserGroup(publicStorageId, publicShoppingListId);
-            group = userGroupRepository.saveAndFlush(group);
+            //UserGroup group = new UserGroup(publicStorageId, publicShoppingListId);
+            //group = userGroupRepository.saveAndFlush(group);
             ApplicationUser u = userLoginMapper.dtoToEntity(admin, shoppingListId);
             u.setCurrGroup(group);
             userRepository.saveAndFlush(u);
-
+            group = null;
         }
 
     }
