@@ -18,12 +18,19 @@ import {AuthService} from '../../services/auth.service';
   styleUrls: ['./storage.component.scss']
 })
 export class StorageComponent implements OnInit {
-
+  user: User = {
+    // @ts-ignore
+    username: jwt_decode(this.authService.getToken()).sub.trim(),
+    password: null,
+    id: null,
+    currGroup: null,
+    privList: null
+  };
   error = false;
   errorMessage = '';
   submitted = false;
   searchString='';
-  searchItem: Item = {image:null, id: null, storageId: 1, name: null,
+  searchItem: Item = {image:null, id: null, storageId: null, name: null,
     notes: null, expDate: null, amount: 0, locationTag: null, shoppingListId: null, quantity: null};
 
   items: Item[] = null;
@@ -33,14 +40,7 @@ export class StorageComponent implements OnInit {
 
   unitsOfQuantity: UnitOfQuantity[];
 
-  user: User = {
-    // @ts-ignore
-    username: jwt_decode(this.authService.getToken()).sub.trim(),
-    password: null,
-    id: null,
-    currGroup: null,
-    privList: null
-  };
+
 
   constructor(private storageService: StorageService,
               private modalService: NgbModal,
@@ -71,7 +71,7 @@ export class StorageComponent implements OnInit {
 
 
   addItem(item: Item) {
-    this.itemToAdd.storageId = 1;
+    item.storageId = this.user.currGroup.storageId;
     this.itemToAdd.id = null;
     if(this.itemToAdd.quantity !== undefined) {
       this.itemToAdd.quantity = null;
@@ -80,7 +80,7 @@ export class StorageComponent implements OnInit {
     this.storageService.addItem(item).subscribe({
       next: data => {
         this.items.push(item);
-        this.getAllItemsByStorageId({id: 1});
+        this.getAllItemsByStorageId({id: this.user.currGroup.storageId});
         console.log('added Item', data);
       },
       error: error => {

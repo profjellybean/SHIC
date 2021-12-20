@@ -6,7 +6,6 @@ import {Injectable} from '@angular/core';
 import {Username} from '../dtos/username';
 import {User} from '../dtos/user';
 import {Params} from '@angular/router';
-import {Group} from "../dtos/group";
 
 @Injectable({
   providedIn: 'root'
