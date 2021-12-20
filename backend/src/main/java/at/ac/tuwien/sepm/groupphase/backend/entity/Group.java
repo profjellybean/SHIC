@@ -1,25 +1,24 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 @Entity
-public class Storage {
+public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToMany
-    private Set<ItemStorage> items;
+    @Column
+    private Set<ApplicationUser> user;
 
-    public Storage() {
-    }
-
-    public Storage(Long id) {
-        this.id = id;
-    }
+    @Column
+    private Long storageId;
+    @Column
+    private Long recipeId = storageId;
+    @Column
+    private Long shoppingListId = storageId;
 
     public Long getId() {
         return id;

@@ -70,12 +70,8 @@ public class ShoppingListDto {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         ShoppingListDto that = (ShoppingListDto) o;
         return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(notes, that.notes) && Objects.equals(items, that.items) && Objects.equals(owner, that.owner);
     }
@@ -87,18 +83,12 @@ public class ShoppingListDto {
 
     @Override
     public String toString() {
-        return "ShoppingListDto{"
-            +
-            "id=" + id
-            +
-            ", name='" + name + '\''
-            +
-            ", notes='" + notes + '\''
-            +
-            ", items=" + items
-            +
-            ", owner=" + owner
-            +
+        return "ShoppingListDto{" +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", notes='" + notes + '\'' +
+            ", items=" + items +
+            ", owner=" + owner +
             '}';
     }
 }

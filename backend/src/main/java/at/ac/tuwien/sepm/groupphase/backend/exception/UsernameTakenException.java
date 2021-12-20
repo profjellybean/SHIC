@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.exception;
 
-public class UsernameTakenException extends RuntimeException {
-    public UsernameTakenException() {
+public class UsernameTakenException extends RuntimeException{
+    public  UsernameTakenException() {
     }
 
     public UsernameTakenException(String message) {
