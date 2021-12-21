@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ComplexUserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
@@ -30,11 +31,13 @@ public class UserGroupEndpoint {
     private final GroupService groupService;
     private final UserMapper userMapper;
     private final UserService userService;
+    private final ComplexUserMapper complexUserMapper;
 
-    public UserGroupEndpoint(GroupService groupService, UserMapper userMapper, UserService userService) {
+    public UserGroupEndpoint(GroupService groupService, UserMapper userMapper, UserService userService, ComplexUserMapper complexUserMapper) {
         this.groupService = groupService;
         this.userMapper = userMapper;
         this.userService = userService;
+        this.complexUserMapper = complexUserMapper;
     }
 
     @PostMapping
@@ -55,7 +58,7 @@ public class UserGroupEndpoint {
         } catch (NotFoundException n) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, n.getMessage());
         } catch (ServiceException s) {
-            throw new ResponseStatusException(HttpStatus.ALREADY_REPORTED, s.getMessage());
+            throw new ResponseStatusException(HttpStatus.CONFLICT, s.getMessage());
         }
     }
 
@@ -80,7 +83,7 @@ public class UserGroupEndpoint {
     public Set<UserDto> getAllUsers(@Param("groupId") Long groupId) {
         LOGGER.info("Get all users from group {}", groupId);
         try {
-            return this.userMapper.usersToUsersDto(this.groupService.getAllUsers(groupId));
+            return this.complexUserMapper.usersToUsersDto(this.groupService.getAllUsers(groupId));
         } catch (NotFoundException n) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, n.getMessage());
         }

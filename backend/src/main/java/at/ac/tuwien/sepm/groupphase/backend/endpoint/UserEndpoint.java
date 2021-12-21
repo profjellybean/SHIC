@@ -40,12 +40,14 @@ public class UserEndpoint {
     private final UserService userService;
     private final ComplexUserMapper userMapperImpl;
     private final UserMapper userMapper;
+    private final ComplexUserMapper complexUserMapper;
 
     @Autowired
-    public UserEndpoint(UserService userService, ComplexUserMapper userMapperImpl, UserMapper userMapper) {
+    public UserEndpoint(UserService userService, ComplexUserMapper userMapperImpl, UserMapper userMapper, ComplexUserMapper complexUserMapper) {
         this.userService = userService;
         this.userMapper = userMapper;
         this.userMapperImpl = userMapperImpl;
+        this.complexUserMapper = complexUserMapper;
     }
 
 
@@ -121,7 +123,6 @@ public class UserEndpoint {
     }
 
 
-
     @PermitAll                   //TODO just for Tests
     @PatchMapping
     public void test(@RequestBody UserLoginDto userLoginDto) {
@@ -134,6 +135,6 @@ public class UserEndpoint {
     @GetMapping
     public UserDto getUserByUsername(@Param("username") String username) {
         LOGGER.info("Endpoint: getUserByUsername({})", username);
-        return this.userMapper.userToUserDto(this.userService.findApplicationUserByUsername(username));
+        return this.complexUserMapper.userToUserDto(this.userService.findApplicationUserByUsername(username));
     }
 }

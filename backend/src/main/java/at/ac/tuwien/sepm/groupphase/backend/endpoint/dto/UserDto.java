@@ -1,21 +1,30 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 
 public class UserDto {
     private Long id;
     private String username;
-    private UserGroup currGroup;
+    private UserGroupDto currGroup;
     private Long privList;
+    private String email;
 
-    public UserDto(Long id, String username, UserGroup currGroup, Long privList) {
+    public UserDto(Long id, String username, UserGroupDto currGroup, Long privList, String email) {
         this.id = id;
         this.username = username;
         this.currGroup = currGroup;
         this.privList = privList;
+        this.email = email;
     }
 
     public UserDto() {
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Long getId() {
@@ -34,11 +43,11 @@ public class UserDto {
         this.username = username;
     }
 
-    public UserGroup getCurrGroup() {
+    public UserGroupDto getCurrGroup() {
         return currGroup;
     }
 
-    public void setCurrGroup(UserGroup currGroup) {
+    public void setCurrGroup(UserGroupDto currGroup) {
         this.currGroup = currGroup;
     }
 

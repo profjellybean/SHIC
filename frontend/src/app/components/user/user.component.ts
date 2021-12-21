@@ -24,7 +24,8 @@ export class UserComponent implements OnInit {
     username: jwt_decode(this.authService.getToken()).sub.trim(),
     id: null,
     currGroup: null,
-    privList: null
+    privList: null,
+    email: null
   };
 
   constructor(private groupService: GroupService, public authService: AuthService, private userService: UserService) { }

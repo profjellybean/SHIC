@@ -23,7 +23,8 @@ export class StorageComponent implements OnInit {
     username: jwt_decode(this.authService.getToken()).sub.trim(),
     id: null,
     currGroup: null,
-    privList: null
+    privList: null,
+    email: null
   };
   error = false;
   errorMessage = '';

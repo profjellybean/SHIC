@@ -5,4 +5,5 @@ export interface User {
   username: string;
   currGroup: Group;
   privList: number;
+  email: string;
 }
