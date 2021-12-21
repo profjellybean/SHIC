@@ -33,7 +33,7 @@ public class Bill {
     private String notes;
 
     @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "included_id")
     private Set<ApplicationUser> names;
 
     @OneToMany(fetch = FetchType.EAGER)
