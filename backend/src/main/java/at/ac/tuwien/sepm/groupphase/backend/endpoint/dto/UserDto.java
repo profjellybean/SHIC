@@ -5,14 +5,12 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 public class UserDto {
     private Long id;
     private String username;
-    private String password;
     private UserGroup currGroup;
     private Long privList;
 
-    public UserDto(Long id, String username, String password, UserGroup currGroup, Long privList) {
+    public UserDto(Long id, String username, UserGroup currGroup, Long privList) {
         this.id = id;
         this.username = username;
-        this.password = password;
         this.currGroup = currGroup;
         this.privList = privList;
     }
@@ -34,14 +32,6 @@ public class UserDto {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public UserGroup getCurrGroup() {

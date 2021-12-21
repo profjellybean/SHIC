@@ -21,7 +21,6 @@ export class StorageComponent implements OnInit {
   user: User = {
     // @ts-ignore
     username: jwt_decode(this.authService.getToken()).sub.trim(),
-    password: null,
     id: null,
     currGroup: null,
     privList: null

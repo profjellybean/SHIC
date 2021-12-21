@@ -35,7 +35,6 @@ export class ShoppingListComponent implements OnInit {
   user: User = {
     // @ts-ignore
     username: jwt_decode(this.authService.getToken()).sub.trim(),
-    password: null,
     id: null,
     currGroup: null,
     privList: null
