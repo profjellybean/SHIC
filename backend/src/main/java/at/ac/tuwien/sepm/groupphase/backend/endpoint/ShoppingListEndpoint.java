@@ -165,7 +165,7 @@ public class ShoppingListEndpoint {
         } catch (ValidationException e) {
             LOGGER.error("Error during planning recipe", e);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
-        } catch (ObjectNotFoundException e) {
+        } catch (NotFoundException e) {
             LOGGER.error("Error during planning recipe", e);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         }

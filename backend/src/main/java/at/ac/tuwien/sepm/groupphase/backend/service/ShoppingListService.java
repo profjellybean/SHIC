@@ -4,6 +4,8 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Item;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ShoppingListCreationDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 //import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.security.core.Authentication;
 
@@ -35,11 +37,15 @@ public interface ShoppingListService {
 
     /**
      * plans a recipe. Checks which of the required ingredients are not present
-     * and sets them on the shopping list.
+     * and puts them on the public shopping-list.
      *
      * @param recipeId  id of recipe that user wants to cook
      * @param authentication of user who sent the request
-     * @return a List of all ingredients that were added to the ShoppingList
+     *
+     * @return a List of all the ingredients that were added to the ShoppingList
+     *
+     * @throws ValidationException if the recipe or values in User are invalid
+     * @throws NotFoundException if the recipe or the items in storage can not be found
      */
     List<ItemStorage> planRecipe(Long recipeId, Authentication authentication);
 

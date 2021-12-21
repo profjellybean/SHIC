@@ -112,7 +112,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         }
         UserGroup group = user.getCurrGroup();
         if (group == null) {
-            throw new ValidationException("Storage does not exist");
+            throw new ValidationException("User has no Group");
         }
         Long storageId = group.getStorageId();
         if (storageId == null) {
@@ -167,6 +167,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
      *
      * @param recipeIngredients set of items e.g. representing ingredients of a recipe
      * @param storedItems       set of items e.g. representing the stored Items in a Storage
+     *
      * @return Set of all Items that occur in recipeIngredients but not in storedItem or occur in both, but the amount in recipeIngredients is bigger than the amount in storedItems.
      */
     private List<ItemStorage> compareItemSets(Set<ItemStorage> recipeIngredients, List<ItemStorage> storedItems) {
@@ -217,7 +218,6 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         if (itemStorage.getShoppingListId() != null) {
             List<ItemStorage> itemsInShoppingList = itemStorageRepository
                 .findAllByShoppingListId(itemStorage.getShoppingListId());
-            System.out.println("AAAAAAAAAAAAAAAAAAAA items in shoppinglist: " + itemsInShoppingList);
             Map<String, ItemStorage> storedItemsMap = itemsInShoppingList.stream()
                 .collect(Collectors.toMap(ItemStorage::getName, Function.identity()));
             ItemStorage storedItem = storedItemsMap.get(itemStorage.getName());
