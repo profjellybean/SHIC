@@ -2,6 +2,7 @@ import {Observable} from 'rxjs';
 import {HttpBackend, HttpClient} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {Injectable} from '@angular/core';
+import {User} from '../dtos/user';
 
 
 @Injectable({
@@ -27,7 +28,8 @@ export class GroupService {
     return this.httpClient.put(this.userRegisterUri, {}, {params:{username, groupId}});
   }
 
-  getAllUsers(groupId: number) {
+  getAllUsers(groupId: number): Observable<User[]> {
+    // @ts-ignore
     return this.httpClient.get(this.userRegisterUri, {params: {groupId}});
   }
 

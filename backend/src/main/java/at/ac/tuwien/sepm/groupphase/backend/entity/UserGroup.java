@@ -1,5 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -16,8 +20,9 @@ public class UserGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToMany
+    @OneToMany
     @Column
+    @JsonManagedReference
     private Set<ApplicationUser> user;
     @Column
     private Long storageId;
@@ -27,6 +32,12 @@ public class UserGroup {
     public UserGroup(Long storageId, Long publicShoppingListId) {
         this.storageId = storageId;
         this.publicShoppingListId = publicShoppingListId;
+    }
+
+    public UserGroup(Long publicStorageId, Long publicShoppingListId, HashSet<ApplicationUser> applicationUsers) {
+        this.publicShoppingListId = publicShoppingListId;
+        this.storageId = publicStorageId;
+        this.user = applicationUsers;
     }
 
     public Long getPublicShoppingListId() {
@@ -85,7 +96,7 @@ public class UserGroup {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, user, storageId, publicShoppingListId);
+        return Objects.hash(id, storageId, publicShoppingListId);
     }
 
     @Override

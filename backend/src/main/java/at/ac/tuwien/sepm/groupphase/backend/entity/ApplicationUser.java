@@ -1,5 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -39,6 +42,7 @@ public class ApplicationUser {
     private Long confirmationToken;
 
     @OneToOne
+    @JsonBackReference
     private UserGroup currGroup;
 
     //@Column(nullable = false, name = "PRIVLIST") // TODO Loading
@@ -54,7 +58,6 @@ public class ApplicationUser {
         this.email = email;
         this.confirmationToken = 0L;
     }
-
 
 
     public ApplicationUser(String username, String password, Long shoppingListId, String email, Long confirmationToken) {
@@ -73,6 +76,15 @@ public class ApplicationUser {
     public ApplicationUser(String username, String password, UserGroup currGroup, Long privList) {
         this.username = username;
         this.password = password;
+        this.currGroup = currGroup;
+        this.privList = privList;
+    }
+
+    public ApplicationUser(Long id, String username, String email, Long confirmationToken, UserGroup currGroup, Long privList) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.confirmationToken = confirmationToken;
         this.currGroup = currGroup;
         this.privList = privList;
     }
@@ -146,7 +158,7 @@ public class ApplicationUser {
         return Objects.equals(id, that.id)
             && Objects.equals(username, that.username)
             && Objects.equals(password, that.password)
-            && Objects.equals(currGroup, that.currGroup)
+            //&& Objects.equals(currGroup, that.currGroup)
             && Objects.equals(privList, that.privList);
     }
 
