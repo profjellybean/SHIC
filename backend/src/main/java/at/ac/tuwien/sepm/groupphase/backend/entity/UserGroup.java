@@ -1,5 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,6 +22,7 @@ public class UserGroup {
     private Long id;
     @OneToMany
     @Column
+    @JsonManagedReference
     private Set<ApplicationUser> user;
     @Column
     private Long storageId;

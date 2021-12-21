@@ -76,17 +76,5 @@ public class ComplexUserMapper {
 
         return list;
     }
-
-    public ApplicationUser userDtoToUser(UserDto user) {
-        LOGGER.debug("Mapper: User userToUserDto");
-        LinkedHashSet<String> usernames = new LinkedHashSet<>();
-        Set<String> users = user.getCurrGroup().getUser();
-        for (ApplicationUser a : users) {
-            usernames.add(a.getUsername());
-        }
-
-        return new ApplicationUser(user.getId(), user.getUsername(), new UserGroupDto(user.getCurrGroup().getId(), usernames,
-            user.getCurrGroup().getStorageId(), user.getCurrGroup().getPublicShoppingListId()), user.getPrivList(), user.getEmail());
-    }
 }
 

@@ -1,5 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -39,6 +42,7 @@ public class ApplicationUser {
     private Long confirmationToken;
 
     @OneToOne
+    @JsonBackReference
     private UserGroup currGroup;
 
     //@Column(nullable = false, name = "PRIVLIST") // TODO Loading
