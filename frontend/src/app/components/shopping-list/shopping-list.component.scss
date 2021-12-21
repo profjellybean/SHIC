@@ -20,9 +20,9 @@ button.delete {
   color: white;
 }
 
-[type="radio"] { display: none; }
+.tabbutton { display: none; }
 
-[type="radio"] + label {
+.tabbutton + label {
   width: 6em;
   border: 1px solid #999;
   background: #EEE;
@@ -32,11 +32,11 @@ button.delete {
   top: 1px;
   margin-top: 1em;
 }
-[type="radio"]:checked + label {
+.tabbutton:checked + label {
   background: #FFF;
   border-bottom: 1px solid transparent;
 }
-[type="radio"] ~ .tab {
+.tabbutton ~ .tab {
   border-top: 1px solid #999;
   padding: 12px;
 }

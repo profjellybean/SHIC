@@ -15,28 +15,29 @@ export class UserComponent implements OnInit {
   groupId = null;
   userToAdd: string;
   error: string;
+  success: string;
+  users: User[];
 
 
   user: User = {
     // @ts-ignore
     username: jwt_decode(this.authService.getToken()).sub.trim(),
-    password: null,
     id: null,
     currGroup: null,
-    privList: null
+    privList: null,
+    email: null
   };
 
   constructor(private groupService: GroupService, public authService: AuthService, private userService: UserService) { }
 
   ngOnInit(): void {
     this.getCurrentGroup();
-    console.log(this.groupId);
   }
 
   generateGroup(){
     this.groupService.generateGroup().subscribe({
       next: data => {
-        console.log('received items', data);
+        console.log('received items10', data);
         this.groupId = data;
       },
       error: error => {
@@ -48,10 +49,23 @@ export class UserComponent implements OnInit {
   getCurrentGroup(){
     this.userService.getCurrentUser({username: this.user.username}).subscribe({
       next: data => {
-        console.log('received items', data);
+        console.log('received items11', data);
         this.user = data;
         this.groupId = this.user.currGroup.id;
+        this.getAllUsers(this.groupId);
         console.log(this.groupId);
+      },
+      error: error => {
+        console.error(error.message);
+      }
+    });
+  }
+
+  getAllUsers(id: number){
+    this.groupService.getAllUsers(id).subscribe({
+      next: data => {
+        console.log('received items', data);
+        this.users = data;
       },
       error: error => {
         console.error(error.message);
@@ -71,6 +85,7 @@ export class UserComponent implements OnInit {
     this.groupService.addUser(this.userToAdd, this.groupId).subscribe({
       next: data => {
         console.log('added user {} to group {}', this.userToAdd, this.groupId);
+        this.showSuccess('Successful');
       },
       error: error => {
         console.error(error.message);
@@ -83,8 +98,18 @@ export class UserComponent implements OnInit {
     this.error = null;
   }
 
+  public vanishSuccess(): void {
+    console.log('vanishError');
+    this.success = null;
+  }
+
   private showError(msg: string) {
     console.log('show error' + msg);
     this.error = msg;
+  }
+
+  private showSuccess(msg: string) {
+    console.log('show error' + msg);
+    this.success = msg;
   }
 }

@@ -1,0 +1,172 @@
+package at.ac.tuwien.sepm.groupphase.backend.service.impl;
+
+import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Storage;
+import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
+import at.ac.tuwien.sepm.groupphase.backend.entity.UnitsRelation;
+import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UnitOfQuantityRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UnitsRelationRepository;
+import at.ac.tuwien.sepm.groupphase.backend.service.StorageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.lang.invoke.MethodHandles;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+@Service
+public class StorageServiceImpl implements StorageService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private final StorageRepository storageRepository;
+    private final ItemStorageRepository itemStorageRepository;
+    private final UnitOfQuantityRepository unitOfQuantityRepository;
+    private final UnitsRelationRepository unitsRelationRepository;
+
+    @Autowired
+    public StorageServiceImpl(StorageRepository storageRepository, ItemStorageRepository itemStorageRepository,
+                              UnitOfQuantityRepository unitOfQuantityRepository,
+                              UnitsRelationRepository unitsRelationRepository) {
+        this.storageRepository = storageRepository;
+        this.itemStorageRepository = itemStorageRepository;
+        this.unitOfQuantityRepository = unitOfQuantityRepository;
+        this.unitsRelationRepository = unitsRelationRepository;
+    }
+
+    @Override
+    public ItemStorage deleteItemById(Long id) {
+        LOGGER.debug("Delete item by id");
+        try {
+            ItemStorage itemToDelete = itemStorageRepository.getById(id);
+            itemStorageRepository.delete(itemToDelete);
+            return itemToDelete;
+        } catch (NotFoundException e) {
+            throw new NotFoundException();
+        }
+    }
+
+    @Override
+    public ItemStorage saveItem(ItemStorage itemStorage) {
+        LOGGER.debug("Save item");
+
+        if (itemStorage.getLocationTag() != null) {
+            try {
+                Location.valueOf(itemStorage.getLocationTag());
+            } catch (IllegalArgumentException i) {
+                throw new ValidationException("Location is not valid");
+            }
+        }
+
+        // check if there is already an item with the same name in the storage
+        if (itemStorage.getStorageId() != null) {
+            List<ItemStorage> itemsInStorage = itemStorageRepository.findAllByStorageId(itemStorage.getStorageId());
+            Map<String, ItemStorage> storedItemsMap = itemsInStorage.stream()
+                .collect(Collectors.toMap(ItemStorage::getName, Function.identity()));
+            ItemStorage storedItem = storedItemsMap.get(itemStorage.getName());
+            // if there is uch an item, compare the units of quantity
+            if (storedItem != null && storedItem.getQuantity().equals(itemStorage.getQuantity())) {
+                // if they are the same, add the amounts and save
+                int newAmount = storedItem.getAmount() + itemStorage.getAmount();
+                storedItem.setAmount(newAmount);
+                return itemStorageRepository.saveAndFlush(storedItem);
+            } else if (storedItem != null && storedItem.getQuantity() != null) {
+                // else recalculate the amount, then add the amounts and save
+                if (itemStorage.getQuantity() == null) {
+                    throw new ValidationException("Unit of Quantity has to be set");
+                }
+                UnitsRelation unitsRelation = unitsRelationRepository.findUnitsRelationByBaseUnitAndCalculatedUnit(
+                    storedItem.getQuantity().getName(), itemStorage.getQuantity().getName());
+                if (unitsRelation != null) {
+                    int newAmount = (int) (storedItem.getAmount() * unitsRelation.getRelation() + itemStorage.getAmount());
+                    storedItem.setAmount(newAmount);
+                    storedItem.setQuantity(itemStorage.getQuantity());
+                    return itemStorageRepository.saveAndFlush(storedItem);
+                } else {
+                    throw new ServiceException("incompatible Units of Quantity");
+                }
+            }
+        }
+
+        return itemStorageRepository.saveAndFlush(itemStorage);
+    }
+
+    @Override
+    public List<ItemStorage> searchItem(ItemStorage itemStorage) {
+        LOGGER.info("Search for Items by ItemStorage {}", itemStorage);
+        if (itemStorage.getNotes() != null) {
+            if (itemStorage.getNotes().trim().equals("")) {
+                itemStorage.setNotes(null);
+            }
+        }
+        if (itemStorage.getName() != null) {
+            if (itemStorage.getName().trim().equals("")) {
+                itemStorage.setName(null);
+            }
+        }
+        if (itemStorage.getLocationTag() != null) {
+            if (itemStorage.getLocationTag().trim().equals("")) {
+                itemStorage.setLocationTag(null);
+            }
+        }
+
+        return itemStorageRepository.findAllByItemStorage(
+            itemStorage.getStorageId(), itemStorage.getAmount(), itemStorage.getLocationTag() == null ? null : itemStorage.getLocationTag(),
+            itemStorage.getName() == null ? null : "%" + itemStorage.getName() + "%",
+            itemStorage.getNotes() == null ? null : "%" + itemStorage.getNotes() + "%",
+            itemStorage.getExpDate());
+
+    }
+
+
+    @Override
+    public List<ItemStorage> deleteItemsWhichDoNotExists(List<ItemStorage> itemStoragesAll, List<ItemStorage> itemStoragesFilter) {
+        itemStoragesAll.removeIf(i -> !itemStoragesFilter.contains(i));
+        return itemStoragesAll;
+    }
+
+    @Override
+    public List<UnitOfQuantity> getAllUnitOfQuantity() {
+        LOGGER.debug("Getting all units of quantity");
+        return unitOfQuantityRepository.findAll();
+    }
+
+    @Override
+    public List<ItemStorage> getAll(Long id) {
+        LOGGER.debug("Getting all items");
+        return itemStorageRepository.findAllByStorageId(id);
+    }
+
+    @Override
+    public Long findStorageById(Long id) {
+        LOGGER.debug("Getting the Storage with the id");
+        if (storageRepository.findById(id).isPresent()) {
+            return id;
+        } else {
+            throw new NotFoundException();
+        }
+    }
+
+    @Override
+    public Long createNewStorage() {
+        LOGGER.debug("Creating a new storage");
+        return storageRepository.saveAndFlush(new Storage()).getId();
+    }
+
+    @Override
+    public List<ItemStorage> searchItemName(Long id, String name) {
+        LOGGER.debug("search for items");
+        return itemStorageRepository.findAllByStorageIdAndNameContainingIgnoreCase(id, name);
+    }
+
+
+}

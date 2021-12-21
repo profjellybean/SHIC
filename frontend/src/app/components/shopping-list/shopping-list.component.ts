@@ -7,6 +7,10 @@ import {User} from '../../dtos/user';
 import jwt_decode from 'jwt-decode';
 import {AuthService} from '../../services/auth.service';
 import {UserService} from '../../services/user.service';
+import {ShoppingList} from '../../dtos/shopping-list';
+import {GroupService} from '../../services/group.service';
+import {UnitOfQuantity} from '../../dtos/unitOfQuantity';
+import {StorageService} from '../../services/storage.service';
 
 @Component({
   selector: 'app-shopping-list',
@@ -23,34 +27,52 @@ export class ShoppingListComponent implements OnInit {
   itemToAdd: Item = null;
   itemsToBuy: Item[] = [];
   items: Item[] = null;
-
+  privateList: ShoppingList;
+  publicList: ShoppingList;
+  isInPublic: boolean;
+  groupStorageId: number;
+  unitsOfQuantity: UnitOfQuantity[];
   user: User = {
     // @ts-ignore
     username: jwt_decode(this.authService.getToken()).sub.trim(),
-    password: null,
     id: null,
     currGroup: null,
-    privList: null
+    privList: null,
+    email: null
   };
 
 
-  constructor(
-              private shoppingListService: ShoppingListService,
+  constructor(private shoppingListService: ShoppingListService,
+              private storageService: StorageService,
               private modalService: NgbModal,
               private authService: AuthService,
-              private userService: UserService) {
+              private userService: UserService,
+              private groupService: GroupService) {
   }
 
   ngOnInit(): void {
+    this.loadUnitsOfQuantity();
     this.loadItemsToAdd();
-    this.getShoppingList();
+    this.loadGroupStorageId();
+    this.getPrivateShoppingList();
+    this.getPublicShoppingList();
     this.getCurrUser();
+  }
+
+  switchMode(publicMode: boolean){
+    this.isInPublic = publicMode;
+    if(publicMode){
+      this.items = this.publicList.items;
+    }else{
+      this.items = this.privateList.items;
+    }
+
   }
 
   getCurrUser(){
     this.userService.getCurrentUser({username: this.user.username}).subscribe({
       next: data => {
-        console.log('received items', data);
+        console.log('received items1', data);
         this.user = data;
         this.loadItems();
       },
@@ -67,10 +89,28 @@ export class ShoppingListComponent implements OnInit {
     this.error = false;
   }
 
-  getShoppingList() {
-    this.shoppingListService.getShoppingList().subscribe({
+  getPrivateShoppingList() {
+    this.shoppingListService.getPrivateShoppingList().subscribe({
         next: res => {
-          console.log(res);
+          this.privateList = res;
+          console.log(this.privateList);
+        },
+        error: err => {
+          console.error(err);
+        }
+      }
+    );
+  }
+
+  getPublicShoppingList() {
+    console.log('getting public shoppingList');
+    this.shoppingListService.getPublicShoppingList().subscribe({
+        next: res => {
+          this.publicList = res;
+          console.log(this.publicList);
+          if(this.items === null){
+            this.items = this.publicList.items;
+          }
         },
         error: err => {
           console.error(err);
@@ -80,7 +120,7 @@ export class ShoppingListComponent implements OnInit {
   }
 
   workOffShoppingList() {
-    this.shoppingListService.workOffShoppingList(this.itemsToBuy, this.user.currGroup.storageId, this.user.username).subscribe({
+    this.shoppingListService.workOffShoppingList(this.itemsToBuy, this.user.currGroup.publicShoppingListId).subscribe({
         next: res => {
           console.log(res);
           for (const item of this.itemsToBuy) {
@@ -98,35 +138,55 @@ export class ShoppingListComponent implements OnInit {
     this.itemsToBuy.push(item);
   }
 
+  loadUnitsOfQuantity() {
+    this.storageService.findAllUnitsOfQuantity().subscribe({
+      next: data => {
+        console.log('received units of quantity', data);
+        this.unitsOfQuantity = data;
+      }
+    });
+  }
+
   loadItemsToAdd() {
     this.shoppingListService.findAllItems().subscribe({
       next: data => {
-        console.log('received items', data);
+        console.log('received items to add', data);
         this.itemsAdd = data;
       }
     });
   }
 
   loadItems() {
-    this.shoppingListService.findAll(this.user.currGroup.publicShoppingListId).subscribe({
-      next: data => {
-        console.log('received items', data);
+    if(this.isInPublic){
+      this.shoppingListService.findAll(this.user.currGroup.publicShoppingListId).subscribe({
+        next: data => {
+          console.log('received items for public shoppingList', data);
 
-        this.items = data;
-      }
-    });
+          this.items = data;
+        }
+      });
+    }else{
+      this.shoppingListService.findAll(this.user.privList).subscribe({
+        next: data => {
+          console.log('received items for private shoppingList', data);
+
+          this.items = data;
+        }
+      });
+    }
+
   }
 
-  addItemToShoppingList() {
+  addItemToShoppingList2() {
     console.log('item to add', this.itemToAdd);
-    this.itemToAdd.shoppingListId = this.user.currGroup.publicShoppingListId;
+
     this.itemToAdd.id = null;
     this.itemToAdd.amount = null;
     this.itemToAdd.quantity = null;
     console.log('item to add', this.itemToAdd);
     this.shoppingListService.addItemToShoppingList(this.itemToAdd).subscribe({
       next: data => {
-        this.items.push(this.itemToAdd);
+        //this.items.push(this.itemToAdd);
         this.loadItems();
         console.log('add item', data);
       },
@@ -136,14 +196,51 @@ export class ShoppingListComponent implements OnInit {
     });
   }
 
+  addItemToShoppingList(item: Item) {
+    console.log('item to add', this.itemToAdd);
+
+    this.itemToAdd.id = null;
+    if(item.quantity === undefined) {
+      item.quantity = null;
+    }
+    if(item.amount === undefined) {
+      item.amount = null;
+    }
+    console.log('item to add', item);
+    if(this.isInPublic){
+      this.shoppingListService.addToPublicShoppingList(item).subscribe({
+        next: data => {
+          //this.items.push(data);
+          this.loadItems();
+          console.log('add item', data);
+        },
+        error: err => {
+          this.defaultServiceErrorHandling(err);
+        }
+      });
+    }else{
+      this.shoppingListService.addToPrivateShoppingList(item).subscribe({
+        next: data => {
+          //this.items.push(data);
+          this.loadItems();
+          console.log('add item', data);
+        },
+        error: err => {
+          this.defaultServiceErrorHandling(err);
+        }
+      });
+    }
+
+  }
+
   addItemForm(form) {
     this.submitted = true;
 
     if (form.valid) {
       //this.storageService.addItem(this.item);
       console.log('form item to add', this.itemToAdd);
-      this.addItemToShoppingList();
-      //this.clearForm();
+      this.addItemToShoppingList(this.itemToAdd);
+      this.clearForm();
     }
   }
 
@@ -173,5 +270,16 @@ export class ShoppingListComponent implements OnInit {
     } else {
       this.errorMessage = error.error;
     }
+  }
+
+  private loadGroupStorageId() {
+    this.shoppingListService.getGroupStorageForUser().subscribe({
+      next: data => {
+        this.groupStorageId = data;
+      },
+      error: err => {
+        this.defaultServiceErrorHandling(err);
+      }
+    });
   }
 }

@@ -40,4 +40,6 @@ export class UserService {
     console.log('get user', params);
     return this.httpClient.get<User>(this.userRegisterUri, {params});
   }
+
+
 }
