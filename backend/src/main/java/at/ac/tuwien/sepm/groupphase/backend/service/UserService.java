@@ -106,6 +106,8 @@ public interface UserService extends UserDetailsService {
 
     Long loadGroupStorageByUsername(String username);
 
+    Long loadGroupShoppinglistByUsername(String username);
+
     void confirmUser(String confirmationTokenEncrypted);
 
     boolean getConfirmationStatusByName(String username);

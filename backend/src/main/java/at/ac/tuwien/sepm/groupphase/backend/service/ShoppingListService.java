@@ -79,4 +79,6 @@ public interface ShoppingListService {
      * @return a list of items which were tranfered into the storage
      */
     List<ItemStorage> workOffShoppingList(Authentication authentication, List<ItemStorage> boughtItems);
+
+
 }

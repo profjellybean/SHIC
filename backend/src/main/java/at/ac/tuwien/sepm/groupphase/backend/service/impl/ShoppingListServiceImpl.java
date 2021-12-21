@@ -204,7 +204,6 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     @Override
     public ItemStorage saveItem(ItemStorage itemStorage, Long id) {
         LOGGER.debug("save item in shopping list");
-
         if (itemStorage.getLocationTag() != null) {
             try {
                 Location.valueOf(itemStorage.getLocationTag());
@@ -217,7 +216,6 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         if (itemStorage.getShoppingListId() != null) {
             List<ItemStorage> itemsInShoppingList = itemStorageRepository
                 .findAllByShoppingListId(itemStorage.getShoppingListId());
-            System.out.println("AAAAAAAAAAAAAAAAAAAA items in shoppinglist: " + itemsInShoppingList);
             Map<String, ItemStorage> storedItemsMap = itemsInShoppingList.stream()
                 .collect(Collectors.toMap(ItemStorage::getName, Function.identity()));
             ItemStorage storedItem = storedItemsMap.get(itemStorage.getName());
@@ -226,7 +224,10 @@ public class ShoppingListServiceImpl implements ShoppingListService {
                 // if they are the same, add the amounts and save
                 int newAmount = storedItem.getAmount() + itemStorage.getAmount();
                 storedItem.setAmount(newAmount);
-                return itemStorageRepository.saveAndFlush(storedItem);
+                itemStorageRepository.saveAndFlush(storedItem);
+                return null;
+                /// In this case null is returned so that the frontend can differentiate between "Item was added to the list" and "Item in the list was changed".
+                /// This is to tell the frontend whether it should reload or not !!
             } else if (storedItem != null && storedItem.getQuantity() != null) {
                 // else recalculate the amount, then add the amounts and save
                 if (itemStorage.getQuantity() == null) {
@@ -240,7 +241,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
                     storedItem.setQuantity(itemStorage.getQuantity());
                     return itemStorageRepository.saveAndFlush(storedItem);
                 } else {
-                    throw new ServiceException("incompatible Units of Quantity");
+                    throw new ValidationException("Incompatible types: Same item with different unit of quantity found");
                 }
             }
         }
@@ -333,5 +334,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
 
         return storedItems;
     }
+
+
 
 }
