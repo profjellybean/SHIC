@@ -17,7 +17,7 @@ public class ItemStorageValidator {
         if (itemStorageDto.getNotes() != null && itemStorageDto.getNotes().length() > 511) {
             throw new ValidationException("Notes can be a maximum of 512 characters long");
         }
-        if (itemStorageDto.getNotes() == null || itemStorageDto.getName().length() > 63) {
+        if (itemStorageDto.getName() == null || itemStorageDto.getName().length() > 63) {
             throw new ValidationException("Names can be a maximum of 64 characters long");
         }
 
