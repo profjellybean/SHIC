@@ -67,10 +67,11 @@
 
         <div class="form-group">
           <label for="inputName">Name</label>
-          <textarea rows="1" name="name" class="form-control" id="inputName" required
-                    aria-describedby="nameHelp" placeholder="Enter Name" [(ngModel)]="itemToAdd.name"></textarea>
+          <input rows="1" name="name" class="form-control" id="inputName" required
+                    aria-describedby="nameHelp" placeholder="Enter Name" [(ngModel)]="itemToAdd.name">
           <div *ngIf="submitted && itemForm.controls.name.errors" class="error">
-            <small class="form-text text-warning" *ngIf="itemForm.controls.name.errors.required"> Name is
+            <small class="form-text text-warning" *ngIf="itemForm.controls.name.errors.required">
+              Name is
               required!
             </small>
           </div>

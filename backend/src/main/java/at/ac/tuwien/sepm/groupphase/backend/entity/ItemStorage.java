@@ -17,9 +17,9 @@ public class ItemStorage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
+    @Column(length = 64)
     private String name;
-    @Column
+    @Column(length = 512)
     private String notes;
     @Column
     private byte[] image;
@@ -27,7 +27,6 @@ public class ItemStorage {
     private Date expDate;
     @Column
     private int amount;
-    @Column
     private String locationTag;
     @OneToOne
     private UnitOfQuantity unitOfQuantity;
