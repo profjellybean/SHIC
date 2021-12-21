@@ -15,6 +15,8 @@ export class UserComponent implements OnInit {
   groupId = null;
   userToAdd: string;
   error: string;
+  success: string;
+  users: User[];
 
 
   user: User = {
@@ -30,7 +32,6 @@ export class UserComponent implements OnInit {
 
   ngOnInit(): void {
     this.getCurrentGroup();
-    console.log(this.groupId);
   }
 
   generateGroup(){
@@ -51,7 +52,20 @@ export class UserComponent implements OnInit {
         console.log('received items', data);
         this.user = data;
         this.groupId = this.user.currGroup.id;
+        this.getAllUsers(this.groupId);
         console.log(this.groupId);
+      },
+      error: error => {
+        console.error(error.message);
+      }
+    });
+  }
+
+  getAllUsers(id: number){
+    this.groupService.getAllUsers(id).subscribe({
+      next: data => {
+        console.log('received items', data);
+        this.users = data;
       },
       error: error => {
         console.error(error.message);
@@ -71,6 +85,7 @@ export class UserComponent implements OnInit {
     this.groupService.addUser(this.userToAdd, this.groupId).subscribe({
       next: data => {
         console.log('added user {} to group {}', this.userToAdd, this.groupId);
+        this.showSuccess('Successful');
       },
       error: error => {
         console.error(error.message);
@@ -83,8 +98,18 @@ export class UserComponent implements OnInit {
     this.error = null;
   }
 
+  public vanishSuccess(): void {
+    console.log('vanishError');
+    this.success = null;
+  }
+
   private showError(msg: string) {
     console.log('show error' + msg);
     this.error = msg;
+  }
+
+  private showSuccess(msg: string) {
+    console.log('show error' + msg);
+    this.success = msg;
   }
 }

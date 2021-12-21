@@ -7,23 +7,51 @@
   E-Mail of user
 </div>
 <div align="right">
-  <button>Edit user</button><p></p>
-  <button>delete profile</button><p></p>
+  <button>Edit user</button>
+  <p></p>
+  <button>delete profile</button>
+  <p></p>
   <button (click)="authService.logoutUser()" routerLink="/">Logout</button>
 </div>
 
 
 <div align="left">
-  <button *ngIf="groupId===null || groupId === undefined" type="button" (click)="generateGroup()" class="close" data-dismiss="alert" aria-label="Close">Generate new Group</button> <p></p>
+  <button *ngIf="groupId===null || groupId === undefined" type="button" (click)="generateGroup()" class="close"
+          data-dismiss="alert" aria-label="Close">Generate new Group
+  </button>
+  <p></p>
   Add a new user to your group {{groupId.valueOf()}}: <p></p>
-  <input *ngIf="groupId!==null && groupId !== undefined" [(ngModel)] = "userToAdd" placeholder="enter username"> <button *ngIf="groupId!==null && groupId !== undefined" (click)="addUser()">add user</button>
+  <input *ngIf="groupId!==null && groupId !== undefined" [(ngModel)]="userToAdd" placeholder="enter username">
+  <button *ngIf="groupId!==null && groupId !== undefined" (click)="addUser()">add user</button>
 
 </div>
+<p></p>
+<table class="table table-striped">
+  <thead class="thead-dark">
+  <tr>
+    <th>Users currently in this group</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let user of $any(users)">
+    <td>{{user.username}}</td>
+  </tr>
+  </tbody>
+</table>
+
+
 <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
-<h4 class="alert-heading">Error adding user
-  <button type="button" class="btn btn-dark" (click)="vanishError()" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</h4>
-<p>{{error}}</p>
+  <h4 class="alert-heading">Error adding user
+    <button type="button" class="btn btn-dark" (click)="vanishError()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </h4>
+  <p>{{error}}</p>
+</div>
+<div *ngIf="success" class="alert alert-success alert-dismissible fade show" role="alert">
+  <h4 class="alert-heading"> Success!
+    <button type="button" class="btn btn-dark" (click)="vanishSuccess()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </h4>
 </div>
