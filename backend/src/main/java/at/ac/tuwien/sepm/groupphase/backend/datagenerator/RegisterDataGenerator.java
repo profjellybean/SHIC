@@ -141,9 +141,9 @@ public class RegisterDataGenerator {
             savedRegister = registerRepository.saveAndFlush(savedRegister);
 
             Bill finalSavedBill2 = savedBill2;
-            HashSet<Bill> billset = new HashSet<Bill>();
-            billset.add(finalSavedBill2);
-            savedRegister.setBills(billset);
+            HashSet<Bill> billSet = new HashSet<Bill>();
+            billSet.add(finalSavedBill2);
+            savedRegister.setBills(billSet);
 
             registerRepository.saveAndFlush(savedRegister);
 

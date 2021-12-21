@@ -310,6 +310,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
                             double relation = unitsRelation.getRelation();
                             int newAmount = (int) (storageItem.getAmount() * relation + itemToStore.getAmount());
                             storageItem.setAmount(newAmount);
+                            storageItem.setQuantity(itemToStore.getQuantity());
                             Long shoppingListId = itemToStore.getShoppingListId();
                             shoppingListItemRepository.deleteFromTable(shoppingListId, itemToStore.getId());
                             itemStorageRepository.saveAndFlush(storageItem);
