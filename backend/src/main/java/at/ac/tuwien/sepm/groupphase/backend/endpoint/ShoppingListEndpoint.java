@@ -30,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.data.repository.query.Param;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -130,29 +131,6 @@ public class ShoppingListEndpoint {
 
 
 
-    /*
-        @PostMapping
-        @PermitAll
-        @Operation(summary = "Insert a new item into the storage") //TODO: add security /// TEMPLATE
-        public ItemStorageDto saveItem(@Valid @RequestBody ItemStorageDto itemStorageDto) {
-            LOGGER.info("POST /storagy body: ", itemStorageDto.toString());
-            return itemStorageMapper.itemStorageToItemStorageDto(shoppingListService.saveItem(itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto), itemStorageDto.getShoppingListId()));
-        }
-
-
-     */
-    /*
-
-    @GetMapping
-    @PermitAll
-    @Operation(summary = "Get all items from the shopping list") //TODO: add security
-    public List<ItemStorageDto> findAllByStorageId(@Param("id") Long id) {
-        LOGGER.info("findAllByStorageId, endpoint");
-        return itemStorageMapper.itemsStorageToItemsStorageDto(shoppingListService.findAllByStorageId(id));
-    }
-    */
-
-    //@PermitAll
     @Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.OK)
     @PutMapping
@@ -221,6 +199,39 @@ public class ShoppingListEndpoint {
 
     }
 
+    @PermitAll
+    @DeleteMapping("/public/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteFromPublicShoppingListForUser(Authentication authentication, @PathVariable Long id) {
+        try {
+            Long shoppingListId = userService.getPublicShoppingListIdByUsername(authentication.getName());
+            shoppingListService.deleteItemById(id, shoppingListId);
+
+        } catch (ValidationException e) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+        } catch (NotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()); // Todo
+        }
+    }
+
+    @PermitAll
+    @DeleteMapping("/private/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteFromPrivateShoppingListForUser(Authentication authentication, @PathVariable Long id) {
+        try {
+            Long shoppingListId = userService.getPrivateShoppingListIdByUsername(authentication.getName());
+            shoppingListService.deleteItemById(id, shoppingListId);
+
+        } catch (ValidationException e) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+        } catch (NotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
 
     @PermitAll
     @GetMapping("/private")

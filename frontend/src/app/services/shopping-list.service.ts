@@ -71,4 +71,14 @@ export class ShoppingListService {
     console.log('get group shoppinglist for user');
     return this.httpClient.get<number>(this.globals.backendUri+ '/group/shoppinglist');
   }
+
+  deleteItemFromPrivate(id: number): Observable<object>{
+    console.log('delete item of shoppinglist');
+    return this.httpClient.delete<object>(this.shoppingListBaseUri + '/private/'+id);
+  }
+
+  deleteItemFromPublic(id: number): Observable<object>{
+    console.log('delete item of shoppinglist');
+    return this.httpClient.delete<object>(this.shoppingListBaseUri + '/public/'+id);
+  }
 }

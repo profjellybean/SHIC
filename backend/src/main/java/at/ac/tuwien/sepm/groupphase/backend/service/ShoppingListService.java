@@ -87,4 +87,7 @@ public interface ShoppingListService {
     List<ItemStorage> workOffShoppingList(Authentication authentication, List<ItemStorage> boughtItems);
 
 
+    void deleteItemById(Long itemId, Long shoppingListId);
+
+
 }

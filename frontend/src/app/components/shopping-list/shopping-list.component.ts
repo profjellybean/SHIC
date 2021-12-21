@@ -41,15 +41,10 @@ export class ShoppingListComponent implements OnInit {
     this.getPrivateShoppingList();
     this.getPublicShoppingList();
 
-    console.log('mode' + this.isInPublic);
   }
 
   switchMode(publicMode: boolean){
-
     this.isInPublic = publicMode;
-    console.log('public items: ' + this.publicList.items);
-    console.log('private items: ' + this.privateList.items);
-    console.log(this.isInPublic);
     if(publicMode){
       this.items = this.publicList.items;
     }else{
@@ -62,6 +57,38 @@ export class ShoppingListComponent implements OnInit {
   vanishError() {
     this.error = false;
   }
+
+
+  deleteItem(item: Item){
+    if(this.isInPublic){
+      this.shoppingListService.deleteItemFromPublic(item.id).subscribe(
+        {
+          next: res => {
+            console.log(res);
+            this.removeItemFromShoppingList(item);
+          },
+          error: err => {
+            console.error(err);
+            this.defaultServiceErrorHandling(err);
+          }
+        }
+      );
+    }else{
+      this.shoppingListService.deleteItemFromPrivate(item.id).subscribe(
+        {
+          next: res => {
+            console.log(res);
+            this.removeItemFromShoppingList(item);
+          },
+          error: err => {
+            console.error(err);
+            this.defaultServiceErrorHandling(err);
+          }
+        }
+      );
+    }
+  }
+
 
   getPrivateShoppingList() {
     this.shoppingListService.getPrivateShoppingList().subscribe({

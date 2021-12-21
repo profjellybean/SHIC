@@ -337,6 +337,16 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         return storedItems;
     }
 
+    @Override
+    public void deleteItemById(Long itemId, Long shoppingListId) {
+        int rowsDeleted = shoppingListItemRepository.deleteFromTable(shoppingListId, itemId);
+        if (rowsDeleted == 0) {
+            throw new NotFoundException("Item not found");
+        }
+        LOGGER.info("::: " + rowsDeleted);
+
+
+    }
 
 
 }
