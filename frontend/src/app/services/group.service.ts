@@ -32,4 +32,6 @@ export class GroupService {
     // @ts-ignore
     return this.httpClient.get(this.userRegisterUri, {params: {groupId}});
   }
+
+
 }

@@ -63,7 +63,7 @@ export class StorageComponent implements OnInit {
   getCurrUser(){
     this.userService.getCurrentUser({username: this.user.username}).subscribe({
       next: data => {
-        console.log('received items', data);
+        console.log('received items6', data);
         this.user = data;
         this.getAllItemsByStorageId({id: this.user.currGroup.storageId});
         this.searchItem.storageId = this.user.currGroup.storageId;
@@ -84,11 +84,16 @@ export class StorageComponent implements OnInit {
     if(item.amount === undefined) {
       item.amount = null;
     }
+    this.unitsOfQuantity.forEach(unit => {
+      if(item.quantity.id === unit.id) {
+        item.quantity.name = unit.name;
+      }
+    });
     console.log('item to add', this.itemToAdd);
     this.storageService.addItem(item).subscribe({
       next: data => {
-        this.items.push(item);
-        //this.getAllItemsByStorageId({id: this.user.currGroup.storageId});
+        //this.items.push(item);
+        this.getAllItemsByStorageId({id: this.user.currGroup.storageId});
         this.itemToAdd = this.nullItem;
         console.log('added Item', data);
       },
@@ -117,7 +122,9 @@ export class StorageComponent implements OnInit {
   loadItemsToAdd() {
     this.shoppingListService.findAllItems().subscribe({
       next: data => {
+
         console.log('received items to add', data);
+
         this.itemsToAdd = data;
       }
     });
@@ -149,6 +156,7 @@ export class StorageComponent implements OnInit {
       },
       error: error => {
         console.error(error.message);
+        this.defaultServiceErrorHandling(error);
       }
     });
   }
@@ -202,6 +210,7 @@ export class StorageComponent implements OnInit {
     this.storageService.getItems(params).subscribe({
       next: data => {
         console.log('received items in storage', data);
+
         this.items = data;
       },
       error: error => {

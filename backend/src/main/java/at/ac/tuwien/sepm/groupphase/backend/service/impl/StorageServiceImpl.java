@@ -3,12 +3,15 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Storage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
+import at.ac.tuwien.sepm.groupphase.backend.entity.UnitsRelation;
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitOfQuantityRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UnitsRelationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.StorageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +20,9 @@ import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class StorageServiceImpl implements StorageService {
@@ -25,12 +31,16 @@ public class StorageServiceImpl implements StorageService {
     private final StorageRepository storageRepository;
     private final ItemStorageRepository itemStorageRepository;
     private final UnitOfQuantityRepository unitOfQuantityRepository;
+    private final UnitsRelationRepository unitsRelationRepository;
 
     @Autowired
-    public StorageServiceImpl(StorageRepository storageRepository, ItemStorageRepository itemStorageRepository, UnitOfQuantityRepository unitOfQuantityRepository) {
+    public StorageServiceImpl(StorageRepository storageRepository, ItemStorageRepository itemStorageRepository,
+                              UnitOfQuantityRepository unitOfQuantityRepository,
+                              UnitsRelationRepository unitsRelationRepository) {
         this.storageRepository = storageRepository;
         this.itemStorageRepository = itemStorageRepository;
         this.unitOfQuantityRepository = unitOfQuantityRepository;
+        this.unitsRelationRepository = unitsRelationRepository;
     }
 
     @Override
@@ -48,11 +58,42 @@ public class StorageServiceImpl implements StorageService {
     @Override
     public ItemStorage saveItem(ItemStorage itemStorage) {
         LOGGER.debug("Save item");
+
         if (itemStorage.getLocationTag() != null) {
             try {
                 Location.valueOf(itemStorage.getLocationTag());
             } catch (IllegalArgumentException i) {
-                throw new ServiceException("Location is not valid");
+                throw new ValidationException("Location is not valid");
+            }
+        }
+
+        // check if there is already an item with the same name in the storage
+        if (itemStorage.getStorageId() != null) {
+            List<ItemStorage> itemsInStorage = itemStorageRepository.findAllByStorageId(itemStorage.getStorageId());
+            Map<String, ItemStorage> storedItemsMap = itemsInStorage.stream()
+                .collect(Collectors.toMap(ItemStorage::getName, Function.identity()));
+            ItemStorage storedItem = storedItemsMap.get(itemStorage.getName());
+            // if there is uch an item, compare the units of quantity
+            if (storedItem != null && storedItem.getQuantity().equals(itemStorage.getQuantity())) {
+                // if they are the same, add the amounts and save
+                int newAmount = storedItem.getAmount() + itemStorage.getAmount();
+                storedItem.setAmount(newAmount);
+                return itemStorageRepository.saveAndFlush(storedItem);
+            } else if (storedItem != null && storedItem.getQuantity() != null) {
+                // else recalculate the amount, then add the amounts and save
+                if (itemStorage.getQuantity() == null) {
+                    throw new ValidationException("Unit of Quantity has to be set");
+                }
+                UnitsRelation unitsRelation = unitsRelationRepository.findUnitsRelationByBaseUnitAndCalculatedUnit(
+                    storedItem.getQuantity().getName(), itemStorage.getQuantity().getName());
+                if (unitsRelation != null) {
+                    int newAmount = (int) (storedItem.getAmount() * unitsRelation.getRelation() + itemStorage.getAmount());
+                    storedItem.setAmount(newAmount);
+                    storedItem.setQuantity(itemStorage.getQuantity());
+                    return itemStorageRepository.saveAndFlush(storedItem);
+                } else {
+                    throw new ServiceException("incompatible Units of Quantity");
+                }
             }
         }
 

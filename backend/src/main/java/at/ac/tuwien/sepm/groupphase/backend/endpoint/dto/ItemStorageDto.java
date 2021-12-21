@@ -1,13 +1,19 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
+import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Objects;
 
 public class ItemStorageDto {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     @NotNull
     private Long storageId;
     private Long shoppingListId;
@@ -32,6 +38,12 @@ public class ItemStorageDto {
         this.storageId = storageId;
         this.name = name;
     }
+
+    public ItemStorageDto(String name, Long shoppingListId) {
+        this.shoppingListId = shoppingListId;
+        this.name = name;
+    }
+
 
 
     public ItemStorageDto(Long storageId, Long shoppingListId, Long id, String name, UnitOfQuantityDto unitOfQuantityDto, String notes, byte[] image, Date expDate, int amount, String locationTag) {
@@ -135,6 +147,33 @@ public class ItemStorageDto {
         this.unitOfQuantityDto = unitOfQuantityDto;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ItemStorageDto that = (ItemStorageDto) o;
+        return amount == that.amount
+            && Objects.equals(storageId, that.storageId)
+            && Objects.equals(shoppingListId, that.shoppingListId)
+            && Objects.equals(id, that.id)
+            && Objects.equals(name, that.name)
+            && Objects.equals(unitOfQuantityDto, that.unitOfQuantityDto)
+            && Objects.equals(notes, that.notes)
+            && Arrays.equals(image, that.image)
+            && Objects.equals(expDate, that.expDate)
+            && Objects.equals(locationTag, that.locationTag);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(storageId, shoppingListId, id, name, unitOfQuantityDto, notes, expDate, amount, locationTag);
+        result = 31 * result + Arrays.hashCode(image);
+        return result;
+    }
 
     @Override
     public String toString() {

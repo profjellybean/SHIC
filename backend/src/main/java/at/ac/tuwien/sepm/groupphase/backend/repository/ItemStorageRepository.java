@@ -15,6 +15,8 @@ import java.util.Optional;
 public interface ItemStorageRepository extends JpaRepository<ItemStorage, Long> {
     List<ItemStorage> findAllByStorageId(Long id);
 
+    List<ItemStorage> findAllByShoppingListId(Long id);
+
     Optional<ItemStorage> findByName(String name);
 
     void deleteItemStorageByStorageId(Long id);
