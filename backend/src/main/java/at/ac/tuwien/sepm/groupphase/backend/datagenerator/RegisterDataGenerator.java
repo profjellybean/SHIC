@@ -140,23 +140,11 @@ public class RegisterDataGenerator {
 
             savedBill2 = billRepository.saveAndFlush(savedBill2);
             savedRegister = registerRepository.saveAndFlush(savedRegister);
-            Bill bill3 = Bill.BillBuilder.aBill()
-                .withRegisterId(savedRegister.getId())
-                .withGroceries(GROCERIES)
-                .withNotes("bought at spar")
-                .withNames(NAMES)
-                .withNotPaidNames(NOT_PAID_NAMES)
-                .withSum(80)
-                .withSumPerPerson(40)
-                .withDate(DATE)
-                .build();
-            Bill savedBill3 = billRepository.saveAndFlush(bill3);
+
             Bill finalSavedBill2 = savedBill2;
-            Bill finalSavedBill3 = savedBill3;
-            HashSet<Bill> billsetjuhu = new HashSet<Bill>();
-            billsetjuhu.add(finalSavedBill2);
-            billsetjuhu.add(finalSavedBill3);
-            savedRegister.setBills(billsetjuhu);
+            HashSet<Bill> billSet = new HashSet<Bill>();
+            billSet.add(finalSavedBill2);
+            savedRegister.setBills(billSet);
 
             registerRepository.saveAndFlush(savedRegister);
 
