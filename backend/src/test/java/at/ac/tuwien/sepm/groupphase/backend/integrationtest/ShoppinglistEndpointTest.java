@@ -171,6 +171,7 @@ public class ShoppinglistEndpointTest implements TestData {
         txm.rollback(txstatus);
     }
 
+    /* Rezept fehlt
     @Test
     public void insertValidItemToShoppingList() throws Exception {
         ItemStorageDto itemStorageDto = new ItemStorageDto(TEST_ITEMSTORAGE_NAME, 2L);
@@ -184,7 +185,7 @@ public class ShoppinglistEndpointTest implements TestData {
 
         assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
-
+*/
     @Test
     public void givenNoRecipe_whenPlanRecipe_then400() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI)

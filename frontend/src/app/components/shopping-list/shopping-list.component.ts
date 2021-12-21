@@ -2,13 +2,7 @@ import {Component, OnInit, TemplateRef} from '@angular/core';
 import {ShoppingListService} from '../../services/shopping-list.service';
 import {Item} from '../../dtos/item';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {User} from '../../dtos/user';
-// @ts-ignore
-import jwt_decode from 'jwt-decode';
-import {AuthService} from '../../services/auth.service';
-import {UserService} from '../../services/user.service';
 import {ShoppingList} from '../../dtos/shopping-list';
-import {GroupService} from '../../services/group.service';
 import {UnitOfQuantity} from '../../dtos/unitOfQuantity';
 import {StorageService} from '../../services/storage.service';
 
@@ -31,32 +25,22 @@ export class ShoppingListComponent implements OnInit {
   publicList: ShoppingList;
   isInPublic: boolean;
   groupStorageId: number;
+  groupShoppingListId: number;
   unitsOfQuantity: UnitOfQuantity[];
-  user: User = {
-    // @ts-ignore
-    username: jwt_decode(this.authService.getToken()).sub.trim(),
-    id: null,
-    currGroup: null,
-    privList: null,
-    email: null
-  };
-
-
   constructor(private shoppingListService: ShoppingListService,
               private storageService: StorageService,
-              private modalService: NgbModal,
-              private authService: AuthService,
-              private userService: UserService,
-              private groupService: GroupService) {
+              private modalService: NgbModal) {
   }
 
   ngOnInit(): void {
+    this.isInPublic = true;
     this.loadUnitsOfQuantity();
     this.loadItemsToAdd();
     this.loadGroupStorageId();
+    this.loadGroupShoppingListId();
     this.getPrivateShoppingList();
     this.getPublicShoppingList();
-    this.getCurrUser();
+
   }
 
   switchMode(publicMode: boolean){
@@ -66,22 +50,7 @@ export class ShoppingListComponent implements OnInit {
     }else{
       this.items = this.privateList.items;
     }
-
   }
-
-  getCurrUser(){
-    this.userService.getCurrentUser({username: this.user.username}).subscribe({
-      next: data => {
-        console.log('received items1', data);
-        this.user = data;
-        this.loadItems();
-      },
-      error: error => {
-        console.error(error.message);
-      }
-    });
-  }
-
   /**
    * Error flag will be deactivated, which clears the error message
    */
@@ -89,14 +58,51 @@ export class ShoppingListComponent implements OnInit {
     this.error = false;
   }
 
+
+  deleteItem(item: Item){
+    if(this.isInPublic){
+      this.shoppingListService.deleteItemFromPublic(item.id).subscribe(
+        {
+          next: res => {
+            console.log(res);
+            this.removeItemFromShoppingList(item);
+          },
+          error: err => {
+            console.error(err);
+            this.defaultServiceErrorHandling(err);
+          }
+        }
+      );
+    }else{
+      this.shoppingListService.deleteItemFromPrivate(item.id).subscribe(
+        {
+          next: res => {
+            console.log(res);
+            this.removeItemFromShoppingList(item);
+          },
+          error: err => {
+            console.error(err);
+            this.defaultServiceErrorHandling(err);
+          }
+        }
+      );
+    }
+  }
+
+
   getPrivateShoppingList() {
     this.shoppingListService.getPrivateShoppingList().subscribe({
         next: res => {
           this.privateList = res;
+          if(!this.isInPublic){
+            this.items = this.privateList.items;
+            console.log(' items = private');
+          }
           console.log(this.privateList);
         },
         error: err => {
           console.error(err);
+          this.defaultServiceErrorHandling(err);
         }
       }
     );
@@ -107,20 +113,22 @@ export class ShoppingListComponent implements OnInit {
     this.shoppingListService.getPublicShoppingList().subscribe({
         next: res => {
           this.publicList = res;
-          console.log(this.publicList);
-          if(this.items === null){
+          if(this.isInPublic){
             this.items = this.publicList.items;
+            console.log(' items = public');
           }
+          console.log(this.publicList);
         },
         error: err => {
           console.error(err);
+          this.defaultServiceErrorHandling(err);
         }
       }
     );
   }
 
   workOffShoppingList() {
-    this.shoppingListService.workOffShoppingList(this.itemsToBuy, this.user.currGroup.publicShoppingListId).subscribe({
+    this.shoppingListService.workOffShoppingList(this.itemsToBuy, this.groupShoppingListId).subscribe({
         next: res => {
           console.log(res);
           for (const item of this.itemsToBuy) {
@@ -129,6 +137,7 @@ export class ShoppingListComponent implements OnInit {
         },
         error: err => {
           console.log(err);
+          this.defaultServiceErrorHandling(err);
         }
       }
     );
@@ -156,49 +165,7 @@ export class ShoppingListComponent implements OnInit {
     });
   }
 
-  loadItems() {
-    if(this.isInPublic){
-      this.shoppingListService.findAll(this.user.currGroup.publicShoppingListId).subscribe({
-        next: data => {
-          console.log('received items for public shoppingList', data);
-
-          this.items = data;
-        }
-      });
-    }else{
-      this.shoppingListService.findAll(this.user.privList).subscribe({
-        next: data => {
-          console.log('received items for private shoppingList', data);
-
-          this.items = data;
-        }
-      });
-    }
-
-  }
-
-  addItemToShoppingList2() {
-    console.log('item to add', this.itemToAdd);
-
-    this.itemToAdd.id = null;
-    this.itemToAdd.amount = null;
-    this.itemToAdd.quantity = null;
-    console.log('item to add', this.itemToAdd);
-    this.shoppingListService.addItemToShoppingList(this.itemToAdd).subscribe({
-      next: data => {
-        //this.items.push(this.itemToAdd);
-        this.loadItems();
-        console.log('add item', data);
-      },
-      error: err => {
-        this.defaultServiceErrorHandling(err);
-      }
-    });
-  }
-
   addItemToShoppingList(item: Item) {
-    console.log('item to add', this.itemToAdd);
-
     this.itemToAdd.id = null;
     if(item.quantity === undefined) {
       item.quantity = null;
@@ -206,24 +173,32 @@ export class ShoppingListComponent implements OnInit {
     if(item.amount === undefined) {
       item.amount = null;
     }
-    console.log('item to add', item);
     if(this.isInPublic){
+      console.log('add item to public list', item);
       this.shoppingListService.addToPublicShoppingList(item).subscribe({
         next: data => {
-          //this.items.push(data);
-          this.loadItems();
-          console.log('add item', data);
+          if(data === null){
+            this.getPublicShoppingList();
+          }else{
+            this.items.push(data);
+          }
+
+
         },
         error: err => {
           this.defaultServiceErrorHandling(err);
         }
       });
     }else{
+      console.log('add item to private list', item);
       this.shoppingListService.addToPrivateShoppingList(item).subscribe({
         next: data => {
-          //this.items.push(data);
-          this.loadItems();
-          console.log('add item', data);
+          if(data === null){
+            this.getPrivateShoppingList();
+          }else{
+            this.items.push(data);
+          }
+
         },
         error: err => {
           this.defaultServiceErrorHandling(err);
@@ -237,7 +212,6 @@ export class ShoppingListComponent implements OnInit {
     this.submitted = true;
 
     if (form.valid) {
-      //this.storageService.addItem(this.item);
       console.log('form item to add', this.itemToAdd);
       this.addItemToShoppingList(this.itemToAdd);
       this.clearForm();
@@ -262,16 +236,6 @@ export class ShoppingListComponent implements OnInit {
     this.submitted = false;
   }
 
-  private defaultServiceErrorHandling(error: any) {
-    console.log(error);
-    this.error = true;
-    if (typeof error.error === 'object') {
-      this.errorMessage = error.error.error;
-    } else {
-      this.errorMessage = error.error;
-    }
-  }
-
   private loadGroupStorageId() {
     this.shoppingListService.getGroupStorageForUser().subscribe({
       next: data => {
@@ -282,4 +246,27 @@ export class ShoppingListComponent implements OnInit {
       }
     });
   }
+
+  private loadGroupShoppingListId() {
+    this.shoppingListService.getGroupShoppingListForUser().subscribe({
+      next: data => {
+        this.groupShoppingListId = data;
+      },
+      error: err => {
+        this.defaultServiceErrorHandling(err);
+      }
+    });
+  }
+
+  private defaultServiceErrorHandling(error: any) {
+    console.log(error);
+    this.error = true;
+    if (typeof error.error === 'object') {
+
+      this.errorMessage = error.error.message;
+    } else {
+      this.errorMessage = error.error;
+    }
+  }
+
 }

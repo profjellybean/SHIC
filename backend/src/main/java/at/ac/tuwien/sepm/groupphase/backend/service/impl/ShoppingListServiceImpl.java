@@ -123,7 +123,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
             throw new ValidationException("Public ShoppingList does not exist");
         }
 
-        Recipe recipe = null;
+        Recipe recipe;
         List<ItemStorage> storageItems;
 
         try {
@@ -144,7 +144,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
             throw new NotFoundException("Could not find storage with id " + storageId, e);
         }
 
-        List<ItemStorage> returnList = null;
+        List<ItemStorage> returnList;
         returnList = compareItemSets(recipe.getIngredients(), storageItems);
 
         String notes = "Ingredient required for recipe: " + recipe.getName();
@@ -205,7 +205,6 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     @Override
     public ItemStorage saveItem(ItemStorage itemStorage, Long id) {
         LOGGER.debug("save item in shopping list");
-
         if (itemStorage.getLocationTag() != null) {
             try {
                 Location.valueOf(itemStorage.getLocationTag());
@@ -226,7 +225,10 @@ public class ShoppingListServiceImpl implements ShoppingListService {
                 // if they are the same, add the amounts and save
                 int newAmount = storedItem.getAmount() + itemStorage.getAmount();
                 storedItem.setAmount(newAmount);
-                return itemStorageRepository.saveAndFlush(storedItem);
+                itemStorageRepository.saveAndFlush(storedItem);
+                return null;
+                /// In this case null is returned so that the frontend can differentiate between "Item was added to the list" and "Item in the list was changed".
+                /// This is to tell the frontend whether it should reload or not !!
             } else if (storedItem != null && storedItem.getQuantity() != null) {
                 // else recalculate the amount, then add the amounts and save
                 if (itemStorage.getQuantity() == null) {
@@ -240,7 +242,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
                     storedItem.setQuantity(itemStorage.getQuantity());
                     return itemStorageRepository.saveAndFlush(storedItem);
                 } else {
-                    throw new ServiceException("incompatible Units of Quantity");
+                    throw new ValidationException("Incompatible types: Same item with different unit of quantity found");
                 }
             }
         }
@@ -280,7 +282,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     public List<ItemStorage> workOffShoppingList(Authentication authentication, List<ItemStorage> boughtItems) {
         LOGGER.debug("Work Off Shoppinglist {}", boughtItems);
 
-        List<ItemStorage> storedItems = new LinkedList<ItemStorage>();
+        List<ItemStorage> storedItems = new LinkedList<>();
         Optional<ApplicationUser> userOptional = userRepository.findUserByUsername(authentication.getName());
         if (userOptional.isPresent()) {
             ApplicationUser user = userOptional.get();
@@ -334,5 +336,18 @@ public class ShoppingListServiceImpl implements ShoppingListService {
 
         return storedItems;
     }
+
+    @Override
+    public void deleteItemById(Long itemId, Long shoppingListId) {
+        int rowsDeleted = shoppingListItemRepository.deleteFromTable(shoppingListId, itemId);
+        itemStorageRepository.deleteById(itemId);
+        if (rowsDeleted == 0) {
+            throw new NotFoundException("Item not found");
+        }
+        LOGGER.info("::: " + rowsDeleted);
+
+
+    }
+
 
 }

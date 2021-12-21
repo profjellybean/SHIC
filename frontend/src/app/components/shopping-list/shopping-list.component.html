@@ -6,7 +6,7 @@
 
 
   <input type="radio" class="tabbutton" name="tabs" id="tab2" />
-  <label class="tabLabel" for="tab2" (click)="switchMode(false)" >Private</label>
+  <label class="tabLabel" for="tab2" (click)="switchMode(false)">Private</label>
 
 </div>
 <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -67,10 +67,11 @@
 
         <div class="form-group">
           <label for="inputName">Name</label>
-          <textarea rows="1" name="name" class="form-control" id="inputName" required
-                    aria-describedby="nameHelp" placeholder="Enter Name" [(ngModel)]="itemToAdd.name"></textarea>
+          <input rows="1" name="name" class="form-control" id="inputName" required
+                    aria-describedby="nameHelp" placeholder="Enter Name" [(ngModel)]="itemToAdd.name">
           <div *ngIf="submitted && itemForm.controls.name.errors" class="error">
-            <small class="form-text text-warning" *ngIf="itemForm.controls.name.errors.required"> Name is
+            <small class="form-text text-warning" *ngIf="itemForm.controls.name.errors.required">
+              Name is
               required!
             </small>
           </div>
@@ -137,18 +138,22 @@
       </thead>
       <tbody>
       <tr *ngFor="let item of items">
-        <td>
-          <div class="form-check">
-            <input type="checkbox" name="item" id="item" (click)="checkCheckbox(item)">
-          </div>
-        </td>
+          <td>
+            <div class="form-check">
+              <input type="checkbox" name="item" id="item" (click)="checkCheckbox(item)">
+            </div>
+          </td>
           <td>{{item.id}}</td>
-        <td>{{item.name}}</td>
-        <td>{{item.amount}}</td>
+          <td>{{item.name}}</td>
+          <td>{{item.amount}}</td>
+          <td>
+            <div *ngIf="item.quantity !== null">{{item.quantity.name}}</div>
+          </td>
+          <td>{{item.notes}}</td>
+
         <td>
-          <div *ngIf="item.quantity !== null">{{item.quantity.name}}</div></td>
-        <td>{{item.notes}}</td>
-        <td>
+          <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="deleteItem(item)">Remove</button>
+        </td>
       </tr>
       </tbody>
     </table>

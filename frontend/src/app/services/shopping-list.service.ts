@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {Observable} from 'rxjs';
 import {ShoppingList} from '../dtos/shopping-list';
 import {Item} from '../dtos/item';
-import {Username} from '../dtos/username';
 
 
 @Injectable({
@@ -48,7 +47,7 @@ export class ShoppingListService {
     return this.httpClient.post<Item>(this.shoppingListBaseUri + '/newItem', item);
   }
 
-  findAll(id: number): Observable<Item[]>{
+  findAll(): Observable<Item[]>{
     console.log('load items of shoppinglist');
     return this.httpClient.get<Item[]>(this.shoppingListBaseUri + '/availableItems');
   }
@@ -66,5 +65,20 @@ export class ShoppingListService {
   getGroupStorageForUser(): Observable<number>{
     console.log('get group storage for user');
     return this.httpClient.get<number>(this.globals.backendUri+ '/group/storage');
+  }
+
+  getGroupShoppingListForUser(): Observable<number>{
+    console.log('get group shoppinglist for user');
+    return this.httpClient.get<number>(this.globals.backendUri+ '/group/shoppinglist');
+  }
+
+  deleteItemFromPrivate(id: number): Observable<object>{
+    console.log('delete item of shoppinglist');
+    return this.httpClient.delete<object>(this.shoppingListBaseUri + '/private/'+id);
+  }
+
+  deleteItemFromPublic(id: number): Observable<object>{
+    console.log('delete item of shoppinglist');
+    return this.httpClient.delete<object>(this.shoppingListBaseUri + '/public/'+id);
   }
 }

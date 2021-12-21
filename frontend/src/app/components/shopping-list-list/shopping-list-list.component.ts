@@ -19,7 +19,7 @@ export class ShoppingListListComponent implements OnInit {
   }
 
   loadItems() {
-    this.shoppingListService.findAll(7).subscribe({
+    this.shoppingListService.findAll().subscribe({
       next: data => {
         console.log('Items received:', data);
 

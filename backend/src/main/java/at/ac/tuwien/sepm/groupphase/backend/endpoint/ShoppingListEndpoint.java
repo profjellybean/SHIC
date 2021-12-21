@@ -19,6 +19,7 @@ import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.service.ShoppingListService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
+import at.ac.tuwien.sepm.groupphase.backend.util.ItemStorageValidator;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 //import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
@@ -30,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.data.repository.query.Param;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,6 +42,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.annotation.security.PermitAll;
@@ -61,15 +64,17 @@ public class ShoppingListEndpoint {
     private final UserService userService;
     private final ItemStorageMapper itemStorageMapper;
     private final ItemMapper itemMapper;
+    private final ItemStorageValidator itemStorageValidator;
 
     @Autowired
     public ShoppingListEndpoint(ShoppingListService shoppingListService, ShoppingListMapper shoppingListMapper,
-                                ItemStorageMapper itemStorageMapper, ItemMapper itemMapper, UserService userService) {
+                                ItemStorageMapper itemStorageMapper, ItemMapper itemMapper, UserService userService, ItemStorageValidator itemStorageValidator) {
         this.shoppingListService = shoppingListService;
         this.shoppingListMapper = shoppingListMapper;
         this.itemStorageMapper = itemStorageMapper;
         this.itemMapper = itemMapper;
         this.userService = userService;
+        this.itemStorageValidator = itemStorageValidator;
     }
 
     @PermitAll
@@ -91,7 +96,17 @@ public class ShoppingListEndpoint {
     @Operation(summary = "Insert a new item into the ShoppingList") //TODO: add security
     public ItemStorageDto saveItem(@RequestBody ItemStorageDto itemStorageDto) {
         LOGGER.info("Endpoint: POST /item to shopping list with id: {}", itemStorageDto.getStorageId());
-        return itemStorageMapper.itemStorageToItemStorageDto(shoppingListService.saveItem(itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto), itemStorageDto.getShoppingListId()));
+        try {
+            itemStorageValidator.validateItemStorageDto(itemStorageDto);
+            return itemStorageMapper.itemStorageToItemStorageDto(shoppingListService.saveItem(itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto), itemStorageDto.getShoppingListId()));
+        } catch (ValidationException e) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+        } catch (NotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+
     }
 
     @PermitAll
@@ -101,9 +116,8 @@ public class ShoppingListEndpoint {
         LOGGER.info("Endpoint: GET shoppingList by id: {}", id);
         try {
             return shoppingListMapper.shoppingListToShoppingListDto(shoppingListService.getShoppingListByid(id));
-
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()); // Todo
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
 
 
@@ -130,29 +144,6 @@ public class ShoppingListEndpoint {
 
 
 
-    /*
-        @PostMapping
-        @PermitAll
-        @Operation(summary = "Insert a new item into the storage") //TODO: add security /// TEMPLATE
-        public ItemStorageDto saveItem(@Valid @RequestBody ItemStorageDto itemStorageDto) {
-            LOGGER.info("POST /storagy body: ", itemStorageDto.toString());
-            return itemStorageMapper.itemStorageToItemStorageDto(shoppingListService.saveItem(itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto), itemStorageDto.getShoppingListId()));
-        }
-
-
-     */
-    /*
-
-    @GetMapping
-    @PermitAll
-    @Operation(summary = "Get all items from the shopping list") //TODO: add security
-    public List<ItemStorageDto> findAllByStorageId(@Param("id") Long id) {
-        LOGGER.info("findAllByStorageId, endpoint");
-        return itemStorageMapper.itemsStorageToItemsStorageDto(shoppingListService.findAllByStorageId(id));
-    }
-    */
-
-    //@PermitAll
     @Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.OK)
     @PutMapping
@@ -185,9 +176,13 @@ public class ShoppingListEndpoint {
     @ResponseStatus(HttpStatus.OK)
     public ItemStorageDto addToPrivateShoppingListForUser(Authentication authentication, @RequestBody ItemStorageDto itemStorageDto) {
         try {
+            itemStorageValidator.validateItemStorageDto(itemStorageDto);
             Long id = userService.getPrivateShoppingListIdByUsername(authentication.getName());
             itemStorageDto.setShoppingListId(id);
-            return itemStorageMapper.itemStorageToItemStorageDto(shoppingListService.saveItem(itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto), id));
+            ItemStorage addedItem = shoppingListService.saveItem(itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto), id);
+            return itemStorageMapper.itemStorageToItemStorageDto(addedItem);
+        } catch (ValidationException e) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
         } catch (NotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (Exception e) {
@@ -203,11 +198,14 @@ public class ShoppingListEndpoint {
     public ItemStorageDto addToPublicShoppingListForUser(Authentication authentication, @RequestBody ItemStorageDto itemStorageDto) {
 
         try {
+            itemStorageValidator.validateItemStorageDto(itemStorageDto);
             Long id = userService.getPublicShoppingListIdByUsername(authentication.getName());
             itemStorageDto.setShoppingListId(id);
 
             return itemStorageMapper.itemStorageToItemStorageDto(shoppingListService.saveItem(itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto), id));
 
+        } catch (ValidationException e) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
         } catch (NotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (Exception e) {
@@ -216,6 +214,39 @@ public class ShoppingListEndpoint {
 
     }
 
+    @PermitAll
+    @DeleteMapping("/public/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteFromPublicShoppingListForUser(Authentication authentication, @PathVariable Long id) {
+        try {
+            Long shoppingListId = userService.getPublicShoppingListIdByUsername(authentication.getName());
+            shoppingListService.deleteItemById(id, shoppingListId);
+
+        } catch (ValidationException e) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+        } catch (NotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()); // Todo
+        }
+    }
+
+    @PermitAll
+    @DeleteMapping("/private/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteFromPrivateShoppingListForUser(Authentication authentication, @PathVariable Long id) {
+        try {
+            Long shoppingListId = userService.getPrivateShoppingListIdByUsername(authentication.getName());
+            shoppingListService.deleteItemById(id, shoppingListId);
+
+        } catch (ValidationException e) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+        } catch (NotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
 
     @PermitAll
     @GetMapping("/private")
