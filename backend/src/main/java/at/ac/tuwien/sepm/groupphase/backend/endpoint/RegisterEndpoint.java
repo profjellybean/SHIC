@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -53,5 +54,14 @@ public class RegisterEndpoint {
                                       @Param("additionalString") String additionalString) {
         LOGGER.info("PUT /api/v1/register {}", id);
         return registerMapper.registerToRegisterDto(registerService.confirmPayment(id, additionalId, additionalString));
+    }
+
+    //@Secured("ROLE_USER")
+    @PermitAll
+    @GetMapping(value = "/monthlysum")
+    @Operation(summary = "Get sum of all Bills in this month", security = @SecurityRequirement(name = "apiKey"))
+    public Double billSumOfCurrentMonth(Authentication authentication) {
+        LOGGER.info("Endpoint: GET /api/v1/register/{}", authentication);
+        return registerService.billSumOfCurrentMonth(authentication);
     }
 }

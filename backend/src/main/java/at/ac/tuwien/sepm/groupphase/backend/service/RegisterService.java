@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Register;
+import org.springframework.security.core.Authentication;
 
 
 public interface RegisterService {
@@ -15,4 +16,12 @@ public interface RegisterService {
      * @return the requested register
      */
     Register findOne(Long id);
+
+    /**
+     * Adds up the sums of all Bills that were paid in the current month.
+     *
+     * @return sum
+     */
+    Double billSumOfCurrentMonth(Authentication authentication);
+
 }

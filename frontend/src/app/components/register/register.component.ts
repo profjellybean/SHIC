@@ -32,6 +32,7 @@ export class RegisterComponent implements OnInit {
   billArray: Bill[] = [];
   help: string;
   billId: number;
+  monthlySum: number;
 
   user: User = {
     // @ts-ignore
@@ -49,6 +50,7 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {
     //const id = +this.route.snapshot.paramMap.get('id');
     this.loadRegister(1);
+    this.getMonthlySum();
   }
 
   public confirmPayment(billId: number) {
@@ -94,6 +96,18 @@ export class RegisterComponent implements OnInit {
         }
       }, error: err => {
         this.defaultServiceErrorHandling(err);
+      }
+    });
+  }
+
+  private getMonthlySum() {
+    this.registerService.getMonthlySum().subscribe({
+      next: data => {
+        console.log('received sum of all Bills this month', data);
+        this.monthlySum = data;
+      },
+      error: error => {
+        console.error(error.message);
       }
     });
   }

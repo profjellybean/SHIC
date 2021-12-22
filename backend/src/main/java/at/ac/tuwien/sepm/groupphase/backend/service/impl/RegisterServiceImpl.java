@@ -10,10 +10,13 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.RegisterService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.Optional;
 import java.util.Set;
 
@@ -67,4 +70,12 @@ public class RegisterServiceImpl implements RegisterService {
             throw new NotFoundException(String.format("Could not find register with id %s", id));
         }
     }
+
+    @Transactional
+    public Double billSumOfCurrentMonth(Authentication authentication) {
+        LOGGER.debug("Service: get sum of Bills of current month");
+        Long registerId = 1L;
+        return billRepository.billSumOfCurrentMonth(registerId, LocalDate.now());
+    }
+
 }

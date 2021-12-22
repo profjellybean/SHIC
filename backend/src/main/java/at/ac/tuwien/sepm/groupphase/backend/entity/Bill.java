@@ -40,14 +40,14 @@ public class Bill {
     @JoinColumn(name = "notPaid_id")
     private Set<ApplicationUser> notPaidNames;
 
-    @Column(name = "sum")
+    @Column(name = "price")
     private double sum;
 
     @Column(name = "sumPerPerson")
     private double sumPerPerson;
 
     @PastOrPresent
-    @Column(name = "date")
+    @Column(name = "paid_on")
     private LocalDate date;
 
     public Bill() {

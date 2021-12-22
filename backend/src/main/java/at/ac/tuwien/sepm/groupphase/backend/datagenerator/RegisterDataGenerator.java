@@ -20,6 +20,7 @@ import javax.annotation.PostConstruct;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Profile("generateData")
@@ -43,15 +44,18 @@ public class RegisterDataGenerator {
     private final BillRepository billRepository;
     private final RegisterRepository registerRepository;
     private final ShoppingListRepository shoppingListRepository;
+    private final BillDataGenerator billDataGenerator;
 
     public RegisterDataGenerator(ItemStorageRepository itemStorageRepository, UserRepository userRepository,
                                  BillRepository billRepository, RegisterRepository registerRepository,
-                                 ShoppingListRepository shoppingListRepository) {
+                                 ShoppingListRepository shoppingListRepository,
+                                 BillDataGenerator billDataGenerator) {
         this.itemStorageRepository = itemStorageRepository;
         this.userRepository = userRepository;
         this.billRepository = billRepository;
         this.registerRepository = registerRepository;
         this.shoppingListRepository = shoppingListRepository;
+        this.billDataGenerator = billDataGenerator;
     }
 
     @PostConstruct
@@ -59,6 +63,7 @@ public class RegisterDataGenerator {
         if (registerRepository.findAll().size() > 0) {
             LOGGER.debug("register already generated");
         } else {
+            billDataGenerator.generateRegister();
 
             //register
             Register register = Register.RegisterBuilder.aRegister()
@@ -140,9 +145,11 @@ public class RegisterDataGenerator {
             savedBill2 = billRepository.saveAndFlush(savedBill2);
             savedRegister = registerRepository.saveAndFlush(savedRegister);
 
+            List<Bill> billList = billRepository.findAll();
             Bill finalSavedBill2 = savedBill2;
             HashSet<Bill> billSet = new HashSet<Bill>();
             billSet.add(finalSavedBill2);
+            billSet.addAll(billList);
             savedRegister.setBills(billSet);
 
             registerRepository.saveAndFlush(savedRegister);

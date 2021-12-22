@@ -23,4 +23,9 @@ export class RegisterService {
     return this.httpClient.put<Register>(this.registerBaseUri + '/?id=' + registerId + '&additionalId=' + billId +
       '&additionalString=' + username, registerId);
   }
+
+  getMonthlySum(): Observable<number> {
+    console.log('Loading monthly sum of Bills');
+    return this.httpClient.get<number>(this.registerBaseUri + '/monthlysum');
+  }
 }

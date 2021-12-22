@@ -21,6 +21,7 @@ public class MasterDataGenerator {
     private final ItemStorageDataGenerator itemStorageDataGenerator;
     private final ItemDataGenerator itemDataGenerator;
     private final UnitOfQuantityDataGenerator unitOfQuantityDataGenerator;
+    private final BillDataGenerator billDataGenerator;
 
     public MasterDataGenerator(RecipeDataGenerator recipeDataGenerator,
                                ShoppingListDataGenerator shoppingListDataGenerator,
@@ -29,7 +30,8 @@ public class MasterDataGenerator {
                                ItemStorageDataGenerator itemStorageDataGenerator,
                                UnitOfQuantityDataGenerator unitOfQuantityDataGenerator,
                                UnitOfQuantityRepository unitOfQuantityRepository,
-                               ItemDataGenerator itemDataGenerator) {
+                               ItemDataGenerator itemDataGenerator,
+                               BillDataGenerator billDataGenerator) {
         this.recipeDataGenerator = recipeDataGenerator;
         this.shoppingListDataGenerator = shoppingListDataGenerator;
         this.storageDataGenerator = storageDataGenerator;
@@ -37,6 +39,7 @@ public class MasterDataGenerator {
         this.itemStorageDataGenerator = itemStorageDataGenerator;
         this.itemDataGenerator = itemDataGenerator;
         this.unitOfQuantityDataGenerator = unitOfQuantityDataGenerator;
+        this.billDataGenerator = billDataGenerator;
     }
 
     @PostConstruct
@@ -51,6 +54,7 @@ public class MasterDataGenerator {
         itemStorageDataGenerator.generateItemStorage();
         recipeDataGenerator.generateRecipes();
         shoppingListDataGenerator.generateShoppingList();
+        billDataGenerator.generateRegister();
     }
 
     public void generateData_planRecipe() {
