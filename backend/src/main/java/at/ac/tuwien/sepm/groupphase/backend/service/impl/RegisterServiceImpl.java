@@ -8,6 +8,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.BillRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.RegisterRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.RegisterService;
+import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -26,12 +27,14 @@ public class RegisterServiceImpl implements RegisterService {
     private final RegisterRepository registerRepository;
     private final BillRepository billRepository;
     private final UserRepository userRepository;
+    private final UserService userService;
 
     public RegisterServiceImpl(RegisterRepository registerRepository, BillRepository billRepository,
-                               UserRepository userRepository) {
+                               UserRepository userRepository, UserService userService) {
         this.registerRepository = registerRepository;
         this.billRepository = billRepository;
         this.userRepository = userRepository;
+        this.userService = userService;
     }
 
 
@@ -72,9 +75,10 @@ public class RegisterServiceImpl implements RegisterService {
     }
 
     @Transactional
-    public Double billSumOfCurrentMonth(Authentication authentication) {
+    public Double billSumOfCurrentMonth(String userName) {
         LOGGER.debug("Service: get sum of Bills of current month");
-        Long registerId = 1L;
+
+        Long registerId = userService.loadGroupRegisterIdByUsername(userName);
         return billRepository.billSumOfCurrentMonth(registerId, LocalDate.now());
     }
 

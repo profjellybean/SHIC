@@ -152,7 +152,7 @@ public class ShoppingListEndpoint {
         LOGGER.info("Endpoint: POST /api/v1/shoppinglist/recipeId={},userName={}", recipeId, authentication.getName());
         try {
             return itemStorageMapper.itemsStorageToItemsStorageDto(
-                shoppingListService.planRecipe(recipeId, authentication));
+                shoppingListService.planRecipe(recipeId, authentication.getName()));
         } catch (ValidationException e) {
             LOGGER.error("Error during planning recipe", e);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);

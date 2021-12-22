@@ -22,6 +22,6 @@ public interface RegisterService {
      *
      * @return sum
      */
-    Double billSumOfCurrentMonth(Authentication authentication);
+    Double billSumOfCurrentMonth(String userName);
 
 }

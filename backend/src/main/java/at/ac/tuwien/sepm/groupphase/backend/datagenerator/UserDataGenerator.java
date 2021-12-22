@@ -4,11 +4,13 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegistrationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserLoginMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Item;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Register;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Storage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 import at.ac.tuwien.sepm.groupphase.backend.repository.CustomUserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.RegisterRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserGroupRepository;
@@ -35,11 +37,13 @@ public class UserDataGenerator {
     private final UserGroupRepository userGroupRepository;
     private final StorageRepository storageRepository;
     private final StorageDataGenerator storageDataGenerator;
+    private final RegisterRepository registerRepository;
 
     public UserDataGenerator(CustomUserRepository userRepository, UserLoginMapper userLoginMapper,
                              ShoppingListRepository shoppingListRepository, ItemRepository itemRepository,
                              UserGroupRepository userGroupRepository, StorageRepository storageRepository,
-                             StorageDataGenerator storageDataGenerator) {
+                             StorageDataGenerator storageDataGenerator,
+                             RegisterRepository registerRepository) {
         this.userRepository = userRepository;
         this.shoppingListRepository = shoppingListRepository;
         this.userLoginMapper = userLoginMapper;
@@ -47,6 +51,7 @@ public class UserDataGenerator {
         this.userGroupRepository = userGroupRepository;
         this.storageRepository = storageRepository;
         this.storageDataGenerator = storageDataGenerator;
+        this.registerRepository = registerRepository;
     }
 
     @PostConstruct
@@ -66,7 +71,8 @@ public class UserDataGenerator {
         if (userGroupRepository.findAll().isEmpty()) {
             Long publicShoppingListId = shoppingListRepository.saveAndFlush(new ShoppingList()).getId();
             Long publicStorageId = storageRepository.saveAndFlush(new Storage()).getId();
-            group = new UserGroup(publicStorageId, publicShoppingListId, new HashSet<ApplicationUser>());
+            //Long registerId = registerRepository.saveAndFlush(new Register()).getId();
+            group = new UserGroup(publicStorageId, publicShoppingListId, 1L, new HashSet<ApplicationUser>());
             group = userGroupRepository.saveAndFlush(group);
             Set<ApplicationUser> users = group.getUser();
             if (applicationUser.isEmpty()) {

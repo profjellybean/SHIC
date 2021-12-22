@@ -40,14 +40,14 @@ public interface ShoppingListService {
      * and puts them on the public shopping-list.
      *
      * @param recipeId  id of recipe that user wants to cook
-     * @param authentication of user who sent the request
+     * @param userName of user who sent the request
      *
      * @return a List of all the ingredients that were added to the ShoppingList
      *
      * @throws ValidationException if the recipe or values in User are invalid
      * @throws NotFoundException if the recipe or the items in storage can not be found
      */
-    List<ItemStorage> planRecipe(Long recipeId, Authentication authentication);
+    List<ItemStorage> planRecipe(Long recipeId, String userName);
 
     /**
      * Insert a storage item to the shopping list.

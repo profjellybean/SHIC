@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.security.access.annotation.Secured;
 
 import javax.annotation.security.PermitAll;
 import java.lang.invoke.MethodHandles;
@@ -56,12 +58,15 @@ public class RegisterEndpoint {
         return registerMapper.registerToRegisterDto(registerService.confirmPayment(id, additionalId, additionalString));
     }
 
-    //@Secured("ROLE_USER")
-    @PermitAll
+    @Secured("ROLE_USER")
+    //@PermitAll
     @GetMapping(value = "/monthlysum")
     @Operation(summary = "Get sum of all Bills in this month", security = @SecurityRequirement(name = "apiKey"))
     public Double billSumOfCurrentMonth(Authentication authentication) {
         LOGGER.info("Endpoint: GET /api/v1/register/{}", authentication);
-        return registerService.billSumOfCurrentMonth(authentication);
+        if (authentication == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You are not logged-in");
+        }
+        return registerService.billSumOfCurrentMonth(authentication.getName());
     }
 }

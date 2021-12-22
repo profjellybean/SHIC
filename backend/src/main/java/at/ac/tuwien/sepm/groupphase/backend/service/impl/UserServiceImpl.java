@@ -173,6 +173,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Long loadGroupRegisterIdByUsername(String username) {
+        return customUserRepository.loadGroupRegisterIdByUsername(username);
+    }
+
+    @Override
     public void resendUserEmailConfirmation(String username) {
         Optional<ApplicationUser> applicationUser = customUserRepository.findUserByUsername(username);
         if (applicationUser.isEmpty()) {

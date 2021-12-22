@@ -99,14 +99,14 @@ public class ShoppingListServiceImpl implements ShoppingListService {
 
     @Override
     @Transactional
-    public List<ItemStorage> planRecipe(Long recipeId, Authentication authentication) {
-        LOGGER.debug("Service: plan Recipe {} based on user {}.", recipeId, authentication.getName());
+    public List<ItemStorage> planRecipe(Long recipeId, String userName) {
+        LOGGER.debug("Service: plan Recipe {} based on user {}.", recipeId, userName);
 
         if (recipeId == null) {
             throw new ValidationException("Recipe does not exist");
         }
 
-        ApplicationUser user = userService.findApplicationUserByUsername(authentication.getName());
+        ApplicationUser user = userService.findApplicationUserByUsername(userName);
         if (user == null) {
             throw new ValidationException("User does not exist");
         }

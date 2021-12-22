@@ -36,4 +36,7 @@ public interface CustomUserRepository extends JpaRepository<ApplicationUser, Lon
 
     @Query ("SELECT u.currGroup.publicShoppingListId FROM ApplicationUser u WHERE u.username = ?1")
     Long loadGroupShoppinglistByUsername(String username);
+
+    @Query ("SELECT u.currGroup.registerId FROM ApplicationUser u WHERE u.username = ?1")
+    Long loadGroupRegisterIdByUsername(String username);
 }

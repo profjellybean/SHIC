@@ -21,6 +21,7 @@ import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Profile("generateData")
@@ -65,13 +66,33 @@ public class RegisterDataGenerator {
         } else {
             billDataGenerator.generateRegister();
 
+            /*
             //register
-            Register register = Register.RegisterBuilder.aRegister()
+            Optional<Register> registerOfGroup = registerRepository.findRegisterById(1L);
+            Register register;
+            if (registerOfGroup.isPresent()) {
+                register = registerOfGroup.get();
+                register.setBills(TEST_BILLS);
+                register.setMonthlyPayments(TEST_MONTHLY_PAYMENT);
+                register.setMonthlyBudget(TEST_MONTHLY_BUDGET);
+            } else {
+                register = Register.RegisterBuilder.aRegister()
                 .withBills(TEST_BILLS)
                 .withMonthlyPayment(TEST_MONTHLY_PAYMENT)
                 .withMonthlyBudget(TEST_MONTHLY_BUDGET)
                 .build();
+            }
             Register savedRegister = registerRepository.saveAndFlush(register);
+
+             */
+
+            Register register = Register.RegisterBuilder.aRegister()
+                .withBills(TEST_BILLS)
+                .withMonthlyPayment(TEST_MONTHLY_PAYMENT)
+                .withMonthlyBudget(TEST_MONTHLY_BUDGET)
+                .build();;
+            Register savedRegister = registerRepository.saveAndFlush(register);
+
 
 
             //bills

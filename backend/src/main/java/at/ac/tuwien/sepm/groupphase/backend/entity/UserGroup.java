@@ -28,15 +28,24 @@ public class UserGroup {
     private Long storageId;
     @Column
     private Long publicShoppingListId;
+    @Column
+    private Long registerId;
+
+    public UserGroup() { }
+
+    public UserGroup(Long storageId) {
+        this.storageId = storageId;
+    }
 
     public UserGroup(Long storageId, Long publicShoppingListId) {
         this.storageId = storageId;
         this.publicShoppingListId = publicShoppingListId;
     }
 
-    public UserGroup(Long publicStorageId, Long publicShoppingListId, HashSet<ApplicationUser> applicationUsers) {
+    public UserGroup(Long publicStorageId, Long publicShoppingListId, Long registerId, HashSet<ApplicationUser> applicationUsers) {
         this.publicShoppingListId = publicShoppingListId;
         this.storageId = publicStorageId;
+        this.registerId = registerId;
         this.user = applicationUsers;
     }
 
@@ -46,13 +55,6 @@ public class UserGroup {
 
     public void setPublicShoppingListId(Long publicShoppingListId) {
         this.publicShoppingListId = publicShoppingListId;
-    }
-
-    public UserGroup() {
-    }
-
-    public UserGroup(Long storageId) {
-        this.storageId = storageId;
     }
 
     public Long getId() {
@@ -79,6 +81,14 @@ public class UserGroup {
         this.storageId = storageId;
     }
 
+    public Long getRegisterId() {
+        return registerId;
+    }
+
+    public void setRegisterId(Long registerId) {
+        this.registerId = registerId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -87,30 +97,24 @@ public class UserGroup {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        UserGroup userGroup = (UserGroup) o;
-        return Objects.equals(id, userGroup.id)
-            && Objects.equals(user, userGroup.user)
-            && Objects.equals(storageId, userGroup.storageId)
-            && Objects.equals(publicShoppingListId, userGroup.publicShoppingListId);
+        UserGroup group = (UserGroup) o;
+        return Objects.equals(id, group.id) && Objects.equals(user, group.user) && Objects.equals(storageId, group.storageId)
+            && Objects.equals(publicShoppingListId, group.publicShoppingListId) && Objects.equals(registerId, group.registerId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, storageId, publicShoppingListId);
+        return Objects.hash(id, storageId, publicShoppingListId, registerId);
     }
 
     @Override
     public String toString() {
         return "UserGroup{"
-            +
-            "id=" + id
-            +
-            ", user=" + user
-            +
-            ", storageId=" + storageId
-            +
-            ", publicShoppingListId=" + publicShoppingListId
-            +
-            '}';
+            + "id=" + id
+            + ", user=" + user
+            + ", storageId=" + storageId
+            + ", publicShoppingListId=" + publicShoppingListId
+            + ", registerId=" + registerId
+            + '}';
     }
 }
