@@ -1,9 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {UserService} from '../../services/user.service';
 import {RegisterRequest} from '../../dtos/RegisterRequest';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -22,20 +21,41 @@ export class RegisterUserComponent implements OnInit {
   successMessage = '';
 
 
+
+
   constructor(private formBuilder: FormBuilder, private userService: UserService, private router: Router) {
-    this.registerForm = this.formBuilder.group({
-      username: ['', [Validators.required]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
-      email: ['', [Validators.required]]
-    });
+    this.registerForm = new FormGroup(
+      {
+              username: new FormControl('', [Validators.required]),
+              email: new FormControl('',[Validators.required]),
+              password: new FormControl('', [Validators.required, Validators.minLength(8)]),
+              confirmPassword: new FormControl('', [Validators.required])
+              }, RegisterUserComponent.mustMatch('password', 'confirmPassword')
+    );
+  }
+
+  static mustMatch(controlName: string, matchingControlName: string) {
+    return (formGroup: FormGroup) => {
+      const control = formGroup.controls[controlName];
+      const matchingControl = formGroup.controls[matchingControlName];
+
+      if (matchingControl.errors && !matchingControl.errors.mustMatch) {
+        return;
+      }
+
+      // set error on matchingControl if validation fails
+      if (control.value !== matchingControl.value) {
+        matchingControl.setErrors({ mustMatch: true });
+      } else {
+        matchingControl.setErrors(null);
+      }
+      return null;
+    };
   }
 
   ngOnInit(): void {}
 
 
-  /**
-   * Form validation will start after the method is called, additionally an AuthRequest will be sent
-   */
   registerUser() {
     this.submitted = true;
     if (this.registerForm.valid) {
