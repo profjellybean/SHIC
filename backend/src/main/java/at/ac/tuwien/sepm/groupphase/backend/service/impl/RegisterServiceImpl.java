@@ -79,7 +79,11 @@ public class RegisterServiceImpl implements RegisterService {
         LOGGER.debug("Service: get sum of Bills of current month");
 
         Long registerId = userService.loadGroupRegisterIdByUsername(userName);
-        return billRepository.billSumOfCurrentMonth(registerId, LocalDate.now());
+        Double sum = billRepository.billSumOfCurrentMonth(registerId, LocalDate.now());
+        if (sum == null) {
+            return 0.0;
+        }
+        return sum;
     }
 
 }
