@@ -8,7 +8,7 @@
 <h1>Storage</h1>
 
 <div>
-  <label for="new-name">Search for name: </label>
+  <label for="new-name">Search for name: &nbsp;</label>
   <input #name (keyup) = "name.value= this.searchItem.name; this.searchItems()" (change)="searchItems()" id="new-name" [(ngModel)]="this.searchItem.name" placeholder="name"/>
 </div>
 <!--TABLE START-->
@@ -22,7 +22,7 @@
   <ng-template #itemAddModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Item</h5>
-      <button type="button" class="close" (click)="modal.dismiss('X')" aria-label="Close">
+      <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -140,8 +140,8 @@
     <td>{{item.notes}}</td>
     <td>{{item.expDate}}</td>
     <td>{{item.locationTag}}</td>
-    <td><button>Edit</button></td>
-    <td><button>Remove</button></td>
+    <td><button type="button" class="btn btn-secondary btn-sm mr-4">Edit</button></td>
+    <td><button type="button" class="btn btn-secondary btn-sm mr-4">Remove</button></td>
   </tr>
   </tbody>
 </table>
