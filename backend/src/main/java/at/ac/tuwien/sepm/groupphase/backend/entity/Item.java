@@ -28,14 +28,15 @@ public class Item {
         this.id = id;
     }
 
-    public Item() {
-
-    }
 
     public Item(Long id, String name, UnitOfQuantity quantity) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
+    }
+
+    public Item() {
+
     }
 
     public void setId(Long id) {

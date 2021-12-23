@@ -1,6 +1,6 @@
 <div class="recipe-list">
-  <table class="table">
-    <thead>
+  <table class="table table-striped">
+    <thead class="thead-dark">
     <tr>
       <th>ID</th>
       <th>Name</th>
@@ -13,7 +13,7 @@
       <td>{{recipe.name}}</td>
       <td>{{recipe.description}}</td>
       <td>
-        <button [routerLink]="['/recipe/', recipe.id]">Details</button>
+        <button type="button" [routerLink]="['/recipe/', recipe.id]">Details</button>
       </td>
       <td>
     </tr>
