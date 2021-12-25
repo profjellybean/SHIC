@@ -59,7 +59,7 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public ItemStorage saveItem(ItemStorage itemStorage) {
+    public ItemStorage saveItem(ItemStorage itemStorage, Long groupId) {
         LOGGER.debug("Save item");
 
         if (itemStorage.getLocationTag() != null) {
@@ -71,7 +71,7 @@ public class StorageServiceImpl implements StorageService {
         }
 
         // TODO check for Item blueprint
-        itemService.checkForBluePrintForGroup(itemStorage, 1L);
+        itemService.checkForBluePrintForGroup(itemStorage, groupId);
 
         // check if there is already an item with the same name in the storage
         if (itemStorage.getStorageId() != null) {

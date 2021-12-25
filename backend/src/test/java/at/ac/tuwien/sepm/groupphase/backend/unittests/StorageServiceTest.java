@@ -31,7 +31,7 @@ public class StorageServiceTest implements TestData {
     public void saveItem() {
         long id = storageService.createNewStorage();
         ItemStorage item = new ItemStorage(id, "Test");
-        storageService.saveItem(item);
+        storageService.saveItem(item, null);
         assertEquals("Test", storageService.getAll(id).get(0).getName());
     }
 
@@ -39,7 +39,7 @@ public class StorageServiceTest implements TestData {
     public void deleteItem() {
         long id = storageService.createNewStorage();
         ItemStorage item = new ItemStorage(id, "Test1");
-        item = storageService.saveItem(item);
+        item = storageService.saveItem(item, null);
         assertEquals("Test1", storageService.getAll(id).get(0).getName());
         storageService.deleteItemById(item.getId());
         assertTrue(storageService.searchItemName(id, "Test1").isEmpty());
