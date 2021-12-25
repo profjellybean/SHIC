@@ -12,6 +12,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitOfQuantityRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitsRelationRepository;
+import at.ac.tuwien.sepm.groupphase.backend.service.ItemService;
 import at.ac.tuwien.sepm.groupphase.backend.service.StorageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,15 +33,17 @@ public class StorageServiceImpl implements StorageService {
     private final ItemStorageRepository itemStorageRepository;
     private final UnitOfQuantityRepository unitOfQuantityRepository;
     private final UnitsRelationRepository unitsRelationRepository;
+    private final ItemService itemService;
 
     @Autowired
     public StorageServiceImpl(StorageRepository storageRepository, ItemStorageRepository itemStorageRepository,
                               UnitOfQuantityRepository unitOfQuantityRepository,
-                              UnitsRelationRepository unitsRelationRepository) {
+                              UnitsRelationRepository unitsRelationRepository, ItemService itemService) {
         this.storageRepository = storageRepository;
         this.itemStorageRepository = itemStorageRepository;
         this.unitOfQuantityRepository = unitOfQuantityRepository;
         this.unitsRelationRepository = unitsRelationRepository;
+        this.itemService = itemService;
     }
 
     @Override
@@ -66,6 +69,9 @@ public class StorageServiceImpl implements StorageService {
                 throw new ValidationException("Location is not valid");
             }
         }
+
+        // TODO check for Item blueprint
+        itemService.checkForBluePrintForGroup(itemStorage, 1L);
 
         // check if there is already an item with the same name in the storage
         if (itemStorage.getStorageId() != null) {

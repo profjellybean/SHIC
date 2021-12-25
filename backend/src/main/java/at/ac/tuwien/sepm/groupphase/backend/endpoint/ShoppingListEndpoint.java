@@ -94,11 +94,16 @@ public class ShoppingListEndpoint {
     @PostMapping("/newItem")
     @PermitAll
     @Operation(summary = "Insert a new item into the ShoppingList") //TODO: add security
-    public ItemStorageDto saveItem(@RequestBody ItemStorageDto itemStorageDto) {
+    public ItemStorageDto saveItem(Authentication authentication, @RequestBody ItemStorageDto itemStorageDto) {
         LOGGER.info("Endpoint: POST /item to shopping list with id: {}", itemStorageDto.getStorageId());
         try {
             itemStorageValidator.validateItemStorageDto(itemStorageDto);
-            return itemStorageMapper.itemStorageToItemStorageDto(shoppingListService.saveItem(itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto), itemStorageDto.getShoppingListId()));
+            Long groupId = null;
+            if (authentication != null) {
+                groupId = userService.getGroupIdByUsername(authentication.getName());
+            }
+            return itemStorageMapper.itemStorageToItemStorageDto(shoppingListService.saveItem(
+                itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto), itemStorageDto.getShoppingListId(), groupId));
         } catch (ValidationException e) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
         } catch (NotFoundException e) {
@@ -179,7 +184,9 @@ public class ShoppingListEndpoint {
             itemStorageValidator.validateItemStorageDto(itemStorageDto);
             Long id = userService.getPrivateShoppingListIdByUsername(authentication.getName());
             itemStorageDto.setShoppingListId(id);
-            ItemStorage addedItem = shoppingListService.saveItem(itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto), id);
+            Long groupId = userService.getGroupIdByUsername(authentication.getName());
+
+            ItemStorage addedItem = shoppingListService.saveItem(itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto), id, groupId);
             return itemStorageMapper.itemStorageToItemStorageDto(addedItem);
         } catch (ValidationException e) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
@@ -201,8 +208,9 @@ public class ShoppingListEndpoint {
             itemStorageValidator.validateItemStorageDto(itemStorageDto);
             Long id = userService.getPublicShoppingListIdByUsername(authentication.getName());
             itemStorageDto.setShoppingListId(id);
+            Long groupId = userService.getGroupIdByUsername(authentication.getName());
 
-            return itemStorageMapper.itemStorageToItemStorageDto(shoppingListService.saveItem(itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto), id));
+            return itemStorageMapper.itemStorageToItemStorageDto(shoppingListService.saveItem(itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto), id, groupId));
 
         } catch (ValidationException e) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());

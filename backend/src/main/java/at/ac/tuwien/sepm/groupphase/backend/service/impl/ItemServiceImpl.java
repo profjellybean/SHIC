@@ -1,9 +1,11 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Item;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitsRelation;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitOfQuantityRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitsRelationRepository;
@@ -98,6 +100,23 @@ public class ItemServiceImpl implements ItemService {
         return itemRepository.findAll();
     }
 
+    @Override
+    public void checkForBluePrintForGroup(ItemStorage itemStorage, Long groupId) {
+        LOGGER.debug("Service: Check for Item blueprint {}", itemStorage);
+
+        if (itemStorage == null) {
+            throw new ValidationException("itemStorage can not be null");
+        }
+        if (groupId == null) {
+            return;
+        }
+
+        List<Item> items = itemRepository.findItemsByNameForGroup(itemStorage.getName(), groupId);
+        if (items.isEmpty()) {
+            Item newBlueprint = new Item(null, itemStorage.getName(), itemStorage.getQuantity(), groupId);
+            itemRepository.saveAndFlush(newBlueprint);
+        }
+    }
 
 
 }
