@@ -96,6 +96,10 @@ export class StorageComponent implements OnInit {
         this.getAllItemsByStorageId({id: this.user.currGroup.storageId});
         this.itemToAdd = this.nullItem;
         console.log('added Item', data);
+
+        // todo dont reload every time
+        this.loadItemsToAdd();
+
       },
       error: error => {
         this.defaultServiceErrorHandling(error);

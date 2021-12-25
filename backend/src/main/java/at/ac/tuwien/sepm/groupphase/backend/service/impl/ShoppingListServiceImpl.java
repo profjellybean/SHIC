@@ -217,7 +217,6 @@ public class ShoppingListServiceImpl implements ShoppingListService {
             }
         }
 
-        // TODO check for Item blueprint
         itemService.checkForBluePrintForGroup(itemStorage, groupId);
 
         // check if there is already an item with the same name in the shoppinglist
