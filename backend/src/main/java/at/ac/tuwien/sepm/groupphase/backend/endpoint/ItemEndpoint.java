@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -118,8 +119,9 @@ public class ItemEndpoint {
     }
 
     @GetMapping("/groupItems")
-    @PermitAll // TODO add security
-    @Operation(summary = "Get all Items")
+    @Secured("ROLE_USER")
+    //@PermitAll // TODO add security
+    @Operation(summary = "Get all Items for specific Group")
     List<ItemDto> getAllItemsForGroup(Authentication authentication) {
         LOGGER.info("Endpoint: getAllItemsForGroup {}", authentication);
         Long groupId = null;

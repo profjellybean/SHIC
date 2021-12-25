@@ -79,5 +79,5 @@ public interface ItemService {
      *
      * @param itemStorage item to check
      */
-    void checkForBluePrintForGroup(ItemStorage itemStorage, Long groupId);
+    ItemStorage checkForBluePrintForGroup(ItemStorage itemStorage, Long groupId);
 }

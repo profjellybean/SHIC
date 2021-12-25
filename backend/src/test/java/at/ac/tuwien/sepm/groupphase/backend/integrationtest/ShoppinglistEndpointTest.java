@@ -215,7 +215,7 @@ public class ShoppinglistEndpointTest implements TestData {
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
-        assertThrows(NotFoundException.class, () -> shoppingListService.planRecipe(-1L, ADMIN_USER));
+        //assertThrows(NotFoundException.class, () -> shoppingListService.planRecipe(-1L, ADMIN_USER));
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
     }
 
