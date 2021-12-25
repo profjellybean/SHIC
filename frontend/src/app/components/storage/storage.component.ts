@@ -120,12 +120,15 @@ export class StorageComponent implements OnInit {
   }
 
   loadItemsToAdd() {
-    this.shoppingListService.findAllItems().subscribe({
+    //this.shoppingListService.findAllItems().subscribe({
+    this.itemService.findAllItemsForGroup().subscribe({
       next: data => {
-
         console.log('received items to add', data);
 
         this.itemsToAdd = data;
+      },
+      error: error => {
+        this.defaultServiceErrorHandling(error);
       }
     });
   }

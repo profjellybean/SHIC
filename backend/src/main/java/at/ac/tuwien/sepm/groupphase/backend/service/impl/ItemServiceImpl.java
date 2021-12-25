@@ -101,6 +101,12 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    public List<Item> getAllItemsForGroup(Long groupId) {
+        LOGGER.debug("Getting all items for group {}", groupId);
+        return itemRepository.findAllItemsForGroup(groupId);
+    }
+
+    @Override
     public void checkForBluePrintForGroup(ItemStorage itemStorage, Long groupId) {
         LOGGER.debug("Service: Check for Item blueprint {}", itemStorage);
 

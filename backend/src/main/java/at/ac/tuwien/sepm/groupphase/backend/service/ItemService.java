@@ -26,6 +26,15 @@ public interface ItemService {
     List<Item> getAllItems();
 
     /**
+     * gets all items for a group. where groupId is either null or the id of the group.
+     *
+     * @param groupId id of the group
+     *
+     * @return list of said items
+     */
+    List<Item> getAllItemsForGroup(Long groupId);
+
+    /**
      * Adds UnitsRelation in database.
      *
      * @param unitsRelation the item to save

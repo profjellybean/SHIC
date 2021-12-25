@@ -22,6 +22,9 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     @Query(value = "SELECT * FROM ITEM WHERE ((GROUP_ID = :groupId) OR (GROUP_ID IS NULL)) AND (UPPER(NAME) = UPPER(:name))", nativeQuery = true)
     List<Item> findItemsByNameForGroup(@Param("name") String name, @Param("groupId") Long groupId);
 
+    @Query(value = "SELECT * FROM ITEM WHERE (GROUP_ID = :groupId) OR (GROUP_ID IS NULL)", nativeQuery = true)
+    List<Item> findAllItemsForGroup(@Param("groupId") Long groupId);
+
     @Override
     Item save(Item item);
 }
