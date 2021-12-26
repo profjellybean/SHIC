@@ -96,6 +96,10 @@ export class StorageComponent implements OnInit {
         this.getAllItemsByStorageId({id: this.user.currGroup.storageId});
         this.itemToAdd = this.nullItem;
         console.log('added Item', data);
+
+        // todo dont reload every time
+        this.loadItemsToAdd();
+
       },
       error: error => {
         this.defaultServiceErrorHandling(error);
@@ -120,12 +124,15 @@ export class StorageComponent implements OnInit {
   }
 
   loadItemsToAdd() {
-    this.shoppingListService.findAllItems().subscribe({
+    //this.shoppingListService.findAllItems().subscribe({
+    this.itemService.findAllItemsForGroup().subscribe({
       next: data => {
-
         console.log('received items to add', data);
 
         this.itemsToAdd = data;
+      },
+      error: error => {
+        this.defaultServiceErrorHandling(error);
       }
     });
   }

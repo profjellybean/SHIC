@@ -28,6 +28,7 @@ public interface TestData {
     String MESSAGE_BASE_URI = BASE_URI + "/messages";
     String USERENDPOINT_URI = BASE_URI + "/user";
     String ADMIN_USER = "admin";
+    String TEST_USER = "testUser";
     String STORAGEENDPOINT_URI = BASE_URI + "/storage";
     String SHOPPINGLISTENPOINDT_URI = BASE_URI + "/shopping-list";
     String ITEMENDPOINT_UNITOFQUANTITY_URI = BASE_URI + "/item/unitOfQuantity";

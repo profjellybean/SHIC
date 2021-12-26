@@ -58,6 +58,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     private final UnitsRelationRepository unitsRelationRepository;
     private final UserService userService;
     private final UserRepository userRepository;
+    private final ItemService itemService;
 
     @Autowired
     public ShoppingListServiceImpl(ShoppingListRepository shoppingListRepository,
@@ -65,8 +66,8 @@ public class ShoppingListServiceImpl implements ShoppingListService {
                                    ItemStorageRepository itemStorageRepository,
                                    ShoppingListItemRepository shoppingListItemRepository,
                                    ItemRepository itemRepository, UnitsRelationRepository unitsRelationRepository,
-                                   UserRepository userRepository,
-                                   UserService userService) {
+                                   UserRepository userRepository, UserService userService,
+                                   ItemService itemService) {
         this.recipeRepository = recipeRepository;
         this.itemStorageRepository = itemStorageRepository;
         this.shoppingListItemRepository = shoppingListItemRepository;
@@ -75,6 +76,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         this.itemRepository = itemRepository;
         this.userRepository = userRepository;
         this.userService = userService;
+        this.itemService = itemService;
     }
 
 
@@ -147,6 +149,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         List<ItemStorage> returnList;
         returnList = compareItemSets(recipe.getIngredients(), storageItems);
 
+        Long groupId = userService.getGroupIdByUsername(userName);
         String notes = "Ingredient required for recipe: " + recipe.getName();
         for (ItemStorage item :
             returnList) {
@@ -154,7 +157,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
             shoppingListItem.setShoppingListId(shoppingListId);
             shoppingListItem.setNotes(notes);
             //shoppingListItem = itemStorageRepository.saveAndFlush(shoppingListItem);
-            saveItem(shoppingListItem, shoppingListId);
+            saveItem(shoppingListItem, shoppingListId, groupId);
         }
 
         return returnList;
@@ -203,8 +206,9 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     }
 
     @Override
-    public ItemStorage saveItem(ItemStorage itemStorage, Long id) {
+    public ItemStorage saveItem(ItemStorage itemStorage, Long id, Long groupId) {
         LOGGER.debug("save item in shopping list");
+
         if (itemStorage.getLocationTag() != null) {
             try {
                 Location.valueOf(itemStorage.getLocationTag());
@@ -212,6 +216,8 @@ public class ShoppingListServiceImpl implements ShoppingListService {
                 throw new ValidationException("Location is not valid");
             }
         }
+
+        itemService.checkForBluePrintForGroup(itemStorage, groupId);
 
         // check if there is already an item with the same name in the shoppinglist
         if (itemStorage.getShoppingListId() != null) {

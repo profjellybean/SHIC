@@ -140,6 +140,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Long getGroupIdByUsername(String username) {
+        LOGGER.debug("Service: Get id of Users current Group by Username");
+        return customUserRepository.loadGroupIdByUsername(username);
+    }
+
+    @Override
     public void createUser(UserRegistrationDto userRegistrationDto, Long confirmationToken) {
         LOGGER.debug("Service: Create new user: {}", userRegistrationDto.getUsername());
 
@@ -290,6 +296,8 @@ public class UserServiceImpl implements UserService {
         return user.get().getConfirmationToken() == 0L;
 
     }
+
+
 
 
 

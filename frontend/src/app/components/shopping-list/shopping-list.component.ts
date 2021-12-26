@@ -5,6 +5,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ShoppingList} from '../../dtos/shopping-list';
 import {UnitOfQuantity} from '../../dtos/unitOfQuantity';
 import {StorageService} from '../../services/storage.service';
+import {ItemService} from '../../services/item.service';
 
 @Component({
   selector: 'app-shopping-list',
@@ -29,6 +30,7 @@ export class ShoppingListComponent implements OnInit {
   unitsOfQuantity: UnitOfQuantity[];
   constructor(private shoppingListService: ShoppingListService,
               private storageService: StorageService,
+              private itemService: ItemService,
               private modalService: NgbModal) {
   }
 
@@ -157,7 +159,7 @@ export class ShoppingListComponent implements OnInit {
   }
 
   loadItemsToAdd() {
-    this.shoppingListService.findAllItems().subscribe({
+    this.itemService.findAllItemsForGroup().subscribe({
       next: data => {
         console.log('received items to add', data);
         this.itemsAdd = data;
@@ -183,6 +185,8 @@ export class ShoppingListComponent implements OnInit {
             this.items.push(data);
           }
 
+          // todo dont reload every time
+          this.loadItemsToAdd();
 
         },
         error: err => {
@@ -198,6 +202,9 @@ export class ShoppingListComponent implements OnInit {
           }else{
             this.items.push(data);
           }
+
+          // todo dont reload every time
+          this.loadItemsToAdd();
 
         },
         error: err => {

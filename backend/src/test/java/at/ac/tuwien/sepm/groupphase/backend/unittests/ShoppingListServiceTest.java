@@ -25,7 +25,7 @@ public class ShoppingListServiceTest implements TestData {
     public void saveItem() {
         long id = shoppingListService.createNewShoppingList();
         ItemStorage item = new ItemStorage("Test", id);
-        shoppingListService.saveItem(item, id);
+        shoppingListService.saveItem(item, id, null);
         assertEquals("Test", shoppingListService.findAllByShoppingListId(id).get(0).getName());
     }
 

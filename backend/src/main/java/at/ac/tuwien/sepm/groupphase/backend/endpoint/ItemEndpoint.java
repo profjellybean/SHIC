@@ -11,11 +11,14 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UnitsRelationMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
 import at.ac.tuwien.sepm.groupphase.backend.service.ItemService;
 import at.ac.tuwien.sepm.groupphase.backend.service.StorageService;
+import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,14 +39,16 @@ public class ItemEndpoint {
     private final UnitOfQuantityMapper unitOfQuantityMapper;
     private final UnitsRelationMapper unitsRelationMapper;
     private final ItemMapper itemMapper;
+    private final UserService userService;
 
     @Autowired
     public ItemEndpoint(ItemService itemService, UnitOfQuantityMapper unitOfQuantityMapper, ItemMapper itemMapper,
-                        UnitsRelationMapper unitsRelationMapper) {
+                        UnitsRelationMapper unitsRelationMapper, UserService userService) {
         this.itemService = itemService;
         this.unitOfQuantityMapper = unitOfQuantityMapper;
         this.unitsRelationMapper = unitsRelationMapper;
         this.itemMapper = itemMapper;
+        this.userService = userService;
     }
 
     @PostMapping(value = "/unitOfQuantity")
@@ -112,6 +117,21 @@ public class ItemEndpoint {
         LOGGER.info("Endpoint: getAllItems()");
         return itemMapper.itemsToItemDtos(itemService.getAllItems());
     }
+
+    @GetMapping("/groupItems")
+    @Secured("ROLE_USER")
+    //@PermitAll // TODO add security
+    @Operation(summary = "Get all Items for specific Group")
+    List<ItemDto> getAllItemsForGroup(Authentication authentication) {
+        LOGGER.info("Endpoint: getAllItemsForGroup {}", authentication);
+        Long groupId = null;
+        if (authentication != null) {
+            groupId = userService.getGroupIdByUsername(authentication.getName());
+        }
+        return itemMapper.itemsToItemDtos(itemService.getAllItemsForGroup(groupId));
+    }
+
+
 
 
 

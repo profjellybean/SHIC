@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Item;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitsRelation;
 
@@ -23,6 +24,15 @@ public interface ItemService {
     List<UnitOfQuantity> getAll();
 
     List<Item> getAllItems();
+
+    /**
+     * gets all items for a group. where groupId is either null or the id of the group.
+     *
+     * @param groupId id of the group
+     *
+     * @return list of said items
+     */
+    List<Item> getAllItemsForGroup(Long groupId);
 
     /**
      * Adds UnitsRelation in database.
@@ -62,4 +72,12 @@ public interface ItemService {
      * @return unitOfQuantity name
      */
     String getUnitOfQuantityById(Long id);
+
+    /**
+     * checks if a blueprint of this Item already exists for the group in table ITEM.
+     * If not it adds a blueprint to the table.
+     *
+     * @param itemStorage item to check
+     */
+    ItemStorage checkForBluePrintForGroup(ItemStorage itemStorage, Long groupId);
 }

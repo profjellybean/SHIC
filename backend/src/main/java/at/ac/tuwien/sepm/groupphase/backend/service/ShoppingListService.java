@@ -52,9 +52,11 @@ public interface ShoppingListService {
     /**
      * Insert a storage item to the shopping list.
      *
+     * @param groupId is used to check if blueprint for this item exists in this group.
+     *
      * @return inserted object
      */
-    ItemStorage saveItem(ItemStorage itemStorage, Long id);
+    ItemStorage saveItem(ItemStorage itemStorage, Long id, Long groupId);
 
     /**
      * Finds all storage items in a shopping list.

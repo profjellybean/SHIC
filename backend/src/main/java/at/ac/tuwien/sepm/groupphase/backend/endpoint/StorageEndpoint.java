@@ -9,6 +9,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.service.StorageService;
+import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,22 +41,30 @@ public class StorageEndpoint {
     private final StorageService storageService;
     private final ItemStorageMapper itemStorageMapper;
     private final UnitOfQuantityMapper unitOfQuantityMapper;
+    private final UserService userService;
 
     @Autowired
-    public StorageEndpoint(StorageService storageService, ItemStorageMapper itemStorageMapper, UnitOfQuantityMapper unitOfQuantityMapper) {
+    public StorageEndpoint(StorageService storageService, ItemStorageMapper itemStorageMapper,
+                           UnitOfQuantityMapper unitOfQuantityMapper, UserService userService) {
         this.storageService = storageService;
         this.itemStorageMapper = itemStorageMapper;
         this.unitOfQuantityMapper = unitOfQuantityMapper;
+        this.userService = userService;
     }
 
 
     @PostMapping
     @PermitAll
     @Operation(summary = "Insert a new item into the storage") //TODO: add security
-    public ItemStorageDto saveItem(@Valid @RequestBody ItemStorageDto itemStorageDto) {
+    public ItemStorageDto saveItem(Authentication authentication, @Valid @RequestBody ItemStorageDto itemStorageDto) {
         LOGGER.info("POST /storage body: {}", itemStorageDto.toString());
         try {
-            return itemStorageMapper.itemStorageToItemStorageDto(storageService.saveItem(itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto)));
+            Long groupId = null;
+            if (authentication != null) {
+                groupId = userService.getGroupIdByUsername(authentication.getName());
+            }
+            return itemStorageMapper.itemStorageToItemStorageDto(storageService.saveItem(
+                itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto), groupId));
         } catch (ServiceException s) {
             LOGGER.error(s.getMessage());
             throw new ResponseStatusException(HttpStatus.CONFLICT);

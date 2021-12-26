@@ -115,4 +115,6 @@ public interface UserService extends UserDetailsService {
     boolean getConfirmationStatusByName(String username);
 
     List<ItemStorage> getCombinedAvailableItemsWithoutDuplicates(String username);
+
+    Long getGroupIdByUsername(String username);
 }

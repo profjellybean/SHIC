@@ -4,9 +4,11 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegistrationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ItemStorageMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserLoginMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Bill;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
+import at.ac.tuwien.sepm.groupphase.backend.repository.BillRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitOfQuantityRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserGroupRepository;
@@ -17,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -44,6 +47,8 @@ public class TestDataGenerator {
     private ItemStorageMapper itemStorageMapper;
     @Autowired
     UserLoginMapper userLoginMapper;
+    @Autowired
+    BillRepository billRepository;
 
     public TestDataGenerator(RecipeDataGenerator recipeDataGenerator,
                                ShoppingListDataGenerator shoppingListDataGenerator,
@@ -74,6 +79,56 @@ public class TestDataGenerator {
         userDataGenerator.generateUser(); // includes ShoppingList and Storage
     }
 
+    public void generateData_billSumOfCurrentMonth() {
+        LOGGER.debug("Generating Data for sum of Bills in current month");
+
+        Bill bill1 = Bill.BillBuilder.aBill()
+            .withRegisterId(-1L)
+            .withDate(LocalDate.now())
+            .withSum(10)
+            .build();
+        Bill bill2 = Bill.BillBuilder.aBill()
+            .withRegisterId(-1L)
+            .withDate(LocalDate.now())
+            .withSum(20)
+            .build();
+        billRepository.saveAndFlush(bill1);
+        billRepository.saveAndFlush(bill2);
+
+        UserRegistrationDto testUser = new UserRegistrationDto("testUser", "password", "test.user@email.com");
+
+        UserGroup testGroup = new UserGroup(null, null, -1L, new HashSet<ApplicationUser>());
+        testGroup = userGroupRepository.saveAndFlush(testGroup);
+
+        ApplicationUser testApplicationUser = userLoginMapper.dtoToEntity(testUser, null);
+        testApplicationUser.setCurrGroup(testGroup);
+        userRepository.saveAndFlush(testApplicationUser);
+
+        Set<ApplicationUser> users = testGroup.getUser();
+        users.add(testApplicationUser);
+        testGroup.setUser(users);
+        userGroupRepository.saveAndFlush(testGroup);
+
+    }
+
+    public void generateData_billSumOfCurrentMonth_noBills() {
+        LOGGER.debug("Generating Data for sum of Bills in current month (no Bills)");
+
+        UserRegistrationDto testUser = new UserRegistrationDto("testUser", "password", "test.user@email.com");
+
+        UserGroup testGroup = new UserGroup(null, null, -1L, new HashSet<ApplicationUser>());
+        testGroup = userGroupRepository.saveAndFlush(testGroup);
+
+        ApplicationUser testApplicationUser = userLoginMapper.dtoToEntity(testUser, null);
+        testApplicationUser.setCurrGroup(testGroup);
+        userRepository.saveAndFlush(testApplicationUser);
+
+        Set<ApplicationUser> users = testGroup.getUser();
+        users.add(testApplicationUser);
+        testGroup.setUser(users);
+        userGroupRepository.saveAndFlush(testGroup);
+
+    }
 
 
 }

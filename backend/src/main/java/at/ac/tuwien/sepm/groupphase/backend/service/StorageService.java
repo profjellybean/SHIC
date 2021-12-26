@@ -17,10 +17,11 @@ public interface StorageService {
     /**
      * Saves an item in the storage (specified in the item itself).
      *
-     * @param itemStorage the item
+     * @param groupId is used to check if blueprint for this item exists in this group.@param itemStorage the item
+     *
      * @return the item
      */
-    ItemStorage saveItem(ItemStorage itemStorage);
+    ItemStorage saveItem(ItemStorage itemStorage, Long groupId);
 
     /**
      * Searches for items in the storage (specified with the id) by name.
