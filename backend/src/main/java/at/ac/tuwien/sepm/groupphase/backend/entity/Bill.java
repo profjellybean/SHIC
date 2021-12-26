@@ -67,6 +67,19 @@ public class Bill {
         this.date = date;
     }
 
+    public Bill(Long registerId, Set<ItemStorage> groceries, String notes, Set<ApplicationUser> names,
+                Set<ApplicationUser> notPaidNames, double sum, double sumPerPerson, LocalDate date) {
+        this.registerId = registerId;
+        this.groceries = groceries;
+        this.notes = notes;
+        this.names = names;
+        this.notPaidNames = notPaidNames;
+        this.sum = sum;
+        this.sumPerPerson = sumPerPerson;
+        this.date = date;
+    }
+
+
     public Long getId() {
         return id;
     }

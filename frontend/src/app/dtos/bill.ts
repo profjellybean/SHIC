@@ -1,7 +1,7 @@
 import {Item} from './item';
 import {User} from './user';
 
-export interface Bill {
+export class Bill {
   id: number;
   registerId: number;
   groceries: Set<Item>;

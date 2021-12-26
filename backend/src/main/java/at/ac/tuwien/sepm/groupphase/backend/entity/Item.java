@@ -32,7 +32,8 @@ public class Item {
         this.id = id;
     }
 
-    public Item() { }
+    public Item() {
+    }
 
     public Item(Long id, String name, UnitOfQuantity quantity) {
         this.id = id;
@@ -45,10 +46,6 @@ public class Item {
         this.name = name;
         this.quantity = quantity;
         this.groupId = groupId;
-    }
-
-    public Item() {
-
     }
 
     public void setId(Long id) {

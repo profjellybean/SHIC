@@ -6,6 +6,13 @@ import {ShoppingList} from '../../dtos/shopping-list';
 import {UnitOfQuantity} from '../../dtos/unitOfQuantity';
 import {StorageService} from '../../services/storage.service';
 import {ItemService} from '../../services/item.service';
+import {Bill} from '../../dtos/bill';
+import {User} from '../../dtos/user';
+import {GroupService} from "../../services/group.service";
+import {UserService} from "../../services/user.service";
+import jwt_decode from 'jwt-decode';
+import {AuthService} from '../../services/auth.service';
+import {formatDate} from '@angular/common';
 
 @Component({
   selector: 'app-shopping-list',
@@ -18,6 +25,19 @@ export class ShoppingListComponent implements OnInit {
   errorMessage = '';
   submitted = false;
 
+  billToAdd: Bill = {
+    id: null,
+    registerId: null,
+    groceries: null,
+    notes: null,
+    names: null,
+    notPaidNames: null,
+    sum: null,
+    sumPerPerson: null,
+    date: new Date(),
+    nameList: null,
+    notPaidNameList: null
+  };
   itemsAdd: Item[] = null;
   itemToAdd: Item = null;
   itemsToBuy: Item[] = [];
@@ -28,13 +48,28 @@ export class ShoppingListComponent implements OnInit {
   groupStorageId: number;
   groupShoppingListId: number;
   unitsOfQuantity: UnitOfQuantity[];
+  allUsers: User[] = null;
+
+  user: User = {
+    // @ts-ignore
+    username: jwt_decode(this.authService.getToken()).sub.trim(),
+    id: null,
+    currGroup: null,
+    privList: null,
+    email: null
+  };
+  groupId: number;
   constructor(private shoppingListService: ShoppingListService,
               private storageService: StorageService,
               private itemService: ItemService,
-              private modalService: NgbModal) {
+              private modalService: NgbModal,
+              private groupService: GroupService,
+              private userService: UserService,
+              private authService: AuthService) {
   }
 
   ngOnInit(): void {
+    this.getCurrentGroup();
     this.isInPublic = true;
     this.loadUnitsOfQuantity();
     this.loadItemsToAdd();
@@ -42,7 +77,35 @@ export class ShoppingListComponent implements OnInit {
     this.loadGroupShoppingListId();
     this.getPrivateShoppingList();
     this.getPublicShoppingList();
+    console.log('DATE: ' + this.billToAdd.date);
 
+  }
+
+  getCurrentGroup(){
+    this.userService.getCurrentUser({username: this.user.username}).subscribe({
+      next: data => {
+        console.log('received items11', data);
+        this.user = data;
+        this.groupId = this.user.currGroup.id;
+        this.getAllUsers(this.groupId);
+        console.log(this.groupId);
+      },
+      error: error => {
+        console.error(error.message);
+      }
+    });
+  }
+
+  getAllUsers(id: number){
+    this.groupService.getAllUsers(id).subscribe({
+      next: data => {
+        console.log('received items', data);
+        this.allUsers = data;
+      },
+      error: error => {
+        console.error(error.message);
+      }
+    });
   }
 
   switchMode(publicMode: boolean){
@@ -225,9 +288,28 @@ export class ShoppingListComponent implements OnInit {
     }
   }
 
+  addBillForm(form) {
+    this.submitted = true;
+
+    if (form.valid) {
+      console.log('form item to add', this.billToAdd);
+      this.addBill(this.billToAdd);
+      this.clearForm();
+    }
+  }
+
+  addBill(bill: Bill){
+
+  }
+
   openAddModal(itemAddModal: TemplateRef<any>) {
     this.itemToAdd = new Item();
     this.modalService.open(itemAddModal, {ariaLabelledBy: 'modal-basic-title'});
+  }
+
+  openBillModal(billModal: TemplateRef<any>) {
+    this.billToAdd = new Bill();
+    this.modalService.open(billModal, {ariaLabelledBy: 'modal-basic-title'});
   }
 
   private removeItemFromShoppingList(item: Item) {
