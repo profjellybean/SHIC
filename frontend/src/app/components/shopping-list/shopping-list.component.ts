@@ -8,11 +8,10 @@ import {StorageService} from '../../services/storage.service';
 import {ItemService} from '../../services/item.service';
 import {Bill} from '../../dtos/bill';
 import {User} from '../../dtos/user';
-import {GroupService} from "../../services/group.service";
-import {UserService} from "../../services/user.service";
+import {GroupService} from '../../services/group.service';
+import {UserService} from '../../services/user.service';
 import jwt_decode from 'jwt-decode';
 import {AuthService} from '../../services/auth.service';
-import {formatDate} from '@angular/common';
 
 @Component({
   selector: 'app-shopping-list',
