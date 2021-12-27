@@ -7,7 +7,6 @@
     <th>Name</th>
     <th>Quantity</th>
     <th></th>
-    <th></th>
   </tr>
   </thead>
   <tbody>
@@ -17,18 +16,13 @@
     <td>
       <div *ngIf="item.quantity !== null">{{item.quantity.name}}</div></td>
     <td>
-      <!--
-      <button (click)="this.editCustomItem()">Edit</button> -->
       <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(itemEditModal, item)">Edit</button>
     </td>
-    <td><button>Remove</button></td>
   </tr>
   </tbody>
 </table>
 
-<!--
-<button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(itemEditModal)">Edit Custom Item</button>
--->
+
 <div class="row p-2 mb-4">
 
   <ng-template #itemEditModal let-modal>
@@ -73,8 +67,8 @@
             id="inputUnitOfQuantity"
             name="inputUnitOfQuantity"
             required="true"
-            [(ngModel)]="this.itemToEdit.quantity.id">
-            <option *ngFor="let myItem of unitsOfQuantity;" [ngValue]="myItem.id">{{myItem.name}}</option>
+            [(ngModel)]="this.itemToEdit.quantity">
+            <option *ngFor="let myItem of unitsOfQuantity;" [ngValue]="myItem">{{myItem.name}}</option>
           </select>
           <div *ngIf="submitted && itemForm.controls.inputUnitOfQuantity.errors" class="error">
             <small class="form-text text-warning" *ngIf="itemForm.controls.inputUnitOfQuantity.errors.required">Unit
@@ -83,7 +77,7 @@
           </div>
         </div>
 
-        <button type="button" (click)="editItemForm(itemForm)" id="add-msg" class="btn btn-success float-right">Edit item</button>
+        <button type="button" (click)="editItemForm(itemForm)" (click)="modal.dismiss('close')" id="add-msg" class="btn btn-success float-right">Edit item</button>
 
       </form>
     </div>

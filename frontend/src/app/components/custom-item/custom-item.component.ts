@@ -43,7 +43,7 @@ export class CustomItemComponent implements OnInit {
         next: data => {
           console.log('successfully edited custom Items', data);
           // TODO dont reload every time
-          this.loadCustomItems();
+          // this.loadCustomItems();
         },
         error: err => {
           console.log(err);
