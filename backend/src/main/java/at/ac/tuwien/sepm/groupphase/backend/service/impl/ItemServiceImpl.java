@@ -140,6 +140,8 @@ public class ItemServiceImpl implements ItemService {
 
         if (item == null) {
             throw new ValidationException("item can not be null when editing");
+        } else if (item.getGroupId() == null) {
+            throw new ValidationException("groupId of item can not be null when editing custom item");
         }
         return itemRepository.saveAndFlush(item);
     }

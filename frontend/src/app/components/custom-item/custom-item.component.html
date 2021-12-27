@@ -1,0 +1,94 @@
+<p></p>
+<h1>Custom Items</h1>
+<p></p>
+<table class="table table-striped">
+  <thead class="thead-dark">
+  <tr>
+    <th>Name</th>
+    <th>Quantity</th>
+    <th></th>
+    <th></th>
+  </tr>
+  </thead>
+  <tbody>
+
+  <tr *ngFor="let item of $any(items)">
+    <td>{{item.name}}</td>
+    <td>
+      <div *ngIf="item.quantity !== null">{{item.quantity.name}}</div></td>
+    <td>
+      <!--
+      <button (click)="this.editCustomItem()">Edit</button> -->
+      <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(itemEditModal, item)">Edit</button>
+    </td>
+    <td><button>Remove</button></td>
+  </tr>
+  </tbody>
+</table>
+
+<!--
+<button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(itemEditModal)">Edit Custom Item</button>
+-->
+<div class="row p-2 mb-4">
+
+  <ng-template #itemEditModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Item</h5>
+      <button type="button" class="close" (click)="modal.dismiss('X')" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form (ngSubmit)="editItemForm(itemForm)" #itemForm="ngForm">
+
+        <!--
+        <div class="form-group">
+          <label for="itemToAdd">Add item: </label>
+          <select
+            class="form-control"
+            id="itemToAdd"
+            name="itemToAdd"
+            [(ngModel)]="this.itemToEdit">
+            <option *ngFor="let myItem of itemToEdit;" [ngValue]="myItem">{{myItem.name}}</option>
+            <option [ngValue]="null">none</option>
+          </select>
+        </div>
+        -->
+
+        <div class="form-group">
+          <label for="inputName">Name</label>
+          <textarea rows="1" name="name" class="form-control" id="inputName" required
+                    aria-describedby="nameHelp" placeholder="Enter Name" [(ngModel)]="itemToEdit.name"></textarea>
+          <div *ngIf="submitted && itemForm.controls.name.errors" class="error">
+            <small class="form-text text-warning" *ngIf="itemForm.controls.name.errors.required"> Name is
+              required!
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="inputUnitOfQuantity">Unit of Quantity</label>
+          <select
+            class="form-control"
+            id="inputUnitOfQuantity"
+            name="inputUnitOfQuantity"
+            required="true"
+            [(ngModel)]="this.itemToEdit.quantity.id">
+            <option *ngFor="let myItem of unitsOfQuantity;" [ngValue]="myItem.id">{{myItem.name}}</option>
+          </select>
+          <div *ngIf="submitted && itemForm.controls.inputUnitOfQuantity.errors" class="error">
+            <small class="form-text text-warning" *ngIf="itemForm.controls.inputUnitOfQuantity.errors.required">Unit
+              of Quantity is required!
+            </small>
+          </div>
+        </div>
+
+        <button type="button" (click)="editItemForm(itemForm)" id="add-msg" class="btn btn-success float-right">Edit item</button>
+
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" id="close-modal-btn" (click)="modal.dismiss('close')">Close</button>
+    </div>
+  </ng-template>
+</div>

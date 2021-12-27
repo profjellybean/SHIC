@@ -153,13 +153,17 @@ public class ItemEndpoint {
         }
     }
 
-    @PutMapping("/groupItemsByGroupId")
+    @PutMapping("/groupItems")
     //@Secured("ROLE_USER")
     @PermitAll // TODO add security
     @Operation(summary = "Edit Item of a specific Group")
     ItemDto editCustomItem(Authentication authentication, @RequestBody ItemDto item) {
-        LOGGER.info("Endpoint: editCustomItem {}", authentication);
+        LOGGER.info("Endpoint: editCustomItem {}{}", item, authentication);
 
+        if (authentication != null) {
+            Long groupId = userService.getGroupIdByUsername(authentication.getName());
+            item.setGroupId(groupId);
+        }
         try {
             return itemMapper.itemToItemDto(itemService.editCustomItem(itemMapper.itemDtoToItem(item)));
         } catch (ValidationException e) {

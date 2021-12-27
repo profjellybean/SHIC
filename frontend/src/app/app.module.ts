@@ -23,6 +23,7 @@ import { ShoppingListListComponent } from './components/shopping-list-list/shopp
 import { StorageAddItemComponent } from './components/storage-add-item/storage-add-item.component';
 import { UserComponent } from './components/user/user.component';
 import { ConfirmUserEmailComponent } from './components/confirm-user-email/confirm-user-email.component';
+import { CustomItemComponent } from './components/custom-item/custom-item.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { ConfirmUserEmailComponent } from './components/confirm-user-email/confi
     ShoppingListAddComponent,
     ShoppingListListComponent,
     StorageAddItemComponent,
+    CustomItemComponent,
   ],
   imports: [
     BrowserModule,
