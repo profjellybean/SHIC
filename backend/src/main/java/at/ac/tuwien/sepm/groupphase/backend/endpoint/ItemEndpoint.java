@@ -172,4 +172,23 @@ public class ItemEndpoint {
         }
     }
 
+    @PostMapping("/groupItems")
+    //@Secured("ROLE_USER")
+    @PermitAll // TODO add security
+    @Operation(summary = "Edit Item of a specific Group")
+    ItemDto addCustomItem(Authentication authentication, @RequestBody ItemDto item) {
+        LOGGER.info("Endpoint: addCustomItem {}{}", item, authentication);
+
+        if (authentication != null) {
+            Long groupId = userService.getGroupIdByUsername(authentication.getName());
+            item.setGroupId(groupId);
+        }
+        try {
+            return itemMapper.itemToItemDto(itemService.addCustomItem(itemMapper.itemDtoToItem(item)));
+        } catch (ValidationException e) {
+            LOGGER.error("Error while adding custom Item for Group", e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
 }

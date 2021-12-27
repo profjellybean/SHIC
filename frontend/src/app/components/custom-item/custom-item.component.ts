@@ -21,6 +21,7 @@ export class CustomItemComponent implements OnInit {
     notes: null, expDate: null, amount: 0, locationTag: null, shoppingListId: null, quantity: this.nullQuantity};
 
   itemToEdit: Item = null;
+  itemToAdd: Item = this.nullItem;
   items: Item[] = null;
   unitsOfQuantity: UnitOfQuantity[];
 
@@ -44,6 +45,21 @@ export class CustomItemComponent implements OnInit {
           console.log('successfully edited custom Items', data);
           // TODO dont reload every time
           // this.loadCustomItems();
+        },
+        error: err => {
+          console.log(err);
+          this.defaultServiceErrorHandling(err);
+        }
+    });
+  }
+
+  addCustomItem() {
+    this.itemService.addCustomItem(this.itemToAdd).subscribe({
+        next: data => {
+          console.log('successfully added custom Item', data);
+          // TODO dont reload every time
+          //this.loadCustomItems();
+          this.items.push(data);
         },
         error: err => {
           console.log(err);
@@ -85,7 +101,21 @@ export class CustomItemComponent implements OnInit {
     }
   }
 
-  openAddModal(itemAddModal: TemplateRef<any>, item: Item) {
+  addItemForm(form) {
+    this.submitted = true;
+
+    if(form.valid) {
+      console.log('form item to add', this.itemToAdd);
+      this.addCustomItem();
+      this.clearForm();
+    }
+  }
+
+  openAddModal(itemAddModal: TemplateRef<any>) {
+    this.modalService.open(itemAddModal, {ariaLabelledBy: 'modal-basic-title'});
+  }
+
+  openEditModal(itemAddModal: TemplateRef<any>, item: Item) {
     this.itemToEdit = item;
     this.modalService.open(itemAddModal, {ariaLabelledBy: 'modal-basic-title'});
   }
@@ -99,6 +129,7 @@ export class CustomItemComponent implements OnInit {
 
   private clearForm() {
     this.itemToEdit = this.nullItem;
+    this.itemToAdd = this.nullItem;
     this.submitted = false;
   }
 

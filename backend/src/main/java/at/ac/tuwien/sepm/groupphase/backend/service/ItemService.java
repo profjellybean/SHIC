@@ -99,4 +99,14 @@ public interface ItemService {
      * @return edited item.
      */
     Item editCustomItem(Item item);
+
+    /**
+     * saves a custom item of a group.
+     * groupId has to be set.
+     *
+     * @param item that is saved.
+     *
+     * @return saved item.
+     */
+    Item addCustomItem(Item item);
 }

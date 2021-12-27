@@ -127,10 +127,12 @@ public class ItemServiceImpl implements ItemService {
         }
 
         List<Item> items = itemRepository.findItemsByNameForGroup(itemStorage.getName(), groupId);
-        if (items.isEmpty()) {
-            Item newBlueprint = new Item(null, itemStorage.getName(), itemStorage.getQuantity(), groupId);
-            itemRepository.saveAndFlush(newBlueprint);
+        if (!items.isEmpty()) {
+            throw new ValidationException("Item with same Nama already exists");
         }
+
+        Item newBlueprint = new Item(null, itemStorage.getName(), itemStorage.getQuantity(), groupId);
+        itemRepository.saveAndFlush(newBlueprint);
         return itemStorage;
     }
 
@@ -142,6 +144,36 @@ public class ItemServiceImpl implements ItemService {
             throw new ValidationException("item can not be null when editing");
         } else if (item.getGroupId() == null) {
             throw new ValidationException("groupId of item can not be null when editing custom item");
+        } else if (item.getName() == null) {
+            throw new ValidationException("name of item can not be null when adding custom item");
+        } else if (item.getQuantity() == null) {
+            throw new ValidationException("unit of quantity of item can not be null when adding custom item");
+        }
+
+        List<Item> items = itemRepository.findItemsByNameForGroup(item.getName(), item.getGroupId());
+        if (!items.isEmpty()) {
+            throw new ValidationException("Item with same Nama already exists");
+        }
+        return itemRepository.saveAndFlush(item);
+    }
+
+    @Override
+    public Item addCustomItem(Item item) {
+        LOGGER.debug("Service: Add Item {}", item);
+
+        if (item == null) {
+            throw new ValidationException("item can not be null when adding");
+        } else if (item.getGroupId() == null) {
+            throw new ValidationException("groupId of item can not be null when adding custom item");
+        } else if (item.getName() == null) {
+            throw new ValidationException("name of item can not be null when adding custom item");
+        } else if (item.getQuantity() == null) {
+            throw new ValidationException("unit of quantity of item can not be null when adding custom item");
+        }
+
+        List<Item> items = itemRepository.findItemsByNameForGroup(item.getName(), item.getGroupId());
+        if (!items.isEmpty()) {
+            throw new ValidationException("Item with same Nama already exists");
         }
         return itemRepository.saveAndFlush(item);
     }
