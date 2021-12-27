@@ -28,6 +28,7 @@ export class ShoppingListComponent implements OnInit {
   groupStorageId: number;
   groupShoppingListId: number;
   unitsOfQuantity: UnitOfQuantity[];
+
   constructor(private shoppingListService: ShoppingListService,
               private storageService: StorageService,
               private itemService: ItemService,

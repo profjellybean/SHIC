@@ -27,6 +27,16 @@ export class ItemService {
     return this.httpClient.get<Item[]>(this.recipeBaseUri + '/groupItems');
   }
 
+  findAllItemsByGroupId(): Observable<Item[]>{
+    console.log('load all items for group by groupId');
+    return this.httpClient.get<Item[]>(this.recipeBaseUri + '/groupItemsByGroupId');
+  }
+
+  editCustomItem(item: Item): Observable<Item> {
+    console.log('edit item: ' + item);
+    return this.httpClient.put<Item>(this.recipeBaseUri + '/groupItems', item);
+  }
+
   addItem(item: Item): Observable<Item> {
     console.log('add item: ' + item);
     return this.httpClient.post<Item>(this.recipeBaseUri, item);

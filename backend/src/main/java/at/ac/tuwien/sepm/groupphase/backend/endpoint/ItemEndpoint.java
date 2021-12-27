@@ -9,6 +9,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ItemMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UnitOfQuantityMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UnitsRelationMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.service.ItemService;
 import at.ac.tuwien.sepm.groupphase.backend.service.StorageService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
@@ -17,14 +18,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
@@ -121,7 +125,7 @@ public class ItemEndpoint {
     @GetMapping("/groupItems")
     @Secured("ROLE_USER")
     //@PermitAll // TODO add security
-    @Operation(summary = "Get all Items for specific Group")
+    @Operation(summary = "Get all available Items for specific Group")
     List<ItemDto> getAllItemsForGroup(Authentication authentication) {
         LOGGER.info("Endpoint: getAllItemsForGroup {}", authentication);
         Long groupId = null;
@@ -131,8 +135,41 @@ public class ItemEndpoint {
         return itemMapper.itemsToItemDtos(itemService.getAllItemsForGroup(groupId));
     }
 
+    @GetMapping("/groupItemsByGroupId")
+    //@Secured("ROLE_USER")
+    @PermitAll // TODO add security
+    @Operation(summary = "Get all Items for specific Group by GroupId")
+    List<ItemDto> getAllItemsByGroupId(Authentication authentication) {
+        LOGGER.info("Endpoint: getAllItemsByGroupId {}", authentication);
+        Long groupId = null;
+        if (authentication != null) {
+            groupId = userService.getGroupIdByUsername(authentication.getName());
+        }
+        try {
+            return itemMapper.itemsToItemDtos(itemService.findAllByGroupId(groupId));
+        } catch (ValidationException e) {
+            LOGGER.error("Error while getting Items for Group", e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
 
+    @PutMapping("/groupItems")
+    //@Secured("ROLE_USER")
+    @PermitAll // TODO add security
+    @Operation(summary = "Edit Item of a specific Group")
+    ItemDto editCustomItem(Authentication authentication, @RequestBody ItemDto item) {
+        LOGGER.info("Endpoint: editCustomItem {}{}", item, authentication);
 
-
+        if (authentication != null) {
+            Long groupId = userService.getGroupIdByUsername(authentication.getName());
+            item.setGroupId(groupId);
+        }
+        try {
+            return itemMapper.itemToItemDto(itemService.editCustomItem(itemMapper.itemDtoToItem(item)));
+        } catch (ValidationException e) {
+            LOGGER.error("Error while editing custom Item for Group", e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
 
 }

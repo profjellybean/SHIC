@@ -107,6 +107,15 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    public List<Item> findAllByGroupId(Long groupId) {
+        LOGGER.debug("Getting all items by groupId {}", groupId);
+        if (groupId == null) {
+            throw new ValidationException("groupId can not be null");
+        }
+        return itemRepository.findAllByGroupId(groupId);
+    }
+
+    @Override
     public ItemStorage checkForBluePrintForGroup(ItemStorage itemStorage, Long groupId) {
         LOGGER.debug("Service: Check for Item blueprint {}", itemStorage);
 
@@ -123,6 +132,18 @@ public class ItemServiceImpl implements ItemService {
             itemRepository.saveAndFlush(newBlueprint);
         }
         return itemStorage;
+    }
+
+    @Override
+    public Item editCustomItem(Item item) {
+        LOGGER.debug("Service: Edit Item {}", item);
+
+        if (item == null) {
+            throw new ValidationException("item can not be null when editing");
+        } else if (item.getGroupId() == null) {
+            throw new ValidationException("groupId of item can not be null when editing custom item");
+        }
+        return itemRepository.saveAndFlush(item);
     }
 
 
