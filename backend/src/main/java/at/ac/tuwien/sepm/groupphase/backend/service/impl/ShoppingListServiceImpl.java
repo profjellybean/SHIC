@@ -360,7 +360,6 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         }
         LOGGER.info("::: " + rowsDeleted);
 
-
     }
 
 

@@ -29,21 +29,24 @@ export class StorageComponent implements OnInit {
   error = false;
   errorMessage = '';
   submitted = false;
-  searchString='';
-  searchItem: Item = {image:null, id: null, storageId: null, name: null,
-    notes: null, expDate: null, amount: 0, locationTag: null, shoppingListId: null, quantity: null};
+  searchString = '';
+  searchItem: Item = {
+    image: null, id: null, storageId: null, name: null,
+    notes: null, expDate: null, amount: 0, locationTag: null, shoppingListId: null, quantity: null
+  };
 
   items: Item[] = null;
   item: Item = new Item();
   nullQuantity: UnitOfQuantity = {id: null, name: null};
-  nullItem: Item = {image:null, id: null, storageId: null, name: null,
-    notes: null, expDate: null, amount: 0, locationTag: null, shoppingListId: null, quantity: this.nullQuantity};
+  nullItem: Item = {
+    image: null, id: null, storageId: null, name: null,
+    notes: null, expDate: null, amount: 0, locationTag: null, shoppingListId: null, quantity: this.nullQuantity
+  };
 
   itemToAdd: Item = this.nullItem;
   itemsToAdd: Item[];
 
   unitsOfQuantity: UnitOfQuantity[];
-
 
 
   constructor(private storageService: StorageService,
@@ -60,7 +63,7 @@ export class StorageComponent implements OnInit {
     this.loadUnitsOfQuantity();
   }
 
-  getCurrUser(){
+  getCurrUser() {
     this.userService.getCurrentUser({username: this.user.username}).subscribe({
       next: data => {
         console.log('received items6', data);
@@ -78,14 +81,14 @@ export class StorageComponent implements OnInit {
   addItem(item: Item) {
     item.storageId = this.user.currGroup.storageId;
     item.id = null;
-    if(item.quantity === undefined) {
+    if (item.quantity === undefined) {
       item.quantity = null;
     }
-    if(item.amount === undefined) {
+    if (item.amount === undefined) {
       item.amount = null;
     }
     this.unitsOfQuantity.forEach(unit => {
-      if(item.quantity.id === unit.id) {
+      if (item.quantity.id === unit.id) {
         item.quantity.name = unit.name;
       }
     });
@@ -110,7 +113,7 @@ export class StorageComponent implements OnInit {
   addItemForm(form) {
     this.submitted = true;
 
-    if(form.valid) {
+    if (form.valid) {
       //this.storageService.addItem(this.item);
       console.log('form item to add', this.itemToAdd);
       this.addItem(this.itemToAdd);
@@ -154,8 +157,8 @@ export class StorageComponent implements OnInit {
     this.error = false;
   }
 
- searchItems() {
-    this.searchString=this.createSearchString();
+  searchItems() {
+    this.searchString = this.createSearchString();
     this.storageService.searchItems(this.searchString).subscribe({
       next: data => {
         console.log('found data', data);
@@ -167,46 +170,70 @@ export class StorageComponent implements OnInit {
       }
     });
   }
-  createSearchString(): string{
-    this.searchString='?id=';
-    if(this.searchItem.storageId!=null){
-      this.searchString=this.searchString+'&storageId='+this.searchItem.storageId;
-    }else {
-      this.searchString=this.searchString+'&storageId=';
+
+  deleteItem(item: Item) {
+    this.storageService.deleteItemFromStorage({itemId: item.id}).subscribe(
+      {
+        next: data => {
+          console.log(data);
+          this.removeItemFromStorage(item);
+        },
+        error: err => {
+          console.error(err);
+          this.defaultServiceErrorHandling(err);
+        }
+      }
+    );
+  }
+
+  private removeItemFromStorage(item: Item) {
+    for (let i = 0; i < this.items.length; i++) {
+      if(this.items[i].id === item.id) {
+        this.items.splice(i, 1);
+      }
     }
-    if(this.searchItem.name!= null) {
+  }
+
+  private createSearchString(): string {
+    this.searchString = '?id=';
+    if (this.searchItem.storageId != null) {
+      this.searchString = this.searchString + '&storageId=' + this.searchItem.storageId;
+    } else {
+      this.searchString = this.searchString + '&storageId=';
+    }
+    if (this.searchItem.name != null) {
       if (this.searchItem.name.trim() !== '') {
-        this.searchString = this.searchString+'&name=' + this.searchItem.name;
+        this.searchString = this.searchString + '&name=' + this.searchItem.name;
       } else {
-        this.searchString = this.searchString+'&name=';
+        this.searchString = this.searchString + '&name=';
       }
-    }else{
-      this.searchString = this.searchString+'&name=';
+    } else {
+      this.searchString = this.searchString + '&name=';
     }
-    if(this.searchItem.notes!= null) {
+    if (this.searchItem.notes != null) {
       if (this.searchItem.notes.trim() !== '') {
-        this.searchString = this.searchString+'&notes=' + this.searchItem.notes;
+        this.searchString = this.searchString + '&notes=' + this.searchItem.notes;
       } else {
-        this.searchString = this.searchString+'&notes=';
+        this.searchString = this.searchString + '&notes=';
       }
-    }else{
-      this.searchString = this.searchString+'&notes=';
+    } else {
+      this.searchString = this.searchString + '&notes=';
     }
-    if(this.searchItem.amount!=null){
-      this.searchString= this.searchString+ '&amount='+this.searchItem.amount;
-    }else{
-      this.searchString= this.searchString+ '&amount=0';
+    if (this.searchItem.amount != null) {
+      this.searchString = this.searchString + '&amount=' + this.searchItem.amount;
+    } else {
+      this.searchString = this.searchString + '&amount=0';
     }
-    if(this.searchItem.locationTag!=null){
-      this.searchString=this.searchString+'&locationTag='+this.searchItem.locationTag;
-    }else {
-      this.searchString=this.searchString+'&locationTag=';
+    if (this.searchItem.locationTag != null) {
+      this.searchString = this.searchString + '&locationTag=' + this.searchItem.locationTag;
+    } else {
+      this.searchString = this.searchString + '&locationTag=';
     }
-    this.searchString=this.searchString+'&quantity=&image=';
-    if(this.searchItem.expDate!=null){
-      this.searchString=this.searchString+'&expDate='+this.searchItem.expDate;
-    }else {
-      this.searchString=this.searchString+'&expDate=';
+    this.searchString = this.searchString + '&quantity=&image=';
+    if (this.searchItem.expDate != null) {
+      this.searchString = this.searchString + '&expDate=' + this.searchItem.expDate;
+    } else {
+      this.searchString = this.searchString + '&expDate=';
     }
 
 

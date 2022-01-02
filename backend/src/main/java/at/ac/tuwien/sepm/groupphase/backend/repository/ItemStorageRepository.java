@@ -33,10 +33,4 @@ public interface ItemStorageRepository extends JpaRepository<ItemStorage, Long> 
     List<ItemStorage> findAllByItemStorage(@Param("storageId") Long storageId, @Param("amount") int amount, @Param("locationTag") String locationTag, @Param("name") String name,
                                            @Param("notes") String notes, @Param("expDate") Date expDate);
 
-    @Modifying
-    @Query(value = "delete from ITEM_STORAGE where SHOPPING_LIST_ID = :shoppingListId and ITEMS_ID = :itemId", nativeQuery = true)
-    @Transactional
-    int deleteFromTable(@Param("shoppingListId") Long shoppingListId, @Param("itemId") Long itemId);
-
-
 }

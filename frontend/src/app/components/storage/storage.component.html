@@ -142,7 +142,7 @@
     <td>{{item.expDate}}</td>
     <td>{{item.locationTag}}</td>
     <td><button type="button" class="btn btn-secondary btn-sm mr-4">Edit</button></td>
-    <td><button type="button" class="btn btn-secondary btn-sm mr-4">Remove</button></td>
+    <td><button type="button" class="btn btn-secondary btn-sm mr-4" (click)="deleteItem(item)">Remove</button></td>
   </tr>
   </tbody>
 </table>

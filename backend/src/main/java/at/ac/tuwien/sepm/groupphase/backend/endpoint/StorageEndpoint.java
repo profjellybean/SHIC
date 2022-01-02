@@ -4,10 +4,11 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemStorageDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UnitOfQuantityDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ItemStorageMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UnitOfQuantityMapper;
-import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
-import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
+import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepm.groupphase.backend.service.GroupService;
 import at.ac.tuwien.sepm.groupphase.backend.service.StorageService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,10 +19,12 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.server.ResponseStatusException;
@@ -29,9 +32,6 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
 import java.lang.invoke.MethodHandles;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -42,14 +42,17 @@ public class StorageEndpoint {
     private final ItemStorageMapper itemStorageMapper;
     private final UnitOfQuantityMapper unitOfQuantityMapper;
     private final UserService userService;
+    private final GroupService groupService;
 
     @Autowired
     public StorageEndpoint(StorageService storageService, ItemStorageMapper itemStorageMapper,
-                           UnitOfQuantityMapper unitOfQuantityMapper, UserService userService) {
+                           UnitOfQuantityMapper unitOfQuantityMapper, UserService userService,
+                           GroupService groupService) {
         this.storageService = storageService;
         this.itemStorageMapper = itemStorageMapper;
         this.unitOfQuantityMapper = unitOfQuantityMapper;
         this.userService = userService;
+        this.groupService = groupService;
     }
 
 
@@ -105,5 +108,23 @@ public class StorageEndpoint {
     public List<UnitOfQuantityDto> getAllUnitsOfQuantity() {
         LOGGER.info("Get units of quantity, endpoint");
         return unitOfQuantityMapper.unitsOfQuantityToUnitsOfQuantityDto(storageService.getAllUnitOfQuantity());
+    }
+
+    @PermitAll
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteItemFromStorage(Authentication authentication, @RequestParam Long id) {
+        try {
+            Long groupId = userService.getGroupIdByUsername(authentication.getName());
+            UserGroup group = groupService.getOneById(groupId);
+            storageService.deleteItemInStorageById(id, group.getStorageId());
+
+        } catch (ValidationException e) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+        } catch (NotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
 }

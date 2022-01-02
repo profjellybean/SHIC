@@ -85,4 +85,15 @@ public class GroupServiceImpl implements GroupService {
             throw new NotFoundException("Group doesn't exist");
         }
     }
+
+    @Override
+    public UserGroup getOneById(Long id) {
+        LOGGER.debug("Service: Get one group by id {}", id);
+        Optional<UserGroup> group = this.userGroupRepository.findById(id);
+        if (group.isPresent()) {
+            return group.get();
+        } else {
+            throw new NotFoundException("Group doesn't exist");
+        }
+    }
 }
