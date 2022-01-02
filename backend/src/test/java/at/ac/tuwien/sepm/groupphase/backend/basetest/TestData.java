@@ -30,7 +30,7 @@ public interface TestData {
     String ADMIN_USER = "admin";
     String TEST_USER = "testUser";
     String STORAGEENDPOINT_URI = BASE_URI + "/storage";
-    String SHOPPINGLISTENPOINDT_URI = BASE_URI + "/shopping-list";
+    String SHOPPINGLISTENPOINDT_URI = BASE_URI + "/shoppinglist";
     String ITEMENDPOINT_UNITOFQUANTITY_URI = BASE_URI + "/item/unitOfQuantity";
     String ITEMENDPOINT_UNITRELATION_URI = BASE_URI + "/item/unitsRelation";
     String USERGROUPENDPOINT_URI = BASE_URI + "/group";

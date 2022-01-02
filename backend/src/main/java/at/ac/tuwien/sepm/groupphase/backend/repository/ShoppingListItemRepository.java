@@ -27,5 +27,9 @@ public interface ShoppingListItemRepository extends JpaRepository<ItemStorage, L
     @Transactional
     int deleteFromTable(@Param("shoppingListId") Long shoppingListId, @Param("itemId") Long itemId);
 
+    @Modifying
+    @Query(value = "update SHOPPING_LIST_ITEMS set ITEMS_ID = :itemId where SHOPPING_LIST_ID = :shoppingListId", nativeQuery = true)
+    @Transactional
+    int updateTable(@Param("shoppingListId") Long shoppingListId, @Param("itemId") Long itemId);
 
 }

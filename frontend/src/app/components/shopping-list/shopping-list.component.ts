@@ -20,6 +20,8 @@ export class ShoppingListComponent implements OnInit {
 
   itemsAdd: Item[] = null;
   itemToAdd: Item = null;
+  itemAmountChange: Item = {image:null, id: null, storageId: null, name: null,
+    notes: null, expDate: null, amount: 0, locationTag: null, shoppingListId: null, quantity: null};
   itemsToBuy: Item[] = [];
   items: Item[] = null;
   privateList: ShoppingList;
@@ -216,6 +218,50 @@ export class ShoppingListComponent implements OnInit {
 
   }
 
+  changeAmountOfItemInShoppingList(item: Item) {
+    this.setItemAmountChange(item);
+    console.log('item amount change ', this.itemAmountChange);
+    this.removeItemFromShoppingList(item);
+    console.log('deleted old item ', item);
+
+    if(this.isInPublic){
+      console.log('change amount if item in public list', item);
+      this.shoppingListService.changeAmountOfItemInPublicShoppingList(this.itemAmountChange).subscribe({
+        next: data => {
+          if(data === null){
+            this.getPublicShoppingList();
+          }else{
+            this.items.push(data);
+          }
+          // todo dont reload every time
+          this.loadItemsToAdd();
+        },
+        error: err => {
+          this.defaultServiceErrorHandling(err);
+        }
+      });
+    }else{
+      console.log('change amount of item of private list', item);
+      this.shoppingListService.changeAmountOfItemInPrivateShoppingList(this.itemAmountChange).subscribe({
+        next: data => {
+          console.log('hey i am back ', data);
+          if(data === null){
+            this.getPrivateShoppingList();
+          }else{
+            this.items.push(data);
+          }
+          // todo dont reload every time
+          this.loadItemsToAdd();
+
+        },
+        error: err => {
+          this.defaultServiceErrorHandling(err);
+        }
+      });
+    }
+
+  }
+
   addItemForm(form) {
     this.submitted = true;
 
@@ -274,6 +320,55 @@ export class ShoppingListComponent implements OnInit {
       this.errorMessage = error.error.message;
     } else {
       this.errorMessage = error.error;
+    }
+  }
+
+  private setItemAmountChange(item: Item) {
+    this.itemAmountChange.id = item.id;
+    if (item.quantity === undefined) {
+      this.itemAmountChange.quantity = null;
+    } else {
+      this.itemAmountChange.quantity = item.quantity;
+    }
+    if (item.amount === undefined) {
+      this.itemAmountChange.amount = null;
+    } else {
+      this.itemAmountChange.amount = item.amount;
+    }
+    if (item.name === undefined) {
+      this.itemAmountChange.name = null;
+    } else {
+      this.itemAmountChange.name = item.name;
+    }
+    if (item.notes === undefined) {
+      this.itemAmountChange.notes = null;
+    } else {
+      this.itemAmountChange.notes = item.notes;
+    }
+    if (item.image === undefined) {
+      this.itemAmountChange.image = null;
+    } else {
+      this.itemAmountChange.image = item.image;
+    }
+    if (item.expDate === undefined) {
+      this.itemAmountChange.expDate = null;
+    } else {
+      this.itemAmountChange.expDate = item.expDate;
+    }
+    if (item.locationTag === undefined) {
+      this.itemAmountChange.locationTag = null;
+    } else {
+      this.itemAmountChange.locationTag = item.locationTag;
+    }
+    if (item.storageId === undefined) {
+      this.itemAmountChange.storageId = null;
+    } else {
+      this.itemAmountChange.storageId = item.storageId;
+    }
+    if (item.shoppingListId === undefined) {
+      this.itemAmountChange.shoppingListId = null;
+    } else {
+      this.itemAmountChange.shoppingListId = item.shoppingListId;
     }
   }
 

@@ -64,9 +64,13 @@ public class RegisterDataGenerator {
         if (registerRepository.findAll().size() > 0) {
             LOGGER.debug("register already generated");
         } else {
-            billDataGenerator.generateRegister();
+            billDataGenerator.generateBills();
 
-            /*
+
+            List<Bill> billList = billRepository.findAll();
+
+            TEST_BILLS = new HashSet<>(billList);
+
             //register
             Optional<Register> registerOfGroup = registerRepository.findRegisterById(1L);
             Register register;
@@ -84,7 +88,7 @@ public class RegisterDataGenerator {
             }
             Register savedRegister = registerRepository.saveAndFlush(register);
 
-             */
+            /*
 
             Register register = Register.RegisterBuilder.aRegister()
                 .withBills(TEST_BILLS)
@@ -94,7 +98,7 @@ public class RegisterDataGenerator {
             Register savedRegister = registerRepository.saveAndFlush(register);
 
 
-
+            /*
             //bills
             Bill bill2 = Bill.BillBuilder.aBill()
                 .withRegisterId(savedRegister.getId())
@@ -174,6 +178,8 @@ public class RegisterDataGenerator {
             savedRegister.setBills(billSet);
 
             registerRepository.saveAndFlush(savedRegister);
+
+            */
 
         }
     }

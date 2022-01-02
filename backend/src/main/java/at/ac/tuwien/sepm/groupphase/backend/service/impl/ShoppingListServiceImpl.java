@@ -260,6 +260,12 @@ public class ShoppingListServiceImpl implements ShoppingListService {
 
     }
 
+    @Override
+    public ItemStorage changeAmountOfItem(ItemStorage itemStorage) {
+        LOGGER.debug("change amount of item in shopping list");
+        return shoppingListItemRepository.saveAndFlush(itemStorage);
+    }
+
     @Transactional
     @Override
     public List<Item> findAllItems() {
@@ -327,9 +333,11 @@ public class ShoppingListServiceImpl implements ShoppingListService {
                             throw new ServiceException("Incompatible units of quantity");
                         }
                     } else {
-                        Long shoppingListId = itemToStore.getShoppingListId();
+
+                        //itemStorageRepository.deleteFromTable(itemToStore.getShoppingListId(), itemToStore.getId());
 
                         itemToStore.setShoppingListId(null);
+                        Long shoppingListId = itemToStore.getShoppingListId();
                         itemToStore.setStorageId(storageId);
 
                         shoppingListItemRepository.deleteFromTable(shoppingListId, itemToStore.getId());

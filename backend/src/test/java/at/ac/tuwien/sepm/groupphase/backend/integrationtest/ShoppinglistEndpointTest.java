@@ -122,7 +122,7 @@ public class ShoppinglistEndpointTest implements TestData {
     //@Autowired
     //RecipeDataGenerator recipeDataGenerator;
 
-/*
+
     @BeforeEach
     public void beforeEach() {
         Optional<ApplicationUser> userOptional = userRepository.findUserByUsername(ADMIN_USER);
@@ -152,13 +152,13 @@ public class ShoppinglistEndpointTest implements TestData {
         shoppingListRepository.saveAndFlush(shoppingList);
     }
 
- */
-    /*
+
+
     @AfterEach
     public void afterEach() {
         recipeRepository.deleteAll();
     }
-     */
+
 
     @Autowired
     PlatformTransactionManager txm;
@@ -294,8 +294,8 @@ public class ShoppinglistEndpointTest implements TestData {
         assertEquals(0, itemStorageDtos.size());
 
     }
-/*
-    @Test
+
+    //@Test
     public void workOffShoppingList_ShouldReturn_shoppingListWithEmptyItems() throws Exception {
 
         ItemStorageDto mushroomsDto = itemStorageMapper.itemStorageToItemStorageDto(mushrooms);
@@ -312,13 +312,13 @@ public class ShoppinglistEndpointTest implements TestData {
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
-        //assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
         Set emptySet = new HashSet<ItemStorage>();
         ShoppingList workedOffList = shoppingListRepository.getById(shoppingList.getId());
         assertEquals(emptySet, workedOffList.getItems());
     }
 
- */
+
 
 
 /*

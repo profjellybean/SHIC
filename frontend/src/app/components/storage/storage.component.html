@@ -9,7 +9,8 @@
 
 <div>
   <label for="new-name">Search for name: &nbsp;</label>
-  <input #name (keyup) = "name.value= this.searchItem.name; this.searchItems()" (change)="searchItems()" id="new-name" [(ngModel)]="this.searchItem.name" placeholder="name"/>
+  <input #name (keyup) = "name.value= this.searchItem.name; this.searchItems()"
+         (change)="searchItems()" id="new-name" [(ngModel)]="this.searchItem.name" placeholder="name"/>
 </div>
 <!--TABLE START-->
 

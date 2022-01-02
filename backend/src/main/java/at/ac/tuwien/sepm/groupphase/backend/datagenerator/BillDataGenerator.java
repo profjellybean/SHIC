@@ -48,7 +48,7 @@ public class BillDataGenerator {
     }
 
     @PostConstruct
-    void generateRegister() {
+    void generateBills() {
         if (billRepository.findAll().size() > 0) {
             LOGGER.debug("bill already generated");
         } else {
@@ -84,6 +84,7 @@ public class BillDataGenerator {
             savedBill = billRepository.saveAndFlush(savedBill);
 
             /*
+
             ApplicationUser maleUser = new ApplicationUser("luke@email.com", "password");
             ApplicationUser user1 = userRepository.saveAndFlush(maleUser);
             ApplicationUser femaleUser = new ApplicationUser("anne@email.com", "password");
@@ -108,8 +109,7 @@ public class BillDataGenerator {
 
              */
 
-
-
+            /*
             //items
             ItemStorage itemStorage1 = new ItemStorage("name 1", "notes for itemStorage 1", null,
                 null, 10, Location.fridge.toString(), null, null, null);
@@ -121,6 +121,8 @@ public class BillDataGenerator {
                 }
             });
             savedBill = billRepository.saveAndFlush(savedBill);
+            HashSet<Bill> bills = new HashSet<>();
+            bills.add(savedBill);
 
 
             // bill 2
@@ -134,7 +136,9 @@ public class BillDataGenerator {
             Bill savedBill2 = billRepository.saveAndFlush(bill2);
 
             savedBill2.setNames(names);
+            savedBill2 = billRepository.saveAndFlush(savedBill2);
             savedBill2.setNotPaidNames(notPaid);
+            savedBill2 = billRepository.saveAndFlush(savedBill2);
 
             ItemStorage itemStorage2 = new ItemStorage("name 2", "notes for itemStorage 2", null,
                 null, 10, Location.fridge.toString(), null, null, null);
@@ -144,7 +148,8 @@ public class BillDataGenerator {
                     add(item2);
                 }
             });
-            billRepository.saveAndFlush(savedBill2);
+            savedBill2 = billRepository.saveAndFlush(savedBill2);
+            bills.add(savedBill2);
 
             // bill 3
             Bill bill3 = Bill.BillBuilder.aBill()
@@ -157,7 +162,9 @@ public class BillDataGenerator {
             Bill savedBill3 = billRepository.saveAndFlush(bill3);
 
             savedBill3.setNames(names);
+            savedBill3 = billRepository.saveAndFlush(savedBill3);
             savedBill3.setNotPaidNames(notPaid);
+            savedBill3 = billRepository.saveAndFlush(savedBill3);
 
             ItemStorage itemStorage3 = new ItemStorage("name 3", "notes for itemStorage 3", null,
                 null, 10, Location.fridge.toString(), null, null, null);
@@ -167,9 +174,24 @@ public class BillDataGenerator {
                     add(item3);
                 }
             });
-            billRepository.saveAndFlush(savedBill3);
+            savedBill3 = billRepository.saveAndFlush(savedBill3);
+            bills.add(savedBill3);
 
+            if (admin.isPresent()) {
+                ApplicationUser applicationAdmin = admin.get();
+                applicationAdmin.setBills(bills);
+                userRepository.saveAndFlush(applicationAdmin);
+            }
+
+            if (user.isPresent()) {
+                ApplicationUser applicationUser = user.get();
+                applicationUser.setBills(bills);
+                userRepository.saveAndFlush(applicationUser);
+            }
+
+             */
 
         }
     }
+
 }

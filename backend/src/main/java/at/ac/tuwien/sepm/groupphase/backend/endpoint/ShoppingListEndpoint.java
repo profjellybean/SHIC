@@ -223,6 +223,45 @@ public class ShoppingListEndpoint {
     }
 
     @PermitAll
+    @PutMapping("/private/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ItemStorageDto changeAmountOfItemOnPrivateShoppingListForUser(Authentication authentication, @RequestBody ItemStorageDto itemStorageDto) {
+
+        try {
+
+            return itemStorageMapper.itemStorageToItemStorageDto(shoppingListService.changeAmountOfItem(
+                itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto)));
+
+        } catch (ValidationException e) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+        } catch (NotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()); // Todo
+        }
+
+    }
+
+    @PermitAll
+    @PutMapping("/public/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ItemStorageDto changeAmountOfItemOnPublicShoppingListForUser(Authentication authentication, @RequestBody ItemStorageDto itemStorageDto) {
+
+        try {
+
+            return itemStorageMapper.itemStorageToItemStorageDto(shoppingListService.changeAmountOfItem(
+                itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto)));
+
+        } catch (ValidationException e) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+        } catch (NotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()); // Todo
+        }
+    }
+
+    @PermitAll
     @DeleteMapping("/public/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteFromPublicShoppingListForUser(Authentication authentication, @PathVariable Long id) {
