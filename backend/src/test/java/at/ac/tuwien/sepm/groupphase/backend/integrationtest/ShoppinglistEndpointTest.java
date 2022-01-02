@@ -55,6 +55,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
@@ -315,7 +316,11 @@ public class ShoppinglistEndpointTest implements TestData {
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         Set emptySet = new HashSet<ItemStorage>();
         ShoppingList workedOffList = shoppingListRepository.getById(shoppingList.getId());
-        assertEquals(emptySet, workedOffList.getItems());
+        Set<ItemStorage> workedOffItems = workedOffList.getItems();
+        for (ItemStorage item:
+             workedOffItems) {
+            assertNull(item.getShoppingListId());
+        }
     }
 
 
