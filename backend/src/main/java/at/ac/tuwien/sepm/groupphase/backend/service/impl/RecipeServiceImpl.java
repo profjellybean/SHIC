@@ -31,4 +31,10 @@ public class RecipeServiceImpl implements RecipeService {
         LOGGER.debug("Find one recipe by id");
         return recipeRepository.findRecipeById(id);
     }
+
+    @Override
+    public Recipe addRecipe(Recipe recipe) {
+        LOGGER.debug("Add one recipe");
+        return recipeRepository.saveAndFlush(recipe);
+    }
 }
