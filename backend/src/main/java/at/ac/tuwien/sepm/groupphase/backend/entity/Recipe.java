@@ -30,7 +30,7 @@ public class Recipe {
     @Column(nullable = false, name = "description")
     private String description;
 
-    @OneToMany(cascade = CascadeType.PERSIST)//(fetch=FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.MERGE)//(fetch=FetchType.EAGER)
     @Column(nullable = true, name = "ingredients")
     private Set<ItemStorage> ingredients;
 

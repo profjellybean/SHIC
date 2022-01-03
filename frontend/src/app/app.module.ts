@@ -24,6 +24,7 @@ import { StorageAddItemComponent } from './components/storage-add-item/storage-a
 import { UserComponent } from './components/user/user.component';
 import { ConfirmUserEmailComponent } from './components/confirm-user-email/confirm-user-email.component';
 import { CustomItemComponent } from './components/custom-item/custom-item.component';
+import {NgSelectModule} from '@ng-select/ng-select';
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import { CustomItemComponent } from './components/custom-item/custom-item.compon
     HttpClientModule,
     NgbModule,
     FormsModule,
+    NgSelectModule,
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

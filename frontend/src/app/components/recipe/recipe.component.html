@@ -21,7 +21,7 @@
           <div class="form-group">
             <label for="recipeToAddName">Name</label>
             <textarea rows="1" name="name" class="form-control" id="recipeToAddName" required
-                      aria-describedby="nameHelp" placeholder="Enter Name" [(ngModel)]="recipeForm.name"></textarea>
+                      aria-describedby="nameHelp" placeholder="Enter Name" [(ngModel)]="recipeToAdd.name"></textarea>
             <div *ngIf="submitted && recipeForm.controls.name.errors" class="error">
               <small class="form-text text-warning" *ngIf="recipeForm.controls.name.errors.required"> Name is
                 required!
@@ -32,46 +32,51 @@
           <div class="form-group">
             <label for="recipeToAddDesc">Description</label>
             <textarea rows="1" name="name" class="form-control" id="recipeToAddDesc" required
-                      aria-describedby="nameHelp" placeholder="Enter description" [(ngModel)]="recipeForm.name"></textarea>
+                      aria-describedby="nameHelp" placeholder="Enter description" [(ngModel)]="recipeToAdd.description"></textarea>
             <div *ngIf="submitted && recipeForm.controls.name.errors" class="error">
               <small class="form-text text-warning" *ngIf="recipeForm.controls.name.errors.required"> Description is
                 required!
               </small>
             </div>
           </div>
-
+          Current ingredients: <br>
+          <div class="form-group" *ngIf="recipeToAdd.ingredients !== null">
+            <div *ngFor="let item of this.recipeToAdd.ingredients">
+              <div>
+                {{item.name}}&nbsp;{{item.amount}}&nbsp;{{item.quantity.name}}
+              </div>
+            </div>
+          </div>
           <div class="form-group">
-            <label for="inputItems">Items</label>
+            <label for="inputItems">Ingredients</label>
             <select
-              class="form-control"
               id="inputItems"
               name="inputItems"
-              required="true"
-              multiple = "true"
-              [(ngModel)]="this.recipeToAdd.ingredients">
-              <option *ngFor="let item of allItems;" [ngValue]="item">{{item.name}}</option>
-            </select>
-            <div *ngIf="submitted && recipeForm.controls.inputCategories.errors" class="error">
-              <small class="form-text text-warning" *ngIf="recipeForm.controls.inputCategories.errors.required">A categorie is required!
+              [(ngModel)]="this.tempIngredient">
+              <option *ngFor="let myItem of allItems;" [ngValue]="myItem">{{myItem.name}}</option>
+            </select><br>
+            <input *ngIf="tempIngredient!==undefined" [(ngModel)]="this.tempIngredient.amount" placeholder="Enter amount in {{this.tempIngredient.quantity.name}}" name="inputItemQuantity">&nbsp;
+            <button (click)="addTempIngredient()" class="btn btn-secondary">Add item to recipe</button>&nbsp;
+            <div *ngIf="error" class="error">
+              <small class="form-text text-warning">Ingredients are required!
               </small>
             </div>
           </div>
 
           <div class="form-group">
             <label for="inputCategories">Categories</label>
-            <select
-              class="form-control"
+            <ng-select
               id="inputCategories"
               name="inputCategories"
               required="true"
-              multiple = "true"
+              [multiple] = "true"
               [(ngModel)]="this.recipeToAdd.categories">
-              <option value="vegan">vegan</option>
-              <option value="vegetarian">vegetarian</option>
-              <option value="dinner">dinner</option>
-              <option value="breakfast">breakfast</option>
-              <option value="supper">supper</option>
-            </select>
+              <ng-option value="vegan">vegan</ng-option>
+              <ng-option value="vegetarian">vegetarian</ng-option>
+              <ng-option value="dinner">dinner</ng-option>
+              <ng-option value="breakfast">breakfast</ng-option>
+              <ng-option value="supper">supper</ng-option>
+            </ng-select>
             <div *ngIf="submitted && recipeForm.controls.inputCategories.errors" class="error">
               <small class="form-text text-warning" *ngIf="recipeForm.controls.inputCategories.errors.required">A categorie is required!
               </small>
