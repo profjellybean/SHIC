@@ -46,6 +46,9 @@ export class StorageComponent implements OnInit {
   itemToAdd: Item = this.nullItem;
   itemsToAdd: Item[];
 
+  shopAgainAmount: number;
+  shopAgainNotes: string;
+
   unitsOfQuantity: UnitOfQuantity[];
 
 
@@ -180,6 +183,46 @@ export class StorageComponent implements OnInit {
         },
         error: err => {
           console.error(err);
+          this.defaultServiceErrorHandling(err);
+        }
+      }
+    );
+  }
+
+  putOnPublicShoppinglist(item: Item) {
+    console.log('hey i am public ', item);
+    item.storageId = null;
+    item.amount = this.shopAgainAmount;
+    this.shopAgainAmount = 0;
+    item.notes = this.shopAgainNotes;
+    this.shopAgainNotes = '';
+    this.shoppingListService.addToPublicShoppingList(item).subscribe(
+      {
+        next: data => {
+          console.log('i got in public');
+          this.deleteItem(item);
+        },
+        error: err => {
+          this.defaultServiceErrorHandling(err);
+        }
+      }
+    );
+  }
+
+  putOnPrivateShoppinglist(item: Item) {
+    console.log('hey i am private ', item);
+    item.storageId = null;
+    item.amount = this.shopAgainAmount;
+    this.shopAgainAmount = 0;
+    item.notes = this.shopAgainNotes;
+    this.shopAgainNotes = '';
+    this.shoppingListService.addToPrivateShoppingList(item).subscribe(
+      {
+        next: data => {
+          console.log('i got in private');
+          this.deleteItem(item);
+        },
+        error: err => {
           this.defaultServiceErrorHandling(err);
         }
       }

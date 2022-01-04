@@ -197,6 +197,8 @@ public class ItemStorageDto {
             +
             ", locationTag=" + locationTag
             +
+            ", shoppingListId=" + shoppingListId
+            +
             '}';
     }
 }

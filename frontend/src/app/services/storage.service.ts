@@ -53,8 +53,8 @@ export class StorageService {
     return this.httpClient.get<UnitOfQuantity[]>(this.storageBaseUri + '/unitOfQuantity');
   }
 
-  deleteItemFromStorage(params: Params): Observable<object> {
+  deleteItemFromStorage(params: Params): Observable<Item> {
     console.log('service: delete item from storage');
-    return this.httpClient.delete<object>(this.storageBaseUri, {params});
+    return this.httpClient.delete<Item>(this.storageBaseUri, {params});
   }
 }

@@ -85,7 +85,7 @@ public class StorageServiceImpl implements StorageService {
             Storage storage = storageOptional.get();
 
             if (Objects.equals(itemToDelete.getStorageId(), storage.getId())) {
-                storageItemStorageRepository.deleteFromTable(storageId, itemId);
+                //storageItemStorageRepository.deleteFromTable(storageId, itemId);
                 itemStorageRepository.delete(itemToDelete);
             }
             return itemToDelete;
@@ -139,7 +139,6 @@ public class StorageServiceImpl implements StorageService {
         UserGroup userGroup = userGroupRepository.getById(groupId);
 
         itemStorageRepository.saveAndFlush(itemStorage);
-        storageItemStorageRepository.insert(userGroup.getStorageId(), itemStorage.getId());
 
         return itemStorage;
     }

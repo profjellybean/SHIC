@@ -180,6 +180,7 @@ public class ShoppingListEndpoint {
     @PostMapping("/private")
     @ResponseStatus(HttpStatus.OK)
     public ItemStorageDto addToPrivateShoppingListForUser(Authentication authentication, @RequestBody ItemStorageDto itemStorageDto) {
+        LOGGER.info("POST /private {}", itemStorageDto);
         try {
             itemStorageValidator.validateItemStorageDto(itemStorageDto);
             Long id = userService.getPrivateShoppingListIdByUsername(authentication.getName());
@@ -189,10 +190,13 @@ public class ShoppingListEndpoint {
             ItemStorage addedItem = shoppingListService.saveItem(itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto), id, groupId);
             return itemStorageMapper.itemStorageToItemStorageDto(addedItem);
         } catch (ValidationException e) {
+            LOGGER.error(e.getMessage());
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
         } catch (NotFoundException e) {
+            LOGGER.error(e.getMessage());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (Exception e) {
+            LOGGER.error(e.getMessage());
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()); // Todo
         }
 
@@ -203,7 +207,7 @@ public class ShoppingListEndpoint {
     @PostMapping("/public")
     @ResponseStatus(HttpStatus.OK)
     public ItemStorageDto addToPublicShoppingListForUser(Authentication authentication, @RequestBody ItemStorageDto itemStorageDto) {
-
+        LOGGER.info("POST /public {}", itemStorageDto);
         try {
             itemStorageValidator.validateItemStorageDto(itemStorageDto);
             Long id = userService.getPublicShoppingListIdByUsername(authentication.getName());
@@ -213,10 +217,13 @@ public class ShoppingListEndpoint {
             return itemStorageMapper.itemStorageToItemStorageDto(shoppingListService.saveItem(itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto), id, groupId));
 
         } catch (ValidationException e) {
+            LOGGER.error(e.getMessage());
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
         } catch (NotFoundException e) {
+            LOGGER.error(e.getMessage());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (Exception e) {
+            LOGGER.error(e.getMessage());
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()); // Todo
         }
 
@@ -226,7 +233,7 @@ public class ShoppingListEndpoint {
     @PutMapping("/private/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ItemStorageDto changeAmountOfItemOnPrivateShoppingListForUser(Authentication authentication, @RequestBody ItemStorageDto itemStorageDto) {
-
+        LOGGER.info("PUT /private/id {}", itemStorageDto);
         try {
 
             return itemStorageMapper.itemStorageToItemStorageDto(shoppingListService.changeAmountOfItem(
@@ -246,7 +253,7 @@ public class ShoppingListEndpoint {
     @PutMapping("/public/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ItemStorageDto changeAmountOfItemOnPublicShoppingListForUser(Authentication authentication, @RequestBody ItemStorageDto itemStorageDto) {
-
+        LOGGER.info("PUT /public/id {}", itemStorageDto);
         try {
 
             return itemStorageMapper.itemStorageToItemStorageDto(shoppingListService.changeAmountOfItem(
@@ -265,6 +272,7 @@ public class ShoppingListEndpoint {
     @DeleteMapping("/public/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteFromPublicShoppingListForUser(Authentication authentication, @PathVariable Long id) {
+        LOGGER.info("DELETE /public/id {}", id);
         try {
             Long shoppingListId = userService.getPublicShoppingListIdByUsername(authentication.getName());
             shoppingListService.deleteItemById(id, shoppingListId);
@@ -282,6 +290,7 @@ public class ShoppingListEndpoint {
     @DeleteMapping("/private/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteFromPrivateShoppingListForUser(Authentication authentication, @PathVariable Long id) {
+        LOGGER.info("DELETE /private/id {}", id);
         try {
             Long shoppingListId = userService.getPrivateShoppingListIdByUsername(authentication.getName());
             shoppingListService.deleteItemById(id, shoppingListId);

@@ -117,7 +117,6 @@
   </ng-template>
 </div>
 
-
 <table class="table table-striped">
   <thead class="thead-dark">
   <tr>
@@ -142,9 +141,39 @@
     <td>{{item.expDate}}</td>
     <td>{{item.locationTag}}</td>
     <td><button type="button" class="btn btn-secondary btn-sm mr-4">Edit</button></td>
-    <td><button type="button" class="btn btn-secondary btn-sm mr-4" (click)="deleteItem(item)">Remove</button></td>
+    <td><!-- popUp if deleted-->
+      <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(itemAddModal)">Remove</button>
+
+      <div class="row p-2 mb-4">
+        <ng-template #itemAddModal let-modal>
+          <div class="modal-header">
+            <h5 class="modal-title">Do you want to buy this item again?</h5>
+            <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="form-group">
+            <label for="inputAmount">Amount</label>
+            <input type="number" name="amount" class="form-control" id="amount" min="1" required
+                   aria-describedby="amountHelp" [(ngModel)]="this.shopAgainAmount">
+          </div>
+          <div class="form-group">
+            <label for="inputNotes">Notes</label>
+            <textarea rows="3" name="notes" class="form-control" id="notes"
+                      aria-describedby="notesHelp" placeholder="Enter Notes" [(ngModel)]="this.shopAgainNotes"></textarea>
+          </div>
+          <div class="modal-body">
+            <button type="button" id="shoppinglist-public-msg" (click)="putOnPublicShoppinglist(item); modal.dismiss('close')"
+                    class="btn btn-success float-right">Yes, i want to put it on the public shoppinglist</button>
+            <br>
+            <button type="button" id="shoppinglist-private-msg" (click)="putOnPrivateShoppinglist(item); modal.dismiss('close')"
+                    class="btn btn-success float-right">Yes, i want to put it on my private shoppinglist</button>
+            <br>
+            <button type="button" (click)="deleteItem(item); modal.dismiss('close')" class="btn btn-secondary" id="delete-btn">No, just delete it</button>
+          </div>
+        </ng-template>
+      </div>
+    </td>
   </tr>
   </tbody>
 </table>
-
-
