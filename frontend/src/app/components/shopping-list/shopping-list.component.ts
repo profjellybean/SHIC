@@ -312,17 +312,6 @@ export class ShoppingListComponent implements OnInit {
     });
   }
 
-  private defaultServiceErrorHandling(error: any) {
-    console.log(error);
-    this.error = true;
-    if (typeof error.error === 'object') {
-
-      this.errorMessage = error.error.message;
-    } else {
-      this.errorMessage = error.error;
-    }
-  }
-
   private setItemAmountChange(item: Item) {
     this.itemAmountChange.id = item.id;
     if (item.quantity === undefined) {
@@ -369,6 +358,17 @@ export class ShoppingListComponent implements OnInit {
       this.itemAmountChange.shoppingListId = null;
     } else {
       this.itemAmountChange.shoppingListId = item.shoppingListId;
+    }
+  }
+
+  private defaultServiceErrorHandling(error: any) {
+    console.log(error);
+    this.error = true;
+    if (typeof error.error === 'object') {
+
+      this.errorMessage = error.error.message;
+    } else {
+      this.errorMessage = error.error;
     }
   }
 
