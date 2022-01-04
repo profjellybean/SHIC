@@ -6,6 +6,7 @@ public class ItemDto {
     private Long id;
     private String name;
     private UnitOfQuantityDto quantity;
+    private Long groupId;
 
     public ItemDto(Long id) {
         this.id = id;
@@ -19,6 +20,13 @@ public class ItemDto {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
+    }
+
+    public ItemDto(Long id, String name, UnitOfQuantityDto quantity, Long groupId) {
+        this.id = id;
+        this.name = name;
+        this.quantity = quantity;
+        this.groupId = groupId;
     }
 
     public ItemDto(String name, UnitOfQuantityDto quantity) {
@@ -50,6 +58,14 @@ public class ItemDto {
         this.quantity = quantity;
     }
 
+    public Long getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -59,26 +75,22 @@ public class ItemDto {
             return false;
         }
         ItemDto itemDto = (ItemDto) o;
-        return Objects.equals(id, itemDto.id)
-            && Objects.equals(name, itemDto.name)
-            && Objects.equals(quantity, itemDto.quantity);
+        return Objects.equals(id, itemDto.id) && Objects.equals(name, itemDto.name)
+            && Objects.equals(quantity, itemDto.quantity) && Objects.equals(groupId, itemDto.groupId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, quantity);
+        return Objects.hash(id, name, quantity, groupId);
     }
 
     @Override
     public String toString() {
         return "ItemDto{"
-            +
-            "id=" + id
-            +
-            ", name='" + name + '\''
-            +
-            ", quantity=" + quantity
-            +
-            '}';
+            + "id=" + id
+            + ", name='" + name + '\''
+            + ", quantity=" + quantity
+            + ", groupId=" + groupId
+            + '}';
     }
 }

@@ -52,4 +52,9 @@ export class StorageService {
     console.log('load UnitOfQuantity');
     return this.httpClient.get<UnitOfQuantity[]>(this.storageBaseUri + '/unitOfQuantity');
   }
+
+  deleteItemFromStorage(params: Params): Observable<Item> {
+    console.log('service: delete item from storage');
+    return this.httpClient.delete<Item>(this.storageBaseUri, {params});
+  }
 }

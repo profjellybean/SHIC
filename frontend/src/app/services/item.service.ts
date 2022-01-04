@@ -11,7 +11,7 @@ import {Item} from '../dtos/item';
 })
 export class ItemService {
 
-  private recipeBaseUri: string = this.globals.backendUri + '/item';
+  private itemBaseUri: string = this.globals.backendUri + '/item';
 
   constructor(private httpClient: HttpClient,
               private globals: Globals) {
@@ -19,18 +19,33 @@ export class ItemService {
 
   findAll(): Observable<Item[]>{
     console.log('load all items');
-    return this.httpClient.get<Item[]>(this.recipeBaseUri);
+    return this.httpClient.get<Item[]>(this.itemBaseUri);
   }
 
   findAllItemsForGroup(): Observable<Item[]>{
     console.log('load all items for group');
-    return this.httpClient.get<Item[]>(this.recipeBaseUri + '/groupItems');
+    return this.httpClient.get<Item[]>(this.itemBaseUri + '/groupItems');
+  }
+
+  findAllItemsByGroupId(): Observable<Item[]>{
+    console.log('load all items for group by groupId');
+    return this.httpClient.get<Item[]>(this.itemBaseUri + '/groupItemsByGroupId');
+  }
+
+  editCustomItem(item: Item): Observable<Item> {
+    console.log('edit item: ' + item);
+    return this.httpClient.put<Item>(this.itemBaseUri + '/groupItems', item);
   }
 
   addItem(item: Item): Observable<Item> {
     console.log('add item: ' + item);
-    return this.httpClient.post<Item>(this.recipeBaseUri, item);
+    return this.httpClient.post<Item>(this.itemBaseUri, item);
 
+  }
+
+  addCustomItem(item: Item): Observable<Item> {
+    console.log('add custom item', item);
+    return this.httpClient.post<Item>(this.itemBaseUri + '/groupItems', item);
   }
 
 }

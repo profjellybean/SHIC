@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.PastOrPresent;
@@ -26,17 +27,16 @@ public class Bill {
     private Long registerId;
 
     @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "item_id")
     private Set<ItemStorage> groceries;
 
     @Column(name = "notes")
     private String notes;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "included_id")
     private Set<ApplicationUser> names;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "notPaid_id")
     private Set<ApplicationUser> notPaidNames;
 

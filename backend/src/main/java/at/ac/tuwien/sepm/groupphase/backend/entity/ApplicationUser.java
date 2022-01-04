@@ -5,9 +5,11 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -15,6 +17,7 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "APPLICATION_USER", uniqueConstraints = {@UniqueConstraint(columnNames = {"USERNAME"})})
@@ -47,6 +50,9 @@ public class ApplicationUser {
 
     //@Column(nullable = false, name = "PRIVLIST") // TODO Loading
     private Long privList;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<Bill> bills;
 
     public ApplicationUser() {
     }
@@ -144,6 +150,14 @@ public class ApplicationUser {
 
     public void setConfirmationToken(Long confirmationToken) {
         this.confirmationToken = confirmationToken;
+    }
+
+    public Set<Bill> getBills() {
+        return bills;
+    }
+
+    public void setBills(Set<Bill> bills) {
+        this.bills = bills;
     }
 
     @Override

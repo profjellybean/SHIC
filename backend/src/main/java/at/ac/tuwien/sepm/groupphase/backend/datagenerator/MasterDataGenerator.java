@@ -54,7 +54,7 @@ public class MasterDataGenerator {
         itemStorageDataGenerator.generateItemStorage();
         recipeDataGenerator.generateRecipes();
         shoppingListDataGenerator.generateShoppingList();
-        billDataGenerator.generateRegister();
+        billDataGenerator.generateBills();
     }
 
     public void generateData_planRecipe() {

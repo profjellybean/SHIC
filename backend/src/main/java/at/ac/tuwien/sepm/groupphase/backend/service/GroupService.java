@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 
 import java.util.Set;
 
@@ -27,4 +28,12 @@ public interface GroupService {
      * @return a Set of all users currently in this group
      */
     Set<ApplicationUser> getAllUsers(Long groupId);
+
+    /**
+     * Gets the group with a given id.
+     *
+     * @param id the id of the group
+     * @return a UserGroup object with the given id
+     */
+    UserGroup getOneById(Long id);
 }

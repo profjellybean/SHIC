@@ -59,6 +59,15 @@ public interface ShoppingListService {
     ItemStorage saveItem(ItemStorage itemStorage, Long id, Long groupId);
 
     /**
+     * Change amount of a storage item of the shopping list.
+     *
+     * @param itemStorage item with changed amount
+     *
+     * @return inserted object
+     */
+    ItemStorage changeAmountOfItem(ItemStorage itemStorage);
+
+    /**
      * Finds all storage items in a shopping list.
      *
      * @return returns list of storage items

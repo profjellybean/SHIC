@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.unittests;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Item;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
+import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.ItemService;
@@ -19,6 +20,7 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
@@ -95,5 +97,83 @@ public class ItemServiceTest {
 
         assertThrows(ValidationException.class, () -> itemService.checkForBluePrintForGroup(null, -1L));
     }
+
+    @Test
+    public void givenNoItem_whenAddingCustomItem_shouldThrowValidationException() throws Exception {
+
+        assertThrows(ValidationException.class, () -> itemService.addCustomItem(null));
+    }
+
+    @Test
+    public void givenNoGroupId_whenAddingCustomItem_shouldThrowValidationException() throws Exception {
+        Item item = new Item(null, "NO_GROUPID_TEST", new UnitOfQuantity(1L, "kg"), null);
+
+        assertThrows(ValidationException.class, () -> itemService.addCustomItem(item));
+    }
+
+    @Test
+    public void givenNoName_whenAddingCustomItem_shouldThrowValidationException() throws Exception {
+        Item item = new Item(null, null, new UnitOfQuantity(1L, "kg"), -1L);
+
+        assertThrows(ValidationException.class, () -> itemService.addCustomItem(item));
+    }
+
+    @Test
+    public void givenNoQuantity_whenAddingCustomItem_shouldThrowValidationException() throws Exception {
+        Item item = new Item(null, "NO_QUANTITY_TEST", null, -1L);
+
+        assertThrows(ValidationException.class, () -> itemService.addCustomItem(item));
+    }
+
+    @Test
+    public void givenItem_whenAddingCustomItemTwice_shouldThrowValidationException() throws Exception {
+        Item item = new Item(null, "DOUBLE_ITEM", new UnitOfQuantity(1L, "kg"), -1L);
+        itemRepository.saveAndFlush(item);
+
+        assertThrows(ValidationException.class, () -> itemService.addCustomItem(item));
+    }
+
+    @Test
+    public void givenValidItem_whenAddingCustomItem_shouldNotThrowValidationException() throws Exception {
+        Item item = new Item(null, "DOUBLE_ITEM", new UnitOfQuantity(1L, "kg"), -1L);
+
+        assertDoesNotThrow(() -> itemService.addCustomItem(item));
+    }
+
+    @Test
+    public void givenNoItem_whenEditingCustomItem_shouldThrowValidationException() throws Exception {
+
+        assertThrows(ValidationException.class, () -> itemService.editCustomItem(null));
+    }
+
+    @Test
+    public void givenNoGroupId_whenEditingCustomItem_shouldThrowValidationException() throws Exception {
+        Item item = new Item(null, "NO_GROUPID_TEST", new UnitOfQuantity(1L, "kg"), null);
+
+        assertThrows(ValidationException.class, () -> itemService.editCustomItem(item));
+    }
+
+    @Test
+    public void givenNoName_whenEditingCustomItem_shouldThrowValidationException() throws Exception {
+        Item item = new Item(null, null, new UnitOfQuantity(1L, "kg"), -1L);
+
+        assertThrows(ValidationException.class, () -> itemService.editCustomItem(item));
+    }
+
+    @Test
+    public void givenNoQuantity_whenEditingCustomItem_shouldThrowValidationException() throws Exception {
+        Item item = new Item(null, "NO_QUANTITY_TEST", null, -1L);
+
+        assertThrows(ValidationException.class, () -> itemService.editCustomItem(item));
+    }
+
+    @Test
+    public void givenValidItem_whenEditingCustomItem_shouldNotThrowValidationException() throws Exception {
+        Item item = new Item(null, "DOUBLE_ITEM", new UnitOfQuantity(1L, "kg"), -1L);
+
+        assertDoesNotThrow(() -> itemService.editCustomItem(item));
+    }
+
+
 
 }

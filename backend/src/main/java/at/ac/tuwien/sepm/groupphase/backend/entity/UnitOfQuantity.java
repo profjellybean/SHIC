@@ -26,6 +26,11 @@ public class UnitOfQuantity {
         this.name = name;
     }
 
+    public UnitOfQuantity(Long id, String name) {
+        this.name = name;
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }

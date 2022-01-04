@@ -55,6 +55,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
@@ -122,7 +123,7 @@ public class ShoppinglistEndpointTest implements TestData {
     //@Autowired
     //RecipeDataGenerator recipeDataGenerator;
 
-/*
+
     @BeforeEach
     public void beforeEach() {
         Optional<ApplicationUser> userOptional = userRepository.findUserByUsername(ADMIN_USER);
@@ -152,13 +153,13 @@ public class ShoppinglistEndpointTest implements TestData {
         shoppingListRepository.saveAndFlush(shoppingList);
     }
 
- */
-    /*
+
+
     @AfterEach
     public void afterEach() {
         recipeRepository.deleteAll();
     }
-     */
+
 
     @Autowired
     PlatformTransactionManager txm;
@@ -294,8 +295,8 @@ public class ShoppinglistEndpointTest implements TestData {
         assertEquals(0, itemStorageDtos.size());
 
     }
-/*
-    @Test
+
+    //@Test
     public void workOffShoppingList_ShouldReturn_shoppingListWithEmptyItems() throws Exception {
 
         ItemStorageDto mushroomsDto = itemStorageMapper.itemStorageToItemStorageDto(mushrooms);
@@ -312,13 +313,17 @@ public class ShoppinglistEndpointTest implements TestData {
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
-        //assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
         Set emptySet = new HashSet<ItemStorage>();
         ShoppingList workedOffList = shoppingListRepository.getById(shoppingList.getId());
-        assertEquals(emptySet, workedOffList.getItems());
+        Set<ItemStorage> workedOffItems = workedOffList.getItems();
+        for (ItemStorage item:
+             workedOffItems) {
+            assertNull(item.getShoppingListId());
+        }
     }
 
- */
+
 
 
 /*

@@ -170,7 +170,6 @@ public class ShoppingListServiceImpl implements ShoppingListService {
      *
      * @param recipeIngredients set of items e.g. representing ingredients of a recipe
      * @param storedItems       set of items e.g. representing the stored Items in a Storage
-     *
      * @return Set of all Items that occur in recipeIngredients but not in storedItem or occur in both, but the amount in recipeIngredients is bigger than the amount in storedItems.
      */
     private List<ItemStorage> compareItemSets(Set<ItemStorage> recipeIngredients, List<ItemStorage> storedItems) {
@@ -260,6 +259,12 @@ public class ShoppingListServiceImpl implements ShoppingListService {
 
     }
 
+    @Override
+    public ItemStorage changeAmountOfItem(ItemStorage itemStorage) {
+        LOGGER.debug("change amount of item in shopping list");
+        return shoppingListItemRepository.saveAndFlush(itemStorage);
+    }
+
     @Transactional
     @Override
     public List<Item> findAllItems() {
@@ -301,45 +306,40 @@ public class ShoppingListServiceImpl implements ShoppingListService {
 
             for (ItemStorage item : boughtItems) {
                 ItemStorage storageItem = itemStorageMap.get(item.getName());
-                Optional<ItemStorage> itemOptional = itemStorageRepository.findById(item.getId());
-                if (itemOptional.isPresent()) {
-                    ItemStorage itemToStore = itemOptional.get();
-                    if (storageItem != null && storageItem.getQuantity().equals(itemToStore.getQuantity())) {
-                        int newAmount = storageItem.getAmount() + itemToStore.getAmount();
+                if (storageItem != null && storageItem.getQuantity().equals(item.getQuantity())) {
+                    int newAmount = storageItem.getAmount() + item.getAmount();
+                    storageItem.setAmount(newAmount);
+                    Long shoppingListId = item.getShoppingListId();
+                    shoppingListItemRepository.deleteFromTable(shoppingListId, item.getId());
+                    itemStorageRepository.saveAndFlush(storageItem);
+                    storedItems.add(item);
+                } else if (storageItem != null && storageItem.getQuantity() != null) {
+                    UnitsRelation unitsRelation = unitsRelationRepository.findUnitsRelationByBaseUnitAndCalculatedUnit(
+                        storageItem.getQuantity().getName(), item.getQuantity().getName());
+                    if (unitsRelation != null) {
+                        double relation = unitsRelation.getRelation();
+                        int newAmount = (int) (storageItem.getAmount() * relation + item.getAmount());
                         storageItem.setAmount(newAmount);
-                        Long shoppingListId = itemToStore.getShoppingListId();
-                        shoppingListItemRepository.deleteFromTable(shoppingListId, itemToStore.getId());
+                        storageItem.setQuantity(item.getQuantity());
+                        Long shoppingListId = item.getShoppingListId();
+                        shoppingListItemRepository.deleteFromTable(shoppingListId, item.getId());
                         itemStorageRepository.saveAndFlush(storageItem);
-                        storedItems.add(itemToStore);
-                    } else if (storageItem != null && storageItem.getQuantity() != null) {
-                        UnitsRelation unitsRelation = unitsRelationRepository.findUnitsRelationByBaseUnitAndCalculatedUnit(
-                            storageItem.getQuantity().getName(), itemToStore.getQuantity().getName());
-                        if (unitsRelation != null) {
-                            double relation = unitsRelation.getRelation();
-                            int newAmount = (int) (storageItem.getAmount() * relation + itemToStore.getAmount());
-                            storageItem.setAmount(newAmount);
-                            storageItem.setQuantity(itemToStore.getQuantity());
-                            Long shoppingListId = itemToStore.getShoppingListId();
-                            shoppingListItemRepository.deleteFromTable(shoppingListId, itemToStore.getId());
-                            itemStorageRepository.saveAndFlush(storageItem);
-                            storedItems.add(itemToStore);
-                        } else {
-                            throw new ServiceException("Incompatible units of quantity");
-                        }
+                        storedItems.add(item);
                     } else {
-                        Long shoppingListId = itemToStore.getShoppingListId();
-
-                        itemToStore.setShoppingListId(null);
-                        itemToStore.setStorageId(storageId);
-
-                        shoppingListItemRepository.deleteFromTable(shoppingListId, itemToStore.getId());
-                        itemStorageRepository.saveAndFlush(itemToStore);
-                        storedItems.add(itemToStore);
+                        throw new ServiceException("Incompatible units of quantity");
                     }
+                } else {
+
+                    Long shoppingListId = item.getShoppingListId();
+                    item.setShoppingListId(null);
+                    item.setStorageId(storageId);
+
+                    shoppingListItemRepository.deleteFromTable(shoppingListId, item.getId());
+                    itemStorageRepository.saveAndFlush(item);
+                    storedItems.add(item);
                 }
             }
         }
-
         return storedItems;
     }
 
@@ -350,8 +350,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         if (rowsDeleted == 0) {
             throw new NotFoundException("Item not found");
         }
-        LOGGER.info("::: " + rowsDeleted);
-
+        LOGGER.debug("::: " + rowsDeleted);
 
     }
 

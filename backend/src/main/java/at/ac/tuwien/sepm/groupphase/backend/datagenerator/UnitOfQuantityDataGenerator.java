@@ -22,7 +22,7 @@ public class UnitOfQuantityDataGenerator {
     private final UnitOfQuantityRepository unitOfQuantityRepository;
     private final UnitsRelationRepository unitsRelationRepository;
     private final ItemService itemService;
-    private static final String[] UNITS = {"kg", "g", "L", "ml", "pieces", "can", "cup"};
+    private static final String[] UNITS = {"kg", "g", "L", "ml", "pieces", "can", "cup", "jar"};
     private static final UnitsRelation unitsRelation = new UnitsRelation("kg", "g", 1000.0);
     private static final UnitsRelation unitsRelation2 = new UnitsRelation("L", "ml", 1000.0);
 

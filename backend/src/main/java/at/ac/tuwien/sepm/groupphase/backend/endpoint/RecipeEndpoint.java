@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.BillDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.RecipeDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.RecipeMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepm.groupphase.backend.service.RecipeService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
@@ -50,5 +51,14 @@ public class RecipeEndpoint {
     public RecipeDto findRecipeById(@PathVariable("id") Long id) {
         LOGGER.info("GET /recipe by id");
         return recipeMapper.recipeToRecipeDto(recipeService.findRecipeById(id));
+    }
+
+    @PostMapping
+    @PermitAll
+    @Transactional
+    @Operation(summary = "Add a new Recipe")
+    public RecipeDto addRecipe(@RequestBody RecipeDto recipeDto) {
+        LOGGER.info("Add recipe {}", recipeDto.getName());
+        return recipeMapper.recipeToRecipeDto(recipeService.addRecipe(recipeMapper.recipeDtoToRecipe(recipeDto)));
     }
 }

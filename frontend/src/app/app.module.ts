@@ -11,9 +11,10 @@ import {HomeComponent} from './components/home/home.component';
 import {LoginComponent} from './components/login/login.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
-import { RecipeComponent } from './components/recipe/recipe.component';
-import { ShoppingListComponent } from './components/shopping-list/shopping-list.component';
-import { StorageComponent } from './components/storage/storage.component';
+import {CustomItemComponent} from './components/custom-item/custom-item.component';
+import {RecipeComponent} from './components/recipe/recipe.component';
+import {ShoppingListComponent} from './components/shopping-list/shopping-list.component';
+import {StorageComponent} from './components/storage/storage.component';
 import {RegisterComponent} from './components/register/register.component';
 import {RegisterUserComponent} from './components/registerUser/registerUser.component';
 import { RecipeDetailComponent } from './components/recipe-detail/recipe-detail.component';
@@ -29,6 +30,7 @@ import {NgSelectModule} from '@ng-select/ng-select';
   declarations: [
     AppComponent,
     HeaderComponent,
+    CustomItemComponent,
     FooterComponent,
     HomeComponent,
     LoginComponent,
@@ -38,13 +40,21 @@ import {NgSelectModule} from '@ng-select/ng-select';
     RecipeComponent,
     ShoppingListComponent,
     RecipeDetailComponent,
-    RecipeListComponent,
     ConfirmUserEmailComponent,
     StorageAddItemComponent,
     UserComponent,
     ShoppingListAddComponent,
     ShoppingListListComponent,
     StorageAddItemComponent,
+  ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    NgbModule,
+    FormsModule,
+    NgSelectModule,
   ],
     imports: [
         BrowserModule,

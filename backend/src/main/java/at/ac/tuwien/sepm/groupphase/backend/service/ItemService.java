@@ -35,6 +35,15 @@ public interface ItemService {
     List<Item> getAllItemsForGroup(Long groupId);
 
     /**
+     * find all items by specified groupId.
+     *
+     * @param groupId the id
+     *
+     * @return all items with specified groupId
+     */
+    List<Item> findAllByGroupId(Long groupId);
+
+    /**
      * Adds UnitsRelation in database.
      *
      * @param unitsRelation the item to save
@@ -80,4 +89,24 @@ public interface ItemService {
      * @param itemStorage item to check
      */
     ItemStorage checkForBluePrintForGroup(ItemStorage itemStorage, Long groupId);
+
+    /**
+     * edits a custom item of a group.
+     * groupId has to be set.
+     *
+     * @param item that replaces stored item.
+     *
+     * @return edited item.
+     */
+    Item editCustomItem(Item item);
+
+    /**
+     * saves a custom item of a group.
+     * groupId has to be set.
+     *
+     * @param item that is saved.
+     *
+     * @return saved item.
+     */
+    Item addCustomItem(Item item);
 }
