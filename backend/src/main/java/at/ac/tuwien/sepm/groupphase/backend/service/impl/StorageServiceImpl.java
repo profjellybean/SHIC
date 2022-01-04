@@ -136,11 +136,7 @@ public class StorageServiceImpl implements StorageService {
             }
         }
 
-        UserGroup userGroup = userGroupRepository.getById(groupId);
-
-        itemStorageRepository.saveAndFlush(itemStorage);
-
-        return itemStorage;
+        return itemStorageRepository.saveAndFlush(itemStorage);
     }
 
     @Override
