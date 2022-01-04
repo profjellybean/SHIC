@@ -31,6 +31,7 @@ export class RecipeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.reloadRecipes();
     this.getAllItems();
   }
 
@@ -41,6 +42,7 @@ export class RecipeComponent implements OnInit {
     }
     this.tempIngredient.id = null;
     this.recipeToAdd.ingredients.push(this.tempIngredient);
+    this.tempIngredient = undefined;
   }
 
   getAllItems() {
