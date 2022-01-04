@@ -18,7 +18,6 @@ import {StorageComponent} from './components/storage/storage.component';
 import {RegisterComponent} from './components/register/register.component';
 import {RegisterUserComponent} from './components/registerUser/registerUser.component';
 import { RecipeDetailComponent } from './components/recipe-detail/recipe-detail.component';
-import { RecipeListComponent } from './components/recipe-list/recipe-list.component';
 import { ShoppingListAddComponent } from './components/shopping-list-add/shopping-list-add.component';
 import { ShoppingListListComponent } from './components/shopping-list-list/shopping-list-list.component';
 import { StorageAddItemComponent } from './components/storage-add-item/storage-add-item.component';
@@ -56,15 +55,6 @@ import {NgSelectModule} from '@ng-select/ng-select';
     FormsModule,
     NgSelectModule,
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        ReactiveFormsModule,
-        HttpClientModule,
-        NgbModule,
-        FormsModule,
-        NgSelectModule,
-    ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
 })
