@@ -20,4 +20,11 @@ public interface RecipeService {
      */
     Recipe findRecipeById(Long id);
 
+    /**
+     * Adds a new recipe.
+     *
+     * @param recipe to add
+     * @return the added recipe
+     */
+    Recipe addRecipe(Recipe recipe);
 }
