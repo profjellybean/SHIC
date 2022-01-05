@@ -41,5 +41,8 @@ export class UserService {
     return this.httpClient.get<User>(this.userRegisterUri, {params});
   }
 
-
+  deleteUserById(id: number) {
+    console.log('delete user', id);
+    return this.httpClient.delete(this.userRegisterUri  + '/' + id);
+  }
 }

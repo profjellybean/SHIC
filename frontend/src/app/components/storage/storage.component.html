@@ -67,9 +67,26 @@
         </div>
 
         <div class="form-group">
-          <label for="inputNotes">Notes</label>
-          <textarea rows="3" name="notes" class="form-control" id="inputNotes"
-                    aria-describedby="notesHelp" placeholder="Enter Notes" [(ngModel)]="itemToAdd.notes"></textarea>
+          <label for="inputUnitOfQuantity">Unit of Quantity</label>
+          <select
+            class="form-control"
+            id="inputUnitOfQuantity"
+            name="inputUnitOfQuantity"
+            required="true"
+            [(ngModel)]="this.itemToAdd.quantity.id">
+            <option *ngFor="let myItem of unitsOfQuantity;" [ngValue]="myItem.id">{{myItem.name}}</option>
+          </select>
+          <div *ngIf="submitted && itemForm.controls.inputUnitOfQuantity.errors" class="error">
+            <small class="form-text text-warning" *ngIf="itemForm.controls.inputUnitOfQuantity.errors.required">Unit
+              of Quantity is required!
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="inputExpDate">Expiration Date</label>
+          <input type="date" name="expDate" class="form-control" id="inputExpDate"
+                 aria-describedby="expDateHelp" placeholder="Enter expDate" [(ngModel)]="itemToAdd.expDate">
         </div>
 
         <div class="form-group">
@@ -87,27 +104,14 @@
         </div>
 
         <div class="form-group">
-          <label for="inputExpDate">Expiration Date</label>
-          <input type="date" name="expDate" class="form-control" id="inputExpDate"
-                 aria-describedby="expDateHelp" placeholder="Enter expDate" [(ngModel)]="itemToAdd.expDate">
+          <label for="inputNotes">Notes</label>
+          <textarea rows="3" name="notes" class="form-control" id="inputNotes"
+                    aria-describedby="notesHelp" placeholder="Enter Notes" [(ngModel)]="itemToAdd.notes"></textarea>
         </div>
 
-        <div class="form-group">
-          <label for="inputUnitOfQuantity">Unit of Quantity</label>
-          <select
-            class="form-control"
-            id="inputUnitOfQuantity"
-            name="inputUnitOfQuantity"
-            required="true"
-            [(ngModel)]="this.itemToAdd.quantity.id">
-            <option *ngFor="let myItem of unitsOfQuantity;" [ngValue]="myItem.id">{{myItem.name}}</option>
-          </select>
-          <div *ngIf="submitted && itemForm.controls.inputUnitOfQuantity.errors" class="error">
-            <small class="form-text text-warning" *ngIf="itemForm.controls.inputUnitOfQuantity.errors.required">Unit
-              of Quantity is required!
-            </small>
-          </div>
-        </div>
+        <button type="button" (click)="addItemForm(itemForm)" id="add-msg" class="btn btn-success float-right">Add
+          item
+        </button>
 
       </form>
     </div>
@@ -126,9 +130,9 @@
     <th>Name</th>
     <th>Amount</th>
     <th>Quantity</th>
-    <th>Notes</th>
     <th>ExpDate</th>
     <th>LocationTag</th>
+    <th>Notes</th>
     <th></th>
     <th></th>
   </tr>
@@ -141,9 +145,9 @@
     <td>
       <div *ngIf="item.quantity !== null">{{item.quantity.name}}</div>
     </td>
-    <td>{{item.notes}}</td>
     <td>{{item.expDate}}</td>
     <td>{{item.locationTag}}</td>
+    <td>{{item.notes}}</td>
     <td>
       <button type="button" class="btn btn-secondary btn-sm mr-4">Edit</button>
     </td>

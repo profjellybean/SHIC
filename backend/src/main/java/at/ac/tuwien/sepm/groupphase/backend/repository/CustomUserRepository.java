@@ -15,6 +15,7 @@ public interface CustomUserRepository extends JpaRepository<ApplicationUser, Lon
 
     Optional<ApplicationUser> findUserByUsername(String username);
 
+
     @Override
     <S extends ApplicationUser> S save(S entity);
 
@@ -42,4 +43,6 @@ public interface CustomUserRepository extends JpaRepository<ApplicationUser, Lon
 
     @Query ("SELECT u.currGroup.id FROM ApplicationUser u WHERE u.username = ?1")
     Long loadGroupIdByUsername(String username);
+
+    void deleteById(Long id);
 }
