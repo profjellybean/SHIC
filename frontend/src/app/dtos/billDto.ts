@@ -1,16 +1,16 @@
 import {Item} from './item';
 import {User} from './user';
 
-export class Bill {
+
+
+export class BillDto {
   id: number;
   registerId: number;
-  groceries: Set<Item>;
+  groceries: Item[] = [];
   notes: string;
-  names: Set<User>;
-  notPaidNames: Set<User>;
+  names: User[];
+  notPaidNames: User[];
   sum: number;
   sumPerPerson: number;
   date: Date;
-  nameList: string;
-  notPaidNameList: string;
 }

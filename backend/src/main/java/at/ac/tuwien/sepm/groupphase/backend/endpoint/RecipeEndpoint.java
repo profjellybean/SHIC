@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.BillDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.RecipeDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.RecipeMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Recipe;

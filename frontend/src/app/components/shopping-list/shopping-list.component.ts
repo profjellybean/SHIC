@@ -6,6 +6,13 @@ import {ShoppingList} from '../../dtos/shopping-list';
 import {UnitOfQuantity} from '../../dtos/unitOfQuantity';
 import {StorageService} from '../../services/storage.service';
 import {ItemService} from '../../services/item.service';
+import {User} from '../../dtos/user';
+import {GroupService} from '../../services/group.service';
+import {UserService} from '../../services/user.service';
+import jwt_decode from 'jwt-decode';
+import {AuthService} from '../../services/auth.service';
+import {BillService} from '../../services/bill.service';
+import {BillDto} from '../../dtos/billDto';
 
 @Component({
   selector: 'app-shopping-list',
@@ -17,7 +24,15 @@ export class ShoppingListComponent implements OnInit {
   error = false;
   errorMessage = '';
   submitted = false;
+  nullUser: User = {
+    id: null,
+    email: null,
+    currGroup: null,
+    username: null,
+    privList: null
+  };
 
+  billToAdd: BillDto = new BillDto();
   itemsAdd: Item[] = null;
   itemToAdd: Item = null;
   itemAmountChange: Item = {image:null, id: null, storageId: null, name: null,
@@ -30,14 +45,29 @@ export class ShoppingListComponent implements OnInit {
   groupStorageId: number;
   groupShoppingListId: number;
   unitsOfQuantity: UnitOfQuantity[];
+  allUsers: User[] = null;
 
+  user: User = {
+    // @ts-ignore
+    username: jwt_decode(this.authService.getToken()).sub.trim(),
+    id: null,
+    currGroup: null,
+    privList: null,
+    email: null
+  };
+  groupId: number;
   constructor(private shoppingListService: ShoppingListService,
               private storageService: StorageService,
               private itemService: ItemService,
-              private modalService: NgbModal) {
+              private modalService: NgbModal,
+              private groupService: GroupService,
+              private userService: UserService,
+              private authService: AuthService,
+              private billService: BillService) {
   }
 
   ngOnInit(): void {
+    this.getCurrentGroup();
     this.isInPublic = true;
     this.loadUnitsOfQuantity();
     this.loadItemsToAdd();
@@ -45,7 +75,35 @@ export class ShoppingListComponent implements OnInit {
     this.loadGroupShoppingListId();
     this.getPrivateShoppingList();
     this.getPublicShoppingList();
+    console.log('DATE: ' + this.billToAdd.date);
 
+  }
+
+  getCurrentGroup(){
+    this.userService.getCurrentUser({username: this.user.username}).subscribe({
+      next: data => {
+        console.log('received items11', data);
+        this.user = data;
+        this.groupId = this.user.currGroup.id;
+        this.getAllUsers(this.groupId);
+      },
+      error: error => {
+        console.error(error.message);
+      }
+    });
+  }
+
+  getAllUsers(id: number){
+    this.groupService.getAllUsers(id).subscribe({
+      next: data => {
+        console.log('received items', data);
+        this.allUsers = data;
+        //this.billToAdd.names = data;
+      },
+      error: error => {
+        console.error(error.message);
+      }
+    });
   }
 
   switchMode(publicMode: boolean){
@@ -272,9 +330,60 @@ export class ShoppingListComponent implements OnInit {
     }
   }
 
+  addBillForm(form) {
+    this.submitted = true;
+
+    if (form.valid) {
+      console.log('form item to add', this.billToAdd.names);
+
+      if(this.billToAdd.names[0].id === null){
+        console.log('Set allUsers {}', this.allUsers);
+        this.billToAdd.names = this.allUsers;
+      }
+      for (const item of this.itemsToBuy) {
+        item.storageId = this.groupStorageId;
+        this.billToAdd.groceries.push(item);
+      }
+      this.billToAdd.notPaidNames = this.billToAdd.names;
+      if(this.billToAdd.names.length > 0) {
+        this.billToAdd.sumPerPerson = this.billToAdd.sum / this.billToAdd.names.length;
+      } else {
+        this.billToAdd.sumPerPerson = this.billToAdd.sum;
+      }
+      for(const name of this.billToAdd.names){
+        delete name.currGroup;
+      }
+      for(const name of this.billToAdd.notPaidNames){
+        delete name.currGroup;
+      }
+      this.billToAdd.registerId = this.user.currGroup.registerId;
+      this.addBill(this.billToAdd);
+      this.workOffShoppingList();
+      this.clearForm();
+    }
+  }
+
+  addBill(bill: BillDto){
+    console.log(bill);
+    this.billService.bill(bill).subscribe({
+      next: data => {
+        console.log(data);
+      }
+      ,
+      error: err => {
+        this.defaultServiceErrorHandling(err);
+      }
+    });
+  }
+
   openAddModal(itemAddModal: TemplateRef<any>) {
     this.itemToAdd = new Item();
     this.modalService.open(itemAddModal, {ariaLabelledBy: 'modal-basic-title'});
+  }
+
+  openBillModal(billModal: TemplateRef<any>) {
+    this.billToAdd = new BillDto();
+    this.modalService.open(billModal, {ariaLabelledBy: 'modal-basic-title'});
   }
 
   private removeItemFromShoppingList(item: Item) {
@@ -371,5 +480,4 @@ export class ShoppingListComponent implements OnInit {
       this.errorMessage = error.error;
     }
   }
-
 }
