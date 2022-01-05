@@ -33,6 +33,16 @@ public interface StorageService {
     ItemStorage saveItem(ItemStorage itemStorage, Long groupId);
 
     /**
+     * Saves updated existing item in the storage (specified in the item itself).
+     *
+     * @param groupId is used to check if blueprint for this item exists in this group
+     * @param itemStorage the item
+     *
+     * @return the updated item
+     */
+    ItemStorage updateItem(ItemStorage itemStorage, Long groupId);
+
+    /**
      * Searches for items in the storage (specified with the id) by name.
      *
      * @param itemStorage to search for

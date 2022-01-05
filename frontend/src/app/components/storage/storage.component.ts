@@ -43,8 +43,15 @@ export class StorageComponent implements OnInit {
     notes: null, expDate: null, amount: 0, locationTag: null, shoppingListId: null, quantity: this.nullQuantity
   };
 
+  absolutNullItem: Item = {
+    image: null, id: null, storageId: null, name: null,
+    notes: null, expDate: null, amount: null, locationTag: null, shoppingListId: null, quantity: this.nullQuantity
+  };
+
   itemToAdd: Item = this.nullItem;
   itemsToAdd: Item[];
+
+  itemToUpdate: Item = this.absolutNullItem;
 
   shopAgainAmount: number;
   shopAgainNotes: string;
@@ -127,6 +134,69 @@ export class StorageComponent implements OnInit {
   openAddModal(itemAddModal: TemplateRef<any>) {
     this.item = new Item();
     this.modalService.open(itemAddModal, {ariaLabelledBy: 'modal-basic-title'});
+  }
+
+  setUpdateItem(item: Item) {
+    this.itemToUpdate.id = item.id;
+    this.itemToUpdate.name = item.name;
+    this.itemToUpdate.quantity = item.quantity;
+    this.itemToUpdate.notes = item.notes;
+    this.itemToUpdate.image = item.image;
+    this.itemToUpdate.expDate = item.expDate;
+    this.itemToUpdate.amount = item.amount;
+    this.itemToUpdate.locationTag = item.locationTag;
+    this.itemToUpdate.storageId = item.storageId;
+    this.itemToUpdate.shoppingListId = item.shoppingListId;
+  }
+
+  updateItemForm(form, item: Item) {
+    this.submitted = true;
+
+    if (form.valid) {
+      //this.storageService.addItem(this.item);
+      console.log('form item to update', this.itemToUpdate);
+      this.updateItem(this.itemToUpdate, item);
+      this.clearForm();
+    }
+  }
+
+  updateItem(itemToUpdate: Item, item: Item) {
+    item.id = itemToUpdate.id;
+    item.name = itemToUpdate.name;
+    item.quantity = itemToUpdate.quantity;
+    item.notes = itemToUpdate.notes;
+    item.image = itemToUpdate.image;
+    item.expDate = itemToUpdate.expDate;
+    item.amount = itemToUpdate.amount;
+    item.locationTag = itemToUpdate.locationTag;
+    item.storageId = itemToUpdate.storageId;
+    item.shoppingListId = itemToUpdate.shoppingListId;
+    if (item.quantity === undefined) {
+      item.quantity = null;
+    }
+    if (item.amount === undefined) {
+      item.amount = null;
+    }
+    this.unitsOfQuantity.forEach(unit => {
+      if (item.quantity.id === unit.id) {
+        item.quantity.name = unit.name;
+      }
+    });
+    console.log('item to update', this.itemToUpdate);
+    this.storageService.updateItem(item).subscribe({
+      next: data => {
+        this.getAllItemsByStorageId({id: this.user.currGroup.storageId});
+        this.itemToUpdate = this.absolutNullItem;
+        console.log('updated Item', data);
+
+        // todo dont reload every time
+        this.loadItemsToAdd();
+
+      },
+      error: error => {
+        this.defaultServiceErrorHandling(error);
+      }
+    });
   }
 
   loadItemsToAdd() {

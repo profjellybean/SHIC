@@ -140,6 +140,21 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
+    public ItemStorage updateItem(ItemStorage itemStorage, Long groupId) {
+        LOGGER.debug("Service: Update item {}", itemStorage);
+
+        if (itemStorage.getLocationTag() != null) {
+            try {
+                Location.valueOf(itemStorage.getLocationTag());
+            } catch (IllegalArgumentException i) {
+                throw new ValidationException("Location is not valid");
+            }
+        }
+
+        return itemStorageRepository.saveAndFlush(itemStorage);
+    }
+
+    @Override
     public List<ItemStorage> searchItem(ItemStorage itemStorage) {
         LOGGER.info("Search for Items by ItemStorage {}", itemStorage);
         if (itemStorage.getNotes() != null) {

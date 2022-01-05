@@ -22,6 +22,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -67,6 +68,27 @@ public class StorageEndpoint {
                 groupId = userService.getGroupIdByUsername(authentication.getName());
             }
             return itemStorageMapper.itemStorageToItemStorageDto(storageService.saveItem(
+                itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto), groupId));
+        } catch (ServiceException s) {
+            LOGGER.error(s.getMessage());
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
+        } catch (ValidationException e) {
+            LOGGER.error(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+    }
+
+    @PutMapping
+    @PermitAll
+    @Operation(summary = "Update an existing item of the storage") //TODO: add security
+    public ItemStorageDto updateItem(Authentication authentication, @Valid @RequestBody ItemStorageDto itemStorageDto) {
+        LOGGER.info("PUT /storage body: {}", itemStorageDto);
+        try {
+            Long groupId = null;
+            if (authentication != null) {
+                groupId = userService.getGroupIdByUsername(authentication.getName());
+            }
+            return itemStorageMapper.itemStorageToItemStorageDto(storageService.updateItem(
                 itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto), groupId));
         } catch (ServiceException s) {
             LOGGER.error(s.getMessage());
