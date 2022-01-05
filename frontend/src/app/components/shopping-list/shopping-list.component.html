@@ -77,12 +77,6 @@
         </div>
 
         <div class="form-group">
-          <label for="inputNotes">Notes</label>
-          <textarea rows="3" name="notes" class="form-control" id="inputNotes"
-                    aria-describedby="notesHelp" placeholder="Enter Notes" [(ngModel)]="itemToAdd.notes"></textarea>
-        </div>
-
-        <div class="form-group">
           <label for="inputAmount">Amount</label>
           <input type="number" name="amount" class="form-control" id="inputAmount" min="1" required
                  aria-describedby="amountHelp" placeholder="Enter Amount" [(ngModel)]="itemToAdd.amount">
@@ -110,6 +104,12 @@
           </div>
         </div>
 
+        <div class="form-group">
+          <label for="inputNotes">Notes</label>
+          <textarea rows="3" name="notes" class="form-control" id="inputNotes"
+                    aria-describedby="notesHelp" placeholder="Enter Notes" [(ngModel)]="itemToAdd.notes"></textarea>
+        </div>
+
         <button type="button" (click)="addItemForm(itemForm)" id="add-msg" class="btn btn-success float-right">Add
           item
         </button>
@@ -131,7 +131,6 @@
       <thead>
       <tr>
         <th></th>
-        <th>ID</th>
         <th>Name</th>
         <th>Amount</th>
         <th>Quantity</th>
@@ -145,7 +144,6 @@
             <input type="checkbox" name="item" id="item" (click)="checkCheckbox(item)">
           </div>
         </td>
-        <td>{{item.id}}</td>
         <td>{{item.name}}</td>
         <td><input (change)="this.changeAmountOfItemInShoppingList(item)" [(ngModel)]="item.amount"/></td>
         <td>
