@@ -75,8 +75,6 @@ export class ShoppingListComponent implements OnInit {
     this.loadGroupShoppingListId();
     this.getPrivateShoppingList();
     this.getPublicShoppingList();
-    console.log('DATE: ' + this.billToAdd.date);
-
   }
 
   getCurrentGroup(){

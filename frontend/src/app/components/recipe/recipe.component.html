@@ -31,16 +31,6 @@
             </small>
           </div>
         </div>
-        <div *ngIf="recipeToAdd.ingredients !== null">
-          Current ingredients: <br>
-          <div class="form-group" *ngIf="recipeToAdd.ingredients !== null">
-            <div *ngFor="let item of this.recipeToAdd.ingredients">
-              <div>
-                {{item.name}}&nbsp;{{item.amount}}&nbsp;{{item.quantity.name}}
-              </div>
-            </div>
-          </div>
-        </div>
 
         <div class="form-group">
           <label for="recipeToAddDesc">Description</label>
@@ -51,6 +41,16 @@
             <small class="form-text text-warning" *ngIf="recipeForm.controls.name.errors.required"> Description is
               required!
             </small>
+          </div>
+        </div>
+        <div *ngIf="recipeToAdd.ingredients !== null">
+          Current ingredients: <br>
+          <div class="form-group" *ngIf="recipeToAdd.ingredients !== null">
+            <ul *ngFor="let item of this.recipeToAdd.ingredients">
+              <li>
+                {{item.name}}&nbsp;{{item.amount}}&nbsp;{{item.quantity.name}}
+              </li>
+            </ul>
           </div>
         </div>
         <div class="form-group">

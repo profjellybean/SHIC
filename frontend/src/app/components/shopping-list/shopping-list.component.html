@@ -111,7 +111,7 @@
 
 </div>
 
-<div *ngIf="items!== null">
+<div *ngIf="items.length !== 0">
   <div class="shopping-list-list">
     <table class="table table-striped">
       <thead class="thead-dark">
@@ -145,8 +145,8 @@
     </table>
   </div>
 </div>
-<div class="modal-footer">
-  <button type="button" class="btn btn-secondary" id="buy-item" (click)="openBillModal(confirmationModal)" data-toggle="modal">Buy these Items</button>
+<div>
+  <button *ngIf="items.length !== 0" type="button" class="btn btn-secondary" id="buy-item" (click)="openBillModal(confirmationModal)" data-toggle="modal">Buy these Items</button>
 </div>
 
 <div>
@@ -158,8 +158,8 @@
       </button>
     </div>
     <div class="modal-body">
-  <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openBillModal(billAddModal)">Buy and make bill</button><p></p>
-  <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="workOffShoppingList()">Only buy</button>
+  <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openBillModal(billAddModal)">Move & make bill</button><p></p>
+  <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="workOffShoppingList()">Move to storage</button>
     </div>
   </ng-template>
 </div>
