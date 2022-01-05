@@ -48,6 +48,10 @@ export class StorageService {
     return this.httpClient.post<Item>(this.storageBaseUri, item);
   }
 
+  updateItem(item: Item): Observable<Item> {
+    return this.httpClient.put<Item>(this.storageBaseUri, item);
+  }
+
   findAllUnitsOfQuantity(): Observable<UnitOfQuantity[]>{
     console.log('load UnitOfQuantity');
     return this.httpClient.get<UnitOfQuantity[]>(this.storageBaseUri + '/unitOfQuantity');
