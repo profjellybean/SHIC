@@ -3,8 +3,6 @@ import {HttpClient} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {Observable} from 'rxjs';
 import {Recipe} from '../dtos/recipe';
-import {ShoppingList} from '../dtos/shopping-list';
-import {UnitOfQuantity} from '../dtos/unitOfQuantity';
 
 @Injectable({
   providedIn: 'root'
@@ -29,5 +27,10 @@ export class RecipeService {
   }
   findUnitOfQuantityById(id: number){
     return this.httpClient.get<string>(this.globals.backendUri+'/item/unitOfQuantity/byId?id='+ id);
+  }
+
+  addRecipe(recipe: Recipe): Observable<Recipe> {
+    console.log('addRecipe, Service', recipe);
+    return this.httpClient.post<Recipe>(this.recipeBaseUri, recipe);
   }
 }

@@ -1,20 +1,36 @@
-<p></p>
 <h1>User</h1>
 <p></p>
+<hr>
+<button type="button" class="btn btn-secondary btn-sm mr-4">Edit user</button>
+&nbsp;
+<button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(userDeleteModal)">delete profile</button>
+&nbsp;
+<button type="button" class="btn btn-secondary btn-sm mr-4" routerLink="/custom-item">Custom Items</button>
+&nbsp;
+<button type="button" class="btn btn-secondary btn-sm mr-4" (click)="authService.logoutUser()" routerLink="/">Logout</button>
+<br>
+<p></p>
 <div>
-  User-picture: <p></p>
-  Username: {{this.user.username}}<p></p>
-  E-Mail of user: {{this.user.email}}
+  <strong>User-picture:</strong> <p></p>
+  <strong>Username:</strong> {{this.user.username}}<p></p>
+  <strong>E-Mail of user:</strong> {{this.user.email}}
 </div>
-<div align="right">
-  <button type="button" class="btn btn-secondary btn-sm mr-4">Edit user</button>
-  <p></p>
-  <button type="button" class="btn btn-secondary btn-sm mr-4">delete profile</button>
-  <p></p>
-  <button type="button" class="btn btn-secondary btn-sm mr-4" routerLink="/custom-item">Custom Items</button>
-  <p></p>
-  <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="authService.logoutUser()" routerLink="/">Logout</button>
-</div>
+
+<ng-template #userDeleteModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Alert</h5>
+    <button type="button" class="close" (click)="modal.dismiss('X')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <div>
+      <p>Do you really want to delete your profile?</p>
+      <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="deleteUserById(); modal.dismiss('X')" routerLink="/">delete profile</button>
+    </div>
+  </div>
+</ng-template>
 
 
 <div align="left">
@@ -22,10 +38,11 @@
           data-dismiss="alert" aria-label="Close">Generate new Group
   </button>
   <p></p>
+  <div>
   Add a new user to your group {{groupId.valueOf()}}: <p></p>
-  <input *ngIf="groupId!==null && groupId !== undefined" [(ngModel)]="userToAdd" placeholder="enter username &nbsp;">
+  <input *ngIf="groupId!==null && groupId !== undefined" [(ngModel)]="userToAdd" placeholder="enter username">&nbsp;
   <button type="button" class="btn btn-secondary btn-sm mr-4" *ngIf="groupId!==null && groupId !== undefined" (click)="addUser()">add user</button>
-
+  </div>
 </div>
 <p></p>
 <table class="table table-striped">

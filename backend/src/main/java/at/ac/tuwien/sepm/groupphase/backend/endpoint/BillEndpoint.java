@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -50,6 +52,15 @@ public class BillEndpoint {
     public BillDto findById(@PathVariable Long id) {
         LOGGER.info("POST /api/v1/bill {}", id);
         return billMapper.billToBillDto(billService.findOne(id));
+    }
+
+    @PostMapping
+    @PermitAll
+    @Transactional
+    @Operation(summary = "create a new bill")
+    public BillDto bill(@RequestBody BillDto billDto) {
+        LOGGER.info("POST /recipe new bill {}", billDto);
+        return billMapper.billToBillDto(billService.bill(billMapper.billDtoToBill(billDto)));
     }
 
 }

@@ -1,3 +1,14 @@
+
+<div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+  <strong>Error! </strong> {{ errorMessage }}
+  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<h1>Shopping List</h1>
+<p></p>
+<hr>
 <div class="tabs">
 
   <input type="radio" class="tabbutton" name="tabs" id="tab1" checked/>
@@ -8,33 +19,7 @@
   <label class="tabLabel" for="tab2" (click)="switchMode(false)">Private</label>
 
 </div>
-<div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
-  <strong>Error! </strong> {{ errorMessage }}
-  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-
-<h1>Shopping List</h1>
-
-<!--
-<form (ngSubmit)="addItemToShoppingList()">
-
-  <div class="form-group">
-    <label for="itemToAdd">Add item: </label>
-    <select
-      class="form-control"
-      id="itemToAdd"
-      name="itemToAdd"
-      [(ngModel)]="this.itemToAdd">
-      <option *ngFor="let myItem of itemsAdd;" [ngValue]="myItem">{{myItem.name}}</option>
-      <option [ngValue]="null">none</option>
-    </select>
-  </div>
-  <button type="submit">add</button>
-</form>
-
--->
+<br>
 
 <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(itemAddModal)">Add new Item</button>
 
@@ -77,12 +62,6 @@
         </div>
 
         <div class="form-group">
-          <label for="inputNotes">Notes</label>
-          <textarea rows="3" name="notes" class="form-control" id="inputNotes"
-                    aria-describedby="notesHelp" placeholder="Enter Notes" [(ngModel)]="itemToAdd.notes"></textarea>
-        </div>
-
-        <div class="form-group">
           <label for="inputAmount">Amount</label>
           <input type="number" name="amount" class="form-control" id="inputAmount" min="1" required
                  aria-describedby="amountHelp" placeholder="Enter Amount" [(ngModel)]="itemToAdd.amount">
@@ -110,6 +89,12 @@
           </div>
         </div>
 
+        <div class="form-group">
+          <label for="inputNotes">Notes</label>
+          <textarea rows="3" name="notes" class="form-control" id="inputNotes"
+                    aria-describedby="notesHelp" placeholder="Enter Notes" [(ngModel)]="itemToAdd.notes"></textarea>
+        </div>
+
         <button type="button" (click)="addItemForm(itemForm)" id="add-msg" class="btn btn-success float-right">Add
           item
         </button>
@@ -117,6 +102,9 @@
       </form>
     </div>
     <div class="modal-footer">
+      <button type="button" (click)="addItemForm(itemForm)" id="add-msg" class="btn btn-success float-right">Add
+        item
+      </button>
       <button type="button" class="btn btn-secondary" id="close-modal-btn" (click)="modal.dismiss('close')">Close
       </button>
     </div>
@@ -125,13 +113,12 @@
 
 </div>
 
-<div *ngIf="items!== null">
+<div *ngIf="items.length !== 0">
   <div class="shopping-list-list">
-    <table class="table">
-      <thead>
+    <table class="table table-striped">
+      <thead class="thead-dark">
       <tr>
         <th></th>
-        <th>ID</th>
         <th>Name</th>
         <th>Amount</th>
         <th>Quantity</th>
@@ -145,7 +132,6 @@
             <input type="checkbox" name="item" id="item" (click)="checkCheckbox(item)">
           </div>
         </td>
-        <td>{{item.id}}</td>
         <td>{{item.name}}</td>
         <td><input (change)="this.changeAmountOfItemInShoppingList(item)" [(ngModel)]="item.amount"/></td>
         <td>
@@ -161,8 +147,72 @@
     </table>
   </div>
 </div>
-<div class="modal-footer">
-  <button type="button" class="btn btn-secondary" id="buy-item" (click)="workOffShoppingList()">Move to Storage</button>
+<div>
+  <button *ngIf="items.length !== 0" type="button" class="btn btn-secondary" id="buy-item" (click)="openBillModal(confirmationModal)" data-toggle="modal">Buy these Items</button>
 </div>
 
+<div>
+  <ng-template #confirmationModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Your options</h5>
+      <button type="button" class="close" (click)="modal.dismiss('X')" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+  <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openBillModal(billAddModal)">Move & make bill</button><p></p>
+  <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="workOffShoppingList()">Move to storage</button>
+    </div>
+  </ng-template>
+</div>
 
+<div class="row p-2 mb-4">
+  <ng-template #billAddModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Bill</h5>
+      <button type="button" class="close" (click)="modal.dismiss('X')" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form (ngSubmit)="addBillForm(billForm)" #billForm="ngForm">
+        <div class="form-group">
+          <label for="itemToAdd2">Add users to bill: </label>
+          <ng-select id="favFood"
+                     [(ngModel)]="this.billToAdd.names"
+                     placeholder="Select names"
+                     [clearable]="true"
+                     [multiple]="true"
+                     [ngModelOptions]="{standalone: true}">
+            <ng-option [value]="nullUser">Everyone</ng-option>
+            <ng-option [value]="user" *ngFor="let user of allUsers">
+              {{user.username}}
+            </ng-option>
+          </ng-select>
+
+        </div>
+
+        <div class="form-group">
+          <label for="price">Bill date:</label>
+          <input name="price" class="form-control" id="price" required
+                  placeholder="Enter price" [(ngModel)]="billToAdd.sum">
+        </div>
+
+        <div class="form-group">
+          <label for="date">Bill date:</label>
+          <input type="date" name="date" class="form-control" id="date" required
+                 aria-describedby="expDateHelp" placeholder="Enter expDate" [(ngModel)]="billToAdd.date">
+        </div>
+
+
+        <div class="form-group">
+          <label for="inputNotes">Notes</label>
+          <textarea rows="3" name="notes" class="form-control" id="billNotes"
+                    aria-describedby="notesHelp" placeholder="Enter Notes" [(ngModel)]="billToAdd.notes"></textarea>
+        </div>
+        <button type="button" (click)="addBillForm(billForm)" id="add-msg1" class="btn btn-success float-right">Add bill and buy</button>
+
+      </form>
+    </div>
+  </ng-template>
+</div>

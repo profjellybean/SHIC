@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, TemplateRef} from '@angular/core';
 import {GroupService} from '../../services/group.service';
 import {AuthService} from '../../services/auth.service';
 import {UserService} from '../../services/user.service';
 import jwt_decode from 'jwt-decode';
 import {User} from '../../dtos/user';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 
 @Component({
@@ -28,7 +29,10 @@ export class UserComponent implements OnInit {
     email: null
   };
 
-  constructor(private groupService: GroupService, public authService: AuthService, private userService: UserService) { }
+  constructor(private groupService: GroupService,
+              public authService: AuthService,
+              private userService: UserService,
+              private modalService: NgbModal) { }
 
   ngOnInit(): void {
     this.getCurrentGroup();
@@ -93,6 +97,26 @@ export class UserComponent implements OnInit {
       }
     });
   }
+
+  deleteUserById() {
+    const currentId = this.user.id;
+    this.authService.logoutUser();
+
+    this.userService.deleteUserById(currentId).subscribe({
+      next: data => {
+
+      },
+      error: error => {
+        console.error(error.message);
+        this.showError('Error while deleting user: ' + error.error.message);
+      }
+    });
+  }
+
+  openAddModal(userDeleteModal: TemplateRef<any>) {
+    this.modalService.open(userDeleteModal, {ariaLabelledBy: 'modal-basic-title'});
+  }
+
   public vanishError(): void {
     console.log('vanishError');
     this.error = null;

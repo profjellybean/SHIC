@@ -5,16 +5,21 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ComplexUserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserLoginMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Bill;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.UsernameTakenException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.PasswordValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.EmailConfirmationException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.EmailCooldownException;
+
 import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
-import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepm.groupphase.backend.exception.PasswordValidationException;
-import at.ac.tuwien.sepm.groupphase.backend.exception.UsernameTakenException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.BillRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.CustomUserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.EmailService;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserGroupRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
@@ -45,22 +50,26 @@ public class UserServiceImpl implements UserService {
     private final EmailService emailService;
     private final UserGroupRepository userGroupRepository;
     private final CustomUserRepository customUserRepository;
+    private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final ComplexUserMapper userMapperImpl;
+    private final BillRepository billRepository;
 
     @Autowired
     public UserServiceImpl(CustomUserRepository userRepository,
                            ShoppingListRepository shoppingListRepository,
                            UserMapper userMapper, EntityManager entityManager, UserLoginMapper userLoginMapper,
-                           EmailService emailService, UserGroupRepository userGroupRepository, ComplexUserMapper userMapperImpl) {
+                           EmailService emailService, UserGroupRepository userGroupRepository, UserRepository userRepository1, ComplexUserMapper userMapperImpl, BillRepository billRepository) {
         this.customUserRepository = userRepository;
         this.userMapper = userMapper;
+        this.userRepository = userRepository1;
         this.userMapperImpl = userMapperImpl;
         this.entityManager = entityManager;
         this.shoppingListRepository = shoppingListRepository;
         this.emailService = emailService;
         this.userGroupRepository = userGroupRepository;
 
+        this.billRepository = billRepository;
     }
 
     @Override
@@ -146,6 +155,37 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void deleteUserById(Long id) {
+        ApplicationUser applicationUser = userRepository.getById(id);
+        List<Bill> bills = billRepository.findAll();
+        for (Bill b : bills) {
+            if (b.getNames().contains(applicationUser)) {
+                Set<ApplicationUser> names = b.getNames();
+                names.remove(applicationUser);
+                b.setNames(names);
+                billRepository.saveAndFlush(b);
+            }
+        }
+
+        if (applicationUser != null) {
+            UserGroup userGroup = applicationUser.getCurrGroup();
+            if (userGroup != null) {
+                Set<ApplicationUser> users = userGroup.getUser();
+                users.remove(applicationUser);
+                userGroup.setUser(users);
+                userGroupRepository.saveAndFlush(userGroup);
+
+            } else {
+                throw new ServiceException("User with id " + id + "is in no group!");
+            }
+        } else {
+            throw new NotFoundException("User " + id + " was not found!");
+        }
+
+        this.userRepository.deleteById(id);
+    }
+
+    @Override
     public void createUser(UserRegistrationDto userRegistrationDto, Long confirmationToken) {
         LOGGER.debug("Service: Create new user: {}", userRegistrationDto.getUsername());
 
@@ -209,7 +249,6 @@ public class UserServiceImpl implements UserService {
         }
 
 
-
     }
 
     @Override
@@ -249,7 +288,6 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
     @Override
     public void confirmUser(String confirmationTokenEncrypted) {
         LOGGER.debug(confirmationTokenEncrypted);
@@ -263,7 +301,7 @@ public class UserServiceImpl implements UserService {
                 throw new EmailConfirmationException("Confirmation token expired");
             }
 
-            Optional<ApplicationUser> user =  customUserRepository.findUserByUsername(username);
+            Optional<ApplicationUser> user = customUserRepository.findUserByUsername(username);
             if (user.isEmpty()) {
                 throw new EmailConfirmationException("User does not exist");
             }
@@ -281,14 +319,12 @@ public class UserServiceImpl implements UserService {
         }
 
 
-
-
     }
 
     @Override
     public boolean getConfirmationStatusByName(String username) {
         LOGGER.info("2:::");
-        Optional<ApplicationUser> user =  customUserRepository.findUserByUsername(username);
+        Optional<ApplicationUser> user = customUserRepository.findUserByUsername(username);
         if (user.isEmpty()) {
             return false;
         }
@@ -296,10 +332,6 @@ public class UserServiceImpl implements UserService {
         return user.get().getConfirmationToken() == 0L;
 
     }
-
-
-
-
 
 
 }
