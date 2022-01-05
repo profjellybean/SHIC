@@ -6,6 +6,8 @@
 </div>
 
 <h1>Storage</h1>
+<p></p>
+<hr>
 
 <div>
   <label for="new-name">Search for name: &nbsp;</label>
@@ -107,11 +109,10 @@
           </div>
           </div>
 
-        <button type="button" (click)="addItemForm(itemForm)" id="add-msg" class="btn btn-success float-right">Add item</button>
-
       </form>
     </div>
     <div class="modal-footer">
+      <button type="button" (click)="addItemForm(itemForm)" id="add-msg" class="btn btn-success float-right">Add item</button>
       <button type="button" class="btn btn-secondary" id="close-modal-btn" (click)="modal.dismiss('close')">Close</button>
     </div>
   </ng-template>

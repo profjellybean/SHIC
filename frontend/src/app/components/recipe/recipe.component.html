@@ -8,6 +8,8 @@
 
 
 <h1>Recipe</h1>
+<p></p>
+<hr>
 <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(recipeAddModal)">Add recipe</button>
 <div class="row p-2 mb-4">
   <ng-template #recipeAddModal let-modal>
@@ -123,7 +125,7 @@
       <td>{{recipe.name}}</td>
       <td>{{recipe.description}}</td>
       <td>
-        <button type="button" [routerLink]="['/recipe/', recipe.id]">Details</button>
+        <button type="button" class = "btn btn-secondary btn-sm mr-4" [routerLink]="['/recipe/', recipe.id]">Details</button>
       </td>
       <td>
     </tr>

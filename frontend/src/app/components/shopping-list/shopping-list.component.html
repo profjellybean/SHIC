@@ -1,3 +1,14 @@
+
+<div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+  <strong>Error! </strong> {{ errorMessage }}
+  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<h1>Shopping List</h1>
+<p></p>
+<hr>
 <div class="tabs">
 
   <input type="radio" class="tabbutton" name="tabs" id="tab1" checked/>
@@ -8,33 +19,7 @@
   <label class="tabLabel" for="tab2" (click)="switchMode(false)">Private</label>
 
 </div>
-<div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
-  <strong>Error! </strong> {{ errorMessage }}
-  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-
-<h1>Shopping List</h1>
-
-<!--
-<form (ngSubmit)="addItemToShoppingList()">
-
-  <div class="form-group">
-    <label for="itemToAdd">Add item: </label>
-    <select
-      class="form-control"
-      id="itemToAdd"
-      name="itemToAdd"
-      [(ngModel)]="this.itemToAdd">
-      <option *ngFor="let myItem of itemsAdd;" [ngValue]="myItem">{{myItem.name}}</option>
-      <option [ngValue]="null">none</option>
-    </select>
-  </div>
-  <button type="submit">add</button>
-</form>
-
--->
+<br>
 
 <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(itemAddModal)">Add new Item</button>
 
@@ -110,13 +95,14 @@
           </div>
         </div>
 
-        <button type="button" (click)="addItemForm(itemForm)" id="add-msg" class="btn btn-success float-right">Add
-          item
-        </button>
+
 
       </form>
     </div>
     <div class="modal-footer">
+      <button type="button" (click)="addItemForm(itemForm)" id="add-msg" class="btn btn-success float-right">Add
+        item
+      </button>
       <button type="button" class="btn btn-secondary" id="close-modal-btn" (click)="modal.dismiss('close')">Close
       </button>
     </div>
@@ -127,11 +113,10 @@
 
 <div *ngIf="items!== null">
   <div class="shopping-list-list">
-    <table class="table">
-      <thead>
+    <table class="table table-striped">
+      <thead class="thead-dark">
       <tr>
         <th></th>
-        <th>ID</th>
         <th>Name</th>
         <th>Amount</th>
         <th>Quantity</th>
@@ -145,7 +130,6 @@
             <input type="checkbox" name="item" id="item" (click)="checkCheckbox(item)">
           </div>
         </td>
-        <td>{{item.id}}</td>
         <td>{{item.name}}</td>
         <td><input (change)="this.changeAmountOfItemInShoppingList(item)" [(ngModel)]="item.amount"/></td>
         <td>

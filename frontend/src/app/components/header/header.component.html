@@ -11,15 +11,17 @@
       <li class="nav-item">
         <a class="nav-link" *ngIf="authService.hasCurrentGroup()" routerLink="/storage" routerLinkActive="active">Storage</a>
       </li>
+
       <li class="nav-item">
-        <a class="nav-link" *ngIf="authService.hasCurrentGroup()" routerLink="/register" routerLinkActive="active">Register</a>
+        <a class="nav-link" *ngIf="authService.hasCurrentGroup()" routerLink="/shopping-list" routerLinkActive="active">Shopping List</a>
       </li>
+
       <li class="nav-item">
         <a class="nav-link" *ngIf="authService.hasCurrentGroup()" routerLink="/recipe" routerLinkActive="active">Recipe</a>
       </li>
 
       <li class="nav-item">
-        <a class="nav-link" *ngIf="authService.hasCurrentGroup()" routerLink="/shopping-list" routerLinkActive="active">Shopping List</a>
+        <a class="nav-link" *ngIf="authService.hasCurrentGroup()" routerLink="/register" routerLinkActive="active">Register</a>
       </li>
 
       <li class="nav-item">
@@ -30,7 +32,11 @@
     <ul class="navbar-nav mr-5">
       <a class="nav-link" *ngIf="!authService.isLoggedIn()" routerLink="/login" routerLinkActive="active">Login</a>
       <a class="nav-link" *ngIf="!authService.isLoggedIn()" routerLink="/registerUser" routerLinkActive="active">Register</a>
+    </ul>
+      <ul class="nav navbar-nav navbar-right m-lg-auto">
+        <li>
       <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/" (click)="authService.logoutUser()">Logout</a>
+        </li>
     </ul>
   </div>
 </nav>

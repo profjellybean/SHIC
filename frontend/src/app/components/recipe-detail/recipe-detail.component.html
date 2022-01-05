@@ -1,3 +1,4 @@
+<br>
 <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
   <strong>Error! </strong> {{ errorMessage }}
   <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
@@ -27,9 +28,9 @@
   </div>
 </div>
 <br>
-<button [routerLink]="['/recipe']">Back</button>
+<button class = "btn btn-secondary btn-sm mr-4" [routerLink]="['/recipe']">Back</button> &nbsp;
 
-<button type="button" class="btn-secondary mr-1" (click)="planRecipe()">Plan Recipe</button>
+<button type="button" class = "btn btn-secondary btn-sm mr-4" (click)="planRecipe()">Plan Recipe</button>
 
 <br>
 <br>
@@ -52,9 +53,9 @@
 <div *ngIf="items && items.length <= 0">
   <div class="card">
     <div class="card-header">
-      <strong>nothing to add</strong>
+      <strong>Nothing to add</strong>
     </div>
-        <p class="card-text"> There is already enough of each Ingredient in your Storage! </p>
+        <p class="card-text"> &nbsp; There is already enough of each Ingredient in your Storage! </p>
   </div>
 </div>
 
