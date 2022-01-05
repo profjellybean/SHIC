@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ComplexUserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserLoginMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Bill;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
@@ -15,6 +16,7 @@ import at.ac.tuwien.sepm.groupphase.backend.exception.EmailConfirmationException
 import at.ac.tuwien.sepm.groupphase.backend.exception.EmailCooldownException;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
+import at.ac.tuwien.sepm.groupphase.backend.repository.BillRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.CustomUserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
@@ -51,12 +53,13 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final ComplexUserMapper userMapperImpl;
+    private final BillRepository billRepository;
 
     @Autowired
     public UserServiceImpl(CustomUserRepository userRepository,
                            ShoppingListRepository shoppingListRepository,
                            UserMapper userMapper, EntityManager entityManager, UserLoginMapper userLoginMapper,
-                           EmailService emailService, UserGroupRepository userGroupRepository, UserRepository userRepository1, ComplexUserMapper userMapperImpl) {
+                           EmailService emailService, UserGroupRepository userGroupRepository, UserRepository userRepository1, ComplexUserMapper userMapperImpl, BillRepository billRepository) {
         this.customUserRepository = userRepository;
         this.userMapper = userMapper;
         this.userRepository = userRepository1;
@@ -66,6 +69,7 @@ public class UserServiceImpl implements UserService {
         this.emailService = emailService;
         this.userGroupRepository = userGroupRepository;
 
+        this.billRepository = billRepository;
     }
 
     @Override
@@ -153,6 +157,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUserById(Long id) {
         ApplicationUser applicationUser = userRepository.getById(id);
+        List<Bill> bills = billRepository.findAll();
+        for (Bill b : bills) {
+            if (b.getNames().contains(applicationUser)) {
+                Set<ApplicationUser> names = b.getNames();
+                names.remove(applicationUser);
+                b.setNames(names);
+                billRepository.saveAndFlush(b);
+            }
+        }
+
         if (applicationUser != null) {
             UserGroup userGroup = applicationUser.getCurrGroup();
             if (userGroup != null) {
@@ -160,6 +174,7 @@ public class UserServiceImpl implements UserService {
                 users.remove(applicationUser);
                 userGroup.setUser(users);
                 userGroupRepository.saveAndFlush(userGroup);
+
             } else {
                 throw new ServiceException("User with id " + id + "is in no group!");
             }
