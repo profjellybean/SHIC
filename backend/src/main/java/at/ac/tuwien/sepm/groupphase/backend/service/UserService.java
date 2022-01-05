@@ -117,4 +117,6 @@ public interface UserService extends UserDetailsService {
     List<ItemStorage> getCombinedAvailableItemsWithoutDuplicates(String username);
 
     Long getGroupIdByUsername(String username);
+
+    void deleteUserById(Long id);
 }
