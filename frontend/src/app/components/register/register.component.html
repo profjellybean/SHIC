@@ -28,6 +28,7 @@
   <tr *ngFor="let bill of billArray;">
     <td>{{bill.nameList}}</td>
     <td>{{bill.notPaidNameList}}</td>
+    <td><div *ngFor="let grocery of bill.groceries">{{grocery.name}}</div></td>
     <td>{{bill.sum}} €</td>
     <td>{{bill.sumPerPerson}} €</td>
     <td>

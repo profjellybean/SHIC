@@ -6,12 +6,13 @@ import {ShoppingList} from '../../dtos/shopping-list';
 import {UnitOfQuantity} from '../../dtos/unitOfQuantity';
 import {StorageService} from '../../services/storage.service';
 import {ItemService} from '../../services/item.service';
-import {Bill} from '../../dtos/bill';
 import {User} from '../../dtos/user';
 import {GroupService} from '../../services/group.service';
 import {UserService} from '../../services/user.service';
 import jwt_decode from 'jwt-decode';
 import {AuthService} from '../../services/auth.service';
+import {BillService} from '../../services/bill.service';
+import {BillDto} from '../../dtos/billDto';
 
 @Component({
   selector: 'app-shopping-list',
@@ -23,20 +24,15 @@ export class ShoppingListComponent implements OnInit {
   error = false;
   errorMessage = '';
   submitted = false;
-
-  billToAdd: Bill = {
+  nullUser: User = {
     id: null,
-    registerId: null,
-    groceries: null,
-    notes: null,
-    names: null,
-    notPaidNames: null,
-    sum: null,
-    sumPerPerson: null,
-    date: new Date(),
-    nameList: null,
-    notPaidNameList: null
+    email: null,
+    currGroup: null,
+    username: null,
+    privList: null
   };
+
+  billToAdd: BillDto = new BillDto();
   itemsAdd: Item[] = null;
   itemToAdd: Item = null;
   itemAmountChange: Item = {image:null, id: null, storageId: null, name: null,
@@ -66,7 +62,8 @@ export class ShoppingListComponent implements OnInit {
               private modalService: NgbModal,
               private groupService: GroupService,
               private userService: UserService,
-              private authService: AuthService) {
+              private authService: AuthService,
+              private billService: BillService) {
   }
 
   ngOnInit(): void {
@@ -89,7 +86,6 @@ export class ShoppingListComponent implements OnInit {
         this.user = data;
         this.groupId = this.user.currGroup.id;
         this.getAllUsers(this.groupId);
-        console.log(this.groupId);
       },
       error: error => {
         console.error(error.message);
@@ -102,6 +98,7 @@ export class ShoppingListComponent implements OnInit {
       next: data => {
         console.log('received items', data);
         this.allUsers = data;
+        //this.billToAdd.names = data;
       },
       error: error => {
         console.error(error.message);
@@ -337,14 +334,46 @@ export class ShoppingListComponent implements OnInit {
     this.submitted = true;
 
     if (form.valid) {
-      console.log('form item to add', this.billToAdd);
+      console.log('form item to add', this.billToAdd.names);
+
+      if(this.billToAdd.names[0].id === null){
+        console.log('Set allUsers {}', this.allUsers);
+        this.billToAdd.names = this.allUsers;
+      }
+      for (const item of this.itemsToBuy) {
+        item.storageId = this.groupStorageId;
+        this.billToAdd.groceries.push(item);
+      }
+      this.billToAdd.notPaidNames = this.billToAdd.names;
+      if(this.billToAdd.names.length > 0) {
+        this.billToAdd.sumPerPerson = this.billToAdd.sum / this.billToAdd.names.length;
+      } else {
+        this.billToAdd.sumPerPerson = this.billToAdd.sum;
+      }
+      for(const name of this.billToAdd.names){
+        delete name.currGroup;
+      }
+      for(const name of this.billToAdd.notPaidNames){
+        delete name.currGroup;
+      }
+      this.billToAdd.registerId = this.user.currGroup.registerId;
       this.addBill(this.billToAdd);
+      this.workOffShoppingList();
       this.clearForm();
     }
   }
 
-  addBill(bill: Bill){
-
+  addBill(bill: BillDto){
+    console.log(bill);
+    this.billService.bill(bill).subscribe({
+      next: data => {
+        console.log(data);
+      }
+      ,
+      error: err => {
+        this.defaultServiceErrorHandling(err);
+      }
+    });
   }
 
   openAddModal(itemAddModal: TemplateRef<any>) {
@@ -353,7 +382,7 @@ export class ShoppingListComponent implements OnInit {
   }
 
   openBillModal(billModal: TemplateRef<any>) {
-    this.billToAdd = new Bill();
+    this.billToAdd = new BillDto();
     this.modalService.open(billModal, {ariaLabelledBy: 'modal-basic-title'});
   }
 
@@ -451,5 +480,4 @@ export class ShoppingListComponent implements OnInit {
       this.errorMessage = error.error;
     }
   }
-
 }

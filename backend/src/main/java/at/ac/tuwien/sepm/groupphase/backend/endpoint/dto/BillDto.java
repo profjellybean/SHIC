@@ -11,6 +11,8 @@ public class BillDto {
 
     private Long id;
 
+    private Long registerId;
+
     private Set<ItemStorage> groceries;
 
     private String notes;
@@ -30,7 +32,7 @@ public class BillDto {
     }
 
     public BillDto(Long id, Set<ItemStorage> groceries, String notes, Set<ApplicationUser> names,
-                   Set<ApplicationUser> notPaidNames, double sum, double sumPerPerson, LocalDate date) {
+                   Set<ApplicationUser> notPaidNames, double sum, double sumPerPerson, LocalDate date, Long registerId) {
         this.id = id;
         this.groceries = groceries;
         this.notes = notes;
@@ -39,6 +41,7 @@ public class BillDto {
         this.sum = sum;
         this.sumPerPerson = sumPerPerson;
         this.date = date;
+        this.registerId = registerId;
     }
 
     public Long getId() {
@@ -105,6 +108,13 @@ public class BillDto {
         this.date = date;
     }
 
+    public Long getRegisterId() {
+        return registerId;
+    }
+
+    public void setRegisterId(Long registerId) {
+        this.registerId = registerId;
+    }
 
     @Override
     public boolean equals(Object o) {

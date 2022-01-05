@@ -9,6 +9,7 @@ import {Register} from '../../dtos/register';
 import jwt_decode from 'jwt-decode';
 import {AuthService} from '../../services/auth.service';
 import {identifierModuleUrl} from '@angular/compiler';
+import {UserService} from "../../services/user.service";
 
 @Component({
   selector: 'app-register',
@@ -44,13 +45,25 @@ export class RegisterComponent implements OnInit {
   };
 
   constructor(private registerService: RegisterService, private billService: BillService, public route: ActivatedRoute,
-              private authService: AuthService) {
+              private authService: AuthService, private userService: UserService) {
   }
 
   ngOnInit(): void {
-    //const id = +this.route.snapshot.paramMap.get('id');
-    this.loadRegister(1);
+    this.getCurrentGroup();
     this.getMonthlySum();
+  }
+
+  getCurrentGroup(){
+    this.userService.getCurrentUser({username: this.user.username}).subscribe({
+      next: data => {
+        console.log('received items11', data);
+        this.user = data;
+        this.loadRegister(data.currGroup.registerId);
+      },
+      error: error => {
+        console.error(error.message);
+      }
+    });
   }
 
   public confirmPayment(billId: number) {

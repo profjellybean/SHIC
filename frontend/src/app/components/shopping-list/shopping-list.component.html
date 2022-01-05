@@ -162,7 +162,6 @@
   </div>
 </div>
 <div class="modal-footer">
-  <button type="button" class="btn btn-secondary" id="buy-item" (click)="workOffShoppingList()">Move to Storage</button>
   <button type="button" class="btn btn-secondary" id="buy-item" (click)="openBillModal(confirmationModal)" data-toggle="modal">Buy these Items</button>
 </div>
 
@@ -199,12 +198,18 @@
                      [clearable]="true"
                      [multiple]="true"
                      [ngModelOptions]="{standalone: true}">
-            <ng-option [value]=allUsers>Everyone</ng-option>
+            <ng-option [value]="nullUser">Everyone</ng-option>
             <ng-option [value]="user" *ngFor="let user of allUsers">
               {{user.username}}
             </ng-option>
           </ng-select>
 
+        </div>
+
+        <div class="form-group">
+          <label for="price">Bill date:</label>
+          <input name="price" class="form-control" id="price" required
+                  placeholder="Enter price" [(ngModel)]="billToAdd.sum">
         </div>
 
         <div class="form-group">
@@ -224,7 +229,4 @@
       </form>
     </div>
   </ng-template>
-
-
 </div>
-
