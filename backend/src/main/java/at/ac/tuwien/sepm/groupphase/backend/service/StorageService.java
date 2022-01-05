@@ -15,6 +15,15 @@ public interface StorageService {
     ItemStorage deleteItemById(Long id);
 
     /**
+     * Delete an item in a specific storage based on the id of the item and the storage.
+     *
+     * @param itemId the id of the item to delete
+     * @param storageId the id of the storage which the item is in
+     * @return a Spring Security user
+     */
+    ItemStorage deleteItemInStorageById(Long itemId, Long storageId);
+
+    /**
      * Saves an item in the storage (specified in the item itself).
      *
      * @param groupId is used to check if blueprint for this item exists in this group.@param itemStorage the item

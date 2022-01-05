@@ -33,5 +33,4 @@ public interface ItemStorageRepository extends JpaRepository<ItemStorage, Long> 
     List<ItemStorage> findAllByItemStorage(@Param("storageId") Long storageId, @Param("amount") int amount, @Param("locationTag") String locationTag, @Param("name") String name,
                                            @Param("notes") String notes, @Param("expDate") Date expDate);
 
-
 }

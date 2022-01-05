@@ -6,6 +6,13 @@ import {ShoppingList} from '../../dtos/shopping-list';
 import {UnitOfQuantity} from '../../dtos/unitOfQuantity';
 import {StorageService} from '../../services/storage.service';
 import {ItemService} from '../../services/item.service';
+import {User} from '../../dtos/user';
+import {GroupService} from '../../services/group.service';
+import {UserService} from '../../services/user.service';
+import jwt_decode from 'jwt-decode';
+import {AuthService} from '../../services/auth.service';
+import {BillService} from '../../services/bill.service';
+import {BillDto} from '../../dtos/billDto';
 
 @Component({
   selector: 'app-shopping-list',
@@ -17,9 +24,19 @@ export class ShoppingListComponent implements OnInit {
   error = false;
   errorMessage = '';
   submitted = false;
+  nullUser: User = {
+    id: null,
+    email: null,
+    currGroup: null,
+    username: null,
+    privList: null
+  };
 
+  billToAdd: BillDto = new BillDto();
   itemsAdd: Item[] = null;
   itemToAdd: Item = null;
+  itemAmountChange: Item = {image:null, id: null, storageId: null, name: null,
+    notes: null, expDate: null, amount: 0, locationTag: null, shoppingListId: null, quantity: null};
   itemsToBuy: Item[] = [];
   items: Item[] = null;
   privateList: ShoppingList;
@@ -28,14 +45,29 @@ export class ShoppingListComponent implements OnInit {
   groupStorageId: number;
   groupShoppingListId: number;
   unitsOfQuantity: UnitOfQuantity[];
+  allUsers: User[] = null;
 
+  user: User = {
+    // @ts-ignore
+    username: jwt_decode(this.authService.getToken()).sub.trim(),
+    id: null,
+    currGroup: null,
+    privList: null,
+    email: null
+  };
+  groupId: number;
   constructor(private shoppingListService: ShoppingListService,
               private storageService: StorageService,
               private itemService: ItemService,
-              private modalService: NgbModal) {
+              private modalService: NgbModal,
+              private groupService: GroupService,
+              private userService: UserService,
+              private authService: AuthService,
+              private billService: BillService) {
   }
 
   ngOnInit(): void {
+    this.getCurrentGroup();
     this.isInPublic = true;
     this.loadUnitsOfQuantity();
     this.loadItemsToAdd();
@@ -43,7 +75,35 @@ export class ShoppingListComponent implements OnInit {
     this.loadGroupShoppingListId();
     this.getPrivateShoppingList();
     this.getPublicShoppingList();
+    console.log('DATE: ' + this.billToAdd.date);
 
+  }
+
+  getCurrentGroup(){
+    this.userService.getCurrentUser({username: this.user.username}).subscribe({
+      next: data => {
+        console.log('received items11', data);
+        this.user = data;
+        this.groupId = this.user.currGroup.id;
+        this.getAllUsers(this.groupId);
+      },
+      error: error => {
+        console.error(error.message);
+      }
+    });
+  }
+
+  getAllUsers(id: number){
+    this.groupService.getAllUsers(id).subscribe({
+      next: data => {
+        console.log('received items', data);
+        this.allUsers = data;
+        //this.billToAdd.names = data;
+      },
+      error: error => {
+        console.error(error.message);
+      }
+    });
   }
 
   switchMode(publicMode: boolean){
@@ -216,6 +276,50 @@ export class ShoppingListComponent implements OnInit {
 
   }
 
+  changeAmountOfItemInShoppingList(item: Item) {
+    this.setItemAmountChange(item);
+    console.log('item amount change ', this.itemAmountChange);
+    this.removeItemFromShoppingList(item);
+    console.log('deleted old item ', item);
+
+    if(this.isInPublic){
+      console.log('change amount if item in public list', item);
+      this.shoppingListService.changeAmountOfItemInPublicShoppingList(this.itemAmountChange).subscribe({
+        next: data => {
+          if(data === null){
+            this.getPublicShoppingList();
+          }else{
+            this.items.push(data);
+          }
+          // todo dont reload every time
+          this.loadItemsToAdd();
+        },
+        error: err => {
+          this.defaultServiceErrorHandling(err);
+        }
+      });
+    }else{
+      console.log('change amount of item of private list', item);
+      this.shoppingListService.changeAmountOfItemInPrivateShoppingList(this.itemAmountChange).subscribe({
+        next: data => {
+          console.log('hey i am back ', data);
+          if(data === null){
+            this.getPrivateShoppingList();
+          }else{
+            this.items.push(data);
+          }
+          // todo dont reload every time
+          this.loadItemsToAdd();
+
+        },
+        error: err => {
+          this.defaultServiceErrorHandling(err);
+        }
+      });
+    }
+
+  }
+
   addItemForm(form) {
     this.submitted = true;
 
@@ -226,9 +330,60 @@ export class ShoppingListComponent implements OnInit {
     }
   }
 
+  addBillForm(form) {
+    this.submitted = true;
+
+    if (form.valid) {
+      console.log('form item to add', this.billToAdd.names);
+
+      if(this.billToAdd.names[0].id === null){
+        console.log('Set allUsers {}', this.allUsers);
+        this.billToAdd.names = this.allUsers;
+      }
+      for (const item of this.itemsToBuy) {
+        item.storageId = this.groupStorageId;
+        this.billToAdd.groceries.push(item);
+      }
+      this.billToAdd.notPaidNames = this.billToAdd.names;
+      if(this.billToAdd.names.length > 0) {
+        this.billToAdd.sumPerPerson = this.billToAdd.sum / this.billToAdd.names.length;
+      } else {
+        this.billToAdd.sumPerPerson = this.billToAdd.sum;
+      }
+      for(const name of this.billToAdd.names){
+        delete name.currGroup;
+      }
+      for(const name of this.billToAdd.notPaidNames){
+        delete name.currGroup;
+      }
+      this.billToAdd.registerId = this.user.currGroup.registerId;
+      this.addBill(this.billToAdd);
+      this.workOffShoppingList();
+      this.clearForm();
+    }
+  }
+
+  addBill(bill: BillDto){
+    console.log(bill);
+    this.billService.bill(bill).subscribe({
+      next: data => {
+        console.log(data);
+      }
+      ,
+      error: err => {
+        this.defaultServiceErrorHandling(err);
+      }
+    });
+  }
+
   openAddModal(itemAddModal: TemplateRef<any>) {
     this.itemToAdd = new Item();
     this.modalService.open(itemAddModal, {ariaLabelledBy: 'modal-basic-title'});
+  }
+
+  openBillModal(billModal: TemplateRef<any>) {
+    this.billToAdd = new BillDto();
+    this.modalService.open(billModal, {ariaLabelledBy: 'modal-basic-title'});
   }
 
   private removeItemFromShoppingList(item: Item) {
@@ -266,6 +421,55 @@ export class ShoppingListComponent implements OnInit {
     });
   }
 
+  private setItemAmountChange(item: Item) {
+    this.itemAmountChange.id = item.id;
+    if (item.quantity === undefined) {
+      this.itemAmountChange.quantity = null;
+    } else {
+      this.itemAmountChange.quantity = item.quantity;
+    }
+    if (item.amount === undefined) {
+      this.itemAmountChange.amount = null;
+    } else {
+      this.itemAmountChange.amount = item.amount;
+    }
+    if (item.name === undefined) {
+      this.itemAmountChange.name = null;
+    } else {
+      this.itemAmountChange.name = item.name;
+    }
+    if (item.notes === undefined) {
+      this.itemAmountChange.notes = null;
+    } else {
+      this.itemAmountChange.notes = item.notes;
+    }
+    if (item.image === undefined) {
+      this.itemAmountChange.image = null;
+    } else {
+      this.itemAmountChange.image = item.image;
+    }
+    if (item.expDate === undefined) {
+      this.itemAmountChange.expDate = null;
+    } else {
+      this.itemAmountChange.expDate = item.expDate;
+    }
+    if (item.locationTag === undefined) {
+      this.itemAmountChange.locationTag = null;
+    } else {
+      this.itemAmountChange.locationTag = item.locationTag;
+    }
+    if (item.storageId === undefined) {
+      this.itemAmountChange.storageId = null;
+    } else {
+      this.itemAmountChange.storageId = item.storageId;
+    }
+    if (item.shoppingListId === undefined) {
+      this.itemAmountChange.shoppingListId = null;
+    } else {
+      this.itemAmountChange.shoppingListId = item.shoppingListId;
+    }
+  }
+
   private defaultServiceErrorHandling(error: any) {
     console.log(error);
     this.error = true;
@@ -276,5 +480,4 @@ export class ShoppingListComponent implements OnInit {
       this.errorMessage = error.error;
     }
   }
-
 }

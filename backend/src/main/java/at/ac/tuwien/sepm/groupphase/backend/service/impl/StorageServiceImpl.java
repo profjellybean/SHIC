@@ -4,14 +4,17 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Storage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitsRelation;
+import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.StorageItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitOfQuantityRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitsRelationRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UserGroupRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.ItemService;
 import at.ac.tuwien.sepm.groupphase.backend.service.StorageService;
 import org.slf4j.Logger;
@@ -22,6 +25,8 @@ import org.springframework.stereotype.Service;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -33,16 +38,22 @@ public class StorageServiceImpl implements StorageService {
     private final ItemStorageRepository itemStorageRepository;
     private final UnitOfQuantityRepository unitOfQuantityRepository;
     private final UnitsRelationRepository unitsRelationRepository;
+    private final StorageItemStorageRepository storageItemStorageRepository;
+    private final UserGroupRepository userGroupRepository;
     private final ItemService itemService;
 
     @Autowired
     public StorageServiceImpl(StorageRepository storageRepository, ItemStorageRepository itemStorageRepository,
                               UnitOfQuantityRepository unitOfQuantityRepository,
-                              UnitsRelationRepository unitsRelationRepository, ItemService itemService) {
+                              UnitsRelationRepository unitsRelationRepository,
+                              StorageItemStorageRepository storageItemStorageRepository,
+                              UserGroupRepository userGroupRepository, ItemService itemService) {
         this.storageRepository = storageRepository;
         this.itemStorageRepository = itemStorageRepository;
         this.unitOfQuantityRepository = unitOfQuantityRepository;
         this.unitsRelationRepository = unitsRelationRepository;
+        this.storageItemStorageRepository = storageItemStorageRepository;
+        this.userGroupRepository = userGroupRepository;
         this.itemService = itemService;
     }
 
@@ -55,6 +66,29 @@ public class StorageServiceImpl implements StorageService {
             return itemToDelete;
         } catch (NotFoundException e) {
             throw new NotFoundException();
+        }
+    }
+
+    @Override
+    public ItemStorage deleteItemInStorageById(Long itemId, Long storageId) {
+        LOGGER.debug("Delete item from storage {} {}", itemId, storageId);
+
+        Optional<Storage> storageOptional = storageRepository.findById(storageId);
+        Optional<ItemStorage> itemStorageOptional = itemStorageRepository.findById(itemId);
+
+        if (storageOptional.isEmpty()) {
+            throw new NotFoundException("No storage with this id found: " + storageId);
+        } else if (itemStorageOptional.isEmpty()) {
+            throw new NotFoundException("No item with this id found: " + itemId);
+        } else {
+            ItemStorage itemToDelete = itemStorageOptional.get();
+            Storage storage = storageOptional.get();
+
+            if (Objects.equals(itemToDelete.getStorageId(), storage.getId())) {
+                //storageItemStorageRepository.deleteFromTable(storageId, itemId);
+                itemStorageRepository.delete(itemToDelete);
+            }
+            return itemToDelete;
         }
     }
 

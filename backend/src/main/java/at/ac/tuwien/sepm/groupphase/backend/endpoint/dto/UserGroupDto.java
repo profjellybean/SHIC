@@ -9,15 +9,25 @@ public class UserGroupDto {
     private Set<String> user;
     private Long storageId;
     private Long publicShoppingListId;
+    private Long registerId;
 
     public UserGroupDto() {
     }
 
-    public UserGroupDto(Long id, Set<String> user, Long storageId, Long publicShoppingListId) {
+    public UserGroupDto(Long id, Set<String> user, Long storageId, Long publicShoppingListId, Long registerId) {
         this.id = id;
         this.user = user;
         this.storageId = storageId;
         this.publicShoppingListId = publicShoppingListId;
+        this.registerId = registerId;
+    }
+
+    public Long getRegisterId() {
+        return registerId;
+    }
+
+    public void setRegisterId(Long registerId) {
+        this.registerId = registerId;
     }
 
     public Long getId() {

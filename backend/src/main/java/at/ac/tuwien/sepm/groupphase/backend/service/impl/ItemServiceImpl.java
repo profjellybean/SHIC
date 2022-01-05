@@ -128,7 +128,7 @@ public class ItemServiceImpl implements ItemService {
 
         List<Item> items = itemRepository.findItemsByNameForGroup(itemStorage.getName(), groupId);
         if (!items.isEmpty()) {
-            throw new ValidationException("Item with same Nama already exists");
+            return itemStorage;
         }
 
         Item newBlueprint = new Item(null, itemStorage.getName(), itemStorage.getQuantity(), groupId);

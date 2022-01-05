@@ -47,7 +47,6 @@ public class Item {
         this.quantity = quantity;
         this.groupId = groupId;
     }
-    
 
     public void setId(Long id) {
         this.id = id;

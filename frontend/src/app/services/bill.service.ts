@@ -3,6 +3,7 @@ import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
 import {Bill} from '../dtos/bill';
 import {HttpClient} from '@angular/common/http';
+import {BillDto} from '../dtos/billDto';
 
 @Injectable({
   providedIn: 'root'
@@ -33,5 +34,10 @@ export class BillService {
     console.log('delete user ' + userId + ' of bill ' + billId);
     return this.httpClient.patch<Bill>(this.billBaseUri + '/?firstAdditionalId=' + billId +
       '&secondAdditionalId=' + userId, billId);
+  }
+
+  bill(bill: BillDto): Observable<BillDto> {
+    console.log('Add a new bill');
+    return this.httpClient.post<BillDto>(this.billBaseUri, bill);
   }
 }
