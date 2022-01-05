@@ -8,8 +8,7 @@ import {Register} from '../../dtos/register';
 // @ts-ignore
 import jwt_decode from 'jwt-decode';
 import {AuthService} from '../../services/auth.service';
-import {identifierModuleUrl} from '@angular/compiler';
-import {UserService} from "../../services/user.service";
+import {UserService} from '../../services/user.service';
 
 @Component({
   selector: 'app-register',
