@@ -149,8 +149,105 @@
     <td>{{item.locationTag}}</td>
     <td>{{item.notes}}</td>
     <td>
-      <button type="button" class="btn btn-secondary btn-sm mr-4">Edit</button>
+      <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(itemAddModal)">Edit</button>
     </td>
+
+      <div class="row p-2 mb-4">
+        <ng-template #itemAddModal let-modal>
+          <div class="modal-header">
+            <h5 class="modal-title">Edit {{item.name}}</h5>
+            <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form (ngSubmit)="updateItemForm(updateitemForm, item)" #updateitemForm="ngForm">
+
+              <div class="form-group">
+                <label for="UpdateName">Amount</label>
+                <input type="string" name="name" class="form-control" id="updateName" min="1" required
+                       aria-describedby="nameHelp" placeholder="Input name" [(ngModel)]="this.itemToUpdate.name">
+                <div *ngIf="submitted && updateitemForm.controls.amount.errors" class="error">
+                  <small class="form-text text-warning" *ngIf="updateitemForm.controls.amount.errors.required"> Name is
+                    required!
+                  </small>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="inputAmount">Amount</label>
+                <input type="number" name="amount" class="form-control" id="updateAmount" min="1" required
+                       aria-describedby="amountHelp" placeholder="Add amount" [(ngModel)]="this.itemToUpdate.amount">
+                <div *ngIf="submitted && updateitemForm.controls.amount.errors" class="error">
+                  <small class="form-text text-warning" *ngIf="updateitemForm.controls.amount.errors.required"> Amount
+                    is
+                    required!
+                  </small>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="inputNotes">Notes</label>
+                <textarea rows="3" name="notes" class="form-control" id="updateNotes"
+                          aria-describedby="notesHelp" placeholder="Add some notes"
+                          [(ngModel)]="this.itemToUpdate.notes"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="inputLocation">Location</label>
+                <select
+                  class="form-control"
+                  id="updateLocation"
+                  name="location"
+                  [(ngModel)]="this.itemToUpdate.locationTag">
+                  <option [ngValue]="null">none</option>
+                  <option value="fridge">fridge</option>
+                  <option value="freezer">freezer</option>
+                  <option value="shelf">shelf</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="inputExpDate">Expiration Date</label>
+                <input type="date" name="expDate" class="form-control" id="updateExpDate"
+                       aria-describedby="expDateHelp" placeholder="Add expiration Date"
+                       [(ngModel)]="this.itemToUpdate.expDate">
+              </div>
+
+              <div class="form-group">
+                <label for="inputUnitOfQuantity">Unit of Quantity</label>
+                <select
+                  class="form-control"
+                  id="updateUnitOfQuantity"
+                  name="updateUnitOfQuantity"
+                  required="true"
+                  [(ngModel)]="this.itemToUpdate.quantity.id">
+                  <option *ngFor="let myUoQ of unitsOfQuantity;" [ngValue]="myUoQ.id">{{myUoQ.name}}</option>
+                </select>
+                <div *ngIf="submitted && updateitemForm.controls.inputUnitOfQuantity.errors" class="error">
+                  <small class="form-text text-warning"
+                         *ngIf="updateitemForm.controls.inputUnitOfQuantity.errors.required">Unit
+                    of Quantity is required!
+                  </small>
+                </div>
+              </div>
+
+              <button type="button" (click)="updateItemForm(updateitemForm, item); modal.dismiss('close')"
+                      id="update-msg"
+                      class="btn btn-success float-right">Update
+              </button>
+
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="close-update-modal-btn"
+                    (click)="modal.dismiss('close')">
+              Close
+            </button>
+          </div>
+        </ng-template>
+      </div>
+
     <td><!-- popUp if deleted-->
       <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(itemAddModal)">Remove</button>
     </td>
@@ -197,89 +294,3 @@
   </tr>
   </tbody>
 </table>
-
-<div class="row p-2 mb-4">
-  <ng-template #itemAddModal let-modal>
-    <div class="modal-header">
-      <h5 class="modal-title">Edit {{item.name}}</h5>
-      <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <form (ngSubmit)="updateItemForm(updateitemForm, item)" #updateitemForm="ngForm">
-
-        <div class="form-group">
-          <label for="UpdateName">Amount</label>
-          <input type="string" name="name" class="form-control" id="updateName" min="1" required
-                 aria-describedby="nameHelp" placeholder="Input name" [(ngModel)]="this.itemToUpdate.name">
-          <div *ngIf="submitted && updateitemForm.controls.amount.errors" class="error">
-            <small class="form-text text-warning" *ngIf="updateitemForm.controls.amount.errors.required"> Name is
-              required!
-            </small>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="inputAmount">Amount</label>
-          <input type="number" name="amount" class="form-control" id="updateAmount" min="1" required
-                 aria-describedby="amountHelp" placeholder="Add amount" [(ngModel)]="this.itemToUpdate.amount">
-          <div *ngIf="submitted && updateitemForm.controls.amount.errors" class="error">
-            <small class="form-text text-warning" *ngIf="updateitemForm.controls.amount.errors.required"> Amount is
-              required!
-            </small>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="inputNotes">Notes</label>
-          <textarea rows="3" name="notes" class="form-control" id="updateNotes"
-                    aria-describedby="notesHelp" placeholder="Add some notes" [(ngModel)]="this.itemToUpdate.notes"></textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="inputLocation">Location</label>
-          <select
-            class="form-control"
-            id="updateLocation"
-            name="location"
-            [(ngModel)]="this.itemToUpdate.locationTag">
-            <option [ngValue]="null">none</option>
-            <option value="fridge">fridge</option>
-            <option value="freezer">freezer</option>
-            <option value="shelf">shelf</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="inputExpDate">Expiration Date</label>
-          <input type="date" name="expDate" class="form-control" id="updateExpDate"
-                 aria-describedby="expDateHelp" placeholder="Add expiration Date" [(ngModel)]="this.itemToUpdate.expDate">
-        </div>
-
-        <div class="form-group">
-          <label for="inputUnitOfQuantity">Unit of Quantity</label>
-          <select
-            class="form-control"
-            id="updateUnitOfQuantity"
-            name="updateUnitOfQuantity"
-            required="true"
-            [(ngModel)]="this.itemToUpdate.quantity.id">
-            <option *ngFor="let myUoQ of unitsOfQuantity;" [ngValue]="myUoQ.id">{{myUoQ.name}}</option>
-          </select>
-          <div *ngIf="submitted && updateitemForm.controls.inputUnitOfQuantity.errors" class="error">
-            <small class="form-text text-warning" *ngIf="updateitemForm.controls.inputUnitOfQuantity.errors.required">Unit
-              of Quantity is required!
-            </small>
-          </div>
-        </div>
-
-        <button type="button" (click)="updateItemForm(updateitemForm, item); modal.dismiss('close')" id="update-msg" class="btn btn-success float-right">Update</button>
-
-      </form>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" id="close-update-modal-btn" (click)="modal.dismiss('close')">Close</button>
-    </div>
-  </ng-template>
-</div>
