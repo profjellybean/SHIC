@@ -101,6 +101,9 @@ public class RegisterServiceImpl implements RegisterService {
     public Double editMonthlyBudget(String userName, Double newBudget) {
         LOGGER.debug("Service: edit monthlyBudget {} of register of Group with user {}", userName, newBudget);
 
+        if (userName == null) {
+            throw new ValidationException("No User specified");
+        }
         if (newBudget == null) {
             throw new ValidationException("No Budget specified");
         }
@@ -111,6 +114,8 @@ public class RegisterServiceImpl implements RegisterService {
         if (registerId == null) {
             throw new NotFoundException("No register found for User " + userName);
         }
+        System.out.println("AAAAAAAAA REGISTERID " + registerId);
+        System.out.println("AAAAAAAAA ALL " + registerRepository.findAll());
         Optional<Register> registerOptional = registerRepository.findRegisterById(registerId);
         if (registerOptional.isPresent()) {
             Register register = registerOptional.get();

@@ -6,10 +6,12 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserLoginMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Bill;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Register;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 import at.ac.tuwien.sepm.groupphase.backend.repository.BillRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.RegisterRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitOfQuantityRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserGroupRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
@@ -49,6 +51,8 @@ public class TestDataGenerator {
     UserLoginMapper userLoginMapper;
     @Autowired
     BillRepository billRepository;
+    @Autowired
+    RegisterRepository registerRepository;
 
     public TestDataGenerator(RecipeDataGenerator recipeDataGenerator,
                                ShoppingListDataGenerator shoppingListDataGenerator,
@@ -128,6 +132,47 @@ public class TestDataGenerator {
         testGroup.setUser(users);
         userGroupRepository.saveAndFlush(testGroup);
 
+    }
+
+    public Long generateData_editMonthlyBudget_inRegister() {
+        LOGGER.debug("Generating Data for editing Monthly Budget");
+
+        UserRegistrationDto testUser = new UserRegistrationDto("testUser", "password", "test.user@email.com");
+
+        Register register = new Register(-1L, null, 0.0, 200.0);
+        register = registerRepository.saveAndFlush(register);
+
+        UserGroup testGroup = new UserGroup(null, null, register.getId(), new HashSet<ApplicationUser>());
+        testGroup = userGroupRepository.saveAndFlush(testGroup);
+
+        ApplicationUser testApplicationUser = userLoginMapper.dtoToEntity(testUser, null);
+        testApplicationUser.setCurrGroup(testGroup);
+        userRepository.saveAndFlush(testApplicationUser);
+
+        Set<ApplicationUser> users = testGroup.getUser();
+        users.add(testApplicationUser);
+        testGroup.setUser(users);
+        userGroupRepository.saveAndFlush(testGroup);
+
+        return register.getId();
+    }
+
+    public void generateData_generateUser_withGroup_withOnlyNullValues() {
+        LOGGER.debug("Generating Data for editing Monthly Budget");
+
+        UserRegistrationDto testUser = new UserRegistrationDto("testUser", "password", "test.user@email.com");
+
+        UserGroup testGroup = new UserGroup(null, null, null, new HashSet<ApplicationUser>());
+        testGroup = userGroupRepository.saveAndFlush(testGroup);
+
+        ApplicationUser testApplicationUser = userLoginMapper.dtoToEntity(testUser, null);
+        testApplicationUser.setCurrGroup(testGroup);
+        userRepository.saveAndFlush(testApplicationUser);
+
+        Set<ApplicationUser> users = testGroup.getUser();
+        users.add(testApplicationUser);
+        testGroup.setUser(users);
+        userGroupRepository.saveAndFlush(testGroup);
     }
 
 
