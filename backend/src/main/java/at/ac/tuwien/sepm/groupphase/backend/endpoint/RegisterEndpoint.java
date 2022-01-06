@@ -70,7 +70,11 @@ public class RegisterEndpoint {
             LOGGER.error("You are not logged-in");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You are not logged-in");
         }
-        return registerService.billSumOfCurrentMonth(authentication.getName());
+        try {
+            return registerService.billSumOfCurrentMonth(authentication.getName());
+        } catch (NotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        }
     }
 
     @Secured("ROLE_USER")
@@ -87,10 +91,10 @@ public class RegisterEndpoint {
             return registerService.editMonthlyBudget(authentication.getName(), budget);
         } catch (ValidationException e) {
             LOGGER.error(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         } catch (NotFoundException e) {
             LOGGER.error(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         }
     }
 

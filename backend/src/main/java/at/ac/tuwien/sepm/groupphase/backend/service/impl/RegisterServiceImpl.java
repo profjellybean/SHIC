@@ -3,10 +3,12 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Bill;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Register;
+import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.BillRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.RegisterRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UserGroupRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.RegisterService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
@@ -84,6 +86,9 @@ public class RegisterServiceImpl implements RegisterService {
         LOGGER.debug("Service: get sum of Bills of current month");
 
         Long registerId = userService.loadGroupRegisterIdByUsername(userName);
+        if (registerId == null) {
+            throw new NotFoundException("No register found for User " + userName);
+        }
         Double sum = billRepository.billSumOfCurrentMonth(registerId, LocalDate.now());
         if (sum == null) {
             return 0.0;
@@ -111,6 +116,7 @@ public class RegisterServiceImpl implements RegisterService {
             Register register = registerOptional.get();
             register.setMonthlyBudget(newBudget);
             registerRepository.save(register);
+            return newBudget;
         }
         throw new NotFoundException("No register found for User " + userName);
     }
