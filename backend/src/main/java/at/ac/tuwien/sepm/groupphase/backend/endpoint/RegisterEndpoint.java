@@ -67,6 +67,7 @@ public class RegisterEndpoint {
     public Double billSumOfCurrentMonth(Authentication authentication) {
         LOGGER.info("Endpoint: GET /api/v1/register/monthlysum/{}", authentication);
         if (authentication == null) {
+            LOGGER.error("You are not logged-in");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You are not logged-in");
         }
         return registerService.billSumOfCurrentMonth(authentication.getName());
@@ -79,13 +80,16 @@ public class RegisterEndpoint {
     public Double billSumOfCurrentMonth(Authentication authentication, @Param("budget") Double budget) {
         LOGGER.info("Endpoint: Edit /api/v1/register/monthlybudget/{}{}", authentication, budget);
         if (authentication == null) {
+            LOGGER.error("You are not logged-in");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You are not logged-in");
         }
         try {
             return registerService.editMonthlyBudget(authentication.getName(), budget);
         } catch (ValidationException e) {
+            LOGGER.error(e.getMessage());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         } catch (NotFoundException e) {
+            LOGGER.error(e.getMessage());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }

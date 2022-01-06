@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, TemplateRef} from '@angular/core';
 import {RegisterService} from '../../services/register.service';
 import {ActivatedRoute} from '@angular/router';
 import {Bill} from '../../dtos/bill';
@@ -9,6 +9,7 @@ import {Register} from '../../dtos/register';
 import jwt_decode from 'jwt-decode';
 import {AuthService} from '../../services/auth.service';
 import {UserService} from '../../services/user.service';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-register',
@@ -19,6 +20,7 @@ export class RegisterComponent implements OnInit {
 
   error = false;
   errorMessage = '';
+  submitted = false;
 
   register: Register = {
     id: null,
@@ -33,6 +35,7 @@ export class RegisterComponent implements OnInit {
   help: string;
   billId: number;
   monthlySum: number;
+  newMonthlyBudget: number;
 
   user: User = {
     // @ts-ignore
@@ -44,12 +47,20 @@ export class RegisterComponent implements OnInit {
   };
 
   constructor(private registerService: RegisterService, private billService: BillService, public route: ActivatedRoute,
-              private authService: AuthService, private userService: UserService) {
+              private authService: AuthService, private userService: UserService,
+              private modalService: NgbModal) {
   }
 
   ngOnInit(): void {
     this.getCurrentGroup();
     this.getMonthlySum();
+  }
+
+  /**
+   * Error flag will be deactivated, which clears the error message
+   */
+  vanishError() {
+    this.error = false;
   }
 
   getCurrentGroup(){
@@ -64,6 +75,21 @@ export class RegisterComponent implements OnInit {
       }
     });
   }
+
+  editBudgetForm(form) {
+    this.submitted = true;
+
+    if (form.valid) {
+      console.log('form edit monthly budget', this.newMonthlyBudget);
+      this.editMonthlyBudget(this.newMonthlyBudget);
+      //this.clearForm();
+    }
+  }
+
+  openEditBudgetModal(editBudgetModal: TemplateRef<any>) {
+    this.modalService.open(editBudgetModal, {ariaLabelledBy: 'modal-basic-title'});
+  }
+
 
   public confirmPayment(billId: number) {
 
@@ -106,6 +132,8 @@ export class RegisterComponent implements OnInit {
           this.billArray[this.counter] = bill;
           this.counter++;
         }
+
+        this.newMonthlyBudget = register.monthlyBudget;
       }, error: err => {
         this.defaultServiceErrorHandling(err);
       }
@@ -113,6 +141,7 @@ export class RegisterComponent implements OnInit {
   }
 
   private getMonthlySum() {
+    console.log('getting sum of all Bills this month');
     this.registerService.getMonthlySum().subscribe({
       next: data => {
         console.log('received sum of all Bills this month', data);
@@ -120,6 +149,21 @@ export class RegisterComponent implements OnInit {
       },
       error: error => {
         console.error(error.message);
+        this.defaultServiceErrorHandling(error);
+      }
+    });
+  }
+
+  private editMonthlyBudget(budget: number) {
+    console.log('edit monthly budget', budget);
+    this.registerService.editMonthlyBudget(budget).subscribe({
+      next: data => {
+        console.log('edited monthly budget', data);
+        this.register.monthlyBudget = data;
+      },
+      error: error => {
+        console.error(error.message);
+        this.defaultServiceErrorHandling(error);
       }
     });
   }

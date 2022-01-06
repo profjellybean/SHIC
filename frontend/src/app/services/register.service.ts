@@ -28,4 +28,9 @@ export class RegisterService {
     console.log('Loading monthly sum of Bills');
     return this.httpClient.get<number>(this.registerBaseUri + '/monthlysum');
   }
+
+  editMonthlyBudget(budget: number): Observable<number> {
+    console.log('Loading monthly sum of Bills');
+    return this.httpClient.put<number>(this.registerBaseUri + '/monthlybudget?budget=' + budget, budget);
+  }
 }
