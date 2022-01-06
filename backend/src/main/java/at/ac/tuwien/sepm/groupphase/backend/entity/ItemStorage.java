@@ -45,7 +45,7 @@ public class ItemStorage {
         this.id = id;
     }
 
-    public ItemStorage(String name, String notes, byte[] image, Date expDate, int amount, String locationTag,  UnitOfQuantity unitOfQuantity, Long storageId, Long shoppingListId) {
+    public ItemStorage(String name, String notes, byte[] image, Date expDate, int amount, String locationTag, UnitOfQuantity unitOfQuantity, Long storageId, Long shoppingListId) {
         this.name = name;
         this.notes = notes;
         this.image = image;

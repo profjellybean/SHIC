@@ -220,41 +220,14 @@ public class ShoppinglistEndpointTest implements TestData {
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
     }
 
-    //@Test
-    public void givenValidRecipe_notEnoughOfIngredient_whenPlanRecipe_then400() throws Exception {
-        testDataGenerator.generateData_planRecipe();
-        Recipe recipe = recipeRepository.findByName("Feta Cheese Noodles");
-
-        MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI)
-                .param("recipeId", recipe.getId().toString())
-                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
-            .andReturn();
-        MockHttpServletResponse response = mvcResult.getResponse();
-
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
-
-        List<ItemStorageDto> itemStorageDtos = Arrays.asList(objectMapper.readValue(response.getContentAsString(),
-            ItemStorageDto[].class));
-
-        assertEquals(1, itemStorageDtos.size());
-        ItemStorageDto itemStorageDto1 = itemStorageDtos.get(0);
-        assertAll(
-            () -> assertEquals("Feta", itemStorageDto1.getName()),
-            () -> assertEquals(2, itemStorageDto1.getAmount()),
-            () -> assertEquals("pieces", itemStorageDto1.getQuantity().getName()) // TODO
-        );
-    }
-
     @Test
-    public void givenValidRecipe_allIngredientsMissing_whenPlanRecipe_then400() throws Exception {
-        testDataGenerator.generateData_planRecipe();
-        Recipe recipe = recipeRepository.findByName("Potato Wedges");
+    public void givenValidRecipe_notEnoughOfIngredient_whenPlanRecipe_then400() throws Exception {
+        testDataGenerator.generateData_planRecipe_notEnoughOfIngredient();
+        Recipe recipe = recipeRepository.findByName("testRecipe");
 
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI)
                 .param("recipeId", recipe.getId().toString())
-                //.param("recipeId", "2")
-                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
@@ -263,26 +236,26 @@ public class ShoppinglistEndpointTest implements TestData {
 
         List<ItemStorageDto> itemStorageDtos = Arrays.asList(objectMapper.readValue(response.getContentAsString(),
             ItemStorageDto[].class));
-
         assertEquals(1, itemStorageDtos.size());
         ItemStorageDto itemStorageDto = itemStorageDtos.get(0);
+
         assertAll(
-            () -> assertEquals("Potatoes", itemStorageDto.getName()),
-            () -> assertEquals("any kind", itemStorageDto.getNotes()),
-            () -> assertEquals(400, itemStorageDto.getAmount()),
+            () -> assertEquals("testItem", itemStorageDto.getName()),
+            () -> assertEquals("item for tests", itemStorageDto.getNotes()),
+            () -> assertEquals(10, itemStorageDto.getAmount()),
             () -> assertEquals("g", itemStorageDto.getQuantity().getName())
         );
 
     }
 
-    //@Test
-    public void givenValidRecipe_allIngredientsPresent_whenPlanRecipe_then400() throws Exception {
-        testDataGenerator.generateData_planRecipe();
-        Recipe recipe = recipeRepository.findByName("Noodles with Pesto");
+    @Test
+    public void givenValidRecipe_allIngredientsMissing_whenPlanRecipe_then400() throws Exception {
+        testDataGenerator.generateData_planRecipe_allIngredientsMissing();
+        Recipe recipe = recipeRepository.findByName("testRecipe");
 
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI)
                 .param("recipeId", recipe.getId().toString())
-                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
@@ -291,7 +264,34 @@ public class ShoppinglistEndpointTest implements TestData {
 
         List<ItemStorageDto> itemStorageDtos = Arrays.asList(objectMapper.readValue(response.getContentAsString(),
             ItemStorageDto[].class));
+        assertEquals(1, itemStorageDtos.size());
+        ItemStorageDto itemStorageDto = itemStorageDtos.get(0);
 
+        assertAll(
+            () -> assertEquals("testItem", itemStorageDto.getName()),
+            () -> assertEquals("item for tests", itemStorageDto.getNotes()),
+            () -> assertEquals(10, itemStorageDto.getAmount()),
+            () -> assertEquals("g", itemStorageDto.getQuantity().getName())
+        );
+
+    }
+
+    @Test
+    public void givenValidRecipe_allIngredientsPresent_whenPlanRecipe_then400() throws Exception {
+        testDataGenerator.generateData_planRecipe_allIngredientsPresent();
+        Recipe recipe = recipeRepository.findByName("testRecipe");
+
+        MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI)
+                .param("recipeId", recipe.getId().toString())
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        List<ItemStorageDto> itemStorageDtos = Arrays.asList(objectMapper.readValue(response.getContentAsString(),
+            ItemStorageDto[].class));
         assertEquals(0, itemStorageDtos.size());
 
     }

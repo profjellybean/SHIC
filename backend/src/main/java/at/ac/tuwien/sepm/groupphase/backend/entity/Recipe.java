@@ -41,6 +41,15 @@ public class Recipe {
     @Enumerated(EnumType.STRING)
     private Set<RecipeCategory> categories;
 
+    public Recipe() { }
+
+    public Recipe(Long id, String name, String description, Set<ItemStorage> ingredients, Set<RecipeCategory> categories) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.ingredients = ingredients;
+        this.categories = categories;
+    }
 
     public Long getId() {
         return id;
