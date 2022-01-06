@@ -3,6 +3,8 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.IdStringCollectionDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.RegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.RegisterMapper;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.service.RegisterService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -63,10 +65,29 @@ public class RegisterEndpoint {
     @GetMapping(value = "/monthlysum")
     @Operation(summary = "Get sum of all Bills in this month", security = @SecurityRequirement(name = "apiKey"))
     public Double billSumOfCurrentMonth(Authentication authentication) {
-        LOGGER.info("Endpoint: GET /api/v1/register/{}", authentication);
+        LOGGER.info("Endpoint: GET /api/v1/register/monthlysum/{}", authentication);
         if (authentication == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You are not logged-in");
         }
         return registerService.billSumOfCurrentMonth(authentication.getName());
     }
+
+    @Secured("ROLE_USER")
+    //@PermitAll
+    @PutMapping(value = "/monthlybudget")
+    @Operation(summary = "Edit Monthly Budget", security = @SecurityRequirement(name = "apiKey"))
+    public Double billSumOfCurrentMonth(Authentication authentication, @Param("budget") Double budget) {
+        LOGGER.info("Endpoint: Edit /api/v1/register/monthlybudget/{}{}", authentication, budget);
+        if (authentication == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You are not logged-in");
+        }
+        try {
+            return registerService.editMonthlyBudget(authentication.getName(), budget);
+        } catch (ValidationException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch (NotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
 }

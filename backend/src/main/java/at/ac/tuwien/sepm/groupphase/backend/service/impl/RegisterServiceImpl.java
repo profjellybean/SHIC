@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Bill;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Register;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.BillRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.RegisterRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
@@ -11,8 +12,10 @@ import at.ac.tuwien.sepm.groupphase.backend.service.RegisterService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
@@ -64,6 +67,7 @@ public class RegisterServiceImpl implements RegisterService {
     }
 
     @Transactional
+    @Override
     public Register findOne(Long id) {
         LOGGER.debug("Service: find register by id {}", id);
         Optional<Register> register = registerRepository.findRegisterById(id);
@@ -75,6 +79,7 @@ public class RegisterServiceImpl implements RegisterService {
     }
 
     @Transactional
+    @Override
     public Double billSumOfCurrentMonth(String userName) {
         LOGGER.debug("Service: get sum of Bills of current month");
 
@@ -85,5 +90,30 @@ public class RegisterServiceImpl implements RegisterService {
         }
         return sum;
     }
+
+    @Transactional
+    @Override
+    public Double editMonthlyBudget(String userName, Double newBudget) {
+        LOGGER.debug("Service: edit monthlyBudget {} of register of Group with user {}", userName, newBudget);
+
+        if (newBudget == null) {
+            throw new ValidationException("No Budget specified");
+        }
+        if (newBudget < 0) {
+            throw new ValidationException("Monthly Budget has to be greater than 0");
+        }
+        Long registerId = userService.loadGroupRegisterIdByUsername(userName);
+        if (registerId == null) {
+            throw new NotFoundException("No register found for User " + userName);
+        }
+        Optional<Register> registerOptional = registerRepository.findRegisterById(registerId);
+        if (registerOptional.isPresent()) {
+            Register register = registerOptional.get();
+            register.setMonthlyBudget(newBudget);
+            registerRepository.save(register);
+        }
+        throw new NotFoundException("No register found for User " + userName);
+    }
+
 
 }

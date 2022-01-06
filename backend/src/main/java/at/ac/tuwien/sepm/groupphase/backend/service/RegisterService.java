@@ -22,4 +22,11 @@ public interface RegisterService {
      * @return sum
      */
     Double billSumOfCurrentMonth(String userName);
+
+    /**
+     * Edits Budget in Register of the Group in which the User currently is.
+     *
+     * @return new Budget
+     */
+    Double editMonthlyBudget(String userName, Double newBudget);
 }
