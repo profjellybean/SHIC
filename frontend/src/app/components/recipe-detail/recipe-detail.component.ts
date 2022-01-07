@@ -54,14 +54,21 @@ export class RecipeDetailComponent implements OnInit {
   }
 */
 
-
-
-
   planRecipe() {
     this.shoppingListService.planRecipe(this.recipe.id).subscribe({
       next: res => {
-        // TODO add success
-        //this.recipe.name = 'test successful: '+res.name;
+        this.items = res;
+      },
+      error: err => {
+        this.defaultServiceErrorHandling(err);
+      }
+    });
+
+  }
+
+  putRecipeOnShoppingList() {
+    this.shoppingListService.putRecipeOnShoppingList(this.recipe.id).subscribe({
+      next: res => {
         this.items = res;
       },
       error: err => {

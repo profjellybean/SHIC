@@ -51,6 +51,11 @@ export class ShoppingListService {
     return this.httpClient.put<Item[]>(this.shoppingListBaseUri+'/?recipeId='+id, id);
   }
 
+  putRecipeOnShoppingList(id: number): Observable<Item[]> {
+    console.log('service: put all ingredients to shoppinglist of recipe with id: ' + id);
+    return this.httpClient.put<Item[]>(this.shoppingListBaseUri+'/putAllIngredientsOfRecipe/?recipeId='+id, id);
+  }
+
   addItemToShoppingList(item: Item): Observable<Item>{
     console.log('service: add item to shoppinglist: ', item);
     console.log(this.shoppingListBaseUri + '/newItem');

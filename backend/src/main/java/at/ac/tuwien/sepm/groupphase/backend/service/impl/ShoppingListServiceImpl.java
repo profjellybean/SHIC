@@ -38,6 +38,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -149,7 +150,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         List<ItemStorage> returnList;
         returnList = compareItemSets(recipe.getIngredients(), storageItems);
 
-        String notes = "Ingredient required for recipe: " + recipe.getName();
+        String notes = "Ingredient for recipe: " + recipe.getName();
         for (ItemStorage item :
             returnList) {
             ItemStorage shoppingListItem = new ItemStorage(item);
@@ -223,7 +224,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
             throw new NotFoundException("ShoppingList could not be found");
         }
 
-        List<ItemStorage> ingredients = (List<ItemStorage>) recipe.getIngredients();
+        List<ItemStorage> ingredients = new ArrayList<>(recipe.getIngredients());
         for (ItemStorage item :
             ingredients) {
             saveItem(item, shoppingListId, null);
@@ -282,6 +283,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
             }
         }
 
+        itemStorage.setShoppingListId(id);
         shoppingListItemRepository.saveAndFlush(itemStorage);
         shoppingListItemRepository.insert(id, itemStorage.getId());
 

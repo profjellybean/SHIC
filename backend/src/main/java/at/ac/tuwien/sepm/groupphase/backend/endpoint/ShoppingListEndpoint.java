@@ -169,7 +169,7 @@ public class ShoppingListEndpoint {
 
     @Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.OK)
-    @PutMapping(value = "putAllIngredientsOfRecipe")
+    @PutMapping(value = "/putAllIngredientsOfRecipe")
     @Operation(summary = "Adds all ingredients of a recipe to shoppingList", security = @SecurityRequirement(name = "apiKey"))
     public List<ItemStorageDto> putRecipeOnShoppingList(Authentication authentication, @RequestParam(name = "recipeId") Long recipeId) {
         LOGGER.info("Endpoint: POST /api/v1/shoppinglist/putAllIngredientsOfRecipe/recipeId={},userName={}", recipeId, authentication.getName());
