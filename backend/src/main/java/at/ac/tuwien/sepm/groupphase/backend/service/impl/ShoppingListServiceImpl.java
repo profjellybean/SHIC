@@ -154,7 +154,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         for (ItemStorage item :
             returnList) {
             ItemStorage shoppingListItem = new ItemStorage(item);
-            shoppingListItem.setShoppingListId(shoppingListId);
+            //shoppingListItem.setShoppingListId(shoppingListId);
             shoppingListItem.setNotes(notes);
             saveItem(shoppingListItem, shoppingListId, null);
         }
@@ -224,9 +224,11 @@ public class ShoppingListServiceImpl implements ShoppingListService {
             throw new NotFoundException("ShoppingList could not be found");
         }
 
+        String notes = "Ingredient for recipe: " + recipe.getName();
         List<ItemStorage> ingredients = new ArrayList<>(recipe.getIngredients());
         for (ItemStorage item :
             ingredients) {
+            item.setNotes(notes);
             saveItem(item, shoppingListId, null);
         }
         return ingredients;
@@ -234,7 +236,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
 
 
     @Override
-    public ItemStorage saveItem(ItemStorage itemStorage, Long id, Long groupId) {
+    public ItemStorage saveItem(ItemStorage itemStorage, Long shoppingListId, Long groupId) {
         LOGGER.debug("save item in shopping list");
 
         if (itemStorage.getLocationTag() != null) {
@@ -250,9 +252,9 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         }
 
         // check if there is already an item with the same name in the shoppinglist
-        if (itemStorage.getShoppingListId() != null) {
+        if (shoppingListId != null) {
             List<ItemStorage> itemsInShoppingList = itemStorageRepository
-                .findAllByShoppingListId(itemStorage.getShoppingListId());
+                .findAllByShoppingListId(shoppingListId);
             Map<String, ItemStorage> storedItemsMap = itemsInShoppingList.stream()
                 .collect(Collectors.toMap(ItemStorage::getName, Function.identity()));
             ItemStorage storedItem = storedItemsMap.get(itemStorage.getName());
@@ -283,9 +285,9 @@ public class ShoppingListServiceImpl implements ShoppingListService {
             }
         }
 
-        itemStorage.setShoppingListId(id);
+        itemStorage.setShoppingListId(shoppingListId);
         shoppingListItemRepository.saveAndFlush(itemStorage);
-        shoppingListItemRepository.insert(id, itemStorage.getId());
+        shoppingListItemRepository.insert(shoppingListId, itemStorage.getId());
 
         return itemStorage;
 
