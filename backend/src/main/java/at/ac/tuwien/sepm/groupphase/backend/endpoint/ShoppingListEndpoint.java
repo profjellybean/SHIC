@@ -167,6 +167,24 @@ public class ShoppingListEndpoint {
         }
     }
 
+    @Secured("ROLE_USER")
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping(value = "putAllIngredientsOfRecipe")
+    @Operation(summary = "Adds all ingredients of a recipe to shoppingList", security = @SecurityRequirement(name = "apiKey"))
+    public List<ItemStorageDto> putRecipeOnShoppingList(Authentication authentication, @RequestParam(name = "recipeId") Long recipeId) {
+        LOGGER.info("Endpoint: POST /api/v1/shoppinglist/putAllIngredientsOfRecipe/recipeId={},userName={}", recipeId, authentication.getName());
+        try {
+            return itemStorageMapper.itemsStorageToItemsStorageDto(
+                shoppingListService.putRecipeOnShoppingList(recipeId, authentication.getName()));
+        } catch (ValidationException e) {
+            LOGGER.error("Error while putting all Ingredients of Recipe to ShoppingList", e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        } catch (NotFoundException e) {
+            LOGGER.error("Error while putting all Ingredients of Recipe to ShoppingList", e);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        }
+    }
+
     @GetMapping(value = "/items")
     @PermitAll
     @Operation(summary = "Get list of all items") //TODO: add security

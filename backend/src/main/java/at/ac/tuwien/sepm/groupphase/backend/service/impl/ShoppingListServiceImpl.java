@@ -149,15 +149,13 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         List<ItemStorage> returnList;
         returnList = compareItemSets(recipe.getIngredients(), storageItems);
 
-        Long groupId = userService.getGroupIdByUsername(userName);
         String notes = "Ingredient required for recipe: " + recipe.getName();
         for (ItemStorage item :
             returnList) {
             ItemStorage shoppingListItem = new ItemStorage(item);
             shoppingListItem.setShoppingListId(shoppingListId);
             shoppingListItem.setNotes(notes);
-            //shoppingListItem = itemStorageRepository.saveAndFlush(shoppingListItem);
-            saveItem(shoppingListItem, shoppingListId, groupId);
+            saveItem(shoppingListItem, shoppingListId, null);
         }
 
         return returnList;
@@ -205,6 +203,36 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     }
 
     @Override
+    @Transactional
+    public List<ItemStorage> putRecipeOnShoppingList(Long recipeId, String userName) {
+        LOGGER.debug("Service: put all Recipe-Ingredients {} on ShoppingList based on user {}.", recipeId, userName);
+
+        if (recipeId == null) {
+            throw new ValidationException("No Recipe specified");
+        }
+        Recipe recipe = recipeRepository.findRecipeById(recipeId);
+        if (recipe == null) {
+            throw new NotFoundException("Recipe could not be found");
+        }
+
+        if (userName == null) {
+            throw new ValidationException("User does not exist");
+        }
+        Long shoppingListId = userService.getPublicShoppingListIdByUsername(userName);
+        if (shoppingListId == null) {
+            throw new NotFoundException("ShoppingList could not be found");
+        }
+
+        List<ItemStorage> ingredients = (List<ItemStorage>) recipe.getIngredients();
+        for (ItemStorage item :
+            ingredients) {
+            saveItem(item, shoppingListId, null);
+        }
+        return ingredients;
+    }
+
+
+    @Override
     public ItemStorage saveItem(ItemStorage itemStorage, Long id, Long groupId) {
         LOGGER.debug("save item in shopping list");
 
@@ -216,7 +244,9 @@ public class ShoppingListServiceImpl implements ShoppingListService {
             }
         }
 
-        itemService.checkForBluePrintForGroup(itemStorage, groupId);
+        if (groupId != null) {
+            itemService.checkForBluePrintForGroup(itemStorage, groupId);
+        }
 
         // check if there is already an item with the same name in the shoppinglist
         if (itemStorage.getShoppingListId() != null) {

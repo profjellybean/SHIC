@@ -50,6 +50,17 @@ public interface ShoppingListService {
     List<ItemStorage> planRecipe(Long recipeId, String userName);
 
     /**
+     * puts all ingredients of a Recipe on the Shoppinglist.
+     * regardless of what`s in the Storage
+     *
+     * @param recipeId  id of recipe that user wants to cook
+     * @param userName of user who sent the request
+     *
+     * @return a List of all the ingredients that were added to the ShoppingList
+     */
+    List<ItemStorage> putRecipeOnShoppingList(Long recipeId, String userName);
+
+    /**
      * Insert a storage item to the shopping list.
      *
      * @param groupId is used to check if blueprint for this item exists in this group.
