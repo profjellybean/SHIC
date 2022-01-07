@@ -72,31 +72,22 @@ public class ShoppinglistEndpointTest implements TestData {
 
     @Autowired
     private MockMvc mockMvc;
-
     @Autowired
     ShoppingListRepository shoppingListRepository;
-
     @Autowired
     RecipeRepository recipeRepository;
-
     @Autowired
     private ObjectMapper objectMapper;
-
     @Autowired
     private ShoppingListMapper shoppingListMapper;
-
     @Autowired
     private ShoppingListService shoppingListService;
-
     @Autowired
     private JwtTokenizer jwtTokenizer;
-
     @Autowired
     private SecurityProperties securityProperties;
-
     @Autowired
     TestDataGenerator testDataGenerator;
-
     @Autowired
     private ItemStorageRepository itemStorageRepository;
     @Autowired
@@ -109,19 +100,11 @@ public class ShoppinglistEndpointTest implements TestData {
     UserLoginMapper userLoginMapper;
 
     ShoppingList shoppingList;
-
     Set<ItemStorage> itemList;
-
     ApplicationUser user;
-
     UserGroup userGroup;
-
     ItemStorage mushrooms;
-
     ItemStorage pasta;
-
-    //@Autowired
-    //RecipeDataGenerator recipeDataGenerator;
 
 
     @BeforeEach
@@ -152,8 +135,6 @@ public class ShoppinglistEndpointTest implements TestData {
         shoppingList.setItems(itemList);
         shoppingListRepository.saveAndFlush(shoppingList);
     }
-
-
 
     @AfterEach
     public void afterEach() {
@@ -295,6 +276,77 @@ public class ShoppinglistEndpointTest implements TestData {
         assertEquals(0, itemStorageDtos.size());
 
     }
+
+    @Test
+    public void givenValidRecipe_allIngredientsPresent_thenStillAddAllIngredients_whenPutRecipeOnShoppingList() throws Exception {
+        testDataGenerator.generateData_planRecipe_allIngredientsPresent();
+        Recipe recipe = recipeRepository.findByName("testRecipe");
+
+        MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI + "/putAllIngredientsOfRecipe")
+                .param("recipeId", recipe.getId().toString())
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        List<ItemStorageDto> itemStorageDtos = Arrays.asList(objectMapper.readValue(response.getContentAsString(),
+            ItemStorageDto[].class));
+        ItemStorageDto itemStorageDto = itemStorageDtos.get(0);
+        assertAll(
+            () -> assertEquals("testItem", itemStorageDto.getName()),
+            () -> assertEquals("Ingredient for recipe: testRecipe", itemStorageDto.getNotes()),
+            () -> assertEquals(10, itemStorageDto.getAmount()),
+            () -> assertEquals("g", itemStorageDto.getQuantity().getName())
+        );
+    }
+
+    @Test
+    public void givenNoRecipe_whenPutRecipeOnShoppingList_then400() throws Exception {
+
+        MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI + "/putAllIngredientsOfRecipe")
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            //.andDo(print())
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+
+    }
+
+    @Test
+    public void givenInvalidRecipeId_whenPutRecipeOnShoppingList_then404() throws Exception {
+
+        MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI + "/putAllIngredientsOfRecipe")
+                .param("recipeId", "-1")
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResponseStatusException))
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        //assertThrows(NotFoundException.class, () -> shoppingListService.planRecipe(-1L, ADMIN_USER));
+        assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
+    }
+
+    @Test
+    public void givenUserWithoutShoppingList_whenPutRecipeOnShoppingList_then404() throws Exception {
+        testDataGenerator.generateData_generateUser_withGroup_withOnlyNullValues();
+        Recipe recipe = new Recipe(-1L, "givenUserWithoutShoppingList_whenPutRecipeOnShoppingList_then404",
+            "recipe for tests", null, null);
+        recipe = recipeRepository.saveAndFlush(recipe);
+
+        MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI + "/putAllIngredientsOfRecipe")
+                .param("recipeId", recipe.getId().toString())
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
+            .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResponseStatusException))
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        //assertThrows(NotFoundException.class, () -> shoppingListService.planRecipe(-1L, ADMIN_USER));
+        assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
+    }
+
 
     //@Test
     public void workOffShoppingList_ShouldReturn_shoppingListWithEmptyItems() throws Exception {
