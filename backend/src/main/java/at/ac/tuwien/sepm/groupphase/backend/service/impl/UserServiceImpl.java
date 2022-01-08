@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegistrationDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UsernameDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ComplexUserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserLoginMapper;
@@ -206,6 +207,23 @@ public class UserServiceImpl implements UserService {
         customUserRepository.save(userMapperImpl.registrationDtoToApplicationUser(userRegistrationDto, shoppingListId, confirmationToken));
 
 
+    }
+
+    @Override
+    public void editUsername(String newUsername, String username) {
+        Optional<ApplicationUser> u = customUserRepository.findUserByUsername(newUsername);
+        if (u.isPresent()) {
+            throw new UsernameTakenException("This username is already taken");
+        }
+
+        Optional<ApplicationUser> userO = customUserRepository.findUserByUsername(username);
+        if (userO.isEmpty()) {
+            throw new NotFoundException("Username not foudnd");
+        }
+
+        ApplicationUser user = userO.get();
+        user.setUsername(newUsername);
+        customUserRepository.saveAndFlush(user);
     }
 
     @Override

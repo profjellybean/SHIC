@@ -12,12 +12,18 @@ import at.ac.tuwien.sepm.groupphase.backend.exception.EmailConfirmationException
 import at.ac.tuwien.sepm.groupphase.backend.exception.PasswordValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.UsernameTakenException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.EmailCooldownException;
+import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,6 +41,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.annotation.security.PermitAll;
 import java.lang.invoke.MethodHandles;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -45,15 +54,38 @@ public class UserEndpoint {
     private final ComplexUserMapper userMapperImpl;
     private final UserMapper userMapper;
     private final ComplexUserMapper complexUserMapper;
+    private final JwtTokenizer jwtTokenizer;
 
     @Autowired
-    public UserEndpoint(UserService userService, ComplexUserMapper userMapperImpl, UserMapper userMapper, ComplexUserMapper complexUserMapper) {
+    public UserEndpoint(UserService userService, ComplexUserMapper userMapperImpl, UserMapper userMapper, ComplexUserMapper complexUserMapper, JwtTokenizer jwtTokenizer) {
         this.userService = userService;
         this.userMapper = userMapper;
         this.userMapperImpl = userMapperImpl;
         this.complexUserMapper = complexUserMapper;
+        this.jwtTokenizer = jwtTokenizer;
     }
 
+
+    @PermitAll
+    @PutMapping
+    @ResponseStatus(HttpStatus.OK)
+    public String editUsername(@RequestBody UsernameDto newUsernameDto, Authentication authentication) {
+
+        try {
+            userService.editUsername(newUsernameDto.getUsername(), authentication.getName());
+
+
+
+            List<String> roles = new LinkedList<>();
+            return "{ \"token\":\"" + jwtTokenizer.getAuthToken(newUsernameDto.getUsername(), roles) + " \"}";
+        } catch (UsernameTakenException e) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+
+
+    }
 
     @PermitAll
     @PostMapping
@@ -137,9 +169,17 @@ public class UserEndpoint {
 
     @PermitAll
     @GetMapping
-    public UserDto getUserByUsername(@Param("username") String username) {
-        LOGGER.info("Endpoint: getUserByUsername({})", username);
-        return this.complexUserMapper.userToUserDto(this.userService.findApplicationUserByUsername(username));
+    public UserDto getUser(Authentication authentication) {
+        try {
+            if (authentication == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            }
+            LOGGER.info("Endpoint: getUserByUsername({})", authentication.getName());
+            return this.complexUserMapper.userToUserDto(this.userService.findApplicationUserByUsername(authentication.getName()));
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+
     }
 
     @PermitAll
