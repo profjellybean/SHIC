@@ -210,6 +210,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void editPicture(byte[] picture, String username) {
+        Optional<ApplicationUser> u = customUserRepository.findUserByUsername(username);
+        if (u.isEmpty()) {
+            throw new NotFoundException("Username not found");
+        }
+        ApplicationUser user = u.get();
+        user.setImage(picture);
+        customUserRepository.saveAndFlush(user);
+    }
+
+    @Override
     public void editUsername(String newUsername, String username) {
         Optional<ApplicationUser> u = customUserRepository.findUserByUsername(newUsername);
         if (u.isPresent()) {
@@ -218,7 +229,7 @@ public class UserServiceImpl implements UserService {
 
         Optional<ApplicationUser> userO = customUserRepository.findUserByUsername(username);
         if (userO.isEmpty()) {
-            throw new NotFoundException("Username not foudnd");
+            throw new NotFoundException("Username not found");
         }
 
         ApplicationUser user = userO.get();

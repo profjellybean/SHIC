@@ -105,6 +105,8 @@ public interface UserService extends UserDetailsService {
 
     void createUser(UserRegistrationDto userRegistrationDto, Long confirmationToken);
 
+    void editPicture(byte[] picture, String username);
+
     void editUsername(String newUsername, String username);
 
     Long loadGroupStorageByUsername(String username);

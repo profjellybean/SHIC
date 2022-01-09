@@ -97,6 +97,7 @@ public class UserDataGenerator {
             UserRegistrationDto admin = new UserRegistrationDto("admin", "password", "admin@email.com");
             shoppingListId = shoppingListRepository.saveAndFlush(ShoppingList.ShoppingListBuilder.aShoppingList().withName("Your private shopping list").build()).getId();
             applicationUser = userRepository.findUserByUsername(admin.getUsername());
+
             if (applicationUser.isEmpty()) {
                 ApplicationUser u = userLoginMapper.dtoToEntity(admin, shoppingListId);
                 u.setCurrGroup(group);
