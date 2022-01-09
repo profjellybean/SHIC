@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
+import at.ac.tuwien.sepm.groupphase.backend.entity.LocationClass;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
 
 import java.util.List;
@@ -48,7 +49,6 @@ public interface StorageService {
      * @param itemStorage to search for
      * @return a list of the items or none
      */
-
     List<ItemStorage> searchItem(ItemStorage itemStorage);
 
     /**
@@ -57,7 +57,6 @@ public interface StorageService {
      * @param id the id of the storage.
      * @return a list of all the items
      */
-
     List<ItemStorage> getAll(Long id);
 
     /**
@@ -66,7 +65,6 @@ public interface StorageService {
      * @param id the id of the storage
      * @return the id
      */
-
     Long findStorageById(Long id);
 
     /**
@@ -101,4 +99,38 @@ public interface StorageService {
      * Gets all units of quantity.
      */
     List<UnitOfQuantity> getAllUnitOfQuantity();
+
+    /**
+     * Gets all locations.
+     *
+     * @return a list of all the locations
+     */
+    List<LocationClass> getAllLocations();
+
+    /**
+     * Find all locations by storageId.
+     *
+     * @return a list of all the locations with correct storageId
+     */
+    List<LocationClass> getAllLocationsByStorageId(Long storageId);
+
+    /**
+     * Find all locations by name.
+     *
+     * @return a list of all the locations with correct name
+     */
+    List<LocationClass> getAllLocationsByName(String name);
+
+    /**
+     * Find all locations by name and storageId.
+     *
+     * @return a list of all the locations with correct name and storageId
+     */
+    List<LocationClass> getAllLocationsByNameAndStorageId(String name, Long storageId);
+
+    /**
+     * saves a location.
+     *
+     */
+    void saveLocation(LocationClass locationClass);
 }

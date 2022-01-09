@@ -1,20 +1,23 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.LocationClass;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Storage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Storage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitsRelation;
-import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
+
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.StorageItemStorageRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.LocationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.UnitOfQuantityRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitsRelationRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.StorageItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserGroupRepository;
+
+import at.ac.tuwien.sepm.groupphase.backend.repository.UnitOfQuantityRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.ItemService;
 import at.ac.tuwien.sepm.groupphase.backend.service.StorageService;
 import org.slf4j.Logger;
@@ -41,13 +44,17 @@ public class StorageServiceImpl implements StorageService {
     private final StorageItemStorageRepository storageItemStorageRepository;
     private final UserGroupRepository userGroupRepository;
     private final ItemService itemService;
+    private final LocationRepository locationRepository;
 
     @Autowired
-    public StorageServiceImpl(StorageRepository storageRepository, ItemStorageRepository itemStorageRepository,
+    public StorageServiceImpl(StorageRepository storageRepository,
+                              ItemStorageRepository itemStorageRepository,
                               UnitOfQuantityRepository unitOfQuantityRepository,
                               UnitsRelationRepository unitsRelationRepository,
                               StorageItemStorageRepository storageItemStorageRepository,
-                              UserGroupRepository userGroupRepository, ItemService itemService) {
+                              UserGroupRepository userGroupRepository,
+                              ItemService itemService,
+                              LocationRepository locationRepository) {
         this.storageRepository = storageRepository;
         this.itemStorageRepository = itemStorageRepository;
         this.unitOfQuantityRepository = unitOfQuantityRepository;
@@ -55,6 +62,7 @@ public class StorageServiceImpl implements StorageService {
         this.storageItemStorageRepository = storageItemStorageRepository;
         this.userGroupRepository = userGroupRepository;
         this.itemService = itemService;
+        this.locationRepository = locationRepository;
     }
 
     @Override
@@ -192,6 +200,32 @@ public class StorageServiceImpl implements StorageService {
     public List<UnitOfQuantity> getAllUnitOfQuantity() {
         LOGGER.debug("Getting all units of quantity");
         return unitOfQuantityRepository.findAll();
+    }
+
+    @Override
+    public List<LocationClass> getAllLocations() {
+        return locationRepository.findAll();
+    }
+
+    @Override
+    public List<LocationClass> getAllLocationsByStorageId(Long storageId) {
+        return locationRepository.findAllByStorageId(storageId);
+    }
+
+    @Override
+    public List<LocationClass> getAllLocationsByName(String name) {
+        return locationRepository.findAllByName(name);
+    }
+
+    @Override
+    public List<LocationClass> getAllLocationsByNameAndStorageId(String name, Long storageId) {
+        return locationRepository.findAllByNameAndStorageId(name, storageId);
+    }
+
+
+    @Override
+    public void saveLocation(LocationClass locationClass) {
+        locationRepository.saveAndFlush(locationClass);
     }
 
     @Override
