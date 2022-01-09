@@ -17,15 +17,17 @@ public class RecipeDto {
 
     private Set<RecipeCategory> categories;
 
+    private Long groupId;
+
     public RecipeDto() { }
 
-    public RecipeDto(Long id, String name, String description,
-                     Set<ItemStorageDto> ingredients, Set<RecipeCategory> categories) {
+    public RecipeDto(Long id, String name, String description, Set<ItemStorageDto> ingredients, Set<RecipeCategory> categories, Long groupId) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.ingredients = ingredients;
         this.categories = categories;
+        this.groupId = groupId;
     }
 
     public Long getId() {
@@ -68,6 +70,14 @@ public class RecipeDto {
         this.categories = categories;
     }
 
+    public Long getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -77,13 +87,17 @@ public class RecipeDto {
             return false;
         }
         RecipeDto recipeDto = (RecipeDto) o;
-        return Objects.equals(id, recipeDto.id) && Objects.equals(name, recipeDto.name)
-            && Objects.equals(description, recipeDto.description) && Objects.equals(ingredients, recipeDto.ingredients) && Objects.equals(categories, recipeDto.categories);
+        return Objects.equals(id, recipeDto.id)
+            && Objects.equals(name, recipeDto.name)
+            && Objects.equals(description, recipeDto.description)
+            && Objects.equals(ingredients, recipeDto.ingredients)
+            && Objects.equals(categories, recipeDto.categories)
+            && Objects.equals(groupId, recipeDto.groupId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, ingredients, categories);
+        return Objects.hash(id, name, description, ingredients, categories, groupId);
     }
 
     @Override
@@ -99,6 +113,8 @@ public class RecipeDto {
             ", ingredients=" + ingredients
             +
             ", categories=" + categories
+            +
+            ", groupId=" + groupId
             +
             '}';
     }

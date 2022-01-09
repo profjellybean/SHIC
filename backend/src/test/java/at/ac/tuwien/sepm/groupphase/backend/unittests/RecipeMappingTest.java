@@ -28,7 +28,7 @@ public class RecipeMappingTest implements TestData {
         .withCategories(TEST_RECIPE_CATEGORIES)
         .build();
     private final RecipeDto recipeDto = new RecipeDto(null, TEST_RECIPE_NAME, TEST_RECIPE_DESCRIPTION,
-        null, TEST_RECIPE_CATEGORIES);
+        null, TEST_RECIPE_CATEGORIES, null);
 
     @Autowired
     private RecipeMapper recipeMapper;
