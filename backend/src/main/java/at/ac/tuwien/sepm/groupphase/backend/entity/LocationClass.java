@@ -26,6 +26,11 @@ public class LocationClass {
 
     }
 
+    public LocationClass(String name, Long storageId) {
+        this.name = name;
+        this.storageId = storageId;
+    }
+
     public LocationClass(Long id, String name, Long storageId) {
         this.id = id;
         this.name = name;

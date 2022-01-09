@@ -195,4 +195,18 @@ public class StorageEndpoint {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
+
+    @PostMapping(value = "/location")
+    @PermitAll
+    @Operation(summary = "save location") //TODO: add security
+    public void saveLocation(@Valid @RequestBody LocationDto locationDto) {
+        try {
+            LOGGER.info("saveLocation{}, endpoint", locationDto);
+            storageService.saveLocation(locationMapper.locationDtoToLocation(locationDto));
+        } catch (NotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
 }

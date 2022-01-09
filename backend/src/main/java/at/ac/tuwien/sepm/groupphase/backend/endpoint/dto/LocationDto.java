@@ -13,6 +13,14 @@ public class LocationDto {
     @NotNull
     private Long storageId;
 
+    public LocationDto() {
+
+    }
+
+    public LocationDto(String name, Long storageId) {
+        this.name = name;
+        this.storageId = storageId;
+    }
 
     public LocationDto(Long id, String name, Long storageId) {
         this.id = id;
