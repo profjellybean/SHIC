@@ -23,6 +23,8 @@ export class RecipeComponent implements OnInit {
   nullRecipe: Recipe = {name: null, id: null, categories: null, description: null, ingredients: this.ingredientsToAdd,
   groupId: null};
 
+  popup= false;
+  deleteRecipe: Recipe;
   recipeToAdd = this.nullRecipe;
   error = false;
   errorMessage = '';
@@ -79,6 +81,10 @@ export class RecipeComponent implements OnInit {
 
   openAddModal(recipeAddModal: TemplateRef<any>) {
     this.modalService.open(recipeAddModal, {ariaLabelledBy: 'modal-basic-title'});
+  }
+
+  openDeleteModal(recipeDeleteModal: TemplateRef<any>) {
+    this.modalService.open(recipeDeleteModal, {ariaLabelledBy: 'modal-basic-title'});
   }
 
   addRecipeForm(form) {
