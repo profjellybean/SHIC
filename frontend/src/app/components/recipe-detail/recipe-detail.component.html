@@ -12,8 +12,10 @@
     <strong>Details</strong>
   </div>
   <div class="card-body">
-    <p class="card-text">Details of recipe: <strong>{{recipe.id}}</strong></p>
-    <p class="card-text"><strong>{{recipe.name}}</strong></p>
+    <p class="card-text">Details of recipe: <strong>{{recipe.id}}</strong> </p>
+    <!-- <p class="card-text"><h2><strong>{{recipe.name}}</strong></h2></p> -->
+    <h2><strong>{{recipe.name}}</strong></h2>
+    <p class="card-text"> for <input [(ngModel)]="numberOfPeople"/> people </p>
     <p class="card-text"><strong>Description:</strong> {{recipe.description}}</p>
     <p class="card-text"><strong>Ingredients:</strong> </p>
     <div class="col-xl-3 col-lg-4 p-2" *ngFor="let ingredient of recipe.ingredients">

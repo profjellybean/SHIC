@@ -155,7 +155,7 @@ public class ShoppingListEndpoint {
     @Operation(summary = "Plan a recipe: adds missing ingredients to shoppingList", security = @SecurityRequirement(name = "apiKey"))
     public List<ItemStorageDto> planRecipe(Authentication authentication,
                                            @RequestParam(name = "recipeId") Long recipeId, @RequestParam(name = "people") Long people) {
-        LOGGER.info("Endpoint: POST /api/v1/shoppinglist/recipeId={}, people{},userName={}", recipeId, people, authentication.getName());
+        LOGGER.info("Endpoint: POST /api/v1/shoppinglist/recipeId={}, people={},userName={}", recipeId, people, authentication.getName());
         try {
             return itemStorageMapper.itemsStorageToItemsStorageDto(
                 shoppingListService.planRecipe(recipeId, authentication.getName(), people));
@@ -174,7 +174,7 @@ public class ShoppingListEndpoint {
     @Operation(summary = "Adds all ingredients of a recipe to shoppingList", security = @SecurityRequirement(name = "apiKey"))
     public List<ItemStorageDto> putRecipeOnShoppingList(Authentication authentication,
                                                         @RequestParam(name = "recipeId") Long recipeId, @RequestParam(name = "people") Long people) {
-        LOGGER.info("Endpoint: POST /api/v1/shoppinglist/putAllIngredientsOfRecipe/recipeId={},people{},userName={}", recipeId, people, authentication.getName());
+        LOGGER.info("Endpoint: POST /api/v1/shoppinglist/putAllIngredientsOfRecipe/recipeId={},people={},userName={}", recipeId, people, authentication.getName());
         try {
             return itemStorageMapper.itemsStorageToItemsStorageDto(
                 shoppingListService.putRecipeOnShoppingList(recipeId, authentication.getName(), people));
