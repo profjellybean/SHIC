@@ -48,7 +48,7 @@ public interface ShoppingListService {
      * @throws ValidationException if the recipe or values in User are invalid
      * @throws NotFoundException if the recipe or the items in storage can not be found
      */
-    List<ItemStorage> planRecipe(Long recipeId, String userName, Long people);
+    List<ItemStorage> planRecipe(Long recipeId, String userName, Integer people);
 
     /**
      * puts all ingredients of a Recipe on the Shoppinglist.
@@ -60,7 +60,7 @@ public interface ShoppingListService {
      *
      * @return a List of all the ingredients that were added to the ShoppingList
      */
-    List<ItemStorage> putRecipeOnShoppingList(Long recipeId, String userName, Long people);
+    List<ItemStorage> putRecipeOnShoppingList(Long recipeId, String userName, Integer people);
 
     /**
      * Insert a storage item to the shopping list.

@@ -39,6 +39,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -102,7 +103,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
 
     @Override
     @Transactional
-    public List<ItemStorage> planRecipe(Long recipeId, String userName, Long people) {
+    public List<ItemStorage> planRecipe(Long recipeId, String userName, Integer people) {
         LOGGER.debug("Service: plan Recipe {} based on user {}.", recipeId, userName);
 
         // validation
@@ -150,13 +151,15 @@ public class ShoppingListServiceImpl implements ShoppingListService {
             throw new NotFoundException("Could not find storage with id " + storageId, e);
         }
 
-        Set<ItemStorage> ingredients = recipe.getIngredients();
+        Set<ItemStorage> calculatedIngredients = new HashSet<>();
         for (ItemStorage item :
-            ingredients) {
-            item.setAmount((int) (item.getAmount() * people));
+            recipe.getIngredients()) {
+            ItemStorage calculatedItem = new ItemStorage(item);
+            calculatedItem.setAmount(item.getAmount() * people);
+            calculatedIngredients.add(calculatedItem);
         }
         List<ItemStorage> returnList;
-        returnList = compareItemSets(ingredients, storageItems);
+        returnList = compareItemSets(calculatedIngredients, storageItems);
 
         String notes = "Ingredient for recipe: " + recipe.getName();
         for (ItemStorage item :
@@ -165,7 +168,6 @@ public class ShoppingListServiceImpl implements ShoppingListService {
             shoppingListItem.setNotes(notes);
             saveItem(shoppingListItem, shoppingListId, null);
         }
-
         return returnList;
     }
 
@@ -212,7 +214,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
 
     @Override
     @Transactional
-    public List<ItemStorage> putRecipeOnShoppingList(Long recipeId, String userName, Long people) {
+    public List<ItemStorage> putRecipeOnShoppingList(Long recipeId, String userName, Integer people) {
         LOGGER.debug("Service: put all Recipe-Ingredients {} on ShoppingList based on user {}.", recipeId, userName);
 
         // validation
@@ -234,15 +236,17 @@ public class ShoppingListServiceImpl implements ShoppingListService {
             throw new ValidationException("Number of people has to be 1 or bigger");
         }
 
+        List<ItemStorage> returnList = new ArrayList<>();
         String notes = "Ingredient for recipe: " + recipe.getName();
-        List<ItemStorage> ingredients = new ArrayList<>(recipe.getIngredients());
         for (ItemStorage item :
-            ingredients) {
-            item.setNotes(notes);
-            item.setAmount((int) (item.getAmount() * people));
-            saveItem(item, shoppingListId, null);
+            recipe.getIngredients()) {
+            ItemStorage itemToSave = new ItemStorage(item);
+            itemToSave.setNotes(notes);
+            itemToSave.setAmount(item.getAmount() * people);
+            saveItem(itemToSave, shoppingListId, null);
+            returnList.add(itemToSave);
         }
-        return ingredients;
+        return returnList;
     }
 
 
@@ -316,7 +320,6 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         LOGGER.debug("Find all items");
         return itemRepository.findAll();
     }
-
 
     @Override
     public List<ItemStorage> findAllByShoppingListId(Long storageId) {
