@@ -125,6 +125,9 @@
       <td>{{recipe.name}}</td>
       <td>{{recipe.description}}</td>
       <td>
+        <button type="button" class = "btn btn-secondary btn-sm mr-4" (click)="delete(recipe)">delete</button>
+      </td>
+      <td>
         <button type="button" class = "btn btn-secondary btn-sm mr-4" [routerLink]="['/recipe/', recipe.id]">Details</button>
       </td>
       <td>

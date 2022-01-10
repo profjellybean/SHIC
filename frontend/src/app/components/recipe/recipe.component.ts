@@ -94,6 +94,12 @@ export class RecipeComponent implements OnInit {
     }
   }
 
+  delete(recipe: Recipe) {
+    console.log('deleteRecipe', recipe.id);
+    this.recipes = this.recipes.filter(r => r !== recipe);
+    this.recipeService.deleteRecipeById(recipe.id).subscribe();
+  }
+
   addRecipe(recipe: Recipe) {
     console.log('addRecipe', this.recipeToAdd);
     this.recipeToAdd.groupId = this.user.currGroup.id;
