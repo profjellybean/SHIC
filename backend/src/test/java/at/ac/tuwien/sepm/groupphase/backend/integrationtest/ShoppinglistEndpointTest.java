@@ -192,6 +192,7 @@ public class ShoppinglistEndpointTest implements TestData {
     public void givenInvalidRecipeId_whenPlanRecipe_then404() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI)
                 .param("recipeId", "-1")
+                .param("people", "1")
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResponseStatusException))
             .andReturn();
@@ -208,6 +209,7 @@ public class ShoppinglistEndpointTest implements TestData {
 
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI)
                 .param("recipeId", recipe.getId().toString())
+                .param("people", "1")
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -236,6 +238,7 @@ public class ShoppinglistEndpointTest implements TestData {
 
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI)
                 .param("recipeId", recipe.getId().toString())
+                .param("people", "1")
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -264,6 +267,7 @@ public class ShoppinglistEndpointTest implements TestData {
 
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI)
                 .param("recipeId", recipe.getId().toString())
+                .param("people", "1")
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -284,6 +288,7 @@ public class ShoppinglistEndpointTest implements TestData {
 
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI + "/putAllIngredientsOfRecipe")
                 .param("recipeId", recipe.getId().toString())
+                .param("people", "1")
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -307,7 +312,6 @@ public class ShoppinglistEndpointTest implements TestData {
 
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI + "/putAllIngredientsOfRecipe")
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
-            //.andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
@@ -320,12 +324,12 @@ public class ShoppinglistEndpointTest implements TestData {
 
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI + "/putAllIngredientsOfRecipe")
                 .param("recipeId", "-1")
+                .param("people", "1")
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResponseStatusException))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
-        //assertThrows(NotFoundException.class, () -> shoppingListService.planRecipe(-1L, ADMIN_USER));
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
     }
 
@@ -338,6 +342,7 @@ public class ShoppinglistEndpointTest implements TestData {
 
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI + "/putAllIngredientsOfRecipe")
                 .param("recipeId", recipe.getId().toString())
+                .param("people", "1")
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
             .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResponseStatusException))
             .andReturn();

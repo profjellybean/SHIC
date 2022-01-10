@@ -41,13 +41,14 @@ public interface ShoppingListService {
      *
      * @param recipeId  id of recipe that user wants to cook
      * @param userName of user who sent the request
+     * @param people number of people the Recipe is planned for
      *
      * @return a List of all the ingredients that were added to the ShoppingList
      *
      * @throws ValidationException if the recipe or values in User are invalid
      * @throws NotFoundException if the recipe or the items in storage can not be found
      */
-    List<ItemStorage> planRecipe(Long recipeId, String userName);
+    List<ItemStorage> planRecipe(Long recipeId, String userName, Long people);
 
     /**
      * puts all ingredients of a Recipe on the Shoppinglist.
@@ -55,10 +56,11 @@ public interface ShoppingListService {
      *
      * @param recipeId  id of recipe that user wants to cook
      * @param userName of user who sent the request
+     * @param people number of people the Recipe is planned for
      *
      * @return a List of all the ingredients that were added to the ShoppingList
      */
-    List<ItemStorage> putRecipeOnShoppingList(Long recipeId, String userName);
+    List<ItemStorage> putRecipeOnShoppingList(Long recipeId, String userName, Long people);
 
     /**
      * Insert a storage item to the shopping list.
