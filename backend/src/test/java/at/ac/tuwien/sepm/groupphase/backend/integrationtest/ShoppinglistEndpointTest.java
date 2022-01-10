@@ -201,7 +201,6 @@ public class ShoppinglistEndpointTest implements TestData {
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
-        //assertThrows(NotFoundException.class, () -> shoppingListService.planRecipe(-1L, ADMIN_USER));
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
     }
 
@@ -442,6 +441,7 @@ public class ShoppinglistEndpointTest implements TestData {
 
         List<ItemStorageDto> itemStorageDtos = Arrays.asList(objectMapper.readValue(response.getContentAsString(),
             ItemStorageDto[].class));
+        assertEquals(1, itemStorageDtos.size());
         ItemStorageDto itemStorageDto = itemStorageDtos.get(0);
         assertAll(
             () -> assertEquals("testItem", itemStorageDto.getName()),
@@ -469,6 +469,7 @@ public class ShoppinglistEndpointTest implements TestData {
 
         List<ItemStorageDto> itemStorageDtos = Arrays.asList(objectMapper.readValue(response.getContentAsString(),
             ItemStorageDto[].class));
+        assertEquals(1, itemStorageDtos.size());
         ItemStorageDto itemStorageDto = itemStorageDtos.get(0);
         assertAll(
             () -> assertEquals("testItem", itemStorageDto.getName()),
@@ -493,7 +494,6 @@ public class ShoppinglistEndpointTest implements TestData {
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
-        //assertThrows(NotFoundException.class, () -> shoppingListService.planRecipe(-1L, ADMIN_USER));
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
     }
 

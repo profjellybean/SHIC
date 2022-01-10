@@ -134,8 +134,6 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         }
 
         Recipe recipe;
-        List<ItemStorage> storageItems;
-
         try {
             recipe = recipeRepository.findRecipeById(recipeId);
             if (recipe == null) {
@@ -145,6 +143,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
             throw new NotFoundException("Could not find recipe with id " + recipeId, e);
         }
 
+        List<ItemStorage> storageItems;
         try {
             storageItems = itemStorageRepository.findAllByStorageId(storageId);
             if (storageItems == null) {
@@ -161,8 +160,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
             calculatedItem.setAmount(item.getAmount() * numberOfPeople);
             calculatedIngredients.add(calculatedItem);
         }
-        List<ItemStorage> returnList;
-        returnList = compareItemSets(calculatedIngredients, storageItems);
+        List<ItemStorage> returnList = compareItemSets(calculatedIngredients, storageItems);
 
         String notes = "Ingredient for recipe: " + recipe.getName();
         for (ItemStorage item :
