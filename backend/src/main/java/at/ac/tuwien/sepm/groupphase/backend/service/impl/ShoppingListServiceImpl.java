@@ -129,6 +129,9 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         if (people == null || people < 1) {
             throw new ValidationException("Number of people has to be 1 or bigger");
         }
+        if (people > 100) {
+            throw new ValidationException("Number of people can not be bigger than 100");
+        }
 
         Recipe recipe;
         List<ItemStorage> storageItems;
@@ -234,6 +237,9 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         }
         if (people == null || people < 1) {
             throw new ValidationException("Number of people has to be 1 or bigger");
+        }
+        if (people > 100) {
+            throw new ValidationException("Number of people can not be bigger than 100");
         }
 
         List<ItemStorage> returnList = new ArrayList<>();

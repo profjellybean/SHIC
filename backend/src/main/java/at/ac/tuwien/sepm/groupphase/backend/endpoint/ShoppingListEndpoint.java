@@ -160,10 +160,10 @@ public class ShoppingListEndpoint {
             return itemStorageMapper.itemsStorageToItemsStorageDto(
                 shoppingListService.planRecipe(recipeId, authentication.getName(), people));
         } catch (ValidationException e) {
-            LOGGER.error("Error during planning recipe", e);
+            LOGGER.error("Error during planning recipe: {}", e.getMessage());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         } catch (NotFoundException e) {
-            LOGGER.error("Error during planning recipe", e);
+            LOGGER.error("Error during planning recipe: {}", e.getMessage());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         }
     }
@@ -179,10 +179,10 @@ public class ShoppingListEndpoint {
             return itemStorageMapper.itemsStorageToItemsStorageDto(
                 shoppingListService.putRecipeOnShoppingList(recipeId, authentication.getName(), people));
         } catch (ValidationException e) {
-            LOGGER.error("Error while putting all Ingredients of Recipe to ShoppingList", e);
+            LOGGER.error("Error while putting all Ingredients of Recipe to ShoppingList: {}", e.getMessage());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         } catch (NotFoundException e) {
-            LOGGER.error("Error while putting all Ingredients of Recipe to ShoppingList", e);
+            LOGGER.error("Error while putting all Ingredients of Recipe to ShoppingList: {}", e.getMessage());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         }
     }
