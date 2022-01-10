@@ -39,7 +39,7 @@
   </button>
   <p></p>
   <div>
-  Add a new user to your group {{groupId.valueOf()}}: <p></p>
+  Add a new user to your group {{this.currGroup.name}}: <p></p>
   <input *ngIf="groupId!==null && groupId !== undefined" [(ngModel)]="userToAdd" placeholder="enter username">&nbsp;
   <button type="button" class="btn btn-secondary btn-sm mr-4" *ngIf="groupId!==null && groupId !== undefined" (click)="addUser()">add user</button>
   </div>
@@ -48,7 +48,7 @@
 <table class="table table-striped">
   <thead class="thead-dark">
   <tr>
-    <th>Users currently in this group</th>
+    <th>Users currently in group {{this.currGroup.name}}<th>
   </tr>
   </thead>
   <tbody>
