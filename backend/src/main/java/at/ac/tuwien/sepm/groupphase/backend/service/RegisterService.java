@@ -2,6 +2,8 @@ package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Register;
 
+import java.time.LocalDate;
+
 
 public interface RegisterService {
     /**
@@ -29,4 +31,19 @@ public interface RegisterService {
      * @return new Budget
      */
     Double editMonthlyBudget(String userName, Double newBudget);
+
+    /**
+     * Adds up the sums of all Bills that were paid in a specific month.
+     *
+     * @return sum
+     */
+    Double billSumOfMonthAndYear(String userName, LocalDate date);
+
+    /**
+     * Adds up the sums of all Bills that were paid in a specific year.
+     *
+     * @return sum
+     */
+    Double billSumOfYear(String userName, LocalDate date);
+
 }

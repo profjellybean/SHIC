@@ -5,6 +5,7 @@ import {UserService} from '../../services/user.service';
 import jwt_decode from 'jwt-decode';
 import {User} from '../../dtos/user';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {Group} from '../../dtos/group';
 
 
 @Component({
@@ -18,6 +19,7 @@ export class UserComponent implements OnInit {
   error: string;
   success: string;
   users: User[];
+  currGroup: Group;
 
 
   user: User = {
@@ -55,6 +57,7 @@ export class UserComponent implements OnInit {
       next: data => {
         console.log('received items11', data);
         this.user = data;
+        this.currGroup = data.currGroup;
         this.groupId = this.user.currGroup.id;
         this.getAllUsers(this.groupId);
         console.log(this.groupId);

@@ -89,7 +89,7 @@ public class RegisterServiceImpl implements RegisterService {
         if (registerId == null) {
             throw new NotFoundException("No register found for User " + userName);
         }
-        Double sum = billRepository.billSumOfCurrentMonth(registerId, LocalDate.now());
+        Double sum = billRepository.billSumOfSpecificMonth(registerId, LocalDate.now());
         if (sum == null) {
             return 0.0;
         }
@@ -125,6 +125,31 @@ public class RegisterServiceImpl implements RegisterService {
         }
         throw new NotFoundException("No register found for User " + userName);
     }
+
+    @Transactional
+    @Override
+    public Double billSumOfMonthAndYear(String userName, LocalDate date) {
+        LOGGER.debug("Service: get sum of Bills of specific month");
+        Long registerId = userService.loadGroupRegisterIdByUsername(userName);
+        Double sum = billRepository.billSumOfSpecificMonth(registerId, date);
+        if (sum == null) {
+            return 0.0;
+        }
+        return sum;
+    }
+
+    @Transactional
+    @Override
+    public Double billSumOfYear(String userName, LocalDate date) {
+        LOGGER.debug("Service: get sum of Bills of specific year");
+        Long registerId = userService.loadGroupRegisterIdByUsername(userName);
+        Double sum = billRepository.billSumOfSpecificYear(registerId, date);
+        if (sum == null) {
+            return 0.0;
+        }
+        return sum;
+    }
+
 
 
 }
