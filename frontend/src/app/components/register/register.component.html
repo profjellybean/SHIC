@@ -30,6 +30,7 @@
     <th>Items bought: </th>
     <th>Sum of the purchase: </th>
     <th>To pay per person: </th>
+    <th>Date: </th>
   </tr>
   </thead>
   <tbody>
@@ -39,6 +40,7 @@
     <td><div *ngFor="let grocery of bill.groceries">{{grocery.name}}</div></td>
     <td>{{bill.sum}} €</td>
     <td>{{bill.sumPerPerson}} €</td>
+    <td>{{bill.date}}</td>
     <td>
       <div>
         <button type="button" style="BACKGROUND-COLOR:green;" class="btn btn-secondary" (click)="confirmPayment(bill.id);">Confirm Payment</button>

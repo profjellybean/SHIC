@@ -24,6 +24,7 @@ import { StorageAddItemComponent } from './components/storage-add-item/storage-a
 import { UserComponent } from './components/user/user.component';
 import { ConfirmUserEmailComponent } from './components/confirm-user-email/confirm-user-email.component';
 import {NgSelectModule} from '@ng-select/ng-select';
+import { StatisticComponent } from './components/statistic/statistic.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import {NgSelectModule} from '@ng-select/ng-select';
     ShoppingListAddComponent,
     ShoppingListListComponent,
     StorageAddItemComponent,
+    StatisticComponent,
   ],
   imports: [
     BrowserModule,

@@ -13,6 +13,7 @@ import {UserComponent} from './components/user/user.component';
 import {HomeComponent} from './components/home/home.component';
 import {ConfirmUserEmailComponent} from './components/confirm-user-email/confirm-user-email.component';
 import {CustomItemComponent} from './components/custom-item/custom-item.component';
+import {StatisticComponent} from './components/statistic/statistic.component';
 
 
 const routes: Routes = [
@@ -28,7 +29,8 @@ const routes: Routes = [
   {path: 'recipe', canActivate: [AuthGuard], component: RecipeComponent},
   {path: 'shopping-list', canActivate: [AuthGuard], component: ShoppingListComponent},
   {path: 'custom-item', canActivate: [AuthGuard], component: CustomItemComponent},
-  {path: 'user', canActivate: [AuthGuard], component: UserComponent}
+  {path: 'user', canActivate: [AuthGuard], component: UserComponent},
+  {path: 'statistic', component: StatisticComponent}
 
 ];
 

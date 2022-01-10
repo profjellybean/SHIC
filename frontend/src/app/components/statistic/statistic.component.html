@@ -1,0 +1,38 @@
+<h1>Statistic</h1>
+
+<h4>Sum of bills per month</h4>
+
+<table class='table'>
+  <thead>
+  <tr>
+    <th>Month</th>
+    <th>Sum</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let bill of sumOfLastTwelveMonths;">
+    <td >{{bill.date}}</td>
+    <td>{{bill.sum}} €</td>
+  </tr>
+
+  </tbody>
+</table>
+<h4>Sum of bills per year</h4>
+<table class='table'>
+  <thead>
+  <tr>
+    <th>Year </th>
+    <th>Sum </th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let bill of sumOfLastTenYears;">
+    <td >{{bill.date}}</td>
+    <td>{{bill.sum}} €</td>
+  </tr>
+
+  </tbody>
+
+</table>
+
+
