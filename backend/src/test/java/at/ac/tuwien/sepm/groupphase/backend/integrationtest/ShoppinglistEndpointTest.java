@@ -235,6 +235,21 @@ public class ShoppinglistEndpointTest implements TestData {
     }
 
     @Test
+    public void givenToHighNumberOfPeople_whenPlanRecipe_then400() throws Exception {
+        testDataGenerator.generateData_planRecipe_allIngredientsPresent();
+        Recipe recipe = recipeRepository.findByName("testRecipe");
+
+        MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI)
+                .param("recipeId", recipe.getId().toString())
+                .param("people", "100000")
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+    }
+
+    @Test
     public void givenValidRecipe_notEnoughOfIngredient_whenPlanRecipe_then200() throws Exception {
         testDataGenerator.generateData_planRecipe_notEnoughOfIngredient();
         Recipe recipe = recipeRepository.findByName("testRecipe");
@@ -287,6 +302,35 @@ public class ShoppinglistEndpointTest implements TestData {
             () -> assertEquals("testItem", itemStorageDto.getName()),
             () -> assertEquals("item for tests", itemStorageDto.getNotes()),
             () -> assertEquals(10, itemStorageDto.getAmount()),
+            () -> assertEquals("g", itemStorageDto.getQuantity().getName())
+        );
+    }
+
+    @Test
+    public void givenValidRecipe_andNumberOfPeople_allIngredientsMissing_whenPlanRecipe_thenAddMoreIngredients_then200() throws Exception {
+        testDataGenerator.generateData_planRecipe_allIngredientsMissing();
+        Recipe recipe = recipeRepository.findByName("testRecipe");
+        int numberOfPeople = 3;
+
+        MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI)
+                .param("recipeId", recipe.getId().toString())
+                .param("people", String.valueOf(numberOfPeople))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        List<ItemStorageDto> itemStorageDtos = Arrays.asList(objectMapper.readValue(response.getContentAsString(),
+            ItemStorageDto[].class));
+        assertEquals(1, itemStorageDtos.size());
+        ItemStorageDto itemStorageDto = itemStorageDtos.get(0);
+
+        assertAll(
+            () -> assertEquals("testItem", itemStorageDto.getName()),
+            () -> assertEquals("item for tests", itemStorageDto.getNotes()),
+            () -> assertEquals(10 * numberOfPeople, itemStorageDto.getAmount()),
             () -> assertEquals("g", itemStorageDto.getQuantity().getName())
         );
     }
@@ -367,6 +411,21 @@ public class ShoppinglistEndpointTest implements TestData {
     }
 
     @Test
+    public void givenToHighNumberOfPeople_whenPutRecipeOnShoppingList_then400() throws Exception {
+        testDataGenerator.generateData_planRecipe_allIngredientsMissing();
+        Recipe recipe = recipeRepository.findByName("testRecipe");
+
+        MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI + "/putAllIngredientsOfRecipe")
+                .param("recipeId", recipe.getId().toString())
+                .param("people", "100000")
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+    }
+
+    @Test
     public void givenValidRecipe_allIngredientsPresent_thenStillAddAllIngredients_whenPutRecipeOnShoppingList() throws Exception {
         testDataGenerator.generateData_planRecipe_allIngredientsPresent();
         Recipe recipe = recipeRepository.findByName("testRecipe");
@@ -388,6 +447,33 @@ public class ShoppinglistEndpointTest implements TestData {
             () -> assertEquals("testItem", itemStorageDto.getName()),
             () -> assertEquals("Ingredient for recipe: testRecipe", itemStorageDto.getNotes()),
             () -> assertEquals(10, itemStorageDto.getAmount()),
+            () -> assertEquals("g", itemStorageDto.getQuantity().getName())
+        );
+    }
+
+    @Test
+    public void givenValidRecipe_andNumberOfPeople_thenAddMoreIngredients_whenPutRecipeOnShoppingList() throws Exception {
+        testDataGenerator.generateData_planRecipe_allIngredientsPresent();
+        Recipe recipe = recipeRepository.findByName("testRecipe");
+        int amountOfPeople = 3;
+
+        MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI + "/putAllIngredientsOfRecipe")
+                .param("recipeId", recipe.getId().toString())
+                .param("people", String.valueOf(amountOfPeople))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        List<ItemStorageDto> itemStorageDtos = Arrays.asList(objectMapper.readValue(response.getContentAsString(),
+            ItemStorageDto[].class));
+        ItemStorageDto itemStorageDto = itemStorageDtos.get(0);
+        assertAll(
+            () -> assertEquals("testItem", itemStorageDto.getName()),
+            () -> assertEquals("Ingredient for recipe: testRecipe", itemStorageDto.getNotes()),
+            () -> assertEquals(10 * amountOfPeople, itemStorageDto.getAmount()),
             () -> assertEquals("g", itemStorageDto.getQuantity().getName())
         );
     }

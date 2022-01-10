@@ -103,8 +103,8 @@ public class ShoppingListServiceImpl implements ShoppingListService {
 
     @Override
     @Transactional
-    public List<ItemStorage> planRecipe(Long recipeId, String userName, Integer people) {
-        LOGGER.debug("Service: plan Recipe {} based on user {}.", recipeId, userName);
+    public List<ItemStorage> planRecipe(Long recipeId, String userName, Integer numberOfPeople) {
+        LOGGER.debug("Service: plan Recipe {} for {} people based on user {}.", recipeId, numberOfPeople, userName);
 
         // validation
         if (recipeId == null) {
@@ -126,10 +126,10 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         if (shoppingListId == null) {
             throw new ValidationException("Public ShoppingList does not exist");
         }
-        if (people == null || people < 1) {
+        if (numberOfPeople == null || numberOfPeople < 1) {
             throw new ValidationException("Number of people has to be 1 or bigger");
         }
-        if (people > 100) {
+        if (numberOfPeople > 100) {
             throw new ValidationException("Number of people can not be bigger than 100");
         }
 
@@ -158,7 +158,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         for (ItemStorage item :
             recipe.getIngredients()) {
             ItemStorage calculatedItem = new ItemStorage(item);
-            calculatedItem.setAmount(item.getAmount() * people);
+            calculatedItem.setAmount(item.getAmount() * numberOfPeople);
             calculatedIngredients.add(calculatedItem);
         }
         List<ItemStorage> returnList;
@@ -217,8 +217,8 @@ public class ShoppingListServiceImpl implements ShoppingListService {
 
     @Override
     @Transactional
-    public List<ItemStorage> putRecipeOnShoppingList(Long recipeId, String userName, Integer people) {
-        LOGGER.debug("Service: put all Recipe-Ingredients {} on ShoppingList based on user {}.", recipeId, userName);
+    public List<ItemStorage> putRecipeOnShoppingList(Long recipeId, String userName, Integer numberOfPeople) {
+        LOGGER.debug("Service: put all Recipe-Ingredients {} on ShoppingList for {} people based on user {}.", recipeId, numberOfPeople, userName);
 
         // validation
         if (recipeId == null) {
@@ -235,10 +235,10 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         if (shoppingListId == null) {
             throw new NotFoundException("ShoppingList could not be found");
         }
-        if (people == null || people < 1) {
+        if (numberOfPeople == null || numberOfPeople < 1) {
             throw new ValidationException("Number of people has to be 1 or bigger");
         }
-        if (people > 100) {
+        if (numberOfPeople > 100) {
             throw new ValidationException("Number of people can not be bigger than 100");
         }
 
@@ -248,7 +248,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
             recipe.getIngredients()) {
             ItemStorage itemToSave = new ItemStorage(item);
             itemToSave.setNotes(notes);
-            itemToSave.setAmount(item.getAmount() * people);
+            itemToSave.setAmount(item.getAmount() * numberOfPeople);
             saveItem(itemToSave, shoppingListId, null);
             returnList.add(itemToSave);
         }
