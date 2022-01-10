@@ -33,4 +33,9 @@ export class RecipeService {
     console.log('addRecipe, Service', recipe);
     return this.httpClient.post<Recipe>(this.recipeBaseUri, recipe);
   }
+
+  updateRecipe(recipe: Recipe): Observable<Recipe> {
+    console.log('update Recipe, Service', recipe);
+    return this.httpClient.put<Recipe>(this.recipeBaseUri + '/' + recipe.id, recipe);
+  }
 }

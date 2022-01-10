@@ -112,7 +112,7 @@ public class TestDataGenerator {
         HashSet<ItemStorage> ingredients = new HashSet<ItemStorage>();
         ingredients.add(new ItemStorage("testItem", "item for tests", null, null,
             10, null, mappedUnits.get("g"), null, null));
-        Recipe recipe = new Recipe(-1L, "testRecipe", "recipe for tests", ingredients, null);
+        Recipe recipe = new Recipe(-1L, "testRecipe", "recipe for tests", ingredients, null, null);
         recipeRepository.saveAndFlush(recipe);
     }
 

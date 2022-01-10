@@ -1,9 +1,15 @@
 import {Component, OnInit, TemplateRef} from '@angular/core';
 import {Recipe} from '../../dtos/recipe';
 import {RecipeService} from '../../services/recipe.service';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Item} from '../../dtos/item';
 import {ItemService} from '../../services/item.service';
+import {UserService} from '../../services/user.service';
+import {User} from '../../dtos/user';
+// @ts-ignore
+import jwt_decode from 'jwt-decode';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {AuthService} from '../../services/auth.service';
+
 
 @Component({
   selector: 'app-recipe',
@@ -14,7 +20,8 @@ export class RecipeComponent implements OnInit {
 
   recipes: Recipe[] = null;
   ingredientsToAdd: Item[] = null;
-  nullRecipe: Recipe = {name: null, id: null, categories: null, description: null, ingredients: this.ingredientsToAdd};
+  nullRecipe: Recipe = {name: null, id: null, categories: null, description: null, ingredients: this.ingredientsToAdd,
+  groupId: null};
 
   recipeToAdd = this.nullRecipe;
   error = false;
@@ -23,16 +30,28 @@ export class RecipeComponent implements OnInit {
   allItems: Item[];
   tempIngredient: Item;
 
+  user: User = {
+    // @ts-ignore
+    username: jwt_decode(this.authService.getToken()).sub.trim(),
+    id: null,
+    currGroup: null,
+    privList: null,
+    email: null
+  };
+
   constructor(
     private recipeService: RecipeService,
     private modalService: NgbModal,
-    private itemService: ItemService
+    private itemService: ItemService,
+    private userService: UserService,
+    private authService: AuthService,
   ) {
   }
 
   ngOnInit(): void {
     this.reloadRecipes();
     this.getAllItems();
+    this.getCurrentGroup();
   }
 
   addTempIngredient() {
@@ -77,6 +96,7 @@ export class RecipeComponent implements OnInit {
 
   addRecipe(recipe: Recipe) {
     console.log('addRecipe', this.recipeToAdd);
+    this.recipeToAdd.groupId = this.user.currGroup.id;
     this.recipeService.addRecipe(recipe).subscribe({
       next: data => {
         console.log('received recipes', data);
@@ -96,6 +116,17 @@ export class RecipeComponent implements OnInit {
       },
       error: error => {
         this.defaultServiceErrorHandling(error);
+      }
+    });
+  }
+
+  getCurrentGroup(){
+    this.userService.getCurrentUser({username: this.user.username}).subscribe({
+      next: data => {
+        this.user = data;
+      },
+      error: error => {
+        console.error(error.message);
       }
     });
   }

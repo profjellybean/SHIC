@@ -34,6 +34,9 @@ public class Recipe {
     @Column(nullable = true, name = "ingredients")
     private Set<ItemStorage> ingredients;
 
+    @Column(name = "groupId")
+    private Long groupId;
+
     //@OneToMany
     @Column(name = "categories")
     @ElementCollection(targetClass = RecipeCategory.class)
@@ -41,14 +44,16 @@ public class Recipe {
     @Enumerated(EnumType.STRING)
     private Set<RecipeCategory> categories;
 
-    public Recipe() { }
+    public Recipe() {
+    }
 
-    public Recipe(Long id, String name, String description, Set<ItemStorage> ingredients, Set<RecipeCategory> categories) {
+    public Recipe(Long id, String name, String description, Set<ItemStorage> ingredients, Set<RecipeCategory> categories, Long groupId) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.ingredients = ingredients;
         this.categories = categories;
+        this.groupId = groupId;
     }
 
     public Long getId() {
@@ -91,6 +96,14 @@ public class Recipe {
         this.categories = categories;
     }
 
+    public Long getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -100,12 +113,17 @@ public class Recipe {
             return false;
         }
         Recipe recipe = (Recipe) o;
-        return Objects.equals(id, recipe.id) && Objects.equals(name, recipe.name) && Objects.equals(description, recipe.description) && Objects.equals(ingredients, recipe.ingredients) && Objects.equals(categories, recipe.categories);
+        return Objects.equals(id, recipe.id)
+            && Objects.equals(name, recipe.name)
+            && Objects.equals(description, recipe.description)
+            && Objects.equals(ingredients, recipe.ingredients)
+            && Objects.equals(categories, recipe.categories)
+            && Objects.equals(groupId, recipe.groupId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, ingredients, categories);
+        return Objects.hash(id, name, description, ingredients, categories, groupId);
     }
 
     @Override
@@ -122,6 +140,8 @@ public class Recipe {
             +
             ", categories=" + categories
             +
+            ", groupId=" + groupId
+            +
             '}';
     }
 
@@ -131,6 +151,7 @@ public class Recipe {
         private String description;
         private Set<ItemStorage> ingredients;
         private Set<RecipeCategory> categories;
+        private Long groupId;
 
         private RecipeBuilder() {
         }
@@ -164,6 +185,11 @@ public class Recipe {
             return this;
         }
 
+        public RecipeBuilder withGroupId(Long groupId) {
+            this.groupId = groupId;
+            return this;
+        }
+
         public Recipe build() {
             Recipe recipe = new Recipe();
             recipe.setId(this.id);
@@ -171,6 +197,7 @@ public class Recipe {
             recipe.setDescription(this.description);
             recipe.setIngredients(this.ingredients);
             recipe.setCategories(this.categories);
+            recipe.setGroupId(this.groupId);
             return recipe;
         }
 

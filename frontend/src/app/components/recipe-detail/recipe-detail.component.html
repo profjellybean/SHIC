@@ -35,6 +35,109 @@
 <button class = "btn btn-secondary btn-sm mr-4" (click)="putRecipeOnShoppingList()">Put all Ingredients to
   Shopping-List</button>
 
+<button *ngIf="recipe.groupId !== null" class = "btn btn-secondary btn-sm mr-4" (click)="setRecipeToUpdate(recipe); openAddModal(recipeAddModal)">Edit Recipe</button>
+<div class="row p-2 mb-4">
+  <ng-template #recipeAddModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Recipe</h5>
+      <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form (ngSubmit)="updateRecipeForm(recipeForm)" #recipeForm="ngForm">
+        <div class="form-group">
+          <label for="recipeToUpdateName">Name</label>
+          <input rows="1" name="name" class="form-control" id="recipeToUpdateName" required
+                    aria-describedby="nameHelp" placeholder="Enter Name"
+                    [(ngModel)]="recipeToUpdate.name">
+          <div *ngIf="submitted && recipeForm.controls.name.errors" class="error">
+            <small class="form-text text-warning" *ngIf="recipeForm.controls.name.errors.required"> Name is
+              required!
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="recipeToUpdateDesc">Description</label>
+          <textarea rows="1" name="description" class="form-control" id="recipeToUpdateDesc" required
+                    aria-describedby="nameHelp" placeholder="Enter description"
+                    [(ngModel)]="recipeToUpdate.description"></textarea>
+          <div *ngIf="submitted && recipeForm.controls.name.errors" class="error">
+            <small class="form-text text-warning" *ngIf="recipeForm.controls.name.errors.required"> Description is
+              required!
+            </small>
+          </div>
+        </div>
+        <div *ngIf="recipeToUpdate.ingredients !== null">
+          Current ingredients: <br>
+          <div class="form-group" *ngIf="recipeToUpdate.ingredients !== null">
+            <ul *ngFor="let item of this.recipeToUpdate.ingredients">
+              <li>
+                {{item.name}}&nbsp;{{item.amount}}&nbsp;{{item.quantity.name}}
+                <button class = "btn btn-secondary btn-sm mr-4" (click)="removeItem(item)">Remove</button>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="form-group">
+          Ingredients<br>
+          <ng-select
+            [items] = "this.allItems"
+            bindLabel = "name"
+            id="inputItems"
+            name="inputItems"
+            clearable = "true"
+            placeholder = "Choose ingredients"
+            [(ngModel)]="this.tempIngredient">
+          </ng-select><br>
+          <input *ngIf="tempIngredient!==undefined" [(ngModel)]="this.tempIngredient.amount"
+                 placeholder="Enter amount in {{this.tempIngredient.quantity.name}}" name="inputItemQuantity">&nbsp;
+          <button *ngIf="tempIngredient!==undefined && tempIngredient.amount > 0" (click)="addTempIngredient()"
+                  class="btn btn-secondary">Add item to recipe
+          </button>&nbsp;
+          <div *ngIf="error" class="error">
+            <small class="form-text text-warning">Ingredients are required!
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="inputCategories">Categories</label>
+          <ng-select
+            id="inputCategories"
+            name="inputCategories"
+            required="true"
+            placeholder = "Select categories"
+            [multiple]="true"
+            [(ngModel)]="this.recipeToUpdate.categories">
+            <ng-option value="vegan">vegan</ng-option>
+            <ng-option value="vegetarian">vegetarian</ng-option>
+            <ng-option value="dinner">dinner</ng-option>
+            <ng-option value="breakfast">breakfast</ng-option>
+            <ng-option value="supper">supper</ng-option>
+          </ng-select>
+          <div *ngIf="submitted && recipeForm.controls.inputCategories.errors" class="error">
+            <small class="form-text text-warning" *ngIf="recipeForm.controls.inputCategories.errors.required">At least one
+              category is required!
+            </small>
+          </div>
+        </div>
+
+
+
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" (click)="updateRecipeForm(recipeForm); modal.dismiss()" id="add-msg" class="btn btn-success float-right">Update
+        recipe
+      </button>
+      <button type="button" class="btn btn-secondary" id="close-modal-btn" (click)="modal.dismiss('close')">Close
+      </button>
+    </div>
+  </ng-template>
+</div>
+
 <br>
 <br>
 

@@ -55,59 +55,37 @@ public class BillDataGenerator {
             userDataGenerator.generateUser();
 
             //bills
-            Bill bill = Bill.BillBuilder.aBill()
-                .withRegisterId(1L)
-                .withGroceries(GROCERIES)
-                .withNotes("bought at Lidl")
-                .withNames(NAMES)
-                .withNotPaidNames(NOT_PAID_NAMES)
-                .withSum(48)
-                .withSumPerPerson(14)
-                .withDate(DATE)
-                .build();
-            Bill savedBill = billRepository.saveAndFlush(bill);
+            for (int i = 0; i < 3; i++) {
+                Bill bill = Bill.BillBuilder.aBill()
+                    .withId(1L + i)
+                    .withRegisterId(1L)
+                    .withGroceries(GROCERIES)
+                    .withNotes("bought at Lidl")
+                    .withNames(NAMES)
+                    .withNotPaidNames(NOT_PAID_NAMES)
+                    .withSum(10 * (i + 1))
+                    .withSumPerPerson((10 * (i + 1)) / 2)
+                    .withDate(DATE)
+                    .build();
+                Bill savedBill = billRepository.saveAndFlush(bill);
 
-            //user
-            Optional<ApplicationUser> user = userRepository.findUserByUsername("user");
-            Optional<ApplicationUser> admin = userRepository.findUserByUsername("admin");
+                //user
+                Optional<ApplicationUser> user = userRepository.findUserByUsername("user");
+                Optional<ApplicationUser> admin = userRepository.findUserByUsername("admin");
 
-            HashSet<ApplicationUser> names = new HashSet<>();
-            user.ifPresent(names::add);
-            admin.ifPresent(names::add);
-            savedBill.setNames(names);
-            savedBill = billRepository.saveAndFlush(savedBill);
+                HashSet<ApplicationUser> names = new HashSet<>();
+                user.ifPresent(names::add);
+                admin.ifPresent(names::add);
+                savedBill.setNames(names);
+                savedBill = billRepository.saveAndFlush(savedBill);
 
-            HashSet<ApplicationUser> notPaid = new HashSet<>();
-            user.ifPresent(notPaid::add);
-            admin.ifPresent(notPaid::add);
-            savedBill.setNotPaidNames(notPaid);
-            savedBill = billRepository.saveAndFlush(savedBill);
+                HashSet<ApplicationUser> notPaid = new HashSet<>();
+                user.ifPresent(notPaid::add);
+                admin.ifPresent(notPaid::add);
+                savedBill.setNotPaidNames(notPaid);
+                savedBill = billRepository.saveAndFlush(savedBill);
 
-            /*
-
-            ApplicationUser maleUser = new ApplicationUser("luke@email.com", "password");
-            ApplicationUser user1 = userRepository.saveAndFlush(maleUser);
-            ApplicationUser femaleUser = new ApplicationUser("anne@email.com", "password");
-            ApplicationUser user2 = userRepository.saveAndFlush(femaleUser);
-
-            savedBill.setNames(new HashSet<ApplicationUser>() {
-                {
-                    add(user1);
-                    add(user2);
-                }
-            });
-
-            savedBill = billRepository.saveAndFlush(savedBill);
-
-            savedBill.setNotPaidNames(new HashSet<ApplicationUser>() {
-                {
-                    add(user1);
-                    add(user2);
-                }
-            });
-            savedBill = billRepository.saveAndFlush(savedBill);
-
-             */
+            }
 
             /*
             //items
@@ -121,6 +99,8 @@ public class BillDataGenerator {
                 }
             });
             savedBill = billRepository.saveAndFlush(savedBill);
+
+
             HashSet<Bill> bills = new HashSet<>();
             bills.add(savedBill);
 
@@ -135,10 +115,18 @@ public class BillDataGenerator {
                 .build();
             Bill savedBill2 = billRepository.saveAndFlush(bill2);
 
-            savedBill2.setNames(names);
+            HashSet<ApplicationUser> names2 = new HashSet<>();
+            user.ifPresent(names2::add);
+            admin.ifPresent(names2::add);
+            savedBill2.setNames(names2);
             savedBill2 = billRepository.saveAndFlush(savedBill2);
-            savedBill2.setNotPaidNames(notPaid);
+
+            HashSet<ApplicationUser> notPaid2 = new HashSet<>();
+            user.ifPresent(notPaid2::add);
+            admin.ifPresent(notPaid2::add);
+            savedBill2.setNotPaidNames(notPaid2);
             savedBill2 = billRepository.saveAndFlush(savedBill2);
+
 
             ItemStorage itemStorage2 = new ItemStorage("name 2", "notes for itemStorage 2", null,
                 null, 10, Location.fridge.toString(), null, null, null);
@@ -149,6 +137,8 @@ public class BillDataGenerator {
                 }
             });
             savedBill2 = billRepository.saveAndFlush(savedBill2);
+
+
             bills.add(savedBill2);
 
             // bill 3
@@ -161,11 +151,19 @@ public class BillDataGenerator {
                 .build();
             Bill savedBill3 = billRepository.saveAndFlush(bill3);
 
-            savedBill3.setNames(names);
-            savedBill3 = billRepository.saveAndFlush(savedBill3);
-            savedBill3.setNotPaidNames(notPaid);
+            HashSet<ApplicationUser> names3 = new HashSet<>();
+            user.ifPresent(names3::add);
+            admin.ifPresent(names3::add);
+            savedBill3.setNames(names3);
             savedBill3 = billRepository.saveAndFlush(savedBill3);
 
+            HashSet<ApplicationUser> notPaid3 = new HashSet<>();
+            user.ifPresent(notPaid3::add);
+            admin.ifPresent(notPaid3::add);
+            savedBill3.setNotPaidNames(notPaid3);
+            savedBill3 = billRepository.saveAndFlush(savedBill3);
+
+            /*
             ItemStorage itemStorage3 = new ItemStorage("name 3", "notes for itemStorage 3", null,
                 null, 10, Location.fridge.toString(), null, null, null);
             ItemStorage item3 = itemStorageRepository.saveAndFlush(itemStorage3);
@@ -175,8 +173,10 @@ public class BillDataGenerator {
                 }
             });
             savedBill3 = billRepository.saveAndFlush(savedBill3);
-            bills.add(savedBill3);
 
+
+            bills.add(savedBill3);
+            /*
             if (admin.isPresent()) {
                 ApplicationUser applicationAdmin = admin.get();
                 applicationAdmin.setBills(bills);
@@ -189,7 +189,8 @@ public class BillDataGenerator {
                 userRepository.saveAndFlush(applicationUser);
             }
 
-             */
+            */
+
 
         }
     }

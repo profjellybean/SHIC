@@ -2,6 +2,9 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Recipe;
+import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
+import at.ac.tuwien.sepm.groupphase.backend.exception.UnchangeableException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.RecipeService;
@@ -42,6 +45,15 @@ public class RecipeServiceImpl implements RecipeService {
         LOGGER.debug("Add one recipe");
         for (ItemStorage item : recipe.getIngredients()) {
             itemStorageRepository.saveAndFlush(item);
+        }
+        return recipeRepository.saveAndFlush(recipe);
+    }
+
+    @Override
+    public Recipe updateRecipe(Recipe recipe, Long groupId) {
+        LOGGER.debug("Service: Update recipe {}", recipe);
+        if (groupId == null) {
+            throw new UnchangeableException("This recipe cannot be updated because it is available for all groups");
         }
         return recipeRepository.saveAndFlush(recipe);
     }

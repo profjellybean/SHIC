@@ -333,7 +333,7 @@ public class ShoppinglistEndpointTest implements TestData {
     public void givenUserWithoutShoppingList_whenPutRecipeOnShoppingList_then404() throws Exception {
         testDataGenerator.generateData_generateUser_withGroup_withOnlyNullValues();
         Recipe recipe = new Recipe(-1L, "givenUserWithoutShoppingList_whenPutRecipeOnShoppingList_then404",
-            "recipe for tests", null, null);
+            "recipe for tests", null, null,null);
         recipe = recipeRepository.saveAndFlush(recipe);
 
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI + "/putAllIngredientsOfRecipe")
