@@ -20,6 +20,8 @@ public class UserGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column
+    private String name;
     @OneToMany
     @Column
     @JsonManagedReference
@@ -31,7 +33,8 @@ public class UserGroup {
     @Column
     private Long registerId;
 
-    public UserGroup() { }
+    public UserGroup() {
+    }
 
     public UserGroup(Long storageId) {
         this.storageId = storageId;
@@ -42,11 +45,20 @@ public class UserGroup {
         this.publicShoppingListId = publicShoppingListId;
     }
 
-    public UserGroup(Long publicStorageId, Long publicShoppingListId, Long registerId, HashSet<ApplicationUser> applicationUsers) {
+    public UserGroup(Long publicStorageId, Long publicShoppingListId, Long registerId, HashSet<ApplicationUser> applicationUsers, String name) {
         this.publicShoppingListId = publicShoppingListId;
         this.storageId = publicStorageId;
         this.registerId = registerId;
         this.user = applicationUsers;
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Long getPublicShoppingListId() {

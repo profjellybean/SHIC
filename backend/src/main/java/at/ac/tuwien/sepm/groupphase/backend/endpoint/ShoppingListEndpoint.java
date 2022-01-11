@@ -153,16 +153,17 @@ public class ShoppingListEndpoint {
     @ResponseStatus(HttpStatus.OK)
     @PutMapping
     @Operation(summary = "Plan a recipe: adds missing ingredients to shoppingList", security = @SecurityRequirement(name = "apiKey"))
-    public List<ItemStorageDto> planRecipe(Authentication authentication, @RequestParam(name = "recipeId") Long recipeId) {
-        LOGGER.info("Endpoint: POST /api/v1/shoppinglist/recipeId={},userName={}", recipeId, authentication.getName());
+    public List<ItemStorageDto> planRecipe(Authentication authentication,
+                                           @RequestParam(name = "recipeId") Long recipeId, @RequestParam(name = "people") Integer people) {
+        LOGGER.info("Endpoint: POST /api/v1/shoppinglist/recipeId={}, people={},userName={}", recipeId, people, authentication.getName());
         try {
             return itemStorageMapper.itemsStorageToItemsStorageDto(
-                shoppingListService.planRecipe(recipeId, authentication.getName()));
+                shoppingListService.planRecipe(recipeId, authentication.getName(), people));
         } catch (ValidationException e) {
-            LOGGER.error("Error during planning recipe", e);
+            LOGGER.error("Error during planning recipe: {}", e.getMessage());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         } catch (NotFoundException e) {
-            LOGGER.error("Error during planning recipe", e);
+            LOGGER.error("Error during planning recipe: {}", e.getMessage());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         }
     }
@@ -171,16 +172,17 @@ public class ShoppingListEndpoint {
     @ResponseStatus(HttpStatus.OK)
     @PutMapping(value = "/putAllIngredientsOfRecipe")
     @Operation(summary = "Adds all ingredients of a recipe to shoppingList", security = @SecurityRequirement(name = "apiKey"))
-    public List<ItemStorageDto> putRecipeOnShoppingList(Authentication authentication, @RequestParam(name = "recipeId") Long recipeId) {
-        LOGGER.info("Endpoint: POST /api/v1/shoppinglist/putAllIngredientsOfRecipe/recipeId={},userName={}", recipeId, authentication.getName());
+    public List<ItemStorageDto> putRecipeOnShoppingList(Authentication authentication,
+                                                        @RequestParam(name = "recipeId") Long recipeId, @RequestParam(name = "people") Integer people) {
+        LOGGER.info("Endpoint: POST /api/v1/shoppinglist/putAllIngredientsOfRecipe/recipeId={},people={},userName={}", recipeId, people, authentication.getName());
         try {
             return itemStorageMapper.itemsStorageToItemsStorageDto(
-                shoppingListService.putRecipeOnShoppingList(recipeId, authentication.getName()));
+                shoppingListService.putRecipeOnShoppingList(recipeId, authentication.getName(), people));
         } catch (ValidationException e) {
-            LOGGER.error("Error while putting all Ingredients of Recipe to ShoppingList", e);
+            LOGGER.error("Error while putting all Ingredients of Recipe to ShoppingList: {}", e.getMessage());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         } catch (NotFoundException e) {
-            LOGGER.error("Error while putting all Ingredients of Recipe to ShoppingList", e);
+            LOGGER.error("Error while putting all Ingredients of Recipe to ShoppingList: {}", e.getMessage());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         }
     }

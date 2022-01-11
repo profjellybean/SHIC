@@ -68,13 +68,13 @@ public class TestDataGenerator {
     ShoppingListRepository shoppingListRepository;
 
     public TestDataGenerator(RecipeDataGenerator recipeDataGenerator,
-                               ShoppingListDataGenerator shoppingListDataGenerator,
-                               StorageDataGenerator storageDataGenerator,
-                               UserDataGenerator userDataGenerator,
-                               ItemStorageDataGenerator itemStorageDataGenerator,
-                               UnitOfQuantityDataGenerator unitOfQuantityDataGenerator,
-                               UnitOfQuantityRepository unitOfQuantityRepository,
-                               ItemDataGenerator itemDataGenerator) {
+                             ShoppingListDataGenerator shoppingListDataGenerator,
+                             StorageDataGenerator storageDataGenerator,
+                             UserDataGenerator userDataGenerator,
+                             ItemStorageDataGenerator itemStorageDataGenerator,
+                             UnitOfQuantityDataGenerator unitOfQuantityDataGenerator,
+                             UnitOfQuantityRepository unitOfQuantityRepository,
+                             ItemDataGenerator itemDataGenerator) {
         this.recipeDataGenerator = recipeDataGenerator;
         this.shoppingListDataGenerator = shoppingListDataGenerator;
         this.storageDataGenerator = storageDataGenerator;
@@ -95,7 +95,7 @@ public class TestDataGenerator {
 
         ShoppingList shoppingList = new ShoppingList();
         shoppingList = shoppingListRepository.save(shoppingList);
-        UserGroup testGroup = new UserGroup(-1L, shoppingList.getId(), null, new HashSet<ApplicationUser>());
+        UserGroup testGroup = new UserGroup(-1L, shoppingList.getId(), null, new HashSet<ApplicationUser>(), null);
         testGroup = userGroupRepository.saveAndFlush(testGroup);
 
         ApplicationUser testApplicationUser = userLoginMapper.dtoToEntity(testUser, null);
@@ -178,7 +178,7 @@ public class TestDataGenerator {
 
         UserRegistrationDto testUser = new UserRegistrationDto("testUser", "password", "test.user@email.com");
 
-        UserGroup testGroup = new UserGroup(null, null, -1L, new HashSet<ApplicationUser>());
+        UserGroup testGroup = new UserGroup(null, null, -1L, new HashSet<ApplicationUser>(), null);
         testGroup = userGroupRepository.saveAndFlush(testGroup);
 
         ApplicationUser testApplicationUser = userLoginMapper.dtoToEntity(testUser, null);
@@ -202,7 +202,7 @@ public class TestDataGenerator {
 
         UserRegistrationDto testUser = new UserRegistrationDto("testUser", "password", "test.user@email.com");
 
-        UserGroup testGroup = new UserGroup(null, null, -1L, new HashSet<ApplicationUser>());
+        UserGroup testGroup = new UserGroup(null, null, -1L, new HashSet<ApplicationUser>(), null);
         testGroup = userGroupRepository.saveAndFlush(testGroup);
 
         ApplicationUser testApplicationUser = userLoginMapper.dtoToEntity(testUser, null);
@@ -231,7 +231,7 @@ public class TestDataGenerator {
         Register register = new Register(-1L, null, 0.0, 200.0);
         register = registerRepository.saveAndFlush(register);
 
-        UserGroup testGroup = new UserGroup(null, null, register.getId(), new HashSet<ApplicationUser>());
+        UserGroup testGroup = new UserGroup(null, null, register.getId(), new HashSet<ApplicationUser>(), null);
         testGroup = userGroupRepository.saveAndFlush(testGroup);
 
         ApplicationUser testApplicationUser = userLoginMapper.dtoToEntity(testUser, null);
@@ -251,7 +251,7 @@ public class TestDataGenerator {
 
         UserRegistrationDto testUser = new UserRegistrationDto("testUser", "password", "test.user@email.com");
 
-        UserGroup testGroup = new UserGroup(null, null, null, new HashSet<ApplicationUser>());
+        UserGroup testGroup = new UserGroup(null, null, null, new HashSet<ApplicationUser>(), "TestGroup");
         testGroup = userGroupRepository.saveAndFlush(testGroup);
 
         ApplicationUser testApplicationUser = userLoginMapper.dtoToEntity(testUser, null);
