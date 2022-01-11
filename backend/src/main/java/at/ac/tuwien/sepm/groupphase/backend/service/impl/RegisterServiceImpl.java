@@ -83,7 +83,7 @@ public class RegisterServiceImpl implements RegisterService {
     @Transactional
     @Override
     public Double billSumOfCurrentMonth(String userName) {
-        LOGGER.debug("Service: get sum of Bills of current month");
+        LOGGER.debug("Service: get sum of Bills of current month for user {}", userName);
 
         Long registerId = userService.loadGroupRegisterIdByUsername(userName);
         if (registerId == null) {
@@ -99,7 +99,7 @@ public class RegisterServiceImpl implements RegisterService {
     @Transactional
     @Override
     public Double editMonthlyBudget(String userName, Double newBudget) {
-        LOGGER.debug("Service: edit monthlyBudget {} of register of Group with user {}", userName, newBudget);
+        LOGGER.debug("Service: edit monthlyBudget {} of register of Group with user {}", newBudget, userName);
 
         if (userName == null) {
             throw new ValidationException("No User specified");
@@ -114,8 +114,6 @@ public class RegisterServiceImpl implements RegisterService {
         if (registerId == null) {
             throw new NotFoundException("No register found for User " + userName);
         }
-        System.out.println("AAAAAAAAA REGISTERID " + registerId);
-        System.out.println("AAAAAAAAA ALL " + registerRepository.findAll());
         Optional<Register> registerOptional = registerRepository.findRegisterById(registerId);
         if (registerOptional.isPresent()) {
             Register register = registerOptional.get();

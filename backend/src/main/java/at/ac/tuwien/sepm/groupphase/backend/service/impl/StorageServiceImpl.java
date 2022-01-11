@@ -94,7 +94,7 @@ public class StorageServiceImpl implements StorageService {
 
     @Override
     public ItemStorage saveItem(ItemStorage itemStorage, Long groupId) {
-        LOGGER.debug("Save item");
+        LOGGER.debug("Service: Save item {} for group {}", itemStorage, groupId);
 
         if (itemStorage.getLocationTag() != null) {
             try {

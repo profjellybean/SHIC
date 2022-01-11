@@ -182,7 +182,7 @@ public class ShoppinglistEndpointTest implements TestData {
     @Test
     public void givenNoRecipe_whenPlanRecipe_then400() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI)
-                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
             //.andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -193,10 +193,12 @@ public class ShoppinglistEndpointTest implements TestData {
 
     @Test
     public void givenInvalidRecipeId_whenPlanRecipe_then404() throws Exception {
+        testDataGenerator.generateData_generateUser_withGroup();
+
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI)
                 .param("recipeId", "-1")
                 .param("people", "1")
-                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
             .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResponseStatusException))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -219,7 +221,7 @@ public class ShoppinglistEndpointTest implements TestData {
     }
 
     @Test
-    public void givenInvalidNumberOfPeople_whenPlanRecipe_then400() throws Exception {
+    public void givenInvalidNumberOfPeople_whenPlanRecipe_then422() throws Exception {
         testDataGenerator.generateData_planRecipe_allIngredientsPresent();
         Recipe recipe = recipeRepository.findByName("testRecipe");
 
@@ -230,11 +232,11 @@ public class ShoppinglistEndpointTest implements TestData {
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
-        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+        assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), response.getStatus());
     }
 
     @Test
-    public void givenToHighNumberOfPeople_whenPlanRecipe_then400() throws Exception {
+    public void givenToHighNumberOfPeople_whenPlanRecipe_then422() throws Exception {
         testDataGenerator.generateData_planRecipe_allIngredientsPresent();
         Recipe recipe = recipeRepository.findByName("testRecipe");
 
@@ -245,7 +247,7 @@ public class ShoppinglistEndpointTest implements TestData {
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
-        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+        assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), response.getStatus());
     }
 
     @Test
@@ -358,7 +360,7 @@ public class ShoppinglistEndpointTest implements TestData {
     public void givenNoRecipe_whenPutRecipeOnShoppingList_then400() throws Exception {
 
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI + "/putAllIngredientsOfRecipe")
-                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
@@ -372,7 +374,7 @@ public class ShoppinglistEndpointTest implements TestData {
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI + "/putAllIngredientsOfRecipe")
                 .param("recipeId", "-1")
                 .param("people", "1")
-                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
             .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResponseStatusException))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -395,7 +397,7 @@ public class ShoppinglistEndpointTest implements TestData {
     }
 
     @Test
-    public void givenInvalidNumberOfPeople_whenPutRecipeOnShoppingList_then400() throws Exception {
+    public void givenInvalidNumberOfPeople_whenPutRecipeOnShoppingList_then422() throws Exception {
         testDataGenerator.generateData_planRecipe_allIngredientsMissing();
         Recipe recipe = recipeRepository.findByName("testRecipe");
 
@@ -406,11 +408,11 @@ public class ShoppinglistEndpointTest implements TestData {
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
-        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+        assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), response.getStatus());
     }
 
     @Test
-    public void givenToHighNumberOfPeople_whenPutRecipeOnShoppingList_then400() throws Exception {
+    public void givenToHighNumberOfPeople_whenPutRecipeOnShoppingList_then422() throws Exception {
         testDataGenerator.generateData_planRecipe_allIngredientsMissing();
         Recipe recipe = recipeRepository.findByName("testRecipe");
 
@@ -421,7 +423,7 @@ public class ShoppinglistEndpointTest implements TestData {
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
-        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+        assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), response.getStatus());
     }
 
     @Test

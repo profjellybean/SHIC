@@ -64,28 +64,27 @@ public class RegisterEndpoint {
     }
 
     @Secured("ROLE_USER")
-    //@PermitAll
     @GetMapping(value = "/monthlysum")
     @Operation(summary = "Get sum of all Bills in this month", security = @SecurityRequirement(name = "apiKey"))
     public Double billSumOfCurrentMonth(Authentication authentication) {
-        LOGGER.info("Endpoint: GET /api/v1/register/monthlysum/{}", authentication);
+        LOGGER.info("Endpoint: GET /register/monthlysum/{}", authentication);
         if (authentication == null) {
             LOGGER.error("You are not logged-in");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You are not logged-in");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You are not logged-in"); // TODO legal?
         }
         try {
             return registerService.billSumOfCurrentMonth(authentication.getName());
         } catch (NotFoundException e) {
+            LOGGER.error("Error while getting monthly sum of bills {}", e.getMessage());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         }
     }
 
     @Secured("ROLE_USER")
-    //@PermitAll
     @PutMapping(value = "/monthlybudget")
     @Operation(summary = "Edit Monthly Budget", security = @SecurityRequirement(name = "apiKey"))
-    public Double billSumOfCurrentMonth(Authentication authentication, @Param("budget") Double budget) {
-        LOGGER.info("Endpoint: Edit /api/v1/register/monthlybudget/{}{}", authentication, budget);
+    public Double editMonthlyBudget(Authentication authentication, @Param("budget") Double budget) {
+        LOGGER.info("Endpoint: Edit /register/monthlybudget/{}{}", authentication, budget);
         if (authentication == null) {
             LOGGER.error("You are not logged-in");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You are not logged-in");
@@ -93,10 +92,10 @@ public class RegisterEndpoint {
         try {
             return registerService.editMonthlyBudget(authentication.getName(), budget);
         } catch (ValidationException e) {
-            LOGGER.error(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+            LOGGER.error("Error while editing monthly budget {}", e.getMessage());
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
         } catch (NotFoundException e) {
-            LOGGER.error(e.getMessage());
+            LOGGER.error("Error while editing monthly budget {}", e.getMessage());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         }
     }

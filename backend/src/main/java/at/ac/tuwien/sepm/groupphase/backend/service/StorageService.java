@@ -2,6 +2,8 @@ package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 
 import java.util.List;
 
@@ -24,11 +26,16 @@ public interface StorageService {
     ItemStorage deleteItemInStorageById(Long itemId, Long storageId);
 
     /**
-     * Saves an item in the storage (specified in the item itself).
+     * Saves an item in the storage.
+     * if there is already an Item with the same name, the Items are summed up
      *
-     * @param groupId is used to check if blueprint for this item exists in this group.@param itemStorage the item
+     * @param itemStorage item to save
+     * @param groupId is used to check, if blueprint for this item exists in this group
      *
      * @return the item
+     *
+     * @throws ValidationException if invalid value exists in Item
+     * @throws ServiceException if UnitOfQuantity of an ingredient and the stored Item are not compatible
      */
     ItemStorage saveItem(ItemStorage itemStorage, Long groupId);
 

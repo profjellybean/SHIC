@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ShoppingListCreationDto
 import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 //import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.security.core.Authentication;
 
@@ -39,7 +40,7 @@ public interface ShoppingListService {
      * plans a recipe. Checks which of the required ingredients are not present
      * and puts them on the public shopping-list.
      *
-     * @param recipeId  id of recipe that user wants to cook
+     * @param recipeId  id of recipe that user wants to plan
      * @param userName of user who sent the request
      * @param numberOfPeople number of people the Recipe is planned for
      *
@@ -47,6 +48,7 @@ public interface ShoppingListService {
      *
      * @throws ValidationException if the recipe or values in User are invalid
      * @throws NotFoundException if the recipe or the items in storage can not be found
+     * @throws ServiceException if UnitOfQuantity of an ingredient and the stored Item are not compatible
      */
     List<ItemStorage> planRecipe(Long recipeId, String userName, Integer numberOfPeople);
 
@@ -59,6 +61,10 @@ public interface ShoppingListService {
      * @param numberOfPeople number of people the Recipe is planned for
      *
      * @return a List of all the ingredients that were added to the ShoppingList
+     *
+     * @throws ValidationException if the recipe or values in User are invalid
+     * @throws NotFoundException if the recipe or the items in storage can not be found
+     * @throws ServiceException if UnitOfQuantity of an ingredient and the stored Item are not compatible
      */
     List<ItemStorage> putRecipeOnShoppingList(Long recipeId, String userName, Integer numberOfPeople);
 

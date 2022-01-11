@@ -96,19 +96,22 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<Item> getAllItems() {
-        LOGGER.debug("Getting all items");
+        LOGGER.debug("Service: Getting all items");
         return itemRepository.findAll();
     }
 
     @Override
     public List<Item> getAllItemsForGroup(Long groupId) {
-        LOGGER.debug("Getting all items for group {}", groupId);
+        LOGGER.debug("Service: Getting all items for group {}", groupId);
+        if (groupId == null) {
+            throw new ValidationException("groupId can not be null");
+        }
         return itemRepository.findAllItemsForGroup(groupId);
     }
 
     @Override
     public List<Item> findAllByGroupId(Long groupId) {
-        LOGGER.debug("Getting all items by groupId {}", groupId);
+        LOGGER.debug("Service: Getting all items by groupId {}", groupId);
         if (groupId == null) {
             throw new ValidationException("groupId can not be null");
         }
@@ -117,7 +120,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemStorage checkForBluePrintForGroup(ItemStorage itemStorage, Long groupId) {
-        LOGGER.debug("Service: Check for Item blueprint {}", itemStorage);
+        LOGGER.debug("Service: Check for Item blueprint {} for group {}", itemStorage, groupId);
 
         if (itemStorage == null) {
             throw new ValidationException("itemStorage can not be null");
@@ -152,7 +155,7 @@ public class ItemServiceImpl implements ItemService {
 
         List<Item> items = itemRepository.findItemsByNameForGroup(item.getName(), item.getGroupId());
         if (!items.isEmpty()) {
-            throw new ValidationException("Item with same Nama already exists");
+            throw new ValidationException("Item with same Name already exists");
         }
         return itemRepository.saveAndFlush(item);
     }
@@ -173,7 +176,7 @@ public class ItemServiceImpl implements ItemService {
 
         List<Item> items = itemRepository.findItemsByNameForGroup(item.getName(), item.getGroupId());
         if (!items.isEmpty()) {
-            throw new ValidationException("Item with same Nama already exists");
+            throw new ValidationException("Item with same Name already exists");
         }
         return itemRepository.saveAndFlush(item);
     }

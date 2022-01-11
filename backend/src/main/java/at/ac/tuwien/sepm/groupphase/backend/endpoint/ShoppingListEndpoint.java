@@ -16,6 +16,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ShoppingListMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.service.ShoppingListService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
@@ -154,17 +155,20 @@ public class ShoppingListEndpoint {
     @PutMapping
     @Operation(summary = "Plan a recipe: adds missing ingredients to shoppingList", security = @SecurityRequirement(name = "apiKey"))
     public List<ItemStorageDto> planRecipe(Authentication authentication,
-                                           @RequestParam(name = "recipeId") Long recipeId, @RequestParam(name = "people") Integer people) {
-        LOGGER.info("Endpoint: POST /api/v1/shoppinglist/recipeId={}, people={},userName={}", recipeId, people, authentication.getName());
+                                           @RequestParam(name = "recipeId") Long recipeId, @RequestParam(name = "people") Integer numberOfPeople) {
+        LOGGER.info("Endpoint: POST /shoppinglist/recipeId={},people={},userName={}", recipeId, numberOfPeople, authentication.getName());
         try {
             return itemStorageMapper.itemsStorageToItemsStorageDto(
-                shoppingListService.planRecipe(recipeId, authentication.getName(), people));
+                shoppingListService.planRecipe(recipeId, authentication.getName(), numberOfPeople)); // TODO authentication != null?
         } catch (ValidationException e) {
-            LOGGER.error("Error during planning recipe: {}", e.getMessage());
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+            LOGGER.error("Error during planRecipe: {}", e.getMessage());
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
         } catch (NotFoundException e) {
-            LOGGER.error("Error during planning recipe: {}", e.getMessage());
+            LOGGER.error("Error during planRecipe: {}", e.getMessage());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        } catch (ServiceException e) {
+            LOGGER.error("Error during planRecipe: {}", e.getMessage());
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
         }
     }
 
@@ -174,16 +178,19 @@ public class ShoppingListEndpoint {
     @Operation(summary = "Adds all ingredients of a recipe to shoppingList", security = @SecurityRequirement(name = "apiKey"))
     public List<ItemStorageDto> putRecipeOnShoppingList(Authentication authentication,
                                                         @RequestParam(name = "recipeId") Long recipeId, @RequestParam(name = "people") Integer people) {
-        LOGGER.info("Endpoint: POST /api/v1/shoppinglist/putAllIngredientsOfRecipe/recipeId={},people={},userName={}", recipeId, people, authentication.getName());
+        LOGGER.info("Endpoint: POST /shoppinglist/putAllIngredientsOfRecipe/recipeId={},people={},userName={}", recipeId, people, authentication.getName());
         try {
             return itemStorageMapper.itemsStorageToItemsStorageDto(
                 shoppingListService.putRecipeOnShoppingList(recipeId, authentication.getName(), people));
         } catch (ValidationException e) {
             LOGGER.error("Error while putting all Ingredients of Recipe to ShoppingList: {}", e.getMessage());
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
         } catch (NotFoundException e) {
             LOGGER.error("Error while putting all Ingredients of Recipe to ShoppingList: {}", e.getMessage());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        } catch (ServiceException e) {
+            LOGGER.error("Error while putting all Ingredients of Recipe to ShoppingList: {}", e.getMessage());
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
         }
     }
 

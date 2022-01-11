@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -58,22 +59,22 @@ public class StorageEndpoint {
 
 
     @PostMapping
-    @PermitAll
-    @Operation(summary = "Insert a new item into the storage") //TODO: add security
+    @Secured("ROLE_USER")
+    @Operation(summary = "Insert a new item into the storage")
     public ItemStorageDto saveItem(Authentication authentication, @Valid @RequestBody ItemStorageDto itemStorageDto) {
-        LOGGER.info("POST /storage body: {}", itemStorageDto.toString());
+        LOGGER.info("Endpoint: POST /storage saveItem {} for user {}", itemStorageDto, authentication.getName());
         try {
             Long groupId = null;
             if (authentication != null) {
-                groupId = userService.getGroupIdByUsername(authentication.getName());
+                groupId = userService.getGroupIdByUsername(authentication.getName()); // TODO legal?
             }
             return itemStorageMapper.itemStorageToItemStorageDto(storageService.saveItem(
                 itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto), groupId));
-        } catch (ServiceException s) {
-            LOGGER.error(s.getMessage());
+        } catch (ServiceException e) {
+            LOGGER.error("Error while saving Item to Storage: {}", e.getMessage());
             throw new ResponseStatusException(HttpStatus.CONFLICT);
         } catch (ValidationException e) {
-            LOGGER.error(e.getMessage());
+            LOGGER.error("Error while saving Item to Storage: {}", e.getMessage());
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }

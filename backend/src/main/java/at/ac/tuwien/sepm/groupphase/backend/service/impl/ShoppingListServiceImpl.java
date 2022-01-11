@@ -108,23 +108,18 @@ public class ShoppingListServiceImpl implements ShoppingListService {
 
         // validation
         if (recipeId == null) {
-            throw new ValidationException("Recipe does not exist");
+            throw new ValidationException("Recipe is not specified");
         }
-        ApplicationUser user = userService.findApplicationUserByUsername(userName);
-        if (user == null) {
-            throw new ValidationException("User does not exist");
+        if (userName == null) {
+            throw new ValidationException("User is not specified");
         }
-        UserGroup group = user.getCurrGroup();
-        if (group == null) {
-            throw new ValidationException("User has no Group");
-        }
-        Long storageId = group.getStorageId();
+        Long storageId = userService.loadGroupStorageByUsername(userName);
         if (storageId == null) {
-            throw new ValidationException("Storage does not exist");
+            throw new NotFoundException("Storage could not be found");
         }
-        Long shoppingListId = group.getPublicShoppingListId();
+        Long shoppingListId = userService.getPublicShoppingListIdByUsername(userName);
         if (shoppingListId == null) {
-            throw new ValidationException("Public ShoppingList does not exist");
+            throw new NotFoundException("Public ShoppingList could not be found");
         }
         if (numberOfPeople == null || numberOfPeople < 1) {
             throw new ValidationException("Number of people has to be 1 or bigger");
@@ -140,7 +135,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
                 throw new NotFoundException("Could not find recipe with id " + recipeId);
             }
         } catch (ObjectNotFoundException e) {
-            throw new NotFoundException("Could not find recipe with id " + recipeId, e);
+            throw new NotFoundException("Could not find recipe with id " + recipeId);
         }
 
         List<ItemStorage> storageItems;
@@ -150,7 +145,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
                 throw new NotFoundException("Could not find storage with id " + storageId);
             }
         } catch (ObjectNotFoundException e) {
-            throw new NotFoundException("Could not find storage with id " + storageId, e);
+            throw new NotFoundException("Could not find storage with id " + storageId);
         }
 
         Set<ItemStorage> calculatedIngredients = new HashSet<>();
@@ -165,7 +160,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         String notes = "Ingredient for recipe: " + recipe.getName();
         for (ItemStorage item :
             returnList) {
-            ItemStorage shoppingListItem = new ItemStorage(item);
+            ItemStorage shoppingListItem = new ItemStorage(item); // TODO use item of returnSet
             shoppingListItem.setNotes(notes);
             saveItem(shoppingListItem, shoppingListId, null);
         }
@@ -178,7 +173,8 @@ public class ShoppingListServiceImpl implements ShoppingListService {
      * If they appear, the amount of the Items is compared.
      *
      * @param recipeIngredients set of items e.g. representing ingredients of a recipe
-     * @param storedItems       set of items e.g. representing the stored Items in a Storage
+     * @param storedItems       set of items e.g. representing the stored Items in a Storage.
+     *
      * @return Set of all Items that occur in recipeIngredients but not in storedItem or occur in both, but the amount in recipeIngredients is bigger than the amount in storedItems.
      */
     private List<ItemStorage> compareItemSets(Set<ItemStorage> recipeIngredients, List<ItemStorage> storedItems) {
@@ -220,14 +216,14 @@ public class ShoppingListServiceImpl implements ShoppingListService {
 
         // validation
         if (recipeId == null) {
-            throw new ValidationException("No Recipe specified");
+            throw new ValidationException("Recipe is not specified");
         }
         Recipe recipe = recipeRepository.findRecipeById(recipeId);
         if (recipe == null) {
             throw new NotFoundException("Recipe could not be found");
         }
         if (userName == null) {
-            throw new ValidationException("User does not exist");
+            throw new ValidationException("User is not specified");
         }
         Long shoppingListId = userService.getPublicShoppingListIdByUsername(userName);
         if (shoppingListId == null) {
@@ -299,7 +295,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
                     storedItem.setQuantity(itemStorage.getQuantity());
                     return itemStorageRepository.saveAndFlush(storedItem);
                 } else {
-                    throw new ValidationException("Incompatible types: Same item with different unit of quantity found");
+                    throw new ServiceException("Incompatible types: Same item with different unit of quantity found");
                 }
             }
         }
