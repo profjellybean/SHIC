@@ -9,11 +9,27 @@
 <p></p>
 <hr>
 
+<!--SEARCH START-->
 <div>
   <label for="new-name">Search for name: &nbsp;</label>
   <input #name (keyup)="name.value= this.searchItem.name; this.searchItems()"
          (change)="searchItems()" id="new-name" [(ngModel)]="this.searchItem.name" placeholder="name"/>
+
+  <label for="searchLocation">Location</label>
+  <select
+    id="searchLocation"
+    name="location"
+    [(ngModel)]="this.searchItem.locationTag"
+    (change)="searchItems()">
+    <option [ngValue]="null">none</option>
+    <option value="fridge">fridge</option>
+    <option value="freezer">freezer</option>
+    <option value="shelf">shelf</option>
+  </select>
+
 </div>
+<!--SEARCH END-->
+
 <!--TABLE START-->
 
 <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(itemAddModal)">Add new Item</button>
