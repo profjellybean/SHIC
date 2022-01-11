@@ -25,11 +25,19 @@ public interface BillRepository extends JpaRepository<Bill, Long> {
     Bill save(Bill bill);
 
     /**
-     * Adds up the sums of all Bills that were paid in the current month.
+     * Adds up the sums of all Bills that were paid in specific month.
+     *
+     * @return sum of all bills, null if no bill is found
+     */
+    @Query(value = "SELECT SUM(B.PRICE) FROM BILL AS B WHERE (B.REGISTER_ID = :registerId) AND (YEAR(B.PAID_ON) = YEAR(:today) AND MONTH(B.PAID_ON) = MONTH(:today))", nativeQuery = true)
+    Double billSumOfSpecificMonth(@Param("registerId") Long registerId, @Param("today") LocalDate today);
+
+    /**
+     * Adds up the sums of all Bills that were paid in a specific year.
      *
      * @return sum
      */
-    //@Query(value = "SELECT SUM(B.PRICE) FROM BILL AS B WHERE (B.REGISTER_ID = :registerId) AND (B.PAID_ON > @startMonthDate)", nativeQuery = true)
-    @Query(value = "SELECT SUM(B.PRICE) FROM BILL AS B WHERE (B.REGISTER_ID = :registerId) AND (YEAR(B.PAID_ON) = YEAR(:today) AND MONTH(B.PAID_ON) = MONTH(:today))", nativeQuery = true)
-    Double billSumOfCurrentMonth(@Param("registerId") Long registerId, @Param("today") LocalDate today);
+    @Query(value = "SELECT SUM(B.PRICE) FROM BILL AS B WHERE (B.REGISTER_ID= :registerId) AND (YEAR(B.PAID_ON)= YEAR(:day))", nativeQuery = true)
+    Double billSumOfSpecificYear(@Param("registerId") Long registerId, @Param("day") LocalDate day);
+
 }

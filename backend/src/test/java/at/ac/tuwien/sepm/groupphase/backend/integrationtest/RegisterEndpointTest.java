@@ -268,7 +268,7 @@ public class RegisterEndpointTest implements TestData {
     }
 
     @Test
-    public void givenBills_billSumOfCurrentMonth_then400() throws Exception {
+    public void givenBills_billSumOfCurrentMonth_then200() throws Exception {
 
         testDataGenerator.generateData_billSumOfCurrentMonth();
 
@@ -283,7 +283,7 @@ public class RegisterEndpointTest implements TestData {
     }
 
     @Test
-    public void givenNoBills_billSumOfCurrentMonth_thenSum0_then400() throws Exception {
+    public void givenNoBills_billSumOfCurrentMonth_thenSum0_then200() throws Exception {
 
         testDataGenerator.generateData_billSumOfCurrentMonth_noBills();
 

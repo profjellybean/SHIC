@@ -38,4 +38,12 @@ public interface RecipeService {
      * @return the updated recipe
      */
     Recipe updateRecipe(Recipe recipe, Long groupId);
+
+    /**
+     * delete recipe by id.
+     *
+     * @param id of the recipe
+     *
+     */
+    void deleteRecipe(String userName, Long id);
 }

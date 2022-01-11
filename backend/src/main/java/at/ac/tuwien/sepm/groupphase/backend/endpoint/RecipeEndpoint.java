@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.RecipeDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.RecipeMapper;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.UnchangeableException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
@@ -12,13 +13,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -93,5 +98,27 @@ public class RecipeEndpoint {
             LOGGER.error(e.getMessage());
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
         }
+    }
+
+    @Secured("ROLE_USER")
+    @DeleteMapping(value = "/{id}")
+    @PermitAll
+    @ResponseStatus(HttpStatus.OK) //TODO: add security
+    public boolean deleteRecipe(Authentication authentication, @PathVariable("id") Long id) {
+        LOGGER.info("DELETE /delete recipe id: {}", id);
+        if (authentication == null) {
+            LOGGER.error("You are not logged-in");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You are not logged-in");
+        }
+        try {
+            recipeService.deleteRecipe(authentication.getName(), id);
+            return true;
+        } catch (NotFoundException e) {
+            LOGGER.error(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        } catch (AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.NETWORK_AUTHENTICATION_REQUIRED);
+        }
+
     }
 }
