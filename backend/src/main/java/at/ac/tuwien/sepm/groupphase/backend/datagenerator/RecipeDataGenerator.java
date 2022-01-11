@@ -79,6 +79,7 @@ public class RecipeDataGenerator {
                     +
                     "Add some water to make it more creamy")
                 .withCategories(new HashSet<>(Arrays.asList(RecipeCategory.vegetarian, RecipeCategory.dinner)))
+                .withGroupId(1L)
                 .build();
             LOGGER.debug("saving recipe {}", fetaCheeseRecipe);
 
@@ -105,6 +106,7 @@ public class RecipeDataGenerator {
                     +
                     "at 200 degrees Celsius until they are gold-brown. Add salt and spices at will.")
                 .withCategories(new HashSet<>(Arrays.asList(RecipeCategory.vegetarian, RecipeCategory.dinner)))
+                .withGroupId(1L)
                 .build();
             LOGGER.debug("saving recipe {}", potatoWedgesRecipe);
             Recipe storedPotatoWedgesRecipe = recipeRepository.save(potatoWedgesRecipe);
@@ -122,6 +124,7 @@ public class RecipeDataGenerator {
                 .withName("Noodles with Pesto")
                 .withDescription("For one Person: Cook noodles and add 100g Pesto")
                 .withCategories(new HashSet<>(Arrays.asList(RecipeCategory.vegetarian, RecipeCategory.dinner)))
+                .withGroupId(1L)
                 .build();
             LOGGER.debug("saving recipe {}", noodlesWithPesto);
 
@@ -144,6 +147,7 @@ public class RecipeDataGenerator {
                 .withName("Nutella Cake")
                 .withDescription("For 12 Portions: First stir the eggs, than add hot nutella and mix both together. Last bake it for 175 Celcius")
                 .withCategories(new HashSet<>(Arrays.asList(RecipeCategory.vegetarian, RecipeCategory.dinner)))
+                .withGroupId(1L)
                 .build();
             LOGGER.debug("saving recipe {}", nutellacake);
 
@@ -166,6 +170,7 @@ public class RecipeDataGenerator {
                 .withName("vegan Pudding")
                 .withDescription("For 10 Portions: Mix both together and heat it in the microwave.")
                 .withCategories(new HashSet<>(Arrays.asList(RecipeCategory.vegetarian, RecipeCategory.dinner)))
+                .withGroupId(1L)
                 .build();
             LOGGER.debug("saving recipe {}", veganPudding);
 
@@ -190,6 +195,7 @@ public class RecipeDataGenerator {
                     .withDescription(TEST_RECIPE_DESCRIPTION + " " + i)
                     //.withIngredients(new HashSet<>(Arrays.asList(new ItemStorage(1L), new ItemStorage(2L))))
                     .withCategories(TEST_RECIPE_CATEGORIES)
+                    .withGroupId(1L)
                     .build();
                 LOGGER.debug("saving recipe {}", recipe);
                 Recipe storedRecipe = recipeRepository.save(recipe);

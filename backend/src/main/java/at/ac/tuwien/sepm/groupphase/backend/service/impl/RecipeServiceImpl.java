@@ -68,7 +68,9 @@ public class RecipeServiceImpl implements RecipeService {
     public void deleteRecipe(String userName, Long id) {
         LOGGER.debug("Service: delete recipe by id: {}", id);
         Long registerId = userService.loadGroupRegisterIdByUsername(userName);
-
+        if (!Objects.equals(registerId, findRecipeById(id).getGroupId())) {
+            throw new NotFoundException("you are not authorized");
+        }
         Recipe helpRecipe = findRecipeById(id);
         if (helpRecipe == null) {
             throw new NotFoundException("recipe not found");
