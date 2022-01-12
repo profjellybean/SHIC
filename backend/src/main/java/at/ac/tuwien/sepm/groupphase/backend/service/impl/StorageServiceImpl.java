@@ -209,6 +209,8 @@ public class StorageServiceImpl implements StorageService {
 
     @Override
     public List<LocationClass> getAllLocationsByStorageId(Long storageId) {
+        LOGGER.debug("Getting the locations with the storageid");
+
         List<LocationClass> locationDefault = locationRepository.findAllByStorageId(null);
         List<LocationClass> locationStorage = locationRepository.findAllByStorageId(storageId);
 
@@ -220,22 +222,31 @@ public class StorageServiceImpl implements StorageService {
 
     @Override
     public List<LocationClass> getAllLocationsByName(String name) {
+        LOGGER.debug("Getting the locations with the name");
         return locationRepository.findAllByName(name);
     }
 
     @Override
     public List<LocationClass> getAllLocationsByNameAndStorageId(String name, Long storageId) {
+        LOGGER.debug("Getting the locations with the storageid and name");
         return locationRepository.findAllByNameAndStorageId(name, storageId);
     }
 
 
     @Override
     public void saveLocation(LocationClass locationClass) {
+        LOGGER.debug("Saving a location");
         List<LocationClass> existingLocation = locationRepository.findAllByNameAndStorageId(locationClass.getName(), locationClass.getStorageId());
         if (!existingLocation.isEmpty()) {
             throw new ServiceException("location already exists!");
         }
         locationRepository.saveAndFlush(locationClass);
+    }
+
+    @Override
+    public void deleteLocation(Long id) {
+        LOGGER.debug("Deleting a location");
+        locationRepository.deleteById(id);
     }
 
     @Override

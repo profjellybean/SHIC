@@ -140,4 +140,10 @@ public interface StorageService {
      *
      */
     void saveLocation(LocationClass locationClass);
+
+    /**
+     * deletes a location.
+     *
+     */
+    void deleteLocation(Long id);
 }

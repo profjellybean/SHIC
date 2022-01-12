@@ -213,4 +213,21 @@ public class StorageEndpoint {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
+
+    @DeleteMapping(value = "/location")
+    @PermitAll
+    @Operation(summary = "delete location") //TODO: add security
+    public void deleteLocation(@Valid @Param("id") Long id) {
+        try {
+            LOGGER.info("deleteLocation{}, endpoint", id);
+            storageService.deleteLocation(id);
+        } catch (NotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (ServiceException e) {
+            LOGGER.error(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
 }
