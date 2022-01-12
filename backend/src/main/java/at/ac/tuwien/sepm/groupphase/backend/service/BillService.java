@@ -30,4 +30,12 @@ public interface BillService {
      * @param bill the bill that will be added
      */
     Bill bill(Bill bill);
+
+    /**
+     * Updates a bill.
+     *
+     * @param billDtoToBill the updated bill
+     * @return the updated bill
+     */
+    Bill updateBill(Bill billDtoToBill);
 }

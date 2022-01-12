@@ -70,8 +70,8 @@ public class BillDataGenerator {
                 Bill savedBill = billRepository.saveAndFlush(bill);
 
                 //user
-                Optional<ApplicationUser> user = userRepository.findUserByUsername("user");
-                Optional<ApplicationUser> admin = userRepository.findUserByUsername("admin");
+                Optional<ApplicationUser> user = userRepository.findUserByUsername("Leopold");
+                Optional<ApplicationUser> admin = userRepository.findUserByUsername("Heidi");
 
                 HashSet<ApplicationUser> names = new HashSet<>();
                 user.ifPresent(names::add);
