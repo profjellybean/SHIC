@@ -25,7 +25,6 @@ import { UserComponent } from './components/user/user.component';
 import { ConfirmUserEmailComponent } from './components/confirm-user-email/confirm-user-email.component';
 import {NgSelectModule} from '@ng-select/ng-select';
 import { StatisticComponent } from './components/statistic/statistic.component';
-import { GroupComponent } from './components/group/group.component';
 import { LocationTagComponent } from './components/location-tag/location-tag.component';
 
 @NgModule({
@@ -49,7 +48,6 @@ import { LocationTagComponent } from './components/location-tag/location-tag.com
     ShoppingListListComponent,
     StorageAddItemComponent,
     StatisticComponent,
-    GroupComponent,
     LocationTagComponent,
   ],
   imports: [
