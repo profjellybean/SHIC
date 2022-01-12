@@ -1,8 +1,10 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemStorageDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.LocationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UnitOfQuantityDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ItemStorageMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.LocationMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UnitOfQuantityMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
@@ -43,16 +45,18 @@ public class StorageEndpoint {
     private final StorageService storageService;
     private final ItemStorageMapper itemStorageMapper;
     private final UnitOfQuantityMapper unitOfQuantityMapper;
+    private final LocationMapper locationMapper;
     private final UserService userService;
     private final GroupService groupService;
 
     @Autowired
     public StorageEndpoint(StorageService storageService, ItemStorageMapper itemStorageMapper,
-                           UnitOfQuantityMapper unitOfQuantityMapper, UserService userService,
+                           UnitOfQuantityMapper unitOfQuantityMapper, LocationMapper locationMapper, UserService userService,
                            GroupService groupService) {
         this.storageService = storageService;
         this.itemStorageMapper = itemStorageMapper;
         this.unitOfQuantityMapper = unitOfQuantityMapper;
+        this.locationMapper = locationMapper;
         this.userService = userService;
         this.groupService = groupService;
     }
@@ -146,6 +150,82 @@ public class StorageEndpoint {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
         } catch (NotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
+    @GetMapping(value = "/location")
+    @PermitAll
+    @Operation(summary = "Get all locations") //TODO: add security
+    public List<LocationDto> getAllLocations() {
+        try {
+            LOGGER.info("getAllLocations, endpoint");
+            return locationMapper.locationToLocationDto(storageService.getAllLocations());
+        } catch (NotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
+    @GetMapping(value = "/locationWithStorageId")
+    @PermitAll
+    @Operation(summary = "Get all locations and storageId") //TODO: add security
+    public List<LocationDto> getAllLocationsByStorageId(@Param("storageId") Long storageId) {
+        try {
+            LOGGER.info("getAllLocations by storageId, endpoint");
+            return locationMapper.locationToLocationDto(storageService.getAllLocationsByStorageId(storageId));
+        } catch (NotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
+    @GetMapping(value = "/locationWithNameandStorageId")
+    @PermitAll
+    @Operation(summary = "Get all locations by name and storageId") //TODO: add security
+    public List<LocationDto> getAllLocationsByNameAndStorageId(@Param("name") String name, @Param("storageId") Long storageId) {
+        try {
+            LOGGER.info("getAllLocations by name and storageId, endpoint");
+            return locationMapper.locationToLocationDto(storageService.getAllLocationsByNameAndStorageId(name, storageId));
+        } catch (NotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
+    @PostMapping(value = "/location")
+    @PermitAll
+    @Operation(summary = "save location") //TODO: add security
+    public void saveLocation(@Valid @RequestBody LocationDto locationDto) {
+        try {
+            LOGGER.info("saveLocation{}, endpoint", locationDto);
+            storageService.saveLocation(locationMapper.locationDtoToLocation(locationDto));
+        } catch (NotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (ServiceException e) {
+            LOGGER.error(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
+    @DeleteMapping(value = "/location")
+    @PermitAll
+    @Operation(summary = "delete location") //TODO: add security
+    public void deleteLocation(@Valid @Param("id") Long id) {
+        try {
+            LOGGER.info("deleteLocation{}, endpoint", id);
+            storageService.deleteLocation(id);
+        } catch (NotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (ServiceException e) {
+            LOGGER.error(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }

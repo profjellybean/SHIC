@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ShoppingListAddComponent } from './shopping-list-add.component';
+import { LocationTagComponent } from './location-tag.component';
 
-describe('ShoppingListAddComponent', () => {
-  let component: ShoppingListAddComponent;
-  let fixture: ComponentFixture<ShoppingListAddComponent>;
+describe('LocationTagComponent', () => {
+  let component: LocationTagComponent;
+  let fixture: ComponentFixture<LocationTagComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ShoppingListAddComponent ]
+      declarations: [ LocationTagComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ShoppingListAddComponent);
+    fixture = TestBed.createComponent(LocationTagComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
