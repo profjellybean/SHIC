@@ -79,7 +79,6 @@ public class BillEndpointTest {
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
-
         assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
 

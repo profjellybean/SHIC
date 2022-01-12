@@ -10,6 +10,8 @@ import jwt_decode from 'jwt-decode';
 import {AuthService} from '../../services/auth.service';
 import {UserService} from '../../services/user.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {BillDto} from '../../dtos/billDto';
+import {GroupService} from "../../services/group.service";
 
 @Component({
   selector: 'app-register',
@@ -22,12 +24,22 @@ export class RegisterComponent implements OnInit {
   errorMessage = '';
   submitted = false;
 
+  nullUser: User = {
+    id: null,
+    email: null,
+    currGroup: null,
+    username: null,
+    privList: null
+  };
+
   register: Register = {
     id: null,
     bills: null,
     monthlyPayments: null,
     monthlyBudget: null,
   };
+  billToEdit: BillDto;
+  allUsers: User[] = null;
 
   counter = 1;
   secondCounter = 1;
@@ -48,7 +60,7 @@ export class RegisterComponent implements OnInit {
 
   constructor(private registerService: RegisterService, private billService: BillService, public route: ActivatedRoute,
               private authService: AuthService, private userService: UserService,
-              private modalService: NgbModal) {
+              private modalService: NgbModal, private groupService: GroupService) {
   }
 
   ngOnInit(): void {
@@ -62,13 +74,26 @@ export class RegisterComponent implements OnInit {
     this.error = false;
   }
 
-  getCurrentGroup(){
+  getCurrentGroup() {
     this.userService.getCurrentUser({username: this.user.username}).subscribe({
       next: data => {
         console.log('received items11', data);
         this.user = data;
+        this.getAllUsers(data.currGroup.id);
         this.loadRegister(data.currGroup.registerId);
         this.getMonthlySum();
+      },
+      error: error => {
+        console.error(error.message);
+      }
+    });
+  }
+
+  getAllUsers(id: number) {
+    this.groupService.getAllUsers(id).subscribe({
+      next: data => {
+        console.log('received items', data);
+        this.allUsers = data;
       },
       error: error => {
         console.error(error.message);
@@ -140,6 +165,55 @@ export class RegisterComponent implements OnInit {
     });
   }
 
+  openBillModal(billModal: TemplateRef<any>, bill: Bill) {
+    this.billToEdit = new BillDto();
+    this.billToEdit.date = bill.date;
+    this.billToEdit.registerId = bill.registerId;
+    this.billToEdit.id = bill.id;
+    //this.billToEdit.names = bill.names;
+    //this.billToEdit.notPaidNames = bill.notPaidNames;
+    //this.billToEdit.groceries = bill.groceries;
+    this.billToEdit.sumPerPerson = bill.sumPerPerson;
+    this.billToEdit.sum = bill.sum;
+    this.modalService.open(billModal, {ariaLabelledBy: 'modal-basic-title'});
+  }
+
+  editBill(form) {
+    this.submitted = true;
+
+    if (form.valid) {
+      console.log('form item to add', this.billToEdit);
+
+      if(this.billToEdit.names[0].id === null){
+        console.log('Set allUsers {}', this.allUsers);
+        this.billToEdit.names = this.allUsers;
+      }
+      this.billToEdit.notPaidNames = this.billToEdit.names;
+      if(this.billToEdit.names.length > 0) {
+        this.billToEdit.sumPerPerson = this.billToEdit.sum / this.billToEdit.names.length;
+      } else {
+        this.billToEdit.sumPerPerson = this.billToEdit.sum;
+      }
+      for(const name of this.billToEdit.names){
+        delete name.currGroup;
+      }
+      for(const name of this.billToEdit.notPaidNames){
+        delete name.currGroup;
+      }
+      this.billService.editBill(this.billToEdit).subscribe({
+        next: data => {
+          console.log('received sum of all Bills this month', data);
+          this.loadRegister(this.user.currGroup.registerId);
+        },
+        error: error => {
+          console.error(error.message);
+          this.defaultServiceErrorHandling(error);
+        }
+      });
+      this.clearForm();
+    }
+  }
+
   private getMonthlySum() {
     console.log('getting sum of all Bills this month');
     this.registerService.getMonthlySum().subscribe({
@@ -176,5 +250,9 @@ export class RegisterComponent implements OnInit {
     } else {
       this.errorMessage = error.error;
     }
+  }
+
+  private clearForm() {
+
   }
 }

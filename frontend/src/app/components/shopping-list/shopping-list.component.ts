@@ -96,7 +96,6 @@ export class ShoppingListComponent implements OnInit {
       next: data => {
         console.log('received items', data);
         this.allUsers = data;
-        //this.billToAdd.names = data;
       },
       error: error => {
         console.error(error.message);
