@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.security.PermitAll;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 
@@ -58,7 +60,7 @@ public class BillEndpoint {
     @PermitAll
     @Transactional
     @Operation(summary = "create a new bill")
-    public BillDto bill(@RequestBody BillDto billDto) {
+    public BillDto bill(@RequestBody @Valid BillDto billDto) {
         LOGGER.info("POST /recipe new bill {}", billDto);
         return billMapper.billToBillDto(billService.bill(billMapper.billDtoToBill(billDto)));
     }

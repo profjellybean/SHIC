@@ -53,7 +53,6 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void {
     this.getCurrentGroup();
-    this.getMonthlySum();
   }
 
   /**
@@ -69,6 +68,7 @@ export class RegisterComponent implements OnInit {
         console.log('received items11', data);
         this.user = data;
         this.loadRegister(data.currGroup.registerId);
+        this.getMonthlySum();
       },
       error: error => {
         console.error(error.message);
@@ -99,14 +99,14 @@ export class RegisterComponent implements OnInit {
         this.register.bills = register.bills;
         this.register.monthlyPayments = register.monthlyPayments;
         this.register.monthlyBudget = register.monthlyBudget;
-        this.loadRegister(1);
+        this.loadRegister(this.user.currGroup.registerId);
       }, error: err => {
         this.defaultServiceErrorHandling(err);
       }
     });
   }
 
-  private loadRegister(id: number) {
+  loadRegister(id: number) {
     this.registerService.getRegisterById(id).subscribe({
       next: register => {
         this.register.id = register.id;
@@ -132,7 +132,7 @@ export class RegisterComponent implements OnInit {
           this.billArray[this.counter] = bill;
           this.counter++;
         }
-
+        console.log(this.billArray);
         this.newMonthlyBudget = register.monthlyBudget;
       }, error: err => {
         this.defaultServiceErrorHandling(err);
