@@ -33,6 +33,7 @@ export class RecipeDetailComponent implements OnInit {
   submitted = false;
   tempIngredient: Item;
   allItems: Item[];
+  numberOfPeople = 1;
 
 
   error = false;
@@ -68,7 +69,7 @@ export class RecipeDetailComponent implements OnInit {
   */
 
   planRecipe() {
-    this.shoppingListService.planRecipe(this.recipe.id).subscribe({
+    this.shoppingListService.planRecipe(this.recipe.id, this.numberOfPeople).subscribe({
       next: res => {
         this.items = res;
       },
@@ -80,7 +81,7 @@ export class RecipeDetailComponent implements OnInit {
   }
 
   putRecipeOnShoppingList() {
-    this.shoppingListService.putRecipeOnShoppingList(this.recipe.id).subscribe({
+    this.shoppingListService.putRecipeOnShoppingList(this.recipe.id, this.numberOfPeople).subscribe({
       next: res => {
         this.items = res;
       },

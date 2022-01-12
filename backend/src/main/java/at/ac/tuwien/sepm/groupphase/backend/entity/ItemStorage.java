@@ -57,9 +57,8 @@ public class ItemStorage {
         this.shoppingListId = shoppingListId;
     }
 
+    // copies all attributes of ItemStorage except id
     public ItemStorage(ItemStorage itemStorage) {
-        //this = itemStorage.clone();
-        // this.id = itemStorage.getId();
         this.name = itemStorage.getName();
         this.notes = itemStorage.notes;
         this.image = itemStorage.image;

@@ -23,6 +23,8 @@ export class RecipeComponent implements OnInit {
   nullRecipe: Recipe = {name: null, id: null, categories: null, description: null, ingredients: this.ingredientsToAdd,
   groupId: null};
 
+  popup= false;
+  deleteRecipe: Recipe;
   recipeToAdd = this.nullRecipe;
   error = false;
   errorMessage = '';
@@ -81,6 +83,10 @@ export class RecipeComponent implements OnInit {
     this.modalService.open(recipeAddModal, {ariaLabelledBy: 'modal-basic-title'});
   }
 
+  openDeleteModal(recipeDeleteModal: TemplateRef<any>) {
+    this.modalService.open(recipeDeleteModal, {ariaLabelledBy: 'modal-basic-title'});
+  }
+
   addRecipeForm(form) {
     this.submitted = true;
     if(this.recipeToAdd.ingredients === undefined || this.recipeToAdd.ingredients === null){
@@ -92,6 +98,12 @@ export class RecipeComponent implements OnInit {
       this.clearForm();
       this.vanishError();
     }
+  }
+
+  delete(recipe: Recipe) {
+    console.log('deleteRecipe', recipe.id);
+    this.recipes = this.recipes.filter(r => r !== recipe);
+    this.recipeService.deleteRecipeById(recipe.id).subscribe();
   }
 
   addRecipe(recipe: Recipe) {
