@@ -22,9 +22,7 @@
     [(ngModel)]="this.searchItem.locationTag"
     (change)="searchItems()">
     <option [ngValue]="null">none</option>
-    <option value="fridge">fridge</option>
-    <option value="freezer">freezer</option>
-    <option value="shelf">shelf</option>
+    <option *ngFor="let locationTag of $any(locationTags)" [ngValue]="locationTag.name">{{locationTag.name}}</option>
   </select>
 
 </div>
@@ -113,9 +111,7 @@
             name="location"
             [(ngModel)]="this.itemToAdd.locationTag">
             <option [ngValue]="null">none</option>
-            <option value="fridge">fridge</option>
-            <option value="freezer">freezer</option>
-            <option value="shelf">shelf</option>
+            <option *ngFor="let locationTag of $any(locationTags)" [ngValue]="locationTag.name">{{locationTag.name}}</option>
           </select>
         </div>
 

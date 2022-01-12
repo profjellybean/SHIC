@@ -104,13 +104,14 @@ public class StorageServiceImpl implements StorageService {
     public ItemStorage saveItem(ItemStorage itemStorage, Long groupId) {
         LOGGER.debug("Service: Save item {} for group {}", itemStorage, groupId);
 
+        /*
         if (itemStorage.getLocationTag() != null) {
             try {
                 Location.valueOf(itemStorage.getLocationTag());
             } catch (IllegalArgumentException i) {
                 throw new ValidationException("Location is not valid");
             }
-        }
+        }*/
 
         itemService.checkForBluePrintForGroup(itemStorage, groupId);
 
@@ -250,6 +251,7 @@ public class StorageServiceImpl implements StorageService {
         if(locationToDelete.getStorageId() == null) {
             throw new ServiceException("location cannot be delete!");
         }
+
         locationRepository.deleteById(id);
     }
 
