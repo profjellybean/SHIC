@@ -205,10 +205,8 @@
                   id="updateLocation"
                   name="location"
                   [(ngModel)]="this.itemToUpdate.locationTag">
+                  <option *ngFor="let locationTag of $any(locationTags)" [ngValue]="locationTag.name">{{locationTag.name}}</option>
                   <option [ngValue]="null">none</option>
-                  <option value="fridge">fridge</option>
-                  <option value="freezer">freezer</option>
-                  <option value="shelf">shelf</option>
                 </select>
               </div>
 
