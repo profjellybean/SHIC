@@ -31,6 +31,7 @@
     <th>Sum of the purchase: </th>
     <th>To pay per person: </th>
     <th>Date: </th>
+    <th>Notes:</th>
   </tr>
   </thead>
   <tbody>
@@ -41,6 +42,7 @@
     <td>{{bill.sum}} €</td>
     <td>{{bill.sumPerPerson}} €</td>
     <td>{{bill.date}}</td>
+    <td>{{bill.notes}}</td>
     <td>
       <div>
         <button type="button" style="BACKGROUND-COLOR:green;" class="btn btn-secondary" (click)="confirmPayment(bill.id);">Confirm Payment</button> &nbsp;
@@ -97,21 +99,7 @@
     </div>
     <div class="modal-body">
       <form (ngSubmit)="editBill(billForm)" #billForm="ngForm">
-        <div class="form-group">
-          <label>Add users to bill: </label>
-          <ng-select id="favFood"
-                     [(ngModel)]="this.billToEdit.names"
-                     placeholder="Select names"
-                     [clearable]="true"
-                     [multiple]="true"
-                     [ngModelOptions]="{standalone: true}">
-            <ng-option [value]="nullUser">Everyone</ng-option>
-            <ng-option [value]="user" *ngFor="let user of allUsers">
-              {{user.username}}
-            </ng-option>
-          </ng-select>
 
-        </div>
 
         <div class="form-group">
           <label for="price">Bill sum (in Euros):</label>

@@ -152,7 +152,6 @@ export class RegisterComponent implements OnInit {
           for (const name of bill.notPaidNames) {
             bill.notPaidNameList = bill.notPaidNameList + name.username + ', ';
             this.secondCounter++;
-            console.log('not paid ' + bill.notPaidNameList);
           }
           this.billArray[this.counter] = bill;
           this.counter++;
@@ -170,11 +169,12 @@ export class RegisterComponent implements OnInit {
     this.billToEdit.date = bill.date;
     this.billToEdit.registerId = bill.registerId;
     this.billToEdit.id = bill.id;
-    //this.billToEdit.names = bill.names;
-    //this.billToEdit.notPaidNames = bill.notPaidNames;
-    //this.billToEdit.groceries = bill.groceries;
+    bill.names.forEach(e => this.billToEdit.names.push(new User(e.id, e.username, e.currGroup, e.privList, e.email)));
+    bill.notPaidNames.forEach(e => this.billToEdit.notPaidNames.push(new User(e.id, e.username, e.currGroup, e.privList, e.email)));
+    this.billToEdit.groceries = Array.from(bill.groceries.values());
     this.billToEdit.sumPerPerson = bill.sumPerPerson;
     this.billToEdit.sum = bill.sum;
+    this.billToEdit.notes = bill.notes;
     this.modalService.open(billModal, {ariaLabelledBy: 'modal-basic-title'});
   }
 
@@ -183,7 +183,6 @@ export class RegisterComponent implements OnInit {
 
     if (form.valid) {
       console.log('form item to add', this.billToEdit);
-
       if(this.billToEdit.names[0].id === null){
         console.log('Set allUsers {}', this.allUsers);
         this.billToEdit.names = this.allUsers;
