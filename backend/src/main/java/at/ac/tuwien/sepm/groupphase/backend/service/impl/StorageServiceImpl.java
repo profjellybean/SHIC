@@ -246,6 +246,10 @@ public class StorageServiceImpl implements StorageService {
     @Override
     public void deleteLocation(Long id) {
         LOGGER.debug("Deleting a location");
+        LocationClass locationToDelete = locationRepository.getById(id);
+        if(locationToDelete.getStorageId() == null) {
+            throw new ServiceException("location cannot be delete!");
+        }
         locationRepository.deleteById(id);
     }
 
