@@ -226,7 +226,7 @@ public class StorageServiceImpl implements StorageService {
     @Override
     public void saveLocation(LocationClass locationClass) {
         List<LocationClass> existingLocation = locationRepository.findAllByNameAndStorageId(locationClass.getName(), locationClass.getStorageId());
-        if(!existingLocation.isEmpty()) {
+        if (!existingLocation.isEmpty()) {
             throw new ServiceException("location already exists!");
         }
         locationRepository.saveAndFlush(locationClass);

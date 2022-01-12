@@ -1,0 +1,60 @@
+<div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+  <strong>Error! </strong> {{ errorMessage }}
+  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<p></p>
+<h1>Custom Location Tags</h1>
+<p></p>
+
+<button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(locationTagAddModal)">Add New Custom Location Tag</button>
+
+
+<table class="table table-striped">
+  <thead class="thead-dark">
+  <tr>
+    <th>Name</th>
+    <th></th>
+  </tr>
+  </thead>
+  <tbody>
+
+  <tr *ngFor="let locationTag of $any(locationTags)">
+    <td>{{locationTag.name}}</td>
+  </tr>
+  </tbody>
+</table>
+
+<div class="row p-2 mb-4">
+
+  <ng-template #locationTagAddModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Add Location Tag</h5>
+      <button type="button" class="close" (click)="modal.dismiss('X')" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form (ngSubmit)="addLocationTagForm(locationTagForm)" #locationTagForm="ngForm">
+
+        <div class="form-group">
+          <label for="inputName2">Name</label>
+          <textarea rows="1" name="name" class="form-control" id="inputName2" required
+                    aria-describedby="nameHelp" placeholder="Enter Name" [(ngModel)]="locationTagToAdd.name"></textarea>
+          <div *ngIf="submitted && locationTagForm.controls.name.errors" class="error">
+            <small class="form-text text-warning" *ngIf="locationTagForm.controls.name.errors.required"> Name is
+              required!
+            </small>
+          </div>
+        </div>
+
+        <button type="button" (click)="addLocationTagForm(locationTagForm)" (click)="modal.dismiss('close')" id="add-msg2" class="btn btn-success float-right">Add Location Tag</button>
+
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" id="close-modal-btn2" (click)="modal.dismiss('close')">Close</button>
+    </div>
+  </ng-template>
+</div>
