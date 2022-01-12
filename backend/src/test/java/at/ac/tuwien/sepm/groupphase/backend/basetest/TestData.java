@@ -27,6 +27,7 @@ public interface TestData {
     String BASE_URI = "/api/v1";
     String MESSAGE_BASE_URI = BASE_URI + "/messages";
     String USERENDPOINT_URI = BASE_URI + "/user";
+    String BILLENDPOINT_URI = BASE_URI + "/bill";
     String ADMIN_USER = "admin";
     String TEST_USER = "testUser";
     String STORAGEENDPOINT_URI = BASE_URI + "/storage";
@@ -69,7 +70,7 @@ public interface TestData {
     String TEST_ITEMSTORAGE_NOTES = "ITEMSTORAGE TEST NOTES";
     Long TEST_ITEMSTORAGE_ID = 1L;
     int TEST_ITEMSTORAGE_AMOUNT = 3;
-    UnitOfQuantity TEST_ITEMSTORAGE_UNITOFQUANTITY = new UnitOfQuantity( "kg");
+    UnitOfQuantity TEST_ITEMSTORAGE_UNITOFQUANTITY = new UnitOfQuantity("kg");
     UnitOfQuantityDto TEST_ITEMSTORAGE_UNITOFQUANTITYDTO = new UnitOfQuantityDto("kg");
     Long TEST_ITEMSTORAGE_STORAGEID = 2L;
     Long TEST_ITEMSTORAGE_SHOPPINGLISTID = 3L;
