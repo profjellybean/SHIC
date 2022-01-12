@@ -11,7 +11,7 @@ import {AuthService} from '../../services/auth.service';
 import {UserService} from '../../services/user.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {BillDto} from '../../dtos/billDto';
-import {GroupService} from "../../services/group.service";
+import {GroupService} from '../../services/group.service';
 
 @Component({
   selector: 'app-register',
