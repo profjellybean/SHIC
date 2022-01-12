@@ -11,19 +11,23 @@
 
 <!--SEARCH START-->
 <div>
-  <label for="new-name">Search for name: &nbsp;</label>
-  <input #name (keyup)="name.value= this.searchItem.name; this.searchItems()"
-         (change)="searchItems()" id="new-name" [(ngModel)]="this.searchItem.name" placeholder="name"/>
-
-  <label for="searchLocation">Location</label>
-  <select
-    id="searchLocation"
-    name="location"
-    [(ngModel)]="this.searchItem.locationTag"
-    (change)="searchItems()">
-    <option [ngValue]="null">none</option>
-    <option *ngFor="let locationTag of $any(locationTags)" [ngValue]="locationTag.name">{{locationTag.name}}</option>
-  </select>
+  <div>
+    <label for="new-name">Search for name: &nbsp;</label>
+    <input #name (keyup)="name.value= this.searchItem.name; this.searchItems()"
+           (change)="searchItems()" id="new-name" [(ngModel)]="this.searchItem.name" placeholder="name"/>
+  </div>
+  <br>
+  <div>
+    <label for="searchLocation">Location</label>
+    <select
+      id="searchLocation"
+      name="location"
+      [(ngModel)]="this.searchItem.locationTag"
+      (change)="searchItems()">
+      <option [ngValue]="null">none</option>
+      <option *ngFor="let locationTag of $any(locationTags)" [ngValue]="locationTag.name">{{locationTag.name}}</option>
+    </select>
+  </div>
 
 </div>
 <!--SEARCH END-->
@@ -111,7 +115,8 @@
             name="location"
             [(ngModel)]="this.itemToAdd.locationTag">
             <option [ngValue]="null">none</option>
-            <option *ngFor="let locationTag of $any(locationTags)" [ngValue]="locationTag.name">{{locationTag.name}}</option>
+            <option *ngFor="let locationTag of $any(locationTags)"
+                    [ngValue]="locationTag.name">{{locationTag.name}}</option>
           </select>
         </div>
 
@@ -156,7 +161,9 @@
     <td>{{item.locationTag}}</td>
     <td>{{item.notes}}</td>
     <td>
-      <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(itemUpdateModal); setUpdateItem(item)">Edit</button>
+      <button type="button" class="btn btn-secondary btn-sm mr-4"
+              (click)="openAddModal(itemUpdateModal); setUpdateItem(item)">Edit
+      </button>
       <div class="row p-2 mb-4">
         <ng-template #itemUpdateModal let-modal>
           <div class="modal-header">
@@ -205,7 +212,8 @@
                   id="updateLocation"
                   name="location"
                   [(ngModel)]="this.itemToUpdate.locationTag">
-                  <option *ngFor="let locationTag of $any(locationTags)" [ngValue]="locationTag.name">{{locationTag.name}}</option>
+                  <option *ngFor="let locationTag of $any(locationTags)"
+                          [ngValue]="locationTag.name">{{locationTag.name}}</option>
                   <option [ngValue]="null">none</option>
                 </select>
               </div>
@@ -253,7 +261,8 @@
     </td>
 
     <td><!-- popUp if deleted-->
-      <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(itemDeleteModal)">Remove</button>
+      <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(itemDeleteModal)">Remove
+      </button>
       <div class="row p-2 mb-4">
         <ng-template #itemDeleteModal let-modal>
           <div class="modal-header">
