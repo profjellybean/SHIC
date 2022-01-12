@@ -43,9 +43,5 @@ public class StorageDataGenerator {
                 storageRepository.save(storage);
             }
         }
-
-        locationRepository.saveAndFlush(new LocationClass(4L, "celler", 1L));
-        locationRepository.saveAndFlush(new LocationClass(5L, "kitchen_1.OG", 1L));
-        locationRepository.saveAndFlush(new LocationClass(6L, "kitchen_2.OG", 1L));
     }
 }

@@ -209,7 +209,13 @@ public class StorageServiceImpl implements StorageService {
 
     @Override
     public List<LocationClass> getAllLocationsByStorageId(Long storageId) {
-        return locationRepository.findAllByStorageId(storageId);
+        List<LocationClass> locationDefault = locationRepository.findAllByStorageId(null);
+        List<LocationClass> locationStorage = locationRepository.findAllByStorageId(storageId);
+
+        for (int i = 0; i < locationDefault.size(); i++) {
+            locationStorage.add(locationDefault.get(i));
+        }
+        return locationStorage;
     }
 
     @Override

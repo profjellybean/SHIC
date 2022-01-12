@@ -12,4 +12,6 @@ public interface LocationRepository extends JpaRepository<LocationClass, Long> {
     List<LocationClass> findAllByName(String name);
 
     List<LocationClass> findAllByNameAndStorageId(String name, Long storageId);
+
+    void deleteById(Long id);
 }

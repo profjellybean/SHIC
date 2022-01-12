@@ -4,7 +4,6 @@ import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 public class LocationDto {
-    @NotNull
     private Long id;
 
     @NotNull
