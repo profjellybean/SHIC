@@ -40,4 +40,12 @@ export class LocationTagService {
     console.log('service: add locationTag to group');
     return this.httpClient.post<LocationTag>(this.locationTagBaseUri + '/location', locationTag);
   }
+
+  /**
+   * delete locationtag
+   */
+  deleteLocationTag(params: Params) {
+    console.log('service: delete locationTag');
+    return this.httpClient.delete(this.locationTagBaseUri + '/location', {params});
+  }
 }

@@ -31,6 +31,7 @@ export class LocationTagComponent implements OnInit {
   nullLocationTag: LocationTag = {id: null, name: null, storageId: this.storageId};
   locationTagToAdd: LocationTag = this.nullLocationTag;
   locationTags: LocationTag[] = null;
+  locationTagToDelete: LocationTag = null;
 
   constructor(private modalService: NgbModal,
               private locationTagService: LocationTagService,
@@ -54,6 +55,19 @@ export class LocationTagComponent implements OnInit {
         console.error(error.message);
       }
     });
+  }
+
+  locationTagDefaultCheck(locationTag: LocationTag) {
+    if(locationTag.name.trim() === 'shelf') {
+      return false;
+    }
+    if(locationTag.name.trim() === 'freezer') {
+      return false;
+    }
+    if(locationTag.name.trim() === 'fridge') {
+      return false;
+    }
+    return true;
   }
 
 
@@ -85,6 +99,20 @@ export class LocationTagComponent implements OnInit {
       });
   }
 
+  deleteLocationTagById(id: number) {
+    this.locationTagService.deleteLocationTag({id}).subscribe(
+      {
+        next: data => {
+          console.log('successfully deleted custom locationTag', data);
+          this.loadLocationTags(this.storageId);
+        },
+        error: err => {
+          console.log(err);
+          this.defaultServiceErrorHandling(err);
+        }
+      });
+  }
+
   addLocationTagForm(form) {
     this.submitted = true;
 
@@ -98,6 +126,10 @@ export class LocationTagComponent implements OnInit {
 
   openAddModal(locationTagAddModal: TemplateRef<any>) {
     this.modalService.open(locationTagAddModal, {ariaLabelledBy: 'modal-basic-title'});
+  }
+
+  openDeleteModal(locationTagDeleteModal: TemplateRef<any>) {
+    this.modalService.open(locationTagDeleteModal, {ariaLabelledBy: 'modal-basic-title'});
   }
 
   /**
