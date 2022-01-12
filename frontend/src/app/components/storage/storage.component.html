@@ -11,14 +11,15 @@
 
 <!--SEARCH START-->
 <div>
+  <h5>Filter Storage</h5>
   <div>
-    <label for="new-name">Search for name: &nbsp;</label>
+    <label for="new-name">name: &nbsp;</label>
     <input #name (keyup)="name.value= this.searchItem.name; this.searchItems()"
            (change)="searchItems()" id="new-name" [(ngModel)]="this.searchItem.name" placeholder="name"/>
   </div>
   <br>
   <div>
-    <label for="searchLocation">Location</label>
+    <label for="searchLocation">Location:  </label>
     <select
       id="searchLocation"
       name="location"
@@ -28,6 +29,13 @@
       <option *ngFor="let locationTag of $any(locationTags)" [ngValue]="locationTag.name">{{locationTag.name}}</option>
     </select>
   </div>
+  <br>
+  <div>
+    <label for="searchDate">Exp.Date:  </label>
+    <input type="date" [(ngModel)]="this.searchItem.expDate" id="searchDate" (change)="searchItems()" />
+  </div>
+
+<br>
 
 </div>
 <!--SEARCH END-->
