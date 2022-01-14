@@ -27,6 +27,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.ItemService;
 import at.ac.tuwien.sepm.groupphase.backend.service.ShoppingListService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
+import at.ac.tuwien.sepm.groupphase.backend.util.ShoppingListValidator;
 import org.hibernate.ObjectNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +53,7 @@ import java.util.stream.Collectors;
 public class ShoppingListServiceImpl implements ShoppingListService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private final ShoppingListValidator shoppingListValidator;
     private final ShoppingListRepository shoppingListRepository;
     private final RecipeRepository recipeRepository;
     private final ItemStorageRepository itemStorageRepository;
@@ -64,12 +66,13 @@ public class ShoppingListServiceImpl implements ShoppingListService {
 
     @Autowired
     public ShoppingListServiceImpl(ShoppingListRepository shoppingListRepository,
-                                   StorageRepository storageRepository, RecipeRepository recipeRepository,
+                                   ShoppingListValidator shoppingListValidator, RecipeRepository recipeRepository,
                                    ItemStorageRepository itemStorageRepository,
                                    ShoppingListItemRepository shoppingListItemRepository,
                                    ItemRepository itemRepository, UnitsRelationRepository unitsRelationRepository,
                                    UserRepository userRepository, UserService userService,
                                    ItemService itemService) {
+        this.shoppingListValidator = shoppingListValidator;
         this.recipeRepository = recipeRepository;
         this.itemStorageRepository = itemStorageRepository;
         this.shoppingListItemRepository = shoppingListItemRepository;
@@ -106,48 +109,9 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     public List<ItemStorage> planRecipe(Long recipeId, String userName, Integer numberOfPeople) {
         LOGGER.debug("Service: plan Recipe {} for {} people based on user {}.", recipeId, numberOfPeople, userName);
 
-        // validation
-        if (recipeId == null) {
-            throw new ValidationException("Recipe is not specified");
-        }
-        if (userName == null) {
-            throw new ValidationException("User is not specified");
-        }
-        Long storageId = userService.loadGroupStorageByUsername(userName);
-        if (storageId == null) {
-            throw new NotFoundException("Storage could not be found");
-        }
-        Long shoppingListId = userService.getPublicShoppingListIdByUsername(userName);
-        if (shoppingListId == null) {
-            throw new NotFoundException("Public ShoppingList could not be found");
-        }
-        if (numberOfPeople == null || numberOfPeople < 1) {
-            throw new ValidationException("Number of people has to be 1 or bigger");
-        }
-        if (numberOfPeople > 100) {
-            throw new ValidationException("Number of people can not be bigger than 100");
-        }
+        shoppingListValidator.validate_planRecipe(recipeId, userName, numberOfPeople);
 
-        Recipe recipe;
-        try {
-            recipe = recipeRepository.findRecipeById(recipeId);
-            if (recipe == null) {
-                throw new NotFoundException("Could not find recipe with id " + recipeId);
-            }
-        } catch (ObjectNotFoundException e) {
-            throw new NotFoundException("Could not find recipe with id " + recipeId);
-        }
-
-        List<ItemStorage> storageItems;
-        try {
-            storageItems = itemStorageRepository.findAllByStorageId(storageId);
-            if (storageItems == null) {
-                throw new NotFoundException("Could not find storage with id " + storageId);
-            }
-        } catch (ObjectNotFoundException e) {
-            throw new NotFoundException("Could not find storage with id " + storageId);
-        }
-
+        Recipe recipe = recipeRepository.findRecipeById(recipeId);
         Set<ItemStorage> calculatedIngredients = new HashSet<>();
         for (ItemStorage item :
             recipe.getIngredients()) {
@@ -155,14 +119,17 @@ public class ShoppingListServiceImpl implements ShoppingListService {
             calculatedItem.setAmount(item.getAmount() * numberOfPeople);
             calculatedIngredients.add(calculatedItem);
         }
+
+        Long storageId = userService.loadGroupStorageByUsername(userName);
+        List<ItemStorage> storageItems = itemStorageRepository.findAllByStorageId(storageId);
         List<ItemStorage> returnList = compareItemSets(calculatedIngredients, storageItems);
 
+        Long shoppingListId = userService.getPublicShoppingListIdByUsername(userName);
         String notes = "Ingredient for recipe: " + recipe.getName();
         for (ItemStorage item :
             returnList) {
-            ItemStorage shoppingListItem = new ItemStorage(item); // TODO use item of returnSet
-            shoppingListItem.setNotes(notes);
-            saveItem(shoppingListItem, shoppingListId, null);
+            item.setNotes(notes);
+            saveItem(item, shoppingListId, null);
         }
         return returnList;
     }
@@ -170,11 +137,12 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     /**
      * Compares two sets of items.
      * Checks which items of recipeIngredients don't appear in storedItems.
-     * If they appear, the amount of the Items is compared.
+     * If they appear, the amount of the Items is compared and adjusted so that the amount of returnSet + storedItem = recipeIngredient
      *
      * @param recipeIngredients set of items e.g. representing ingredients of a recipe
      * @param storedItems       set of items e.g. representing the stored Items in a Storage.
-     * @return Set of all Items that occur in recipeIngredients but not in storedItem or occur in both, but the amount in recipeIngredients is bigger than the amount in storedItems.
+     * @return List of all Items that occur in recipeIngredients but not in storedItem,
+     *      or occur in both, but the amount in recipeIngredients is bigger than the amount in storedItems.
      */
     private List<ItemStorage> compareItemSets(Set<ItemStorage> recipeIngredients, List<ItemStorage> storedItems) {
         LOGGER.debug("Service: compareItemLists");
@@ -191,6 +159,8 @@ public class ShoppingListServiceImpl implements ShoppingListService {
                 if (ingredient.getQuantity().equals(storedItem.getQuantity())) {
                     // adds items if there is not enough of them in the storage
                     if (ingredient.getAmount() > storedItem.getAmount()) {
+                        int amount = ingredient.getAmount() - storedItem.getAmount();
+                        ingredient.setAmount(amount);
                         returnSet.add(ingredient);
                     }
                 } else {
@@ -199,6 +169,8 @@ public class ShoppingListServiceImpl implements ShoppingListService {
                     if (unitsRelation != null) {
                         Double relation = unitsRelation.getRelation();
                         if (ingredient.getAmount() * relation > storedItem.getAmount()) {
+                            int amount = (int) (ingredient.getAmount() * relation - storedItem.getAmount());
+                            ingredient.setAmount(amount);
                             returnSet.add(ingredient);
                         }
                     }
@@ -214,26 +186,10 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         LOGGER.debug("Service: put all Recipe-Ingredients {} on ShoppingList for {} people based on user {}.", recipeId, numberOfPeople, userName);
 
         // validation
-        if (recipeId == null) {
-            throw new ValidationException("Recipe is not specified");
-        }
+        shoppingListValidator.validate_putRecipeOnShoppingList(recipeId, userName, numberOfPeople);
+
         Recipe recipe = recipeRepository.findRecipeById(recipeId);
-        if (recipe == null) {
-            throw new NotFoundException("Recipe could not be found");
-        }
-        if (userName == null) {
-            throw new ValidationException("User is not specified");
-        }
         Long shoppingListId = userService.getPublicShoppingListIdByUsername(userName);
-        if (shoppingListId == null) {
-            throw new NotFoundException("ShoppingList could not be found");
-        }
-        if (numberOfPeople == null || numberOfPeople < 1) {
-            throw new ValidationException("Number of people has to be 1 or bigger");
-        }
-        if (numberOfPeople > 100) {
-            throw new ValidationException("Number of people can not be bigger than 100");
-        }
 
         List<ItemStorage> returnList = new ArrayList<>();
         String notes = "Ingredient for recipe: " + recipe.getName();

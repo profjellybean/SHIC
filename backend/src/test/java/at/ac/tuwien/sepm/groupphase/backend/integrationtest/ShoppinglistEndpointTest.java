@@ -146,7 +146,6 @@ public class ShoppinglistEndpointTest implements TestData {
     public void givenNoRecipe_whenPlanRecipe_then400() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
-            //.andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
@@ -235,8 +234,8 @@ public class ShoppinglistEndpointTest implements TestData {
 
         assertAll(
             () -> assertEquals("testItem", itemStorageDto.getName()),
-            () -> assertEquals("item for tests", itemStorageDto.getNotes()),
-            () -> assertEquals(10, itemStorageDto.getAmount()),
+            () -> assertEquals("Ingredient for recipe: testRecipe", itemStorageDto.getNotes()),
+            () -> assertEquals(9, itemStorageDto.getAmount()),
             () -> assertEquals("g", itemStorageDto.getQuantity().getName())
         );
 
@@ -264,7 +263,7 @@ public class ShoppinglistEndpointTest implements TestData {
 
         assertAll(
             () -> assertEquals("testItem", itemStorageDto.getName()),
-            () -> assertEquals("item for tests", itemStorageDto.getNotes()),
+            () -> assertEquals("Ingredient for recipe: testRecipe", itemStorageDto.getNotes()),
             () -> assertEquals(10, itemStorageDto.getAmount()),
             () -> assertEquals("g", itemStorageDto.getQuantity().getName())
         );
@@ -293,7 +292,7 @@ public class ShoppinglistEndpointTest implements TestData {
 
         assertAll(
             () -> assertEquals("testItem", itemStorageDto.getName()),
-            () -> assertEquals("item for tests", itemStorageDto.getNotes()),
+            () -> assertEquals("Ingredient for recipe: testRecipe", itemStorageDto.getNotes()),
             () -> assertEquals(10 * numberOfPeople, itemStorageDto.getAmount()),
             () -> assertEquals("g", itemStorageDto.getQuantity().getName())
         );
