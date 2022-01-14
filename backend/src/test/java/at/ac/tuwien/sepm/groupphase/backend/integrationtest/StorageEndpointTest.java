@@ -3,12 +3,24 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
+import at.ac.tuwien.sepm.groupphase.backend.datagenerator.TestDataGenerator;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemStorageDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegistrationDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ItemStorageMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserLoginMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Storage;
+import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UserGroupRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
+import at.ac.tuwien.sepm.groupphase.backend.service.StorageService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +29,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -26,9 +39,16 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 
+import java.util.HashSet;
+import java.util.List;
+
 import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.STORAGEENDPOINT_URI;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -51,12 +71,25 @@ public class StorageEndpointTest implements TestData {
     private ItemStorageRepository itemStorageRepository;
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private UserGroupRepository userGroupRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    UserLoginMapper userLoginMapper;
+    @Autowired
+    private ItemStorageMapper itemStorageMapper;
+    @Autowired
+    TestDataGenerator testDataGenerator;
+    @Autowired
+    private StorageService storageService;
 
-    // @AfterEach
-    // public void afterEach() {
-    //     storageRepository.deleteAll();
-    //     itemStorageRepository.deleteAll();
-    // }
+
+    @AfterEach
+    public void afterEach() {
+        storageRepository.deleteAll();
+        itemStorageRepository.deleteAll();
+    }
 
     @Test
     public void insertItemWithEmptyOrNullStorageIdShouldThrowException() throws Exception {
@@ -80,7 +113,7 @@ public class StorageEndpointTest implements TestData {
         MvcResult mvcResult = this.mockMvc.perform(post(STORAGEENDPOINT_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(itemStorageDto))
-            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
@@ -148,6 +181,96 @@ public class StorageEndpointTest implements TestData {
 
         assertEquals(HttpStatus.OK.value(), response.getStatus());
 
+    }
+
+    @Test
+    public void deleteExistingItemShouldReturnDeletedItem() throws Exception {
+        Storage storage = new Storage();
+        storage = storageRepository.saveAndFlush(storage);
+        UserRegistrationDto testUser = new UserRegistrationDto("testUser", "password", "test.user@email.com");
+        UserGroup testGroup = new UserGroup(storage.getId(), null, null, new HashSet<ApplicationUser>(), null);
+        testGroup = userGroupRepository.saveAndFlush(testGroup);
+
+        ApplicationUser testApplicationUser = userLoginMapper.dtoToEntity(testUser, null);
+        testApplicationUser.setCurrGroup(testGroup);
+        userRepository.saveAndFlush(testApplicationUser);
+
+        ItemStorageDto itemStorageDto = new ItemStorageDto(storage.getId(), "test");
+        ItemStorage item = itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto);
+        itemStorageRepository.saveAndFlush(item);
+        itemStorageDto.setId(item.getId());
+
+        MvcResult mvcResult = this.mockMvc.perform(delete(STORAGEENDPOINT_URI + "?itemId=" + itemStorageDto.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        Storage finalStorage = storage;
+        assertAll(
+            () -> assertEquals(finalStorage.getId(), itemStorageDto.getStorageId()),
+            () -> assertNull(itemStorageDto.getShoppingListId()),
+            () -> assertEquals("test", itemStorageDto.getName()),
+            () -> assertNull(itemStorageDto.getQuantity()),
+            () -> assertNull(itemStorageDto.getNotes()),
+            () -> assertNull(itemStorageDto.getImage()),
+            () -> assertEquals(0, itemStorageDto.getAmount()),
+            () -> assertNull(itemStorageDto.getLocationTag())
+        );
+    }
+
+    @Test
+    public void deleteNotExistingItemShouldThrowNotFoundException() throws Exception {
+        Storage storage = new Storage();
+        storage = storageRepository.saveAndFlush(storage);
+        UserRegistrationDto testUser = new UserRegistrationDto("testUser2", "password", "test.user@email.com");
+        UserGroup testGroup = new UserGroup(storage.getId(), null, null, new HashSet<ApplicationUser>(), null);
+        testGroup = userGroupRepository.saveAndFlush(testGroup);
+
+        ApplicationUser testApplicationUser = userLoginMapper.dtoToEntity(testUser, null);
+        testApplicationUser.setCurrGroup(testGroup);
+        userRepository.saveAndFlush(testApplicationUser);
+
+        ItemStorageDto itemStorageDto = new ItemStorageDto(null, "test");
+        ItemStorage item = itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto);
+        itemStorageRepository.saveAndFlush(item);
+        itemStorageDto.setId(item.getId());
+
+        MvcResult mvcResult = this.mockMvc.perform(delete(STORAGEENDPOINT_URI + "?itemId=" + itemStorageDto.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken("testUser2", ADMIN_ROLES)))
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
+        Storage finalStorage = storage;
+        assertThrows(NotFoundException.class, () -> storageService.deleteItemInStorageById(itemStorageDto.getId(), finalStorage.getId()));
+    }
+
+    @Test
+    public void deleteItemFromNotExistingStorageShouldThrowNotFoundException() throws Exception {
+        UserRegistrationDto testUser = new UserRegistrationDto("testUser2", "password", "test.user@email.com");
+        UserGroup testGroup = new UserGroup(-1L, null, null, new HashSet<ApplicationUser>(), null);
+        testGroup = userGroupRepository.saveAndFlush(testGroup);
+
+        ApplicationUser testApplicationUser = userLoginMapper.dtoToEntity(testUser, null);
+        testApplicationUser.setCurrGroup(testGroup);
+        userRepository.saveAndFlush(testApplicationUser);
+
+        ItemStorageDto itemStorageDto = new ItemStorageDto(null, "test");
+        ItemStorage item = itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto);
+        itemStorageRepository.saveAndFlush(item);
+        itemStorageDto.setId(item.getId());
+
+        MvcResult mvcResult = this.mockMvc.perform(delete(STORAGEENDPOINT_URI + "?itemId=" + itemStorageDto.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken("testUser2", ADMIN_ROLES)))
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
+        assertThrows(NotFoundException.class, () -> storageService.deleteItemInStorageById(itemStorageDto.getId(), -2L));
     }
 
 

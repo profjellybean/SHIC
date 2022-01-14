@@ -93,8 +93,9 @@ public class StorageServiceImpl implements StorageService {
             Storage storage = storageOptional.get();
 
             if (Objects.equals(itemToDelete.getStorageId(), storage.getId())) {
-                //storageItemStorageRepository.deleteFromTable(storageId, itemId);
                 itemStorageRepository.delete(itemToDelete);
+            } else {
+                throw new NotFoundException("No item in this storage with id: " + itemId);
             }
             return itemToDelete;
         }
