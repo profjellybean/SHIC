@@ -188,7 +188,7 @@ public class StorageEndpointTest implements TestData {
     public void deleteExistingItemShouldReturnDeletedItem() throws Exception {
         Storage storage = new Storage();
         storage = storageRepository.saveAndFlush(storage);
-        UserRegistrationDto testUser = new UserRegistrationDto("testUser", "password", "test.user@email.com");
+        UserRegistrationDto testUser = new UserRegistrationDto("test", "password", "test.user@email.com");
         UserGroup testGroup = new UserGroup(storage.getId(), null, null, new HashSet<ApplicationUser>(), null);
         testGroup = userGroupRepository.saveAndFlush(testGroup);
 
@@ -203,7 +203,7 @@ public class StorageEndpointTest implements TestData {
 
         MvcResult mvcResult = this.mockMvc.perform(delete(STORAGEENDPOINT_URI + "?itemId=" + itemStorageDto.getId())
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken("test", ADMIN_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
@@ -225,7 +225,7 @@ public class StorageEndpointTest implements TestData {
     public void deleteNotExistingItemShouldThrowNotFoundException() throws Exception {
         Storage storage = new Storage();
         storage = storageRepository.saveAndFlush(storage);
-        UserRegistrationDto testUser = new UserRegistrationDto("testUser2", "password", "test.user@email.com");
+        UserRegistrationDto testUser = new UserRegistrationDto("test2", "password", "test.user@email.com");
         UserGroup testGroup = new UserGroup(storage.getId(), null, null, new HashSet<ApplicationUser>(), null);
         testGroup = userGroupRepository.saveAndFlush(testGroup);
 
@@ -240,7 +240,7 @@ public class StorageEndpointTest implements TestData {
 
         MvcResult mvcResult = this.mockMvc.perform(delete(STORAGEENDPOINT_URI + "?itemId=" + itemStorageDto.getId())
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken("testUser2", ADMIN_ROLES)))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken("test2", ADMIN_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
@@ -251,7 +251,7 @@ public class StorageEndpointTest implements TestData {
 
     @Test
     public void deleteItemFromNotExistingStorageShouldThrowNotFoundException() throws Exception {
-        UserRegistrationDto testUser = new UserRegistrationDto("testUser3", "password", "test.user@email.com");
+        UserRegistrationDto testUser = new UserRegistrationDto("test3", "password", "test.user@email.com");
         UserGroup testGroup = new UserGroup(-1L, null, null, new HashSet<ApplicationUser>(), null);
         testGroup = userGroupRepository.saveAndFlush(testGroup);
 
@@ -266,7 +266,7 @@ public class StorageEndpointTest implements TestData {
 
         MvcResult mvcResult = this.mockMvc.perform(delete(STORAGEENDPOINT_URI + "?itemId=" + itemStorageDto.getId())
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken("testUser3", ADMIN_ROLES)))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken("test3", ADMIN_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
