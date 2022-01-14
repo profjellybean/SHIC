@@ -84,7 +84,7 @@ public interface ShoppingListService {
      *
      * @return inserted object
      */
-    ItemStorage changeAmountOfItem(ItemStorage itemStorage);
+    ItemStorage changeAmountOfItem(ItemStorage itemStorage, Long shoppingListId);
 
     /**
      * Finds all storage items in a shopping list.

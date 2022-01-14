@@ -15,6 +15,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Storage;
@@ -90,6 +91,8 @@ public class ShoppinglistEndpointTest implements TestData {
     private ItemStorageMapper itemStorageMapper;
     @Autowired
     UserLoginMapper userLoginMapper;
+    @Autowired
+    ShoppingListService shoppingListService;
 
 
 
@@ -489,10 +492,6 @@ public class ShoppinglistEndpointTest implements TestData {
         assertNull(pastaStorage.getShoppingListId());
     }
 
-
-
-
-
     @Test
     public void workOffShoppingList_WithNoItems_ShouldReturn400() throws Exception {
         Long shoppingListId = testDataGenerator.generateData_workOffShoppingList_withoutItems();
@@ -512,5 +511,92 @@ public class ShoppinglistEndpointTest implements TestData {
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
     }
 
+    @Test
+    public void changeAmountOfItemOnPublicShoppingList_ShouldReturn_ShoppingListWithItemWithChangedAmount() throws Exception {
+
+        List<Long> idList = testDataGenerator.generateData_changeAmountOfItemOnPublicShoppingList_WithValidItem();
+        ShoppingList shoppingList = shoppingListRepository.getById(idList.get(0));
+
+        ItemStorageDto mushroomsDto = itemStorageMapper.itemStorageToItemStorageDto(itemStorageRepository.getById(idList.get(1)));
+
+        mushroomsDto.setAmount(600);
+
+        MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLISTENPOINDT_URI + "/public/" + shoppingList.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(mushroomsDto))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+
+        ItemStorage mushroomStorage = itemStorageRepository.getById(idList.get(1));
+
+        assertEquals(600, mushroomStorage.getAmount());
+    }
+
+    @Test
+    public void changeAmountOfItemOnPublicShoppingList_withItemNotOnShoppingList_ShouldThrow_ServiceException() throws Exception {
+
+        List<Long> idList = testDataGenerator.generateData_changeAmountOfItemOnPublicShoppingList_WithValidItem();
+        ShoppingList shoppingList = shoppingListRepository.getById(idList.get(0));
+
+        ItemStorageDto pastaDto = new ItemStorageDto(null,"Pasta", null, 500, null);
+
+
+        MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLISTENPOINDT_URI + "/public/" + shoppingList.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(pastaDto))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+        assertThrows(ServiceException.class, () -> shoppingListService.changeAmountOfItem(itemStorageMapper.itemStorageDtoToItemStorage(pastaDto),shoppingList.getId()));
+    }
+
+    @Test
+    public void changeAmountOfItemOnPrivateShoppingList_ShouldReturn_ShoppingListWithItemWithChangedAmount() throws Exception {
+
+        List<Long> idList = testDataGenerator.generateData_changeAmountOfItemOnPrivateShoppingList_WithValidItem();
+        ShoppingList shoppingList = shoppingListRepository.getById(idList.get(0));
+
+        ItemStorageDto mushroomsDto = itemStorageMapper.itemStorageToItemStorageDto(itemStorageRepository.getById(idList.get(1)));
+
+        mushroomsDto.setAmount(600);
+
+        MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLISTENPOINDT_URI + "/private/" + shoppingList.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(mushroomsDto))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+
+        ItemStorage mushroomStorage = itemStorageRepository.getById(idList.get(1));
+
+        assertEquals(600, mushroomStorage.getAmount());
+    }
+
+    @Test
+    public void changeAmountOfItemOnPrivateShoppingList_withItemNotOnShoppingList_ShouldThrow_ServiceException() throws Exception {
+
+        List<Long> idList = testDataGenerator.generateData_changeAmountOfItemOnPrivateShoppingList_WithValidItem();
+        ShoppingList shoppingList = shoppingListRepository.getById(idList.get(0));
+
+        ItemStorageDto pastaDto = new ItemStorageDto(null,"Pasta", null, 500, null);
+
+
+        MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLISTENPOINDT_URI + "/private/" + shoppingList.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(pastaDto))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+        assertThrows(ServiceException.class, () -> shoppingListService.changeAmountOfItem(itemStorageMapper.itemStorageDtoToItemStorage(pastaDto),shoppingList.getId()));
+    }
 
 }

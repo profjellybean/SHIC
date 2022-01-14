@@ -309,9 +309,13 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     }
 
     @Override
-    public ItemStorage changeAmountOfItem(ItemStorage itemStorage) {
+    public ItemStorage changeAmountOfItem(ItemStorage itemStorage, Long shoppingListId) {
         LOGGER.debug("change amount of item in shopping list");
-        return shoppingListItemRepository.saveAndFlush(itemStorage);
+        if(itemStorage.getShoppingListId() != null && itemStorage.getShoppingListId().equals(shoppingListId)) {
+            return shoppingListItemRepository.saveAndFlush(itemStorage);
+        } else {
+            throw new ServiceException("This item is not on the given shopping list");
+        }
     }
 
     @Transactional

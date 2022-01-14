@@ -355,5 +355,84 @@ public class TestDataGenerator {
         return shoppingList.getId();
     }
 
+    public List<Long> generateData_changeAmountOfItemOnPublicShoppingList_WithValidItem() {
+        UserRegistrationDto testUser = new UserRegistrationDto("testUser", "password", "test.user@email.com");
+
+        ShoppingList shoppingList = new ShoppingList();
+        shoppingList = shoppingListRepository.save(shoppingList);
+        UserGroup testGroup = new UserGroup(-1L, shoppingList.getId(), null, new HashSet<ApplicationUser>(), null);
+        testGroup = userGroupRepository.saveAndFlush(testGroup);
+
+        ApplicationUser testApplicationUser = userLoginMapper.dtoToEntity(testUser, null);
+        testApplicationUser.setCurrGroup(testGroup);
+        userRepository.saveAndFlush(testApplicationUser);
+
+        shoppingList.setName("Test");
+        shoppingList.setOwner(testApplicationUser);
+        shoppingList.setNotes("test notes");
+        shoppingList = shoppingListRepository.saveAndFlush(shoppingList);
+
+        ItemStorage mushrooms = new ItemStorage("Mushrooms", null, null, null, 200,
+            null, null, null, shoppingList.getId());
+        itemStorageRepository.save(mushrooms);
+        ItemStorage pasta = new ItemStorage("Pasta", null, null, null, 500,
+            null, null, null, shoppingList.getId());
+        itemStorageRepository.save(pasta);
+
+        Set<ItemStorage> itemList = new HashSet<>();
+        itemList.add(mushrooms);
+        itemList.add(pasta);
+
+        shoppingList.setItems(itemList);
+        shoppingListRepository.saveAndFlush(shoppingList);
+
+        List<Long> idList = new LinkedList<>();
+        idList.add(shoppingList.getId());
+        idList.add(mushrooms.getId());
+
+        return idList;
+    }
+
+    public List<Long> generateData_changeAmountOfItemOnPrivateShoppingList_WithValidItem() {
+        UserRegistrationDto testUser = new UserRegistrationDto("testUser", "password", "test.user@email.com");
+
+        ShoppingList shoppingList = new ShoppingList();
+        shoppingList = shoppingListRepository.save(shoppingList);
+        UserGroup testGroup = new UserGroup(-1L, shoppingList.getId(), null, new HashSet<ApplicationUser>(), null);
+        testGroup = userGroupRepository.saveAndFlush(testGroup);
+
+        ShoppingList privateShoppingList = new ShoppingList();
+        privateShoppingList = shoppingListRepository.save(privateShoppingList);
+
+        ApplicationUser testApplicationUser = userLoginMapper.dtoToEntity(testUser, null);
+        testApplicationUser.setCurrGroup(testGroup);
+        testApplicationUser.setPrivList(privateShoppingList.getId());
+        userRepository.saveAndFlush(testApplicationUser);
+
+        privateShoppingList.setName("Test");
+        privateShoppingList.setOwner(testApplicationUser);
+        privateShoppingList.setNotes("test notes");
+        privateShoppingList = shoppingListRepository.saveAndFlush(privateShoppingList);
+
+        ItemStorage mushrooms = new ItemStorage("Mushrooms", null, null, null, 200,
+            null, null, null, privateShoppingList.getId());
+        itemStorageRepository.save(mushrooms);
+        ItemStorage pasta = new ItemStorage("Pasta", null, null, null, 500,
+            null, null, null, privateShoppingList.getId());
+        itemStorageRepository.save(pasta);
+
+        Set<ItemStorage> itemList = new HashSet<>();
+        itemList.add(mushrooms);
+        itemList.add(pasta);
+
+        privateShoppingList.setItems(itemList);
+        shoppingListRepository.saveAndFlush(privateShoppingList);
+
+        List<Long> idList = new LinkedList<>();
+        idList.add(privateShoppingList.getId());
+        idList.add(mushrooms.getId());
+
+        return idList;
+    }
 
 }
