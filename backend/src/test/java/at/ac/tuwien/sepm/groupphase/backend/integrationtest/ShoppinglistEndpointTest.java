@@ -75,13 +75,11 @@ public class ShoppinglistEndpointTest implements TestData {
     @Autowired
     ShoppingListRepository shoppingListRepository;
     @Autowired
+    ItemStorageRepository itemStorageRepository;
+    @Autowired
     RecipeRepository recipeRepository;
     @Autowired
     private ObjectMapper objectMapper;
-    @Autowired
-    private ShoppingListMapper shoppingListMapper;
-    @Autowired
-    private ShoppingListService shoppingListService;
     @Autowired
     private JwtTokenizer jwtTokenizer;
     @Autowired
@@ -89,51 +87,15 @@ public class ShoppinglistEndpointTest implements TestData {
     @Autowired
     TestDataGenerator testDataGenerator;
     @Autowired
-    private ItemStorageRepository itemStorageRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private UserGroupRepository userGroupRepository;
-    @Autowired
     private ItemStorageMapper itemStorageMapper;
     @Autowired
     UserLoginMapper userLoginMapper;
 
-    ShoppingList shoppingList;
-    Set<ItemStorage> itemList;
-    ApplicationUser user;
-    UserGroup userGroup;
-    ItemStorage mushrooms;
-    ItemStorage pasta;
 
 
     @BeforeEach
     public void beforeEach() {
-        Optional<ApplicationUser> userOptional = userRepository.findUserByUsername(ADMIN_USER);
-        if(userOptional.isPresent()) {
-            ApplicationUser user = userOptional.get();
-        }
-        shoppingList = ShoppingList.ShoppingListBuilder.aShoppingList()
-            .withName("Test")
-            .withOwner(user)
-            .withNotes("test notes")
-            .withItems(null)
-            .build();
-        shoppingList = shoppingListRepository.saveAndFlush(shoppingList);
 
-        mushrooms = new ItemStorage("Mushrooms", null, null, null, 200,
-            null, null, null, shoppingList.getId());
-        itemStorageRepository.save(mushrooms);
-        pasta = new ItemStorage("Pasta", null, null, null, 500,
-            null, null, null, shoppingList.getId());
-        itemStorageRepository.save(pasta);
-
-        itemList = new HashSet<>();
-        itemList.add(mushrooms);
-        itemList.add(pasta);
-
-        shoppingList.setItems(itemList);
-        shoppingListRepository.saveAndFlush(shoppingList);
     }
 
     @AfterEach
@@ -176,7 +138,6 @@ public class ShoppinglistEndpointTest implements TestData {
         assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
 */
-
 
 
     @Test
@@ -485,7 +446,7 @@ public class ShoppinglistEndpointTest implements TestData {
     public void givenUserWithoutShoppingList_whenPutRecipeOnShoppingList_then404() throws Exception {
         testDataGenerator.generateData_generateUser_withGroup_withOnlyNullValues();
         Recipe recipe = new Recipe(-1L, "givenUserWithoutShoppingList_whenPutRecipeOnShoppingList_then404",
-            "recipe for tests", null, null,null);
+            "recipe for tests", null, null, null);
         recipe = recipeRepository.saveAndFlush(recipe);
 
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI + "/putAllIngredientsOfRecipe")
@@ -499,11 +460,14 @@ public class ShoppinglistEndpointTest implements TestData {
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
     }
 
-    //@Test
-    public void workOffShoppingList_ShouldReturn_shoppingListWithEmptyItems() throws Exception {
+    @Test
+    public void workOffShoppingList_ShouldReturn_ItemsWithShoppingListIdEqualNull() throws Exception {
 
-        ItemStorageDto mushroomsDto = itemStorageMapper.itemStorageToItemStorageDto(mushrooms);
-        ItemStorageDto pastaDto = itemStorageMapper.itemStorageToItemStorageDto(pasta);
+        List<Long> idList = testDataGenerator.generateData_workOffShoppingList_successfully();
+        ShoppingList shoppingList = shoppingListRepository.getById(idList.get(0));
+
+        ItemStorageDto mushroomsDto = itemStorageMapper.itemStorageToItemStorageDto(itemStorageRepository.getById(idList.get(1)));
+        ItemStorageDto pastaDto = itemStorageMapper.itemStorageToItemStorageDto(itemStorageRepository.getById(idList.get(2)));
 
         List<ItemStorageDto> itemsToBuy = new LinkedList<ItemStorageDto>();
         itemsToBuy.add(mushroomsDto);
@@ -512,40 +476,41 @@ public class ShoppinglistEndpointTest implements TestData {
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLISTENPOINDT_URI + "/" + shoppingList.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(itemsToBuy))
-            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
         assertEquals(HttpStatus.OK.value(), response.getStatus());
-        Set emptySet = new HashSet<ItemStorage>();
-        ShoppingList workedOffList = shoppingListRepository.getById(shoppingList.getId());
-        Set<ItemStorage> workedOffItems = workedOffList.getItems();
-        for (ItemStorage item:
-             workedOffItems) {
-            assertNull(item.getShoppingListId());
-        }
+
+        ItemStorage mushroomStorage = itemStorageRepository.getById(idList.get(1));
+        ItemStorage pastaStorage = itemStorageRepository.getById(idList.get(2));
+
+        assertNull(mushroomStorage.getShoppingListId());
+        assertNull(pastaStorage.getShoppingListId());
     }
 
 
 
 
-/*
-    @Test
-    public void workOffShoppingList_WithNoItems_ShouldThrowError() throws Exception {
 
+    @Test
+    public void workOffShoppingList_WithNoItems_ShouldReturn400() throws Exception {
+        Long shoppingListId = testDataGenerator.generateData_workOffShoppingList_withoutItems();
+        ShoppingList shoppingList = shoppingListRepository.getById(shoppingListId);
 
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLISTENPOINDT_URI + "/" + shoppingList.getId())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(itemsToBuy))
-                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(user.getUsername(), USER_ROLES)))
+                .content(objectMapper.writeValueAsString(""))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, USER_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
         //assertEquals(HttpStatus.OK.value(), response.getStatus());
         Set emptySet = new HashSet<ItemStorage>();
         ShoppingList workedOffList = shoppingListRepository.getById(shoppingList.getId());
-        assertEquals(emptySet, workedOffList.getItems());
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
     }
-    */
+
 
 }
