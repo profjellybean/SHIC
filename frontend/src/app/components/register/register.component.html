@@ -31,6 +31,7 @@
     <th>Sum of the purchase: </th>
     <th>To pay per person: </th>
     <th>Date: </th>
+    <th>Notes:</th>
   </tr>
   </thead>
   <tbody>
@@ -41,9 +42,12 @@
     <td>{{bill.sum}} €</td>
     <td>{{bill.sumPerPerson}} €</td>
     <td>{{bill.date}}</td>
+    <td>{{bill.notes}}</td>
     <td>
       <div>
-        <button type="button" style="BACKGROUND-COLOR:green;" class="btn btn-secondary" (click)="confirmPayment(bill.id);">Confirm Payment</button>
+        <button type="button" style="BACKGROUND-COLOR:green;" class="btn btn-secondary" (click)="confirmPayment(bill.id);">Confirm Payment</button> &nbsp;
+        <button type="button" class="btn btn-secondary" (click)="openBillModal(billEditModal, bill);">Edit Bill</button>
+
       </div>
     </td>
   </tr>
@@ -84,3 +88,42 @@
     </div>
   </ng-template>
 </div>
+
+<div class="row p-2 mb-4">
+  <ng-template #billEditModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Bill</h5>
+      <button type="button" class="close" (click)="modal.dismiss('X')" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form (ngSubmit)="editBill(billForm)" #billForm="ngForm">
+
+
+        <div class="form-group">
+          <label for="price">Bill sum (in Euros):</label>
+          <input name="price" class="form-control" id="price" required
+                 placeholder="Enter price" [(ngModel)]="billToEdit.sum">
+        </div>
+
+        <div class="form-group">
+          <label for="date">Bill date:</label>
+          <input type="date" name="date" class="form-control" id="date" required
+                 aria-describedby="expDateHelp" placeholder="Enter expDate" [(ngModel)]="billToEdit.date">
+        </div>
+
+
+        <div class="form-group">
+          <label for="billNotes">Notes</label>
+          <textarea rows="3" name="notes" class="form-control" id="billNotes"
+                    aria-describedby="notesHelp" placeholder="Enter Notes" [(ngModel)]="billToEdit.notes"></textarea>
+        </div>
+        <button type="button" (click)="editBill(billForm)" id="add-msg1" class="btn btn-success float-right">Edit bill</button>
+
+      </form>
+    </div>
+  </ng-template>
+</div>
+
+{{this.billToEdit | json}}

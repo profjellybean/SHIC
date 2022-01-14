@@ -18,13 +18,13 @@ import {StorageComponent} from './components/storage/storage.component';
 import {RegisterComponent} from './components/register/register.component';
 import {RegisterUserComponent} from './components/registerUser/registerUser.component';
 import { RecipeDetailComponent } from './components/recipe-detail/recipe-detail.component';
-import { ShoppingListAddComponent } from './components/shopping-list-add/shopping-list-add.component';
 import { ShoppingListListComponent } from './components/shopping-list-list/shopping-list-list.component';
 import { StorageAddItemComponent } from './components/storage-add-item/storage-add-item.component';
 import { UserComponent } from './components/user/user.component';
 import { ConfirmUserEmailComponent } from './components/confirm-user-email/confirm-user-email.component';
 import {NgSelectModule} from '@ng-select/ng-select';
 import { StatisticComponent } from './components/statistic/statistic.component';
+import { LocationTagComponent } from './components/location-tag/location-tag.component';
 
 @NgModule({
   declarations: [
@@ -43,10 +43,10 @@ import { StatisticComponent } from './components/statistic/statistic.component';
     ConfirmUserEmailComponent,
     StorageAddItemComponent,
     UserComponent,
-    ShoppingListAddComponent,
     ShoppingListListComponent,
     StorageAddItemComponent,
     StatisticComponent,
+    LocationTagComponent,
   ],
   imports: [
     BrowserModule,

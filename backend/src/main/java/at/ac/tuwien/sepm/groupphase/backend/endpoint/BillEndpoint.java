@@ -1,7 +1,10 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.BillDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemStorageDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.BillMapper;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.service.BillService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -9,12 +12,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 
 import javax.annotation.security.PermitAll;
@@ -64,5 +71,22 @@ public class BillEndpoint {
         LOGGER.info("POST /recipe new bill {}", billDto);
         return billMapper.billToBillDto(billService.bill(billMapper.billDtoToBill(billDto)));
     }
+
+    @PutMapping
+    @PermitAll
+    @Operation(summary = "Update a existing bill")
+    public BillDto updateBill(Authentication authentication, @Valid @RequestBody BillDto billDto) {
+        LOGGER.info("PUT /bill body: {}", billDto);
+        try {
+            return billMapper.billToBillDto(billService.updateBill(billMapper.billDtoToBill(billDto)));
+        } catch (ServiceException s) {
+            LOGGER.error(s.getMessage());
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
+        } catch (ValidationException e) {
+            LOGGER.error(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+    }
+
 
 }

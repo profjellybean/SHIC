@@ -95,10 +95,6 @@
                     aria-describedby="notesHelp" placeholder="Enter Notes" [(ngModel)]="itemToAdd.notes"></textarea>
         </div>
 
-        <button type="button" (click)="addItemForm(itemForm)" id="add-msg" class="btn btn-success float-right">Add
-          item
-        </button>
-
       </form>
     </div>
     <div class="modal-footer">
@@ -180,7 +176,6 @@
           <label for="itemToAdd2">Add users to bill: </label>
           <ng-select id="favFood"
                      [(ngModel)]="this.billToAdd.names"
-                     placeholder="Select names"
                      [clearable]="true"
                      [multiple]="true"
                      [ngModelOptions]="{standalone: true}">
@@ -193,7 +188,7 @@
         </div>
 
         <div class="form-group">
-          <label for="price">Bill date:</label>
+          <label for="price">Bill sum:</label>
           <input name="price" class="form-control" id="price" required
                   placeholder="Enter price" [(ngModel)]="billToAdd.sum">
         </div>
