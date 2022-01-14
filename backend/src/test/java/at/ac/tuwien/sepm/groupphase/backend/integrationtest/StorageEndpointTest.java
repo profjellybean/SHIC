@@ -22,6 +22,7 @@ import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepm.groupphase.backend.service.StorageService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.aspectj.lang.annotation.After;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -250,7 +251,7 @@ public class StorageEndpointTest implements TestData {
 
     @Test
     public void deleteItemFromNotExistingStorageShouldThrowNotFoundException() throws Exception {
-        UserRegistrationDto testUser = new UserRegistrationDto("testUser2", "password", "test.user@email.com");
+        UserRegistrationDto testUser = new UserRegistrationDto("testUser3", "password", "test.user@email.com");
         UserGroup testGroup = new UserGroup(-1L, null, null, new HashSet<ApplicationUser>(), null);
         testGroup = userGroupRepository.saveAndFlush(testGroup);
 
@@ -265,7 +266,7 @@ public class StorageEndpointTest implements TestData {
 
         MvcResult mvcResult = this.mockMvc.perform(delete(STORAGEENDPOINT_URI + "?itemId=" + itemStorageDto.getId())
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken("testUser2", ADMIN_ROLES)))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken("testUser3", ADMIN_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
