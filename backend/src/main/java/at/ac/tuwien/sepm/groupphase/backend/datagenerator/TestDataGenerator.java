@@ -394,10 +394,9 @@ public class TestDataGenerator {
     }
 
     public List<Long> generateData_changeAmountOfItemOnPrivateShoppingList_WithValidItem() {
-        UserRegistrationDto testUser = new UserRegistrationDto("testUser", "password", "test.user@email.com");
-
         ShoppingList shoppingList = new ShoppingList();
         shoppingList = shoppingListRepository.save(shoppingList);
+        UserRegistrationDto testUser = new UserRegistrationDto("testUser", "password", "test.user@email.com");
         UserGroup testGroup = new UserGroup(-1L, shoppingList.getId(), null, new HashSet<ApplicationUser>(), null);
         testGroup = userGroupRepository.saveAndFlush(testGroup);
 

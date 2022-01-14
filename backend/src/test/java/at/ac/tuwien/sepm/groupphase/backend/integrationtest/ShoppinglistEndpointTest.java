@@ -95,7 +95,6 @@ public class ShoppinglistEndpointTest implements TestData {
     ShoppingListService shoppingListService;
 
 
-
     @BeforeEach
     public void beforeEach() {
 
@@ -541,7 +540,7 @@ public class ShoppinglistEndpointTest implements TestData {
         List<Long> idList = testDataGenerator.generateData_changeAmountOfItemOnPublicShoppingList_WithValidItem();
         ShoppingList shoppingList = shoppingListRepository.getById(idList.get(0));
 
-        ItemStorageDto pastaDto = new ItemStorageDto(null,"Pasta", null, 500, null);
+        ItemStorageDto pastaDto = new ItemStorageDto(null, "Pasta", null, 500, null);
 
 
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLISTENPOINDT_URI + "/public/" + shoppingList.getId())
@@ -552,7 +551,7 @@ public class ShoppinglistEndpointTest implements TestData {
         MockHttpServletResponse response = mvcResult.getResponse();
 
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-        assertThrows(ServiceException.class, () -> shoppingListService.changeAmountOfItem(itemStorageMapper.itemStorageDtoToItemStorage(pastaDto),shoppingList.getId()));
+        assertThrows(ServiceException.class, () -> shoppingListService.changeAmountOfItem(itemStorageMapper.itemStorageDtoToItemStorage(pastaDto), shoppingList.getId()));
     }
 
     @Test
@@ -585,7 +584,7 @@ public class ShoppinglistEndpointTest implements TestData {
         List<Long> idList = testDataGenerator.generateData_changeAmountOfItemOnPrivateShoppingList_WithValidItem();
         ShoppingList shoppingList = shoppingListRepository.getById(idList.get(0));
 
-        ItemStorageDto pastaDto = new ItemStorageDto(null,"Pasta", null, 500, null);
+        ItemStorageDto pastaDto = new ItemStorageDto(null, "Pasta", null, 500, null);
 
 
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLISTENPOINDT_URI + "/private/" + shoppingList.getId())
@@ -596,7 +595,7 @@ public class ShoppinglistEndpointTest implements TestData {
         MockHttpServletResponse response = mvcResult.getResponse();
 
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-        assertThrows(ServiceException.class, () -> shoppingListService.changeAmountOfItem(itemStorageMapper.itemStorageDtoToItemStorage(pastaDto),shoppingList.getId()));
+        assertThrows(ServiceException.class, () -> shoppingListService.changeAmountOfItem(itemStorageMapper.itemStorageDtoToItemStorage(pastaDto), shoppingList.getId()));
     }
 
 }
