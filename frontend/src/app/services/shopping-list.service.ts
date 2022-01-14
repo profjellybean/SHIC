@@ -46,9 +46,14 @@ export class ShoppingListService {
     return this.httpClient.put<Item>(this.shoppingListBaseUri + '/public/' + item.id, item);
   }
 
-  planRecipe(id: number): Observable<Item[]> {
-    console.log('service: plan recipe with id: ' + id);
-    return this.httpClient.put<Item[]>(this.shoppingListBaseUri+'/?recipeId='+id, id);
+  planRecipe(id: number, people: number): Observable<Item[]> {
+    console.log('service: plan recipe with id: ' + id + 'for number of people: ' + people);
+    return this.httpClient.put<Item[]>(this.shoppingListBaseUri+'/?recipeId='+id+'&people='+people, id);
+  }
+
+  putRecipeOnShoppingList(id: number, people: number): Observable<Item[]> {
+    console.log('service: put all ingredients to shoppinglist of recipe with id: ' + id + 'for number of people: ' + people);
+    return this.httpClient.put<Item[]>(this.shoppingListBaseUri+'/putAllIngredientsOfRecipe/?recipeId='+id+'&people='+people, id);
   }
 
   addItemToShoppingList(item: Item): Observable<Item>{

@@ -3,6 +3,7 @@ import {Globals} from '../global/globals';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Register} from '../dtos/register';
+import {TimeSumBill} from '../dtos/time-sum-bill';
 
 @Injectable({
   providedIn: 'root'
@@ -28,4 +29,18 @@ export class RegisterService {
     console.log('Loading monthly sum of Bills');
     return this.httpClient.get<number>(this.registerBaseUri + '/monthlysum');
   }
+
+  editMonthlyBudget(budget: number): Observable<number> {
+    console.log('Loading monthly sum of Bills');
+    return this.httpClient.put<number>(this.registerBaseUri + '/monthlybudget?budget=' + budget, budget);
+  }
+  getSumOfMonthAndYear(date: string): Observable<TimeSumBill>{
+    console.log('Load sum of specific month and year');
+    return this.httpClient.get<TimeSumBill>(this.registerBaseUri + '/sumOfMonthAndYear'+'?date='+date);
+  }
+  getSumOfYear(date: string): Observable<TimeSumBill>{
+    console.log('Load sum of specific month and year');
+    return this.httpClient.get<TimeSumBill>(this.registerBaseUri + '/sumOfYear'+'?date='+date);
+  }
+
 }

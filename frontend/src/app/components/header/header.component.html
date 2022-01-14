@@ -25,7 +25,11 @@
       </li>
 
       <li class="nav-item">
-        <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/user" routerLinkActive="active">ApplikationUser</a>
+        <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/user" routerLinkActive="active">ApplicationUser</a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" *ngIf="authService.hasCurrentGroup()" routerLink="/statistic" routerLinkActive="active">Statistic</a>
       </li>
 
     </ul>

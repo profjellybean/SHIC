@@ -1,7 +1,10 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
+import at.ac.tuwien.sepm.groupphase.backend.entity.LocationClass;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 
 import java.util.List;
 
@@ -24,11 +27,16 @@ public interface StorageService {
     ItemStorage deleteItemInStorageById(Long itemId, Long storageId);
 
     /**
-     * Saves an item in the storage (specified in the item itself).
+     * Saves an item in the storage.
+     * if there is already an Item with the same name, the Items are summed up
      *
-     * @param groupId is used to check if blueprint for this item exists in this group.@param itemStorage the item
+     * @param itemStorage item to save
+     * @param groupId is used to check, if blueprint for this item exists in this group
      *
      * @return the item
+     *
+     * @throws ValidationException if invalid value exists in Item
+     * @throws ServiceException if UnitOfQuantity of an ingredient and the stored Item are not compatible
      */
     ItemStorage saveItem(ItemStorage itemStorage, Long groupId);
 
@@ -48,7 +56,6 @@ public interface StorageService {
      * @param itemStorage to search for
      * @return a list of the items or none
      */
-
     List<ItemStorage> searchItem(ItemStorage itemStorage);
 
     /**
@@ -57,7 +64,6 @@ public interface StorageService {
      * @param id the id of the storage.
      * @return a list of all the items
      */
-
     List<ItemStorage> getAll(Long id);
 
     /**
@@ -66,7 +72,6 @@ public interface StorageService {
      * @param id the id of the storage
      * @return the id
      */
-
     Long findStorageById(Long id);
 
     /**
@@ -101,4 +106,44 @@ public interface StorageService {
      * Gets all units of quantity.
      */
     List<UnitOfQuantity> getAllUnitOfQuantity();
+
+    /**
+     * Gets all locations.
+     *
+     * @return a list of all the locations
+     */
+    List<LocationClass> getAllLocations();
+
+    /**
+     * Find all locations by storageId.
+     *
+     * @return a list of all the locations with correct storageId
+     */
+    List<LocationClass> getAllLocationsByStorageId(Long storageId);
+
+    /**
+     * Find all locations by name.
+     *
+     * @return a list of all the locations with correct name
+     */
+    List<LocationClass> getAllLocationsByName(String name);
+
+    /**
+     * Find all locations by name and storageId.
+     *
+     * @return a list of all the locations with correct name and storageId
+     */
+    List<LocationClass> getAllLocationsByNameAndStorageId(String name, Long storageId);
+
+    /**
+     * saves a location.
+     *
+     */
+    void saveLocation(LocationClass locationClass);
+
+    /**
+     * deletes a location.
+     *
+     */
+    void deleteLocation(Long id);
 }

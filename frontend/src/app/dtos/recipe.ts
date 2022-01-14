@@ -7,4 +7,5 @@ export class Recipe {
   // TODO add Set as ingredients Set as categories
   ingredients: Item[];
   categories: string[];
+  groupId: number;
 }

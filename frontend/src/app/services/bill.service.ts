@@ -40,4 +40,9 @@ export class BillService {
     console.log('Add a new bill');
     return this.httpClient.post<BillDto>(this.billBaseUri, bill);
   }
+
+  editBill(billToEdit: BillDto) {
+    console.log('Edit a bill');
+    return this.httpClient.put<BillDto>(this.billBaseUri, billToEdit);
+  }
 }

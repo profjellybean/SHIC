@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, TemplateRef} from '@angular/core';
 import {RegisterService} from '../../services/register.service';
 import {ActivatedRoute} from '@angular/router';
 import {Bill} from '../../dtos/bill';
@@ -9,6 +9,9 @@ import {Register} from '../../dtos/register';
 import jwt_decode from 'jwt-decode';
 import {AuthService} from '../../services/auth.service';
 import {UserService} from '../../services/user.service';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {BillDto} from '../../dtos/billDto';
+import {GroupService} from '../../services/group.service';
 
 @Component({
   selector: 'app-register',
@@ -19,6 +22,15 @@ export class RegisterComponent implements OnInit {
 
   error = false;
   errorMessage = '';
+  submitted = false;
+
+  nullUser: User = {
+    id: null,
+    email: null,
+    currGroup: null,
+    username: null,
+    privList: null
+  };
 
   register: Register = {
     id: null,
@@ -26,6 +38,8 @@ export class RegisterComponent implements OnInit {
     monthlyPayments: null,
     monthlyBudget: null,
   };
+  billToEdit: BillDto;
+  allUsers: User[] = null;
 
   counter = 1;
   secondCounter = 1;
@@ -33,6 +47,7 @@ export class RegisterComponent implements OnInit {
   help: string;
   billId: number;
   monthlySum: number;
+  newMonthlyBudget: number;
 
   user: User = {
     // @ts-ignore
@@ -44,26 +59,62 @@ export class RegisterComponent implements OnInit {
   };
 
   constructor(private registerService: RegisterService, private billService: BillService, public route: ActivatedRoute,
-              private authService: AuthService, private userService: UserService) {
+              private authService: AuthService, private userService: UserService,
+              private modalService: NgbModal, private groupService: GroupService) {
   }
 
   ngOnInit(): void {
     this.getCurrentGroup();
-    this.getMonthlySum();
   }
 
-  getCurrentGroup(){
+  /**
+   * Error flag will be deactivated, which clears the error message
+   */
+  vanishError() {
+    this.error = false;
+  }
+
+  getCurrentGroup() {
     this.userService.getCurrentUser({username: this.user.username}).subscribe({
       next: data => {
         console.log('received items11', data);
         this.user = data;
+        this.getAllUsers(data.currGroup.id);
         this.loadRegister(data.currGroup.registerId);
+        this.getMonthlySum();
       },
       error: error => {
         console.error(error.message);
       }
     });
   }
+
+  getAllUsers(id: number) {
+    this.groupService.getAllUsers(id).subscribe({
+      next: data => {
+        console.log('received items', data);
+        this.allUsers = data;
+      },
+      error: error => {
+        console.error(error.message);
+      }
+    });
+  }
+
+  editBudgetForm(form) {
+    this.submitted = true;
+
+    if (form.valid) {
+      console.log('form edit monthly budget', this.newMonthlyBudget);
+      this.editMonthlyBudget(this.newMonthlyBudget);
+      //this.clearForm();
+    }
+  }
+
+  openEditBudgetModal(editBudgetModal: TemplateRef<any>) {
+    this.modalService.open(editBudgetModal, {ariaLabelledBy: 'modal-basic-title'});
+  }
+
 
   public confirmPayment(billId: number) {
 
@@ -73,14 +124,14 @@ export class RegisterComponent implements OnInit {
         this.register.bills = register.bills;
         this.register.monthlyPayments = register.monthlyPayments;
         this.register.monthlyBudget = register.monthlyBudget;
-        this.loadRegister(1);
+        this.loadRegister(this.user.currGroup.registerId);
       }, error: err => {
         this.defaultServiceErrorHandling(err);
       }
     });
   }
 
-  private loadRegister(id: number) {
+  loadRegister(id: number) {
     this.registerService.getRegisterById(id).subscribe({
       next: register => {
         this.register.id = register.id;
@@ -101,18 +152,69 @@ export class RegisterComponent implements OnInit {
           for (const name of bill.notPaidNames) {
             bill.notPaidNameList = bill.notPaidNameList + name.username + ', ';
             this.secondCounter++;
-            console.log('not paid ' + bill.notPaidNameList);
           }
           this.billArray[this.counter] = bill;
           this.counter++;
         }
+        console.log(this.billArray);
+        this.newMonthlyBudget = register.monthlyBudget;
       }, error: err => {
         this.defaultServiceErrorHandling(err);
       }
     });
   }
 
+  openBillModal(billModal: TemplateRef<any>, bill: Bill) {
+    this.billToEdit = new BillDto();
+    this.billToEdit.date = bill.date;
+    this.billToEdit.registerId = bill.registerId;
+    this.billToEdit.id = bill.id;
+    bill.names.forEach(e => this.billToEdit.names.push(new User(e.id, e.username, e.currGroup, e.privList, e.email)));
+    bill.notPaidNames.forEach(e => this.billToEdit.notPaidNames.push(new User(e.id, e.username, e.currGroup, e.privList, e.email)));
+    this.billToEdit.groceries = Array.from(bill.groceries.values());
+    this.billToEdit.sumPerPerson = bill.sumPerPerson;
+    this.billToEdit.sum = bill.sum;
+    this.billToEdit.notes = bill.notes;
+    this.modalService.open(billModal, {ariaLabelledBy: 'modal-basic-title'});
+  }
+
+  editBill(form) {
+    this.submitted = true;
+
+    if (form.valid) {
+      console.log('form item to add', this.billToEdit);
+      if(this.billToEdit.names[0].id === null){
+        console.log('Set allUsers {}', this.allUsers);
+        this.billToEdit.names = this.allUsers;
+      }
+      this.billToEdit.notPaidNames = this.billToEdit.names;
+      if(this.billToEdit.names.length > 0) {
+        this.billToEdit.sumPerPerson = this.billToEdit.sum / this.billToEdit.names.length;
+      } else {
+        this.billToEdit.sumPerPerson = this.billToEdit.sum;
+      }
+      for(const name of this.billToEdit.names){
+        delete name.currGroup;
+      }
+      for(const name of this.billToEdit.notPaidNames){
+        delete name.currGroup;
+      }
+      this.billService.editBill(this.billToEdit).subscribe({
+        next: data => {
+          console.log('received sum of all Bills this month', data);
+          this.loadRegister(this.user.currGroup.registerId);
+        },
+        error: error => {
+          console.error(error.message);
+          this.defaultServiceErrorHandling(error);
+        }
+      });
+      this.clearForm();
+    }
+  }
+
   private getMonthlySum() {
+    console.log('getting sum of all Bills this month');
     this.registerService.getMonthlySum().subscribe({
       next: data => {
         console.log('received sum of all Bills this month', data);
@@ -120,6 +222,21 @@ export class RegisterComponent implements OnInit {
       },
       error: error => {
         console.error(error.message);
+        this.defaultServiceErrorHandling(error);
+      }
+    });
+  }
+
+  private editMonthlyBudget(budget: number) {
+    console.log('edit monthly budget', budget);
+    this.registerService.editMonthlyBudget(budget).subscribe({
+      next: data => {
+        console.log('edited monthly budget', data);
+        this.register.monthlyBudget = data;
+      },
+      error: error => {
+        console.error(error.message);
+        this.defaultServiceErrorHandling(error);
       }
     });
   }
@@ -132,5 +249,9 @@ export class RegisterComponent implements OnInit {
     } else {
       this.errorMessage = error.error;
     }
+  }
+
+  private clearForm() {
+
   }
 }

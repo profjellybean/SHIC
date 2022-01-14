@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Set;
@@ -10,7 +11,7 @@ import java.util.Set;
 public class BillDto {
 
     private Long id;
-
+    @NotNull
     private Long registerId;
 
     private Set<ItemStorage> groceries;
@@ -20,11 +21,11 @@ public class BillDto {
     private Set<ApplicationUser> names;
 
     private Set<ApplicationUser> notPaidNames;
-
+    @NotNull
     private double sum;
 
     private double sumPerPerson;
-
+    @NotNull
     private LocalDate date;
 
     public BillDto() {
@@ -42,6 +43,10 @@ public class BillDto {
         this.sumPerPerson = sumPerPerson;
         this.date = date;
         this.registerId = registerId;
+    }
+
+    public BillDto(String notes) {
+        this.notes = notes;
     }
 
     public Long getId() {

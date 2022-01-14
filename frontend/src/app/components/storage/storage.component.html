@@ -5,15 +5,41 @@
   </button>
 </div>
 
-<h1>Storage</h1>
+<h1>Storage</h1><h4>{{this.user.currGroup.name}}</h4>
 <p></p>
 <hr>
 
+<!--SEARCH START-->
 <div>
-  <label for="new-name">Search for name: &nbsp;</label>
-  <input #name (keyup)="name.value= this.searchItem.name; this.searchItems()"
-         (change)="searchItems()" id="new-name" [(ngModel)]="this.searchItem.name" placeholder="name"/>
+  <h5>Filter Storage</h5>
+  <div>
+    <label for="new-name">name: &nbsp;</label>
+    <input #name (keyup)="name.value= this.searchItem.name; this.searchItems()"
+           (change)="searchItems()" id="new-name" [(ngModel)]="this.searchItem.name" placeholder="name"/>
+  </div>
+  <br>
+  <div>
+    <label for="searchLocation">Location:  </label>
+    <select
+      id="searchLocation"
+      name="location"
+      [(ngModel)]="this.searchItem.locationTag"
+      (change)="searchItems()">
+      <option [ngValue]="null">none</option>
+      <option *ngFor="let locationTag of $any(locationTags)" [ngValue]="locationTag.name">{{locationTag.name}}</option>
+    </select>
+  </div>
+  <br>
+  <div>
+    <label for="searchDate">Exp.Date:  </label>
+    <input type="date" [(ngModel)]="this.searchItem.expDate" id="searchDate" (change)="searchItems()" />
+  </div>
+
+<br>
+
 </div>
+<!--SEARCH END-->
+
 <!--TABLE START-->
 
 <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(itemAddModal)">Add new Item</button>
@@ -97,9 +123,8 @@
             name="location"
             [(ngModel)]="this.itemToAdd.locationTag">
             <option [ngValue]="null">none</option>
-            <option value="fridge">fridge</option>
-            <option value="freezer">freezer</option>
-            <option value="shelf">shelf</option>
+            <option *ngFor="let locationTag of $any(locationTags)"
+                    [ngValue]="locationTag.name">{{locationTag.name}}</option>
           </select>
         </div>
 
@@ -108,11 +133,6 @@
           <textarea rows="3" name="notes" class="form-control" id="inputNotes"
                     aria-describedby="notesHelp" placeholder="Enter Notes" [(ngModel)]="itemToAdd.notes"></textarea>
         </div>
-
-        <button type="button" (click)="addItemForm(itemForm)" id="add-msg" class="btn btn-success float-right">Add
-          item
-        </button>
-
       </form>
     </div>
     <div class="modal-footer">
@@ -149,11 +169,11 @@
     <td>{{item.locationTag}}</td>
     <td>{{item.notes}}</td>
     <td>
-      <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(itemAddModal)">Edit</button>
-    </td>
-
+      <button type="button" class="btn btn-secondary btn-sm mr-4"
+              (click)="openAddModal(itemUpdateModal); setUpdateItem(item)">Edit
+      </button>
       <div class="row p-2 mb-4">
-        <ng-template #itemAddModal let-modal>
+        <ng-template #itemUpdateModal let-modal>
           <div class="modal-header">
             <h5 class="modal-title">Edit {{item.name}}</h5>
             <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
@@ -200,10 +220,9 @@
                   id="updateLocation"
                   name="location"
                   [(ngModel)]="this.itemToUpdate.locationTag">
+                  <option *ngFor="let locationTag of $any(locationTags)"
+                          [ngValue]="locationTag.name">{{locationTag.name}}</option>
                   <option [ngValue]="null">none</option>
-                  <option value="fridge">fridge</option>
-                  <option value="freezer">freezer</option>
-                  <option value="shelf">shelf</option>
                 </select>
               </div>
 
@@ -247,49 +266,49 @@
           </div>
         </ng-template>
       </div>
-
-    <td><!-- popUp if deleted-->
-      <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(itemAddModal)">Remove</button>
     </td>
 
-    <div class="row p-2 mb-4">
-      <ng-template #itemAddModal let-modal>
-        <div class="modal-header">
-          <h5 class="modal-title">Do you want to buy this item again?</h5>
-          <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="form-group">
-            <label for="inputAmount">Amount</label>
-            <input type="number" name="amount" class="form-control" id="amount" min="1" required
-                   aria-describedby="amountHelp" [(ngModel)]="this.shopAgainAmount">
+    <td><!-- popUp if deleted-->
+      <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(itemDeleteModal)">Remove
+      </button>
+      <div class="row p-2 mb-4">
+        <ng-template #itemDeleteModal let-modal>
+          <div class="modal-header">
+            <h5 class="modal-title">Do you want to put {{item.name}} on the shoppinglist again?</h5>
+            <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
           </div>
-          <div class="form-group">
-            <label for="inputNotes">Notes</label>
-            <textarea rows="3" name="notes" class="form-control" id="notes"
-                      aria-describedby="notesHelp" placeholder="Enter Notes"
-                      [(ngModel)]="this.shopAgainNotes"></textarea>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="inputAmount">Amount</label>
+              <input type="number" name="amount" class="form-control" id="amount" min="1" required
+                     aria-describedby="amountHelp" [(ngModel)]="this.shopAgainAmount">
+            </div>
+            <div class="form-group">
+              <label for="inputNotes">Notes</label>
+              <textarea rows="3" name="notes" class="form-control" id="notes"
+                        aria-describedby="notesHelp" placeholder="Enter Notes"
+                        [(ngModel)]="this.shopAgainNotes"></textarea>
+            </div>
           </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" id="shoppinglist-public-msg"
-                  (click)="putOnPublicShoppinglist(item); modal.dismiss('close')"
-                  class="btn btn-success float-right">Yes, i want to put it on the public shoppinglist
-          </button>
+          <div class="modal-footer">
+            <button type="button" id="shoppinglist-public-msg"
+                    (click)="putOnPublicShoppinglist(item); modal.dismiss('close')"
+                    class="btn btn-success float-right">Yes, on public shoppinglist
+            </button>
 
-          <button type="button" id="shoppinglist-private-msg"
-                  (click)="putOnPrivateShoppinglist(item); modal.dismiss('close')"
-                  class="btn btn-success float-right">Yes, i want to put it on my private shoppinglist
-          </button>
-
-          <button type="button" (click)="deleteItem(item); modal.dismiss('close')" class="btn btn-secondary"
-                  id="delete-btn">No, just delete it
-          </button>
-        </div>
-      </ng-template>
-    </div>
+            <button type="button" id="shoppinglist-private-msg"
+                    (click)="putOnPrivateShoppinglist(item); modal.dismiss('close')"
+                    class="btn btn-success float-right">Yes, on private shoppinglist
+            </button>
+            <button type="button" (click)="deleteItem(item); modal.dismiss('close')" class="btn btn-secondary"
+                    id="delete-btn">No, just delete it
+            </button>
+          </div>
+        </ng-template>
+      </div>
+    </td>
 
   </tr>
   </tbody>
