@@ -117,7 +117,6 @@ public interface UserService extends UserDetailsService {
 
     void editUsername(String newUsername, String username);
 
-    Long loadGroupStorageByUsername(String username);
 
     Long loadGroupShoppinglistByUsername(String username);
 

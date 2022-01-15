@@ -190,40 +190,7 @@ public class UserServiceImpl implements UserService {
         this.userRepository.deleteById(id);
     }
 
-    public void confirmNewEmail(String confirmationTokenEncrypted) {
-        String confirmationTokenDecrypted = new String(Base64.decodeBase64(confirmationTokenEncrypted));
 
-        String username = confirmationTokenDecrypted.split(":")[0];
-
-        try {
-            Long confirmationToken = Long.parseLong(confirmationTokenDecrypted.split(":")[1]);
-            if ((System.currentTimeMillis() - confirmationToken) > 86400000) {
-                throw new EmailConfirmationException("Confirmation token expired");
-            }
-
-            Optional<ApplicationUser> userO = customUserRepository.findUserByUsername(username);
-            Optional<PendingEmail> pendingEmail = pendingEmailRespository.findEmailByConfirmationToken(confirmationToken, username);
-
-            if (userO.isEmpty()) {
-                throw new EmailConfirmationException("User does not exist");
-            }
-
-            if (pendingEmail.isEmpty()) {
-                throw new EmailConfirmationException("No new Email detected in database");
-            }
-
-            String email = pendingEmail.get().getEmail();
-
-            ApplicationUser user = userO.get();
-            user.setEmail(email);
-            customUserRepository.save(user);
-            pendingEmailRespository.deleteByEmail(email);
-
-        } catch (NumberFormatException | PatternSyntaxException | ArrayIndexOutOfBoundsException | IllegalStateException e) {
-            throw new EmailConfirmationException("Wrong confirmation token");
-        }
-
-    }
 
     @Override
     public void createUser(UserRegistrationDto userRegistrationDto, Long confirmationToken) {
