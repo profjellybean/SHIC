@@ -28,26 +28,26 @@
 
 <th>Bills:</th>
 
-<table class='table'>
-  <thead>
+<table class="table table-striped">
+  <thead class="thead-dark">
   <tr>
-    <th>Included: </th>
-    <th>Not paid yet: </th>
-    <th>Items bought: </th>
-    <th>Sum of the purchase: </th>
-    <th>To pay per person: </th>
     <th>Date: </th>
+    <th>Included: </th>
+    <th>Yet to pay: </th>
+    <th>Items: </th>
+    <th>Sum: </th>
+    <th>To pay per person: </th>
     <th>Notes:</th>
   </tr>
   </thead>
   <tbody>
   <tr *ngFor="let bill of billArray;">
+    <td>{{bill.date}}</td>
     <td>{{bill.nameList}}</td>
     <td>{{bill.notPaidNameList}}</td>
     <td><div *ngFor="let grocery of bill.groceries">{{grocery.name}}</div></td>
     <td>{{bill.sum}} €</td>
     <td>{{bill.sumPerPerson}} €</td>
-    <td>{{bill.date}}</td>
     <td>{{bill.notes}}</td>
     <td>
       <div>
@@ -62,10 +62,9 @@
   <tr>
     <th>TOTAL:</th>
     <th></th>
-    <th></th>
     <th>{{billSumGroup}} €</th>
     <th>{{billSumUser}} € (for you to pay)</th>
-    <th></th>
+    <th><button class=" btn btn-outline-info" (click)="payAll()">Pay all bills</button></th>
     <th></th>
     <th></th>
     <th></th>
