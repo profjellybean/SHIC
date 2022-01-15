@@ -49,6 +49,11 @@ export class UserService {
     return this.authHttpClient.put<Image>(this.userRegisterUri+'/picture', formData);
   }
 
+  changeEmail(newEmail: string): Observable<object> {
+    return this.authHttpClient.put<object>(this.userRegisterUri+'/email', {email: newEmail});
+  }
+
+
   getCurrentUser(params: Params): Observable<User>{
     console.log('get user');
     return this.authHttpClient.get<User>(this.userRegisterUri);

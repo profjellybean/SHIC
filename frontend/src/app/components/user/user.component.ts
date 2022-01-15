@@ -7,6 +7,7 @@ import jwt_decode from 'jwt-decode';
 import {User} from '../../dtos/user';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {HeaderComponent} from '../header/header.component';
+import {Group} from '../../dtos/group';
 
 
 @Component({
@@ -19,8 +20,11 @@ export class UserComponent implements OnInit {
   userToAdd: string;
   error: string;
   success: string;
+  emailEditMode = false;
   users: User[];
   userEditMode: boolean;
+  newGroupName: string;
+  currGroup: Group;
 
   user: User = {
     // @ts-ignore
@@ -52,7 +56,7 @@ export class UserComponent implements OnInit {
   }
 
   generateGroup(){
-    this.groupService.generateGroup('WG-Wipplingerstraße', this.user.username).subscribe({
+    this.groupService.generateGroup(this.newGroupName, this.user.username).subscribe({
       next: data => {
         console.log('received items10', data);
         this.groupId = data;
@@ -110,6 +114,21 @@ export class UserComponent implements OnInit {
         this.showError('Error while adding user to group: ' + error.error.message);
       }
     });
+  }
+
+  changeEmail(){
+    this.emailEditMode = false;
+    console.log(this.user.email + ' ' + this.editedUser.email);
+    if(this.editedUser.email !== this.user.email){
+      this.userService.changeEmail(this.editedUser.email).subscribe({
+        next: data =>{
+          this.notifications.pushSuccess('Check your Email!');
+        },
+        error: error =>{
+          this.notifications.pushFailure(error.error.message);
+        }
+      });
+    }
   }
 
   onFileChange(event){
