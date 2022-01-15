@@ -50,9 +50,8 @@
     <td>{{bill.notes}}</td>
     <td>
       <div>
-        <button type="button" style="BACKGROUND-COLOR:green;" class="btn btn-secondary" (click)="confirmPayment(bill.id);">Confirm Payment</button> &nbsp;
-        <button type="button" class="btn btn-secondary" (click)="openBillModal(billEditModal, bill);">Edit Bill</button>
-
+        <button type="button" class="btn btn-secondary" (click)="openBillModal(billEditModal, bill);">Edit Bill</button> &nbsp;
+        <button *ngIf="bill.notPaidNameList.includes(this.user.username)" type="button" style="BACKGROUND-COLOR:green;" class="btn btn-secondary" (click)="confirmPayment(bill.id);">Confirm Payment</button>
       </div>
     </td>
   </tr>
