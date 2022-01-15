@@ -213,7 +213,9 @@ public class UserEndpoint {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND);
             }
             LOGGER.info("Endpoint: getUserByUsername({})", authentication.getName());
-            return this.complexUserMapper.userToUserDto(this.userService.findApplicationUserByUsername(authentication.getName()));
+            ApplicationUser applicationUser = this.userService.findApplicationUserByUsername(authentication.getName());
+            LOGGER.error(applicationUser.getImage().toString());
+            return this.complexUserMapper.userToUserDto(applicationUser);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
