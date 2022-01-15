@@ -206,9 +206,17 @@ public class UserEndpoint {
 
     @PermitAll
     @GetMapping
-    public UserDto getUserByUsername(@Param("username") String username) {
-        LOGGER.info("Endpoint: getUserByUsername({})", username);
-        return this.complexUserMapper.userToUserDto(this.userService.findApplicationUserByUsername(username));
+    public UserDto getUser(Authentication authentication) {
+        try {
+            if (authentication == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            }
+            LOGGER.info("Endpoint: getUserByUsername({})", authentication.getName());
+            return this.complexUserMapper.userToUserDto(this.userService.findApplicationUserByUsername(authentication.getName()));
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+
     }
 
     @PermitAll

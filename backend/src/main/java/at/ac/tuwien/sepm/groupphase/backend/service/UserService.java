@@ -103,17 +103,21 @@ public interface UserService extends UserDetailsService {
      *
      */
 
+
     void createUser(UserRegistrationDto userRegistrationDto, Long confirmationToken);
 
     Long loadGroupStorageByUsername(String username);
 
     Long changeEmail(EmailDto emailDto, String username);
 
+    void confirmNewEmail(String confirmationTokenEncrypted);
+
+
     void editPicture(byte[] picture, String username);
 
     void editUsername(String newUsername, String username);
 
-    void confirmNewEmail(String confirmationTokenEncrypted);
+    Long loadGroupStorageByUsername(String username);
 
     Long loadGroupShoppinglistByUsername(String username);
 
