@@ -71,7 +71,7 @@
 <table class="table table-striped">
   <thead class="thead-dark">
   <tr>
-    <th>Users currently in group {{this.currGroup.name}}<th>
+    <th *ngIf="this.currGroup.name">Users currently in group {{this.currGroup.name}}<th>
   </tr>
   </thead>
   <tbody>

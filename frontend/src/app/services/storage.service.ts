@@ -3,7 +3,6 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
 import {Item} from '../dtos/item';
-import {ItemStorage} from '../dtos/itemStorage';
 import {Params} from '@angular/router';
 import {UnitOfQuantity} from '../dtos/unitOfQuantity';
 
