@@ -3,5 +3,6 @@ export interface Group{
   user: any;
   storageId: number;
   registerId: number;
+  name: string;
   publicShoppingListId: number;
 }

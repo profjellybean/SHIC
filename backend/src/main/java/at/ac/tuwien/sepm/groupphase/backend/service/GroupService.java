@@ -9,9 +9,11 @@ public interface GroupService {
     /**
      * Generates a new UserGroup containing of a group ID, a storageId(the storage is also generated here), a public shopping list id (is generated here) and a set of valid users.
      *
+     * @param groupName the name of the new group
+     * @param username  the user to add in the new group
      * @return the UserGroupId
      */
-    Long generateUserGroup();
+    Long generateUserGroup(String groupName, String username);
 
     /**
      * Adds the application user to the list of users in the group.

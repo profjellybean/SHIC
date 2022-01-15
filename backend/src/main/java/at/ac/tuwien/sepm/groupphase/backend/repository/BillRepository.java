@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Repository
 public interface BillRepository extends JpaRepository<Bill, Long> {
@@ -18,18 +19,42 @@ public interface BillRepository extends JpaRepository<Bill, Long> {
     Bill getById(Long id);
 
     /**
+     * delete a bill by a given id.
+     *
+     */
+    void deleteById(Long id);
+
+
+    /**
      * Save a given bill.
      *
      * @return the saved bill
      */
     Bill save(Bill bill);
 
+    List<Bill> findAllByRegisterId(Long registerId);
+
     /**
-     * Adds up the sums of all Bills that were paid in the current month.
+     * Adds up the sums of all Bills that were paid in specific month.
+     *
+     * @return sum of all bills, null if no bill is found
+     */
+    @Query(value = "SELECT SUM(B.PRICE) FROM BILL AS B WHERE (B.REGISTER_ID = :registerId) AND (YEAR(B.PAID_ON) = YEAR(:today) AND MONTH(B.PAID_ON) = MONTH(:today))", nativeQuery = true)
+    Double billSumOfSpecificMonth(@Param("registerId") Long registerId, @Param("today") LocalDate today);
+
+    /**
+     * Adds up the sums of all Bills that were paid in a specific year.
      *
      * @return sum
      */
-    //@Query(value = "SELECT SUM(B.PRICE) FROM BILL AS B WHERE (B.REGISTER_ID = :registerId) AND (B.PAID_ON > @startMonthDate)", nativeQuery = true)
-    @Query(value = "SELECT SUM(B.PRICE) FROM BILL AS B WHERE (B.REGISTER_ID = :registerId) AND (YEAR(B.PAID_ON) = YEAR(:today) AND MONTH(B.PAID_ON) = MONTH(:today))", nativeQuery = true)
-    Double billSumOfCurrentMonth(@Param("registerId") Long registerId, @Param("today") LocalDate today);
+    @Query(value = "SELECT SUM(B.PRICE) FROM BILL AS B WHERE (B.REGISTER_ID= :registerId) AND (YEAR(B.PAID_ON)= YEAR(:day))", nativeQuery = true)
+    Double billSumOfSpecificYear(@Param("registerId") Long registerId, @Param("day") LocalDate day);
+
+    /**
+     * Adds up the sums of all Bills that are currently saved in the register.
+     *
+     * @return sum
+     */
+    @Query(value = "SELECT SUM(B.PRICE) FROM BILL AS B WHERE (B.REGISTER_ID= :registerId)", nativeQuery = true)
+    Double billSumOfBillsInRegister(@Param("registerId") Long registerId);
 }

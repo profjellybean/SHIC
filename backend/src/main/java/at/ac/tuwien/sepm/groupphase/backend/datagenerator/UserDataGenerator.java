@@ -72,7 +72,7 @@ public class UserDataGenerator {
         UserGroup group = null;
         //Item item = new Item(null, "Döner", null);
         //Long itemId = itemRepository.saveAndFlush(new Item(null, "Döner", null)).getId();
-        UserRegistrationDto user = new UserRegistrationDto("user", "password", "user@email.com");
+        UserRegistrationDto user = new UserRegistrationDto("Heidi", "password", "user@email.com");
 
         Set<Item> items = new HashSet<>();
         //items.add(itemRepository.getById(itemId));
@@ -83,7 +83,7 @@ public class UserDataGenerator {
             Long publicShoppingListId = shoppingListRepository.saveAndFlush(new ShoppingList()).getId();
             Long publicStorageId = storageRepository.saveAndFlush(new Storage()).getId();
             //Long registerId = registerRepository.saveAndFlush(new Register()).getId();
-            group = new UserGroup(publicStorageId, publicShoppingListId, 1L, new HashSet<ApplicationUser>());
+            group = new UserGroup(publicStorageId, publicShoppingListId, 1L, new HashSet<ApplicationUser>(), "WG-Wipplingerstraße");
             group = userGroupRepository.saveAndFlush(group);
             Set<ApplicationUser> users = group.getUser();
             if (applicationUser.isEmpty()) {
@@ -94,7 +94,20 @@ public class UserDataGenerator {
                 group.setUser(users);
                 userGroupRepository.saveAndFlush(group);
             }
-            UserRegistrationDto admin = new UserRegistrationDto("admin", "password", "admin@email.com");
+            UserRegistrationDto admin = new UserRegistrationDto("Leopold", "password", "admin@email.com");
+            shoppingListId = shoppingListRepository.saveAndFlush(ShoppingList.ShoppingListBuilder.aShoppingList().withName("Your private shopping list").build()).getId();
+            applicationUser = userRepository.findUserByUsername(admin.getUsername());
+            if (applicationUser.isEmpty()) {
+                ApplicationUser u = userLoginMapper.dtoToEntity(admin, shoppingListId);
+                u.setCurrGroup(group);
+                userRepository.saveAndFlush(u);
+                users = userGroupRepository.findAll().get(0).getUser();
+                users.add(u);
+                group.setUser(users);
+                userGroupRepository.saveAndFlush(group);
+            }
+
+            UserRegistrationDto admin1 = new UserRegistrationDto("Gudrun", "password", "admin@email.com");
             shoppingListId = shoppingListRepository.saveAndFlush(ShoppingList.ShoppingListBuilder.aShoppingList().withName("Your private shopping list").build()).getId();
             applicationUser = userRepository.findUserByUsername(admin.getUsername());
 

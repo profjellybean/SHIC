@@ -8,8 +8,8 @@ export class BillDto {
   registerId: number;
   groceries: Item[] = [];
   notes: string;
-  names: User[];
-  notPaidNames: User[];
+  names: User[] = [];
+  notPaidNames: User[] = [];
   sum: number;
   sumPerPerson: number;
   date: Date;

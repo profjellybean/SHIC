@@ -7,6 +7,7 @@ import jwt_decode from 'jwt-decode';
 import {User} from '../../dtos/user';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {HeaderComponent} from '../header/header.component';
+import {Group} from '../../dtos/group';
 
 
 @Component({
@@ -22,6 +23,10 @@ export class UserComponent implements OnInit {
   users: User[];
   userEditMode: boolean;
   emailEditMode: boolean;
+  currGroup: Group;
+  newGroupName: string;
+
+
   user: User = {
     // @ts-ignore
     username: jwt_decode(this.authService.getToken()).sub.trim(),
@@ -52,10 +57,11 @@ export class UserComponent implements OnInit {
   }
 
   generateGroup(){
-    this.groupService.generateGroup().subscribe({
+    this.groupService.generateGroup(this.newGroupName, this.user.username).subscribe({
       next: data => {
         console.log('received items10', data);
         this.groupId = data;
+        this.getCurrentGroup();
       },
       error: error => {
         console.error(error.message);
@@ -68,6 +74,7 @@ export class UserComponent implements OnInit {
       next: data => {
         console.log('received items11', data);
         this.user = data;
+        this.currGroup = data.currGroup;
         this.groupId = this.user.currGroup.id;
         this.getAllUsers(this.groupId);
         console.log(this.groupId);

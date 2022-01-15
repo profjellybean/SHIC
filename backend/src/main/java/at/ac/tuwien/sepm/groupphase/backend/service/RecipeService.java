@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Recipe;
 
 import java.util.List;
@@ -27,4 +28,22 @@ public interface RecipeService {
      * @return the added recipe
      */
     Recipe addRecipe(Recipe recipe);
+
+    /**
+     * Saves updated existing recipe (specified in the recipe itself).
+     *
+     * @param recipe the updated version of an existing recipe
+     * @param groupId to check if this is recipe is available for all groups then it cannot be updated
+     *
+     * @return the updated recipe
+     */
+    Recipe updateRecipe(Recipe recipe, Long groupId);
+
+    /**
+     * delete recipe by id.
+     *
+     * @param id of the recipe
+     *
+     */
+    void deleteRecipe(String userName, Long id);
 }

@@ -2,16 +2,21 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Recipe;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.UnchangeableException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.RecipeService;
+import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.naming.AuthenticationException;
+import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
@@ -19,10 +24,12 @@ public class RecipeServiceImpl implements RecipeService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final RecipeRepository recipeRepository;
     private final ItemStorageRepository itemStorageRepository;
+    private final UserService userService;
 
-    public RecipeServiceImpl(RecipeRepository recipeRepository, ItemStorageRepository itemStorageRepository) {
+    public RecipeServiceImpl(RecipeRepository recipeRepository, ItemStorageRepository itemStorageRepository, UserService userService) {
         this.recipeRepository = recipeRepository;
         this.itemStorageRepository = itemStorageRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -44,5 +51,30 @@ public class RecipeServiceImpl implements RecipeService {
             itemStorageRepository.saveAndFlush(item);
         }
         return recipeRepository.saveAndFlush(recipe);
+    }
+
+    @Override
+    public Recipe updateRecipe(Recipe recipe, Long groupId) {
+        LOGGER.debug("Service: Update recipe {}", recipe);
+        if (groupId == null) {
+            throw new UnchangeableException("This recipe cannot be updated because it is available for all groups");
+        }
+        return recipeRepository.saveAndFlush(recipe);
+    }
+
+
+    @Override
+    @Transactional
+    public void deleteRecipe(String userName, Long id) {
+        LOGGER.debug("Service: delete recipe by id: {}", id);
+        Long registerId = userService.loadGroupRegisterIdByUsername(userName);
+        if (!Objects.equals(registerId, findRecipeById(id).getGroupId())) {
+            throw new NotFoundException("you are not authorized");
+        }
+        Recipe helpRecipe = findRecipeById(id);
+        if (helpRecipe == null) {
+            throw new NotFoundException("recipe not found");
+        }
+        recipeRepository.delete(helpRecipe);
     }
 }

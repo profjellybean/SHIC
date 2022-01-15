@@ -3,28 +3,22 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Bill;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Register;
-import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.BillRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.RegisterRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.UserGroupRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.RegisterService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class RegisterServiceImpl implements RegisterService {
@@ -83,13 +77,13 @@ public class RegisterServiceImpl implements RegisterService {
     @Transactional
     @Override
     public Double billSumOfCurrentMonth(String userName) {
-        LOGGER.debug("Service: get sum of Bills of current month");
+        LOGGER.debug("Service: get sum of Bills of current month for user {}", userName);
 
         Long registerId = userService.loadGroupRegisterIdByUsername(userName);
         if (registerId == null) {
             throw new NotFoundException("No register found for User " + userName);
         }
-        Double sum = billRepository.billSumOfCurrentMonth(registerId, LocalDate.now());
+        Double sum = billRepository.billSumOfSpecificMonth(registerId, LocalDate.now());
         if (sum == null) {
             return 0.0;
         }
@@ -98,8 +92,42 @@ public class RegisterServiceImpl implements RegisterService {
 
     @Transactional
     @Override
+    public Double billGroupTotal(String userName) {
+        LOGGER.debug("Service: get group total of bills {}", userName);
+        Long registerId = userService.loadGroupRegisterIdByUsername(userName);
+        if (registerId == null) {
+            throw new NotFoundException("No register found for User " + userName);
+        }
+        Double sumBillsGroup = billRepository.billSumOfBillsInRegister(registerId);
+
+        return sumBillsGroup;
+    }
+
+    @Transactional
+    @Override
+    public Double billUserTotal(String userName) {
+        LOGGER.debug("Service: get user total of bills {}", userName);
+        Long registerId = userService.loadGroupRegisterIdByUsername(userName);
+        if (registerId == null) {
+            throw new NotFoundException("No register found for User " + userName);
+        }
+        List<Bill> bills = billRepository.findAllByRegisterId(registerId);
+        Double sumBillsUser = 0.0;
+        for (Bill bill : bills) {
+            for (ApplicationUser user : bill.getNotPaidNames()) {
+                if (user.getUsername().equals(userName)) {
+                    sumBillsUser += bill.getSumPerPerson();
+                }
+            }
+        }
+
+        return sumBillsUser;
+    }
+
+    @Transactional
+    @Override
     public Double editMonthlyBudget(String userName, Double newBudget) {
-        LOGGER.debug("Service: edit monthlyBudget {} of register of Group with user {}", userName, newBudget);
+        LOGGER.debug("Service: edit monthlyBudget {} of register of Group with user {}", newBudget, userName);
 
         if (userName == null) {
             throw new ValidationException("No User specified");
@@ -114,8 +142,6 @@ public class RegisterServiceImpl implements RegisterService {
         if (registerId == null) {
             throw new NotFoundException("No register found for User " + userName);
         }
-        System.out.println("AAAAAAAAA REGISTERID " + registerId);
-        System.out.println("AAAAAAAAA ALL " + registerRepository.findAll());
         Optional<Register> registerOptional = registerRepository.findRegisterById(registerId);
         if (registerOptional.isPresent()) {
             Register register = registerOptional.get();
@@ -124,6 +150,30 @@ public class RegisterServiceImpl implements RegisterService {
             return newBudget;
         }
         throw new NotFoundException("No register found for User " + userName);
+    }
+
+    @Transactional
+    @Override
+    public Double billSumOfMonthAndYear(String userName, LocalDate date) {
+        LOGGER.debug("Service: get sum of Bills of specific month");
+        Long registerId = userService.loadGroupRegisterIdByUsername(userName);
+        Double sum = billRepository.billSumOfSpecificMonth(registerId, date);
+        if (sum == null) {
+            return 0.0;
+        }
+        return sum;
+    }
+
+    @Transactional
+    @Override
+    public Double billSumOfYear(String userName, LocalDate date) {
+        LOGGER.debug("Service: get sum of Bills of specific year");
+        Long registerId = userService.loadGroupRegisterIdByUsername(userName);
+        Double sum = billRepository.billSumOfSpecificYear(registerId, date);
+        if (sum == null) {
+            return 0.0;
+        }
+        return sum;
     }
 
 

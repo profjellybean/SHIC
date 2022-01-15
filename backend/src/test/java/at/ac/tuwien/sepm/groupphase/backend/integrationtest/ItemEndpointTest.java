@@ -15,6 +15,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.UnitsRelationRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,14 +63,13 @@ public class ItemEndpointTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-
-
 /*
     @Test
+    @Disabled
     public void insertUnitOfQuantityWithEmptyOrNullNameShouldThrowException() throws Exception {
         UnitOfQuantityDto unitOfQuantityDto = new UnitOfQuantityDto();
 
-        MvcResult mvcResult = this.mockMvc.perform(post(ITEMENDPOINT_UNITOFQUANTITY_URI+"?name=")
+        MvcResult mvcResult = this.mockMvc.perform(post(ITEMENDPOINT_UNITOFQUANTITY_URI + "?name=")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(unitOfQuantityDto)))
             .andReturn();

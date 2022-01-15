@@ -3,6 +3,8 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Bill;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Register;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.BillRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.RegisterRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
@@ -51,6 +53,29 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
+    public void deleteById(Long id) {
+        Bill bill = billRepository.getById(id);
+        Register register = registerRepository.getById(bill.getRegisterId());
+        if (bill != null) {
+            if (register.getBills().contains(bill)) {
+                Set<Bill> billsInRegister = register.getBills();
+                billsInRegister.remove(bill);
+                register.setBills(billsInRegister);
+                registerRepository.saveAndFlush(register);
+            }
+            if (!bill.getNames().isEmpty()) {
+                bill.setNames(null);
+            }
+            if (!bill.getNotPaidNames().isEmpty()) {
+                bill.setNotPaidNames(null);
+            }
+
+            billRepository.saveAndFlush(bill);
+            billRepository.deleteById(id);
+        }
+    }
+
+    @Override
     public Bill bill(Bill bill) {
         LOGGER.debug("Service: create new bill");
         Bill savedBill = billRepository.saveAndFlush(bill);
@@ -62,5 +87,15 @@ public class BillServiceImpl implements BillService {
             registerRepository.saveAndFlush(register.get());
         }
         return savedBill;
+    }
+
+    @Override
+    public Bill updateBill(Bill bill) {
+        LOGGER.debug("Service: update a bill");
+        if (bill.getId() == null) {
+            throw new ValidationException("Bill's id is null");
+        }
+
+        return this.billRepository.saveAndFlush(bill);
     }
 }
