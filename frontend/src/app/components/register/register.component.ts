@@ -51,6 +51,7 @@ export class RegisterComponent implements OnInit {
   monthlyDifference: number;
   billSumGroup: number;
   billSumUser: number;
+  billToDelete: Bill;
 
   user: User = {
     // @ts-ignore
@@ -185,25 +186,29 @@ export class RegisterComponent implements OnInit {
     this.modalService.open(billModal, {ariaLabelledBy: 'modal-basic-title'});
   }
 
+  openAddModal(billDeleteModal: TemplateRef<any>) {
+    this.modalService.open(billDeleteModal, {ariaLabelledBy: 'modal-basic-title'});
+  }
+
   editBill(form) {
     this.submitted = true;
 
     if (form.valid) {
       console.log('form item to add', this.billToEdit);
-      if(this.billToEdit.names[0].id === null){
+      if (this.billToEdit.names[0].id === null) {
         console.log('Set allUsers {}', this.allUsers);
         this.billToEdit.names = this.allUsers;
       }
       this.billToEdit.notPaidNames = this.billToEdit.names;
-      if(this.billToEdit.names.length > 0) {
+      if (this.billToEdit.names.length > 0) {
         this.billToEdit.sumPerPerson = this.billToEdit.sum / this.billToEdit.names.length;
       } else {
         this.billToEdit.sumPerPerson = this.billToEdit.sum;
       }
-      for(const name of this.billToEdit.names){
+      for (const name of this.billToEdit.names) {
         delete name.currGroup;
       }
-      for(const name of this.billToEdit.notPaidNames){
+      for (const name of this.billToEdit.notPaidNames) {
         delete name.currGroup;
       }
       this.billService.editBill(this.billToEdit).subscribe({
@@ -218,6 +223,21 @@ export class RegisterComponent implements OnInit {
       });
       this.clearForm();
     }
+  }
+
+  deleteBillById() {
+    this.billService.deleteBillById(this.billToDelete.id).subscribe({
+      next: data => {
+        const deleteIndex = this.billArray.indexOf(this.billToDelete);
+        if (deleteIndex !== -1) {
+          this.billArray.splice(deleteIndex,1);
+        }
+      },
+      error: error => {
+        console.error(error.message);
+        this.defaultServiceErrorHandling(error);
+      }
+    });
   }
 
   private getMonthlySum() {

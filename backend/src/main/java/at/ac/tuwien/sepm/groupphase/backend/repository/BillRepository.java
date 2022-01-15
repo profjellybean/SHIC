@@ -19,6 +19,13 @@ public interface BillRepository extends JpaRepository<Bill, Long> {
     Bill getById(Long id);
 
     /**
+     * delete a bill by a given id.
+     *
+     */
+    void deleteById(Long id);
+
+
+    /**
      * Save a given bill.
      *
      * @return the saved bill
@@ -44,7 +51,7 @@ public interface BillRepository extends JpaRepository<Bill, Long> {
     Double billSumOfSpecificYear(@Param("registerId") Long registerId, @Param("day") LocalDate day);
 
     /**
-     * Adds up the sums of all Bills that are currently saved in the register
+     * Adds up the sums of all Bills that are currently saved in the register.
      *
      * @return sum
      */

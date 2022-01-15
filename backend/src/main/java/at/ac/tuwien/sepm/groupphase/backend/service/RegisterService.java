@@ -33,7 +33,7 @@ public interface RegisterService {
 
 
     /**
-     * calculates the sum of the bills for the group
+     * calculates the sum of the bills for the group.
      *
      * @return sum of the bills for the group
      *
@@ -42,7 +42,7 @@ public interface RegisterService {
     Double billGroupTotal(String userName);
 
     /**
-     * calculates the sum of the bills for the user
+     * calculates the sum of the bills for the user.
      *
      * @return sum of the bills for the user
      *

@@ -120,9 +120,9 @@ public class RegisterServiceImpl implements RegisterService {
         }
         List<Bill> bills = billRepository.findAllByRegisterId(registerId);
         Double sumBillsUser = 0.0;
-        for (Bill bill:bills) {
-            for (ApplicationUser user:bill.getNotPaidNames()) {
-                if(user.getUsername().equals(userName)) {
+        for (Bill bill : bills) {
+            for (ApplicationUser user : bill.getNotPaidNames()) {
+                if (user.getUsername().equals(userName)) {
                     sumBillsUser += bill.getSumPerPerson();
                 }
             }
