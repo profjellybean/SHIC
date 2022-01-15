@@ -22,7 +22,7 @@
 </div>
 <br>
 
-<button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(itemAddModal)">Add new Item</button>
+<button type="button" class="btn btn-outline-info btn-sm mr-4" (click)="openAddModal(itemAddModal)">Add new Item</button>
 
 <div class="row p-2 mb-4">
 
@@ -99,10 +99,10 @@
       </form>
     </div>
     <div class="modal-footer">
-      <button type="button" (click)="addItemForm(itemForm)" id="add-msg" class="btn btn-success float-right">Add
+      <button type="button" (click)="addItemForm(itemForm)" id="add-msg" class="btn btn-outline-info float-right">Add
         item
       </button>
-      <button type="button" class="btn btn-secondary" id="close-modal-btn" (click)="modal.dismiss('close')">Close
+      <button type="button" class="btn btn-outline-dark" id="close-modal-btn" (click)="modal.dismiss('close')">Close
       </button>
     </div>
   </ng-template>
@@ -137,7 +137,7 @@
         <td>{{item.notes}}</td>
 
         <td>
-          <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="deleteItem(item)">Remove</button>
+          <button type="button" class="btn btn-outline-danger btn-sm mr-4" (click)="deleteItem(item)">Remove</button>
         </td>
       </tr>
       </tbody>
@@ -145,7 +145,7 @@
   </div>
 </div>
 <div>
-  <button *ngIf="items.length !== 0" type="button" class="btn btn-secondary" id="buy-item" (click)="openBillModal(confirmationModal)" data-toggle="modal">Buy these Items</button>
+  <button *ngIf="items.length !== 0" type="button" class="btn btn-outline-info" id="buy-item" (click)="openBillModal(confirmationModal)" data-toggle="modal">Buy these Items</button>
 </div>
 
 <div>
@@ -157,8 +157,8 @@
       </button>
     </div>
     <div class="modal-body">
-  <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openBillModal(billAddModal)">Move & make bill</button><p></p>
-  <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="workOffShoppingList()">Move to storage</button>
+  <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="openBillModal(billAddModal)">Move & make bill</button><p></p>
+  <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="workOffShoppingList()">Move to storage</button>
     </div>
   </ng-template>
 </div>
@@ -206,7 +206,7 @@
           <textarea rows="3" name="notes" class="form-control" id="billNotes"
                     aria-describedby="notesHelp" placeholder="Enter Notes" [(ngModel)]="billToAdd.notes"></textarea>
         </div>
-        <button type="button" (click)="addBillForm(billForm)" id="add-msg1" class="btn btn-success float-right">Add bill and buy</button>
+        <button type="button" (click)="addBillForm(billForm)" id="add-msg1" class="btn btn-outline-success float-right">Add bill and buy</button>
 
       </form>
     </div>
