@@ -31,6 +31,26 @@ public interface RegisterService {
      */
     Double billSumOfCurrentMonth(String userName);
 
+
+    /**
+     * calculates the sum of the bills for the group
+     *
+     * @return sum of the bills for the group
+     *
+     * @throws NotFoundException if no register can be found for the user
+     */
+    Double billGroupTotal(String userName);
+
+    /**
+     * calculates the sum of the bills for the user
+     *
+     * @return sum of the bills for the user
+     *
+     * @throws NotFoundException if no register can be found for the user
+     */
+    Double billUserTotal(String userName);
+
+
     /**
      * Edits Budget in Register of the Group in which the User currently is.
      *
