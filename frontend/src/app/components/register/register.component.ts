@@ -61,6 +61,7 @@ export class RegisterComponent implements OnInit {
     currGroup: null,
     privList: null,
     email: null,
+
     image: null
   };
 
