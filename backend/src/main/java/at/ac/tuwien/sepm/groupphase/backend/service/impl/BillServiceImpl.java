@@ -57,7 +57,7 @@ public class BillServiceImpl implements BillService {
         Bill bill = billRepository.getById(id);
         Register register = registerRepository.getById(bill.getRegisterId());
         if (bill != null) {
-            if(register.getBills().contains(bill)) {
+            if (register.getBills().contains(bill)) {
                 Set<Bill> billsInRegister = register.getBills();
                 billsInRegister.remove(bill);
                 register.setBills(billsInRegister);
