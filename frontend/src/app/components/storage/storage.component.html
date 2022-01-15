@@ -43,16 +43,13 @@
 
 <!--TABLE START-->
 
-<button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(itemAddModal)">Add new Item</button>
+<button type="button" class="btn btn-outline-info btn-sm mr-4" (click)="openAddModal(itemAddModal)">Add new Item</button>
 
 <div class="row p-2 mb-4">
-  <!--
-  <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(itemAddModal)">Add</button>
--->
   <ng-template #itemAddModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Item</h5>
-      <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
+      <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -137,9 +134,9 @@
       </form>
     </div>
     <div class="modal-footer">
-      <button type="button" (click)="addItemForm(itemForm)" id="add-msg" class="btn btn-success float-right">Add item
+      <button type="button" (click)="addItemForm(itemForm)" id="add-msg" class="btn btn-outline-info float-right">Add item
       </button>
-      <button type="button" class="btn btn-secondary" id="close-modal-btn" (click)="modal.dismiss('close')">Close
+      <button type="button" class="btn btn-outline-dark" id="close-modal-btn" (click)="modal.dismiss('close')">Close
       </button>
     </div>
   </ng-template>
@@ -170,14 +167,14 @@
     <td>{{item.locationTag}}</td>
     <td>{{item.notes}}</td>
     <td>
-      <button type="button" class="btn btn-secondary btn-sm mr-4"
+      <button type="button" class="btn btn-outline-dark btn-sm mr-4"
               (click)="openAddModal(itemUpdateModal); setUpdateItem(item)">Edit
       </button>
       <div class="row p-2 mb-4">
         <ng-template #itemUpdateModal let-modal>
           <div class="modal-header">
             <h5 class="modal-title">Edit {{item.name}}</h5>
-            <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
+            <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -254,13 +251,13 @@
 
               <button type="button" (click)="updateItemForm(updateitemForm, item); modal.dismiss('close')"
                       id="update-msg"
-                      class="btn btn-success float-right">Update
+                      class="btn btn-outline-dark float-right">Update
               </button>
 
             </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" id="close-update-modal-btn"
+            <button type="button" class="btn btn-outline-dark" id="close-update-modal-btn"
                     (click)="modal.dismiss('close')">
               Close
             </button>
@@ -270,13 +267,13 @@
     </td>
 
     <td><!-- popUp if deleted-->
-      <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(itemDeleteModal)">Remove
+      <button type="button" class="btn btn-outline-danger btn-sm mr-4" (click)="openAddModal(itemDeleteModal)">Remove
       </button>
       <div class="row p-2 mb-4">
         <ng-template #itemDeleteModal let-modal>
           <div class="modal-header">
             <h5 class="modal-title">Do you want to put {{item.name}} on the shoppinglist again?</h5>
-            <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
+            <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -296,14 +293,14 @@
           <div class="modal-footer">
             <button type="button" id="shoppinglist-public-msg"
                     (click)="putOnPublicShoppinglist(item); modal.dismiss('close')"
-                    class="btn btn-success float-right">Yes, on public shoppinglist
+                    class="btn btn-outline-info float-right">Yes, on public shoppinglist
             </button>
 
             <button type="button" id="shoppinglist-private-msg"
                     (click)="putOnPrivateShoppinglist(item); modal.dismiss('close')"
-                    class="btn btn-success float-right">Yes, on private shoppinglist
+                    class="btn btn-outline-info float-right">Yes, on private shoppinglist
             </button>
-            <button type="button" (click)="deleteItem(item); modal.dismiss('close')" class="btn btn-secondary"
+            <button type="button" (click)="deleteItem(item); modal.dismiss('close')" class="btn btn-outline-danger"
                     id="delete-btn">No, just delete it
             </button>
           </div>
