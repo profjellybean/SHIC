@@ -161,6 +161,9 @@ export class RegisterComponent implements OnInit {
             bill.notPaidNameList = bill.notPaidNameList + name.username + ', ';
             this.secondCounter++;
           }
+          bill.notPaidNameList = bill.notPaidNameList.substring(0, bill.notPaidNameList.length-2);
+          bill.nameList = bill.nameList.substring(0, bill.nameList.length-2);
+          console.log(bill.notPaidNameList);
           this.billArray[this.counter] = bill;
           this.counter++;
         }
