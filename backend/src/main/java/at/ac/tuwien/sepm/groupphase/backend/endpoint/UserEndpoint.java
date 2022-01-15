@@ -1,5 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EmailDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ImageDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UsernameDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
@@ -12,6 +14,7 @@ import at.ac.tuwien.sepm.groupphase.backend.exception.EmailConfirmationException
 import at.ac.tuwien.sepm.groupphase.backend.exception.PasswordValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.UsernameTakenException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.EmailCooldownException;
+import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,10 +34,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.annotation.security.PermitAll;
 import java.lang.invoke.MethodHandles;
+import java.util.LinkedList;
+import java.util.List;
 
 
 @RestController
@@ -45,16 +51,65 @@ public class UserEndpoint {
     private final ComplexUserMapper userMapperImpl;
     private final UserMapper userMapper;
     private final ComplexUserMapper complexUserMapper;
+    private final JwtTokenizer jwtTokenizer;
 
     @Autowired
-    public UserEndpoint(UserService userService, ComplexUserMapper userMapperImpl, UserMapper userMapper, ComplexUserMapper complexUserMapper) {
+    public UserEndpoint(UserService userService, ComplexUserMapper userMapperImpl, UserMapper userMapper, ComplexUserMapper complexUserMapper, JwtTokenizer jwtTokenizer) {
         this.userService = userService;
         this.userMapper = userMapper;
         this.userMapperImpl = userMapperImpl;
         this.complexUserMapper = complexUserMapper;
+        this.jwtTokenizer = jwtTokenizer;
     }
 
 
+    @PermitAll
+    @PutMapping("/picture")
+    @ResponseStatus(HttpStatus.OK)
+    ImageDto uploadImage(@RequestParam("file") MultipartFile multipartImage, Authentication authentication) {
+        try {
+            userService.editPicture(multipartImage.getBytes(), authentication.getName());
+            return new ImageDto(multipartImage.getBytes());
+        } catch (NotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+
+    }
+
+
+    @PermitAll
+    @PutMapping
+    @ResponseStatus(HttpStatus.OK)
+    public String editUsername(@RequestBody UsernameDto newUsernameDto, Authentication authentication) {
+
+        try {
+            userService.editUsername(newUsernameDto.getUsername(), authentication.getName());
+
+            List<String> roles = new LinkedList<>();
+            return "{ \"token\":\"" + jwtTokenizer.getAuthToken(newUsernameDto.getUsername(), roles) + " \"}";
+        } catch (UsernameTakenException e) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+
+
+    }
+
+    @PermitAll
+    @PutMapping("/email")
+    @ResponseStatus(HttpStatus.OK)
+    public Long changeEmail(@RequestBody EmailDto emailDto, Authentication authentication) {
+        try {
+
+            return userService.changeEmail(emailDto, authentication.getName());
+
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
     @PermitAll
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -92,6 +147,20 @@ public class UserEndpoint {
 
     }
 
+    @PermitAll
+    @GetMapping("/confirmNew")
+    @ResponseStatus(HttpStatus.OK)
+    public void confirmNewEmail(@RequestParam(value = "tkn") String confirmationTokenEncrypted) {
+        LOGGER.info("Endpoint: GET /user/confirmNew?tkn={}", confirmationTokenEncrypted);
+        try {
+            userService.confirmNewEmail(confirmationTokenEncrypted);
+        } catch (EmailConfirmationException e) {
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+
+
+    }
 
     @PermitAll
     @PutMapping("/confirmation")
