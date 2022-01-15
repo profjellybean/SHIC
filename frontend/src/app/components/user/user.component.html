@@ -5,11 +5,9 @@
 &nbsp;
 <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(userDeleteModal)">delete profile</button>
 &nbsp;
-<button type="button" class="btn btn-secondary btn-sm mr-4" routerLink="/custom-item">Custom Items</button>
-
-<button type="button" class="btn btn-secondary btn-sm mr-4" routerLink="/locationTag">Custom LocationTags</button>
+<button *ngIf="!(groupId===null || groupId === undefined)" type="button" class="btn btn-secondary btn-sm mr-4" routerLink="/custom-item">Custom Items</button>
 &nbsp;
-<button type="button" class="btn btn-secondary btn-sm mr-4" (click)="authService.logoutUser()" routerLink="/">Logout</button>
+<button *ngIf="!(groupId===null || groupId === undefined)" type="button" class="btn btn-secondary btn-sm mr-4" routerLink="/locationTag">Custom LocationTags</button>
 <br>
 <p></p>
 <div>
@@ -36,7 +34,10 @@
 
 
 <div align="left">
-  <button type="button" class="btn btn-secondary btn-sm mr-4" *ngIf="groupId===null || groupId === undefined" (click)="generateGroup()"
+  <br>
+  <label *ngIf="groupId===null || groupId === undefined" for="name">Group-Name: </label> &nbsp;
+  <input *ngIf="groupId===null || groupId === undefined" id="name" [(ngModel)]="newGroupName" placeholder="group name">&nbsp;
+  <p></p><button type="button" class="btn btn-secondary btn-sm mr-4" *ngIf="groupId===null || groupId === undefined" (click)="generateGroup()"
           data-dismiss="alert" aria-label="Close">Generate new Group
   </button>
   <p></p>

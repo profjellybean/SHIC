@@ -3,29 +3,22 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Bill;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Register;
-import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.BillRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.RegisterRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.UserGroupRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.RegisterService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class RegisterServiceImpl implements RegisterService {
@@ -120,9 +113,9 @@ public class RegisterServiceImpl implements RegisterService {
         }
         List<Bill> bills = billRepository.findAllByRegisterId(registerId);
         Double sumBillsUser = 0.0;
-        for (Bill bill:bills) {
-            for (ApplicationUser user:bill.getNotPaidNames()) {
-                if(user.getUsername().equals(userName)) {
+        for (Bill bill : bills) {
+            for (ApplicationUser user : bill.getNotPaidNames()) {
+                if (user.getUsername().equals(userName)) {
                     sumBillsUser += bill.getSumPerPerson();
                 }
             }
@@ -182,7 +175,6 @@ public class RegisterServiceImpl implements RegisterService {
         }
         return sum;
     }
-
 
 
 }

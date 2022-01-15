@@ -43,9 +43,10 @@ public class UserGroupEndpoint {
     @PostMapping
     @PermitAll
     @Operation(summary = "Generate a new Group")
-    public Long generateUserGroup() {
+    public Long generateUserGroup(@Param("groupName") String groupName, @Param("userName") String userName) {
         LOGGER.info("POST group");
-        return groupService.generateUserGroup();
+        LOGGER.info(userName + "INHERE");
+        return groupService.generateUserGroup(groupName, userName);
     }
 
     @PutMapping
