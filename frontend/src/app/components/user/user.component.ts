@@ -20,6 +20,7 @@ export class UserComponent implements OnInit {
   success: string;
   users: User[];
   currGroup: Group;
+  newGroupName: string;
 
 
   user: User = {
@@ -41,10 +42,11 @@ export class UserComponent implements OnInit {
   }
 
   generateGroup(){
-    this.groupService.generateGroup().subscribe({
+    this.groupService.generateGroup(this.newGroupName, this.user.username).subscribe({
       next: data => {
         console.log('received items10', data);
         this.groupId = data;
+        this.getCurrentGroup();
       },
       error: error => {
         console.error(error.message);

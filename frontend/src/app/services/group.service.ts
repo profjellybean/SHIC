@@ -19,8 +19,8 @@ export class GroupService {
     this.httpClient = new HttpClient(handler);
   }
 
-  generateGroup(): Observable<any> {
-    return this.httpClient.post(this.userRegisterUri, null);
+  generateGroup(groupName: string, userName: string): Observable<any> {
+    return this.httpClient.post(this.userRegisterUri, null, {params:{groupName, userName}});
   }
 
 

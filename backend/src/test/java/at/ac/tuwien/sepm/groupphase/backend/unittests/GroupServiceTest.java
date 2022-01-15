@@ -34,13 +34,13 @@ public class GroupServiceTest {
 
     @Test
     public void generateNewUserGroup() {
-        long id = groupService.generateUserGroup();
+        long id = groupService.generateUserGroup(null, null);
         assertTrue(userGroupRepository.findById(id).isPresent());
     }
 
     @Test
     public void addingUserToGroupWhenAlreadyInGroupShouldThrowServiceException() {
-        long id = groupService.generateUserGroup();
+        long id = groupService.generateUserGroup(null, null);
         Long shoppingListId = shoppingListRepository.saveAndFlush(ShoppingList.ShoppingListBuilder.aShoppingList().withName("Your private shopping list").build()).getId();
         ApplicationUser user = new ApplicationUser("Name", "12345678", shoppingListId, "name@email.com");
         userRepository.saveAndFlush(user);
@@ -51,7 +51,7 @@ public class GroupServiceTest {
 
     @Test
     public void addingUserThatNotExistsToGroupShouldThrowNotFoundException() {
-        long id = groupService.generateUserGroup();
+        long id = groupService.generateUserGroup(null, null);
         assertThrows(NotFoundException.class, () -> groupService.addUser(id, "Not a user"));
     }
 }
