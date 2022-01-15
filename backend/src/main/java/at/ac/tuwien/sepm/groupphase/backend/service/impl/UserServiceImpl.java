@@ -1,12 +1,15 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EmailDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegistrationDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UsernameDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ComplexUserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserLoginMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Bill;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
+import at.ac.tuwien.sepm.groupphase.backend.entity.PendingEmail;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
@@ -18,6 +21,7 @@ import at.ac.tuwien.sepm.groupphase.backend.exception.EmailCooldownException;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 import at.ac.tuwien.sepm.groupphase.backend.repository.BillRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.CustomUserRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.PendingEmailRespository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.EmailService;
@@ -54,12 +58,14 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final ComplexUserMapper userMapperImpl;
     private final BillRepository billRepository;
+    private final PendingEmailRespository pendingEmailRespository;
 
     @Autowired
     public UserServiceImpl(CustomUserRepository userRepository,
                            ShoppingListRepository shoppingListRepository,
                            UserMapper userMapper, EntityManager entityManager, UserLoginMapper userLoginMapper,
-                           EmailService emailService, UserGroupRepository userGroupRepository, UserRepository userRepository1, ComplexUserMapper userMapperImpl, BillRepository billRepository) {
+                           EmailService emailService, UserGroupRepository userGroupRepository, UserRepository userRepository1,
+                           ComplexUserMapper userMapperImpl, BillRepository billRepository, PendingEmailRespository pendingEmailRespository) {
         this.customUserRepository = userRepository;
         this.userMapper = userMapper;
         this.userRepository = userRepository1;
@@ -68,7 +74,7 @@ public class UserServiceImpl implements UserService {
         this.shoppingListRepository = shoppingListRepository;
         this.emailService = emailService;
         this.userGroupRepository = userGroupRepository;
-
+        this.pendingEmailRespository = pendingEmailRespository;
         this.billRepository = billRepository;
     }
 
@@ -209,6 +215,49 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Long changeEmail(EmailDto emailDto, String username) {
+        Long confirmationToken = System.currentTimeMillis();
+
+        try {
+            PendingEmail pendingEmail = new PendingEmail(emailDto.getEmail(), confirmationToken, username);
+            pendingEmailRespository.save(pendingEmail);
+            emailService.sendEmailChangeConfirmation(emailDto.getEmail(), username, confirmationToken);
+            return confirmationToken;
+
+        } catch (Exception e) {
+            throw new EmailConfirmationException("Email could not be sent");
+        }
+    }
+
+    @Override
+    public void editPicture(byte[] picture, String username) {
+        Optional<ApplicationUser> u = customUserRepository.findUserByUsername(username);
+        if (u.isEmpty()) {
+            throw new NotFoundException("Username not found");
+        }
+        ApplicationUser user = u.get();
+        user.setImage(picture);
+        customUserRepository.saveAndFlush(user);
+    }
+
+    @Override
+    public void editUsername(String newUsername, String username) {
+        Optional<ApplicationUser> u = customUserRepository.findUserByUsername(newUsername);
+        if (u.isPresent()) {
+            throw new UsernameTakenException("This username is already taken");
+        }
+
+        Optional<ApplicationUser> userO = customUserRepository.findUserByUsername(username);
+        if (userO.isEmpty()) {
+            throw new NotFoundException("Username not found");
+        }
+
+        ApplicationUser user = userO.get();
+        user.setUsername(newUsername);
+        customUserRepository.saveAndFlush(user);
+    }
+
+    @Override
     public Long loadGroupStorageByUsername(String username) {
         return customUserRepository.loadGroupStorageByUsername(username);
     }
@@ -287,12 +336,45 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    public void confirmNewEmail(String confirmationTokenEncrypted) {
+        String confirmationTokenDecrypted = new String(Base64.decodeBase64(confirmationTokenEncrypted));
+
+        String username = confirmationTokenDecrypted.split(":")[0];
+
+        try {
+            Long confirmationToken = Long.parseLong(confirmationTokenDecrypted.split(":")[1]);
+            if ((System.currentTimeMillis() - confirmationToken) > 86400000) {
+                throw new EmailConfirmationException("Confirmation token expired");
+            }
+
+            Optional<ApplicationUser> userO = customUserRepository.findUserByUsername(username);
+            Optional<PendingEmail> pendingEmail = pendingEmailRespository.findEmailByConfirmationToken(confirmationToken, username);
+
+            if (userO.isEmpty()) {
+                throw new EmailConfirmationException("User does not exist");
+            }
+
+            if (pendingEmail.isEmpty()) {
+                throw new EmailConfirmationException("No new Email detected in database");
+            }
+
+            String email = pendingEmail.get().getEmail();
+
+            ApplicationUser user = userO.get();
+            user.setEmail(email);
+            customUserRepository.save(user);
+            pendingEmailRespository.deleteByEmail(email);
+
+        } catch (NumberFormatException | PatternSyntaxException | ArrayIndexOutOfBoundsException | IllegalStateException e) {
+            throw new EmailConfirmationException("Wrong confirmation token");
+        }
+
+    }
 
     @Override
     public void confirmUser(String confirmationTokenEncrypted) {
-        LOGGER.debug(confirmationTokenEncrypted);
+
         String confirmationTokenDecrypted = new String(Base64.decodeBase64(confirmationTokenEncrypted));
-        LOGGER.debug(confirmationTokenDecrypted);
 
         String username = confirmationTokenDecrypted.split(":")[0];
         try {

@@ -1,7 +1,9 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EmailDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegistrationDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UsernameDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
@@ -102,7 +104,14 @@ public interface UserService extends UserDetailsService {
      *
      */
 
+
     void createUser(UserRegistrationDto userRegistrationDto, Long confirmationToken);
+
+    Long changeEmail(EmailDto emailDto, String username);
+
+    void editPicture(byte[] picture, String username);
+
+    void editUsername(String newUsername, String username);
 
     Long loadGroupStorageByUsername(String username);
 
@@ -111,6 +120,8 @@ public interface UserService extends UserDetailsService {
     Long loadGroupRegisterIdByUsername(String username);
 
     void confirmUser(String confirmationTokenEncrypted);
+
+    void confirmNewEmail(String confirmationTokenEncrypted);
 
     boolean getConfirmationStatusByName(String username);
 

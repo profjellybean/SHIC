@@ -1,0 +1,11 @@
+<div class="pt-5" *ngIf="confirmationSuccess">
+
+
+  <h4> Your account has been confirmed!</h4>
+</div>
+
+
+<div class="pt-5" *ngIf="!confirmationSuccess">
+  <h4>Confirmation failed: {{errorMessage}}</h4>
+</div>
+<br>
