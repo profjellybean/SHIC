@@ -76,6 +76,12 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    public List<UnitOfQuantity> getAllForGroup(Long groupId) {
+        LOGGER.debug("Getting all units of quantity");
+        return unitOfQuantityRepository.findAllByGroupIdOrGroupIdIsNull(groupId);
+    }
+
+    @Override
     public List<UnitOfQuantity> getAll() {
         LOGGER.debug("Getting all units of quantity");
         return unitOfQuantityRepository.findAll();

@@ -124,4 +124,13 @@ public interface ItemService {
      * @throws ValidationException if invalid value exists in item
      */
     Item addCustomItem(Item item);
+
+    /**
+     * Finds all UnitsOfQuantity in database for specific Group with those without group.
+     *
+     * @param groupId that is saved.
+     *
+     * @return unitsOfQuantities
+     */
+    List<UnitOfQuantity> getAllForGroup(Long groupId);
 }
