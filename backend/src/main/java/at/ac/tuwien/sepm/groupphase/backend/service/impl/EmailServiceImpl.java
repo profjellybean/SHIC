@@ -25,7 +25,6 @@ public class EmailServiceImpl implements EmailService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final String CONFIRMATION_URL = "http://localhost:4200/#/confirm/?token=";
-    private static final String CONFIRMATIONNEW_URL = "http://localhost:4200/#/confirmNew/?token=";
     @Autowired
     private JavaMailSender emailSender;
 
@@ -50,27 +49,6 @@ public class EmailServiceImpl implements EmailService {
         }
 
         emailSender.send(mimeMessage);
-
-    }
-
-    @Async
-    @Override
-    public void sendEmailChangeConfirmation(String to, String username, Long confirmationToken) {
-
-        String confirmationTokenEncrypted = Base64.encodeBase64String((username + ":" + confirmationToken).getBytes(StandardCharsets.UTF_8));
-
-        Email registrationMail = new Email();
-        registrationMail.setMailFrom("shicregistrator@gmail.com");
-        registrationMail.setMailTo(to);
-        registrationMail.setMailSubject("SHIC Confirmation");
-        registrationMail.setMailContent("<html><body>Hello " + username + "!<h2>Click this link to confirm your new email: </h2>      <h3><a href=\"" + CONFIRMATIONNEW_URL + confirmationTokenEncrypted + "\"> Confirm </a></h3></b></body></html>");
-
-        try {
-            sendEmail(registrationMail);
-        } catch (MailSendException e) {
-            LOGGER.error(e.getMessage());
-        }
-
 
     }
 

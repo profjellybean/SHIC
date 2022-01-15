@@ -60,7 +60,7 @@ public class ComplexUserMapper {
             group = new UserGroupDto(user.getCurrGroup().getId(), usernames,
                 user.getCurrGroup().getStorageId(), user.getCurrGroup().getPublicShoppingListId(), user.getCurrGroup().getRegisterId(), user.getCurrGroup().getName());
         }
-        return new UserDto(user.getId(), user.getUsername(), group, user.getPrivList(), user.getEmail(), user.getImage());
+        return new UserDto(user.getId(), user.getUsername(), group, user.getPrivList(), user.getEmail());
     }
 
     public Set<UserDto> usersToUsersDto(Set<ApplicationUser> allUsers) {

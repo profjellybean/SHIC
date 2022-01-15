@@ -29,8 +29,7 @@ export class RegisterComponent implements OnInit {
     email: null,
     currGroup: null,
     username: null,
-    privList: null,
-    image: null
+    privList: null
   };
 
   register: Register = {
@@ -60,8 +59,7 @@ export class RegisterComponent implements OnInit {
     id: null,
     currGroup: null,
     privList: null,
-    email: null,
-    image: null
+    email: null
   };
 
   constructor(private registerService: RegisterService, private billService: BillService, public route: ActivatedRoute,

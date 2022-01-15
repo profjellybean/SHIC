@@ -26,8 +26,7 @@ export class StorageComponent implements OnInit {
     id: null,
     currGroup: null,
     privList: null,
-    email: null,
-    image: null
+    email: null
   };
   error = false;
   errorMessage = '';

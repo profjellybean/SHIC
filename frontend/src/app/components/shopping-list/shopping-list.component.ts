@@ -31,8 +31,7 @@ export class ShoppingListComponent implements OnInit {
     email: null,
     currGroup: null,
     username: null,
-    privList: null,
-    image: null
+    privList: null
   };
 
   billToAdd: BillDto = new BillDto();
@@ -56,8 +55,7 @@ export class ShoppingListComponent implements OnInit {
     id: null,
     currGroup: null,
     privList: null,
-    email: null,
-    image: null
+    email: null
   };
   groupId: number;
   constructor(private shoppingListService: ShoppingListService,

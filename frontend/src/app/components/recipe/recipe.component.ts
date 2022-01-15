@@ -38,8 +38,7 @@ export class RecipeComponent implements OnInit {
     id: null,
     currGroup: null,
     privList: null,
-    email: null,
-    image: null
+    email: null
   };
 
   constructor(

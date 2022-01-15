@@ -9,7 +9,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
@@ -32,8 +31,6 @@ public class ApplicationUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Lob
-    private byte[] image;
 
     @Column(nullable = false, name = "USERNAME")
     private String username;
@@ -47,8 +44,6 @@ public class ApplicationUser {
     @Column(nullable = false, name = "CONFIRMATIONTOKEN")
     private Long confirmationToken;
 
-
-
     @OneToOne
     @JsonBackReference
     private UserGroup currGroup;
@@ -58,8 +53,6 @@ public class ApplicationUser {
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Bill> bills;
-
-
 
     public ApplicationUser() {
     }
@@ -100,14 +93,6 @@ public class ApplicationUser {
         this.confirmationToken = confirmationToken;
         this.currGroup = currGroup;
         this.privList = privList;
-    }
-
-    public byte[] getImage() {
-        return image;
-    }
-
-    public void setImage(byte[] image) {
-        this.image = image;
     }
 
     public Long getPrivList() {

@@ -5,7 +5,6 @@ import {AuthService} from '../../services/auth.service';
 import {UserService} from '../../services/user.service';
 import {AuthRequest} from '../../dtos/auth-request';
 import {Username} from '../../dtos/username';
-import {HeaderComponent} from '../header/header.component';
 
 
 @Component({
@@ -72,7 +71,6 @@ export class LoginComponent implements OnInit {
     this.authService.loginUser(authRequest).subscribe(
       () => {
         console.log('Successfully logged in user: ' + authRequest.username);
-        HeaderComponent.username = authRequest.username;
         this.router.navigate(['/user']);
       },
       error => {
