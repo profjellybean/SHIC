@@ -1,20 +1,35 @@
-<br>
-<h1>User</h1>
+
+
 <p></p>
-<hr>
-<button type="button" class="btn btn-secondary btn-sm mr-4">Edit user</button>
-&nbsp;
-<button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(userDeleteModal)">delete profile</button>
-&nbsp;
-<button *ngIf="!(groupId===null || groupId === undefined)" type="button" class="btn btn-secondary btn-sm mr-4" routerLink="/custom-item">Custom Items</button>
-&nbsp;
-<button *ngIf="!(groupId===null || groupId === undefined)" type="button" class="btn btn-secondary btn-sm mr-4" routerLink="/locationTag">Custom LocationTags</button>
-<br>
 <p></p>
-<div>
-  <strong>User-picture:</strong> <p></p>
-  <strong>Username:</strong> {{this.user.username}}<p></p>
-  <strong>E-Mail of user:</strong> {{this.user.email}}
+<div class="parent">
+  <div style="width: 50%">
+
+    <div class="basicAttribute big" *ngIf="!userEditMode"> {{this.user.username}}  </div>
+    <input class="basicAttributeEdit big" *ngIf="userEditMode" [(ngModel)]="editedUser.username" value="{{this.user.username}}">
+    <button type="button" class="btn btn-secondary btn-sm mr-4" *ngIf="!userEditMode" (click)="userEditMode = true">Edit username</button>
+    <button type="button" class="btn btn-secondary btn-sm mr-4" *ngIf="userEditMode" (click)="editUsername()">Accept</button><p></p>
+
+    <div class="basicAttribute" *ngIf="!emailEditMode"> <strong>E-Mail: &nbsp;</strong> {{this.user.email}} </div>
+    <input class="basicAttributeEdit" *ngIf="emailEditMode" [(ngModel)]="editedUser.email" value="{{this.user.email}}">
+    <button type="button" class="btn btn-secondary btn-sm mr-4" *ngIf="!emailEditMode" (click)="emailEditMode = true">Edit email</button>
+    <button type="button" class="btn btn-secondary btn-sm mr-4" *ngIf="emailEditMode" (click)="changeEmail()">Accept</button><p></p>
+
+    <br><br><br><br><br><br><br>
+    <button type="button" class="btn btn-secondary btn-sm mr-4 button" (click)="openAddModal(userDeleteModal)">delete profile</button>
+    <br>
+    <button type="button" class="btn btn-secondary btn-sm mr-4 button" routerLink="/custom-item">Custom Items</button>
+  </div>
+
+  <div class="profilePictureContainer">
+    <label style="width: 100%; height: 100%" for="file-input">
+      <img *ngIf="user.image" class="profilePicture" src="{{'data:image/jpg;base64,'+user.image}}">
+      <div class="overlay">
+        <div class="text">Edit</div>
+      </div>
+    </label>
+    <input (change)="onFileChange($event)"  id="file-input" type="file"  accept="image/png, image/jpeg" />
+  </div>
 </div>
 
 <ng-template #userDeleteModal let-modal>
@@ -42,8 +57,12 @@
           data-dismiss="alert" aria-label="Close">Generate new Group
   </button>
   <p></p>
+
+  <div *ngIf="groupId !== null">
+  Add a new user to your group {{groupId.valueOf()}}: <p></p>
+
   <div>
-  Add a new user to your group {{this.currGroup.name}}: <p></p>
+
   <input *ngIf="groupId!==null && groupId !== undefined" [(ngModel)]="userToAdd" placeholder="enter username">&nbsp;
   <button type="button" class="btn btn-secondary btn-sm mr-4" *ngIf="groupId!==null && groupId !== undefined" (click)="addUser()">add user</button>
   </div>
@@ -57,7 +76,8 @@
   </thead>
   <tbody>
   <tr *ngFor="let user of $any(users)">
-    <td>{{user.username}}</td>
+    <td style="width: auto">{{user.username}}</td>
+    <td style="width: 4em"*ngIf="user.image"> <div  class="smallProfilePictureContainer"> <img *ngIf="user.image" class="smallProfilePicture" src="{{'data:image/jpg;base64,'+user.image}}"> </div> </td>
   </tr>
   </tbody>
 </table>
@@ -72,9 +92,10 @@
   <p>{{error}}</p>
 </div>
 <div *ngIf="success" class="alert alert-success alert-dismissible fade show" role="alert">
-  <h4 class="alert-heading"> Success!
+  <h4 class="alert-heading"> {{this.success}}
     <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="vanishSuccess()" aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>
   </h4>
+</div>
 </div>

@@ -20,7 +20,8 @@ export class LocationTagComponent implements OnInit {
     id: null,
     currGroup: null,
     privList: null,
-    email: null
+    email: null,
+    image: null
   };
 
   error = false;

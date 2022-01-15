@@ -1,22 +1,34 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
 
+import javax.persistence.Lob;
+
 public class UserDto {
     private Long id;
     private String username;
     private UserGroupDto currGroup;
     private Long privList;
     private String email;
+    private byte[] image;
 
-    public UserDto(Long id, String username, UserGroupDto currGroup, Long privList, String email) {
+    public UserDto(Long id, String username, UserGroupDto currGroup, Long privList, String email, byte[] image) {
         this.id = id;
         this.username = username;
         this.currGroup = currGroup;
         this.privList = privList;
         this.email = email;
+        this.image = image;
     }
 
     public UserDto() {
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 
     public String getEmail() {

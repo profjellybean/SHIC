@@ -2,7 +2,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {HeaderComponent} from './components/header/header.component';
@@ -22,6 +22,8 @@ import { StorageAddItemComponent } from './components/storage-add-item/storage-a
 import { UserComponent } from './components/user/user.component';
 import { ConfirmUserEmailComponent } from './components/confirm-user-email/confirm-user-email.component';
 import {NgSelectModule} from '@ng-select/ng-select';
+import { NotificationsComponent } from './components/notifications/notifications.component';
+import { ConfirmUserEmailChangedComponent } from './components/confirm-user-email-changed/confirm-user-email-changed.component';
 import { StatisticComponent } from './components/statistic/statistic.component';
 import { LocationTagComponent } from './components/location-tag/location-tag.component';
 
@@ -45,6 +47,8 @@ import { LocationTagComponent } from './components/location-tag/location-tag.com
     StorageAddItemComponent,
     StatisticComponent,
     LocationTagComponent,
+    NotificationsComponent,
+    ConfirmUserEmailChangedComponent,
   ],
   imports: [
     BrowserModule,
@@ -54,6 +58,7 @@ import { LocationTagComponent } from './components/location-tag/location-tag.com
     NgbModule,
     FormsModule,
     NgSelectModule,
+    BrowserAnimationsModule,
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
