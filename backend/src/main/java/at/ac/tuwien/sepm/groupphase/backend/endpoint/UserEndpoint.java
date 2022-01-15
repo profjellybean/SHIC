@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EmailDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ImageDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UsernameDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDto;
@@ -82,8 +83,6 @@ public class UserEndpoint {
         try {
             userService.editUsername(newUsernameDto.getUsername(), authentication.getName());
 
-
-
             List<String> roles = new LinkedList<>();
             return "{ \"token\":\"" + jwtTokenizer.getAuthToken(newUsernameDto.getUsername(), roles) + " \"}";
         } catch (UsernameTakenException e) {
@@ -93,6 +92,19 @@ public class UserEndpoint {
         }
 
 
+    }
+
+    @PermitAll
+    @PutMapping("/email")
+    @ResponseStatus(HttpStatus.OK)
+    public Long changeEmail(@RequestBody EmailDto emailDto, Authentication authentication) {
+        try {
+
+            return userService.changeEmail(emailDto, authentication.getName());
+
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
 
     @PermitAll
@@ -132,6 +144,20 @@ public class UserEndpoint {
 
     }
 
+    @PermitAll
+    @GetMapping("/confirmNew")
+    @ResponseStatus(HttpStatus.OK)
+    public void confirmNewEmail(@RequestParam(value = "tkn") String confirmationTokenEncrypted) {
+        LOGGER.info("Endpoint: GET /user/confirmNew?tkn={}", confirmationTokenEncrypted);
+        try {
+            userService.confirmNewEmail(confirmationTokenEncrypted);
+        } catch (EmailConfirmationException e) {
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+
+
+    }
 
     @PermitAll
     @PutMapping("/confirmation")
