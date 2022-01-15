@@ -19,6 +19,13 @@ public interface BillRepository extends JpaRepository<Bill, Long> {
     Bill getById(Long id);
 
     /**
+     * delete a bill by a given id.
+     *
+     */
+    void deleteById(Long id);
+
+
+    /**
      * Save a given bill.
      *
      * @return the saved bill
