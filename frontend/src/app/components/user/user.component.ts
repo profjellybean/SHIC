@@ -69,6 +69,7 @@ export class UserComponent implements OnInit {
     });
   }
 
+
   getCurrentGroup(){
     this.userService.getCurrentUser({username: this.user.username}).subscribe({
       next: data => {
