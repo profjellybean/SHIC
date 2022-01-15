@@ -214,6 +214,7 @@ public class UserServiceImpl implements UserService {
 
 
     }
+
     @Override
     public Long changeEmail(EmailDto emailDto, String username) {
         Long confirmationToken = System.currentTimeMillis();

@@ -110,6 +110,7 @@ public class UserEndpoint {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
+
     @PermitAll
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
