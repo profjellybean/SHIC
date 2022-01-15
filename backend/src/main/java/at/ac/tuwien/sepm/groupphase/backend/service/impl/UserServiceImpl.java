@@ -2,7 +2,6 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EmailDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegistrationDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UsernameDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ComplexUserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserLoginMapper;
@@ -191,6 +190,8 @@ public class UserServiceImpl implements UserService {
         this.userRepository.deleteById(id);
     }
 
+
+
     @Override
     public void createUser(UserRegistrationDto userRegistrationDto, Long confirmationToken) {
         LOGGER.debug("Service: Create new user: {}", userRegistrationDto.getUsername());
@@ -239,6 +240,7 @@ public class UserServiceImpl implements UserService {
         user.setImage(picture);
         customUserRepository.saveAndFlush(user);
     }
+
 
     @Override
     public void editUsername(String newUsername, String username) {

@@ -1,14 +1,9 @@
 .message{
-
   margin-top: 0.5em;
   margin-bottom: 0.1em;
-  margin-left: 0;
-  padding-left: 0;
 
 }
-ul{
-  padding-left: 0;
-}
+
 .notification{
   display: inline-flex;
   flex-direction: row;
@@ -34,7 +29,7 @@ strong{
 }
 
 .close{
-  width: 16%;
+  width: 15%;
   outline: 0;
   margin-right: 0;
   margin-left: auto;

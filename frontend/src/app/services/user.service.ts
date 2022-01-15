@@ -30,10 +30,6 @@ export class UserService {
     return this.nakedHttpClient.get(this.userRegisterUri +'/confirm?tkn=' + confirmationToken);
   }
 
-  confirmUserChanged(confirmationToken: string): Observable<object> {
-
-    return this.nakedHttpClient.get(this.userRegisterUri +'/confirmNew?tkn=' + confirmationToken);
-  }
   resendConfirmation(username: Username): Observable<object> {
     return this.nakedHttpClient.put(this.userRegisterUri + '/confirmation', username);
   }
@@ -51,10 +47,6 @@ export class UserService {
     formData.append('file', image);
 
     return this.authHttpClient.put<Image>(this.userRegisterUri+'/picture', formData);
-  }
-
-  changeEmail(newEmail: string): Observable<object> {
-    return this.authHttpClient.put<object>(this.userRegisterUri+'/email', {email: newEmail});
   }
 
   getCurrentUser(params: Params): Observable<User>{

@@ -7,7 +7,6 @@ import jwt_decode from 'jwt-decode';
 import {User} from '../../dtos/user';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {HeaderComponent} from '../header/header.component';
-import {Group} from '../../dtos/group';
 
 
 @Component({
@@ -22,10 +21,6 @@ export class UserComponent implements OnInit {
   success: string;
   users: User[];
   userEditMode: boolean;
-  emailEditMode: boolean;
-  currGroup: Group;
-  newGroupName: string;
-
 
   user: User = {
     // @ts-ignore
@@ -39,7 +34,7 @@ export class UserComponent implements OnInit {
 
   editedUser: User ={
     username: this.user.username,
-    email: this.user.email,
+    email: null,
     id: null,
     currGroup: null,
     privList: null,
@@ -57,11 +52,10 @@ export class UserComponent implements OnInit {
   }
 
   generateGroup(){
-    this.groupService.generateGroup(this.newGroupName, this.user.username).subscribe({
+    this.groupService.generateGroup('WG-Wipplingerstraße', this.user.username).subscribe({
       next: data => {
         console.log('received items10', data);
         this.groupId = data;
-        this.getCurrentGroup();
       },
       error: error => {
         console.error(error.message);
@@ -75,7 +69,6 @@ export class UserComponent implements OnInit {
       next: data => {
         console.log('received items11', data);
         this.user = data;
-        this.currGroup = data.currGroup;
         this.groupId = this.user.currGroup.id;
         this.getAllUsers(this.groupId);
         console.log(this.groupId);
@@ -166,20 +159,6 @@ export class UserComponent implements OnInit {
 
   }
 
-  changeEmail(){
-    this.emailEditMode = false;
-    console.log(this.user.email + ' ' + this.editedUser.email);
-    if(this.editedUser.email !== this.user.email){
-      this.userService.changeEmail(this.editedUser.email).subscribe({
-        next: data =>{
-          this.notifications.pushSuccess('Check your Email!');
-        },
-        error: error =>{
-          this.notifications.pushFailure(error.error.message);
-        }
-      });
-    }
-  }
   deleteUserById() {
     const currentId = this.user.id;
     this.authService.logoutUser();

@@ -5,7 +5,8 @@
   </button>
 </div>
 
-<h1 class="alert-heading">Register</h1>
+<br>
+<h1 class="alert-heading">Bills</h1>
 <p></p>
 <hr>
 
@@ -13,12 +14,12 @@
 <br>
 {{monthlySum}}  €
 <br>
-<th>Budget:</th>
+<th>Group Budget:</th>
 <br>
 {{register.monthlyBudget}}  €
 <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openEditBudgetModal(budgetEditModal)">Edit</button>
 <br>
-<th>Monthly difference:</th>
+<th>Rest Group Budget for this month:</th>
 <br>
 {{monthlyDifference}}  €
 <br>
@@ -63,7 +64,7 @@
     <th></th>
     <th></th>
     <th>{{billSumGroup}} €</th>
-    <th>{{billSumUser}} €</th>
+    <th>{{billSumUser}} € (for you to pay)</th>
     <th></th>
     <th></th>
     <th></th>

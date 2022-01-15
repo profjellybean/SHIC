@@ -1,8 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
 
-import javax.persistence.Lob;
-
 public class UserDto {
     private Long id;
     private String username;

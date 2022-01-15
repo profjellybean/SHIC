@@ -47,8 +47,6 @@ public class ApplicationUser {
     @Column(nullable = false, name = "CONFIRMATIONTOKEN")
     private Long confirmationToken;
 
-
-
     @OneToOne
     @JsonBackReference
     private UserGroup currGroup;
@@ -58,8 +56,6 @@ public class ApplicationUser {
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Bill> bills;
-
-
 
     public ApplicationUser() {
     }
@@ -101,6 +97,7 @@ public class ApplicationUser {
         this.currGroup = currGroup;
         this.privList = privList;
     }
+
 
     public byte[] getImage() {
         return image;

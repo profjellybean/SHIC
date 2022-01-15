@@ -15,6 +15,6 @@ export class User {
     this.currGroup = currGroup;
     this.privList = privList;
     this.email = email;
-
+    this.image = null;
   }
 }
