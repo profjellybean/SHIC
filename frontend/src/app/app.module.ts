@@ -18,7 +18,6 @@ import {StorageComponent} from './components/storage/storage.component';
 import {RegisterComponent} from './components/register/register.component';
 import {RegisterUserComponent} from './components/registerUser/registerUser.component';
 import { RecipeDetailComponent } from './components/recipe-detail/recipe-detail.component';
-import { ShoppingListListComponent } from './components/shopping-list-list/shopping-list-list.component';
 import { StorageAddItemComponent } from './components/storage-add-item/storage-add-item.component';
 import { UserComponent } from './components/user/user.component';
 import { ConfirmUserEmailComponent } from './components/confirm-user-email/confirm-user-email.component';
@@ -45,7 +44,6 @@ import { LocationTagComponent } from './components/location-tag/location-tag.com
     ConfirmUserEmailComponent,
     StorageAddItemComponent,
     UserComponent,
-    ShoppingListListComponent,
     StorageAddItemComponent,
     StatisticComponent,
     LocationTagComponent,

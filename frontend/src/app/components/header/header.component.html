@@ -21,8 +21,10 @@
       </li>
 
       <li class="nav-item">
+
         <a class="nav-link" *ngIf="this.hasCurrentGroup()" routerLink="/shopping-list" routerLinkActive="active">Shopping List</a>
       </li>
+     
 
       <li class="nav-item">
         <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/user" routerLinkActive="active">{{getUsername()}}</a>
