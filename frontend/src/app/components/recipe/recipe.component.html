@@ -27,7 +27,7 @@
 
 
 
-
+<br>
 <h1>Recipe</h1>
 <p></p>
 <hr>
@@ -146,10 +146,10 @@
       <td>{{recipe.name}}</td>
       <td>{{recipe.description}}</td>
       <td>
-        <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openDeleteModal(recipeDeleteModal); deleteRecipe=recipe">delete</button>
+        <button type="button" class = "btn btn-outline-secondary btn-sm mr-4" [routerLink]="['/recipe/', recipe.id]">Details</button>
       </td>
       <td>
-        <button type="button" class = "btn btn-secondary btn-sm mr-4" [routerLink]="['/recipe/', recipe.id]">Details</button>
+        <button type="button" class="btn btn-outline-danger btn-sm mr-4" (click)="openDeleteModal(recipeDeleteModal); deleteRecipe=recipe">Delete</button>
       </td>
       <td>
     </tr>

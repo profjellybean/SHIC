@@ -18,6 +18,12 @@ public interface BillService {
     Bill findOne(Long id);
 
     /**
+     * delete bill by given id.
+     *
+     */
+    void deleteById(Long id);
+
+    /**
      * Find all bills.
      *
      * @return a list of all bills

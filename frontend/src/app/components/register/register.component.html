@@ -5,7 +5,8 @@
   </button>
 </div>
 
-<h1 class="alert-heading">Register</h1>
+<br>
+<h1 class="alert-heading">Bills</h1>
 <p></p>
 <hr>
 
@@ -13,12 +14,12 @@
 <br>
 {{monthlySum}}  €
 <br>
-<th>Budget:</th>
+<th>Group Budget:</th>
 <br>
 {{register.monthlyBudget}}  €
 <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openEditBudgetModal(budgetEditModal)">Edit</button>
 <br>
-<th>Monthly difference:</th>
+<th>Rest Group Budget for this month:</th>
 <br>
 {{monthlyDifference}}  €
 <br>
@@ -50,9 +51,9 @@
     <td>{{bill.notes}}</td>
     <td>
       <div>
-        <button type="button" style="BACKGROUND-COLOR:green;" class="btn btn-secondary" (click)="confirmPayment(bill.id);">Confirm Payment</button> &nbsp;
-        <button type="button" class="btn btn-secondary" (click)="openBillModal(billEditModal, bill);">Edit Bill</button>
-
+        <button *ngIf="bill.notPaidNameList.includes(this.user.username)" type="button" style="BACKGROUND-COLOR:green;" class="btn btn-secondary" (click)="confirmPayment(bill.id);">Confirm Payment</button> &nbsp;
+        <button type="button" class="btn btn-secondary" (click)="openBillModal(billEditModal, bill);">Edit Bill</button> &nbsp;
+        <button type="button" style="BACKGROUND-COLOR:darkred;" class="btn btn-secondary" (click)="openAddModal(billDeleteModal); this.billToDelete=bill">Delete</button>
       </div>
     </td>
   </tr>
@@ -63,7 +64,7 @@
     <th></th>
     <th></th>
     <th>{{billSumGroup}} €</th>
-    <th>{{billSumUser}} €</th>
+    <th>{{billSumUser}} € (for you to pay)</th>
     <th></th>
     <th></th>
     <th></th>
@@ -143,5 +144,22 @@
     </div>
   </ng-template>
 </div>
+
+
+<ng-template #billDeleteModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Alert</h5>
+    <button type="button" class="close" (click)="modal.dismiss('X')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <div>
+      <p>Do you really want to delete this bill?</p>
+      <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="deleteBillById(); modal.dismiss('X')">delete bill</button>
+    </div>
+  </div>
+</ng-template>
 
 {{this.billToEdit | json}}

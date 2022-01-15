@@ -53,6 +53,29 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
+    public void deleteById(Long id) {
+        Bill bill = billRepository.getById(id);
+        Register register = registerRepository.getById(bill.getRegisterId());
+        if (bill != null) {
+            if (register.getBills().contains(bill)) {
+                Set<Bill> billsInRegister = register.getBills();
+                billsInRegister.remove(bill);
+                register.setBills(billsInRegister);
+                registerRepository.saveAndFlush(register);
+            }
+            if (!bill.getNames().isEmpty()) {
+                bill.setNames(null);
+            }
+            if (!bill.getNotPaidNames().isEmpty()) {
+                bill.setNotPaidNames(null);
+            }
+
+            billRepository.saveAndFlush(bill);
+            billRepository.deleteById(id);
+        }
+    }
+
+    @Override
     public Bill bill(Bill bill) {
         LOGGER.debug("Service: create new bill");
         Bill savedBill = billRepository.saveAndFlush(bill);
