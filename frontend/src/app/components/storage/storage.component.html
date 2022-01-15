@@ -134,7 +134,7 @@
       </form>
     </div>
     <div class="modal-footer">
-      <button type="button" (click)="addItemForm(itemForm)" id="add-msg" class="btn btn-outline-info float-right">Add item
+      <button type="button" (click)="addItemForm(itemForm)" id="add-msg" class="btn btn-outline-info float-right">Add Item
       </button>
       <button type="button" class="btn btn-outline-dark" id="close-modal-btn" (click)="modal.dismiss('close')">Close
       </button>
@@ -248,15 +248,13 @@
                   </small>
                 </div>
               </div>
-
-              <button type="button" (click)="updateItemForm(updateitemForm, item); modal.dismiss('close')"
-                      id="update-msg"
-                      class="btn btn-outline-dark float-right">Update
-              </button>
-
             </form>
           </div>
           <div class="modal-footer">
+            <button type="button" (click)="updateItemForm(updateitemForm, item); modal.dismiss('close')"
+                    id="update-msg"
+                    class="btn btn-outline-info float-right">Save Changes
+            </button>
             <button type="button" class="btn btn-outline-dark" id="close-update-modal-btn"
                     (click)="modal.dismiss('close')">
               Close
@@ -293,15 +291,15 @@
           <div class="modal-footer">
             <button type="button" id="shoppinglist-public-msg"
                     (click)="putOnPublicShoppinglist(item); modal.dismiss('close')"
-                    class="btn btn-outline-info float-right">Yes, on public shoppinglist
+                    class="btn btn-outline-info float-right">Yes, on public Shoppinglist
             </button>
 
             <button type="button" id="shoppinglist-private-msg"
                     (click)="putOnPrivateShoppinglist(item); modal.dismiss('close')"
-                    class="btn btn-outline-info float-right">Yes, on private shoppinglist
+                    class="btn btn-outline-info float-right">Yes, on private Shoppinglist
             </button>
             <button type="button" (click)="deleteItem(item); modal.dismiss('close')" class="btn btn-outline-danger"
-                    id="delete-btn">No, just delete it
+                    id="delete-btn">No, just Delete it
             </button>
           </div>
         </ng-template>
