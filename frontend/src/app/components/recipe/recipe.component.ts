@@ -40,6 +40,7 @@ export class RecipeComponent implements OnInit {
     privList: null,
     email: null,
     image: null
+
   };
 
   constructor(
