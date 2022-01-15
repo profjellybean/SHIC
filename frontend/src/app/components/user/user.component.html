@@ -7,12 +7,15 @@
 <div class="parent">
   <div style="width: 50%">
 
-    <div class="basicAttribute big" *ngIf="!userEditMode">{{this.user.username}}  </div>
+    <div class="basicAttribute big" *ngIf="!userEditMode"> {{this.user.username}}  </div>
     <input class="basicAttributeEdit big" *ngIf="userEditMode" [(ngModel)]="editedUser.username" value="{{this.user.username}}">
     <button type="button" class="btn btn-secondary btn-sm mr-4" *ngIf="!userEditMode" (click)="userEditMode = true">Edit username</button>
     <button type="button" class="btn btn-secondary btn-sm mr-4" *ngIf="userEditMode" (click)="editUsername()">Accept</button><p></p>
 
-    <div class="basicAttribute"> <strong>E-Mail: &nbsp;</strong> {{this.user.email}} </div>
+    <div class="basicAttribute" *ngIf="!emailEditMode"> <strong>E-Mail: &nbsp;</strong> {{this.user.email}} </div>
+    <input class="basicAttributeEdit" *ngIf="emailEditMode" [(ngModel)]="editedUser.email" value="{{this.user.email}}">
+    <button type="button" class="btn btn-secondary btn-sm mr-4" *ngIf="!emailEditMode" (click)="emailEditMode = true">Edit email</button>
+    <button type="button" class="btn btn-secondary btn-sm mr-4" *ngIf="emailEditMode" (click)="changeEmail()">Accept</button><p></p>
 
     <br><br><br><br><br><br><br>
     <button type="button" class="btn btn-secondary btn-sm mr-4 button" (click)="openAddModal(userDeleteModal)">delete profile</button>

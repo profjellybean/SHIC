@@ -25,6 +25,7 @@ import { UserComponent } from './components/user/user.component';
 import { ConfirmUserEmailComponent } from './components/confirm-user-email/confirm-user-email.component';
 import {NgSelectModule} from '@ng-select/ng-select';
 import { NotificationsComponent } from './components/notifications/notifications.component';
+import { ConfirmUserEmailChangedComponent } from './components/confirm-user-email-changed/confirm-user-email-changed.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { NotificationsComponent } from './components/notifications/notifications
     ShoppingListListComponent,
     StorageAddItemComponent,
     NotificationsComponent,
+    ConfirmUserEmailChangedComponent,
   ],
   imports: [
     BrowserModule,

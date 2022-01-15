@@ -21,7 +21,7 @@ export class UserComponent implements OnInit {
   success: string;
   users: User[];
   userEditMode: boolean;
-
+  emailEditMode: boolean;
   user: User = {
     // @ts-ignore
     username: jwt_decode(this.authService.getToken()).sub.trim(),
@@ -34,7 +34,7 @@ export class UserComponent implements OnInit {
 
   editedUser: User ={
     username: this.user.username,
-    email: null,
+    email: this.user.email,
     id: null,
     currGroup: null,
     privList: null,
@@ -158,6 +158,20 @@ export class UserComponent implements OnInit {
 
   }
 
+  changeEmail(){
+    this.emailEditMode = false;
+    console.log(this.user.email + ' ' + this.editedUser.email);
+    if(this.editedUser.email !== this.user.email){
+      this.userService.changeEmail(this.editedUser.email).subscribe({
+        next: data =>{
+          this.notifications.pushSuccess('Check your Email!');
+        },
+        error: error =>{
+          this.notifications.pushFailure(error.error.message);
+        }
+      });
+    }
+  }
   deleteUserById() {
     const currentId = this.user.id;
     this.authService.logoutUser();

@@ -13,6 +13,7 @@ import {UserComponent} from './components/user/user.component';
 import {HomeComponent} from './components/home/home.component';
 import {ConfirmUserEmailComponent} from './components/confirm-user-email/confirm-user-email.component';
 import {CustomItemComponent} from './components/custom-item/custom-item.component';
+import {ConfirmUserEmailChangedComponent} from './components/confirm-user-email-changed/confirm-user-email-changed.component';
 
 
 const routes: Routes = [
@@ -22,6 +23,7 @@ const routes: Routes = [
   {path: 'storage', component: StorageComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'confirm', component: ConfirmUserEmailComponent},
+  {path: 'confirmNew', component: ConfirmUserEmailChangedComponent},
   {path: 'storage', component: StorageComponent},
   {path: 'storage/add', component: StorageAddItemComponent},
   {path: 'recipe/:id', canActivate: [AuthGuard], component: RecipeDetailComponent},
