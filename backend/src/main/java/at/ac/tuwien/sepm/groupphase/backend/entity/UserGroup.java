@@ -40,9 +40,11 @@ public class UserGroup {
         this.storageId = storageId;
     }
 
-    public UserGroup(Long storageId, Long publicShoppingListId) {
+    public UserGroup(String groupname, Long storageId, Long publicShoppingListId, Long registerId) {
+        this.name = groupname;
         this.storageId = storageId;
         this.publicShoppingListId = publicShoppingListId;
+        this.registerId = registerId;
     }
 
     public UserGroup(Long publicStorageId, Long publicShoppingListId, Long registerId, HashSet<ApplicationUser> applicationUsers, String name) {
@@ -52,6 +54,7 @@ public class UserGroup {
         this.user = applicationUsers;
         this.name = name;
     }
+
 
     public String getName() {
         return name;
