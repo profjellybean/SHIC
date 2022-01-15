@@ -18,6 +18,11 @@
 {{register.monthlyBudget}}  €
 <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openEditBudgetModal(budgetEditModal)">Edit</button>
 <br>
+<th>Monthly difference:</th>
+<br>
+{{monthlyDifference}}  €
+<br>
+
 <br>
 
 <th>Bills:</th>
@@ -51,8 +56,21 @@
       </div>
     </td>
   </tr>
-  {{this.help}}
   </tbody>
+  <tfoot>
+  <tr>
+    <th>TOTAL:</th>
+    <th></th>
+    <th></th>
+    <th>{{billSumGroup}} €</th>
+    <th>{{billSumUser}} €</th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+  </tfoot>
+  {{this.help}}
 </table>
 
 

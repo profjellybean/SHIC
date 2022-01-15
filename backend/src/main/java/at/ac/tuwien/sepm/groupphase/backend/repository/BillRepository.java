@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Repository
 public interface BillRepository extends JpaRepository<Bill, Long> {
@@ -24,6 +25,8 @@ public interface BillRepository extends JpaRepository<Bill, Long> {
      */
     Bill save(Bill bill);
 
+    List<Bill> findAllByRegisterId(Long registerId);
+
     /**
      * Adds up the sums of all Bills that were paid in specific month.
      *
@@ -40,4 +43,11 @@ public interface BillRepository extends JpaRepository<Bill, Long> {
     @Query(value = "SELECT SUM(B.PRICE) FROM BILL AS B WHERE (B.REGISTER_ID= :registerId) AND (YEAR(B.PAID_ON)= YEAR(:day))", nativeQuery = true)
     Double billSumOfSpecificYear(@Param("registerId") Long registerId, @Param("day") LocalDate day);
 
+    /**
+     * Adds up the sums of all Bills that are currently saved in the register
+     *
+     * @return sum
+     */
+    @Query(value = "SELECT SUM(B.PRICE) FROM BILL AS B WHERE (B.REGISTER_ID= :registerId)", nativeQuery = true)
+    Double billSumOfBillsInRegister(@Param("registerId") Long registerId);
 }

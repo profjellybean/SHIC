@@ -23,6 +23,7 @@ import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -94,6 +95,40 @@ public class RegisterServiceImpl implements RegisterService {
             return 0.0;
         }
         return sum;
+    }
+
+    @Transactional
+    @Override
+    public Double billGroupTotal(String userName) {
+        LOGGER.debug("Service: get group total of bills {}", userName);
+        Long registerId = userService.loadGroupRegisterIdByUsername(userName);
+        if (registerId == null) {
+            throw new NotFoundException("No register found for User " + userName);
+        }
+        Double sumBillsGroup = billRepository.billSumOfBillsInRegister(registerId);
+
+        return sumBillsGroup;
+    }
+
+    @Transactional
+    @Override
+    public Double billUserTotal(String userName) {
+        LOGGER.debug("Service: get user total of bills {}", userName);
+        Long registerId = userService.loadGroupRegisterIdByUsername(userName);
+        if (registerId == null) {
+            throw new NotFoundException("No register found for User " + userName);
+        }
+        List<Bill> bills = billRepository.findAllByRegisterId(registerId);
+        Double sumBillsUser = 0.0;
+        for (Bill bill:bills) {
+            for (ApplicationUser user:bill.getNotPaidNames()) {
+                if(user.getUsername().equals(userName)) {
+                    sumBillsUser += bill.getSumPerPerson();
+                }
+            }
+        }
+
+        return sumBillsUser;
     }
 
     @Transactional

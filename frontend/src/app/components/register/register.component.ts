@@ -48,6 +48,9 @@ export class RegisterComponent implements OnInit {
   billId: number;
   monthlySum: number;
   newMonthlyBudget: number;
+  monthlyDifference: number;
+  billSumGroup: number;
+  billSumUser: number;
 
   user: User = {
     // @ts-ignore
@@ -82,6 +85,8 @@ export class RegisterComponent implements OnInit {
         this.getAllUsers(data.currGroup.id);
         this.loadRegister(data.currGroup.registerId);
         this.getMonthlySum();
+        this.getBillSumGroup();
+        this.getBillSumUser();
       },
       error: error => {
         console.error(error.message);
@@ -125,6 +130,7 @@ export class RegisterComponent implements OnInit {
         this.register.monthlyPayments = register.monthlyPayments;
         this.register.monthlyBudget = register.monthlyBudget;
         this.loadRegister(this.user.currGroup.registerId);
+        this.getBillSumUser();
       }, error: err => {
         this.defaultServiceErrorHandling(err);
       }
@@ -138,6 +144,7 @@ export class RegisterComponent implements OnInit {
         this.register.bills = register.bills;
         this.register.monthlyPayments = register.monthlyPayments;
         this.register.monthlyBudget = register.monthlyBudget;
+        this.monthlyDifference = this.register.monthlyBudget - this.monthlySum;
 
         this.counter = 0;
         for (const bill of register.bills) {
@@ -227,12 +234,41 @@ export class RegisterComponent implements OnInit {
     });
   }
 
+  private getBillSumGroup() {
+    console.log('getting sum of all Bills for the group');
+    this.registerService.getBillSumGroup().subscribe({
+      next: data => {
+        console.log('received um of all Bills for the group', data);
+        this.billSumGroup = data;
+      },
+      error: error => {
+        console.error(error.message);
+        this.defaultServiceErrorHandling(error);
+      }
+    });
+  }
+
+  private getBillSumUser() {
+    console.log('getting sum of all Bills for the user');
+    this.registerService.getBillSumUser().subscribe({
+      next: data => {
+        console.log('received um of all Bills for the user', data);
+        this.billSumUser = data;
+      },
+      error: error => {
+        console.error(error.message);
+        this.defaultServiceErrorHandling(error);
+      }
+    });
+  }
+
   private editMonthlyBudget(budget: number) {
     console.log('edit monthly budget', budget);
     this.registerService.editMonthlyBudget(budget).subscribe({
       next: data => {
         console.log('edited monthly budget', data);
         this.register.monthlyBudget = data;
+        this.monthlyDifference = this.register.monthlyBudget - this.monthlySum;
       },
       error: error => {
         console.error(error.message);
