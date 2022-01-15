@@ -2,9 +2,11 @@ import {Component, OnInit, TemplateRef} from '@angular/core';
 import {GroupService} from '../../services/group.service';
 import {AuthService} from '../../services/auth.service';
 import {UserService} from '../../services/user.service';
+import {NotificationsComponent} from '../notifications/notifications.component';
 import jwt_decode from 'jwt-decode';
 import {User} from '../../dtos/user';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {HeaderComponent} from '../header/header.component';
 
 
 @Component({
@@ -18,7 +20,7 @@ export class UserComponent implements OnInit {
   error: string;
   success: string;
   users: User[];
-
+  userEditMode: boolean;
 
   user: User = {
     // @ts-ignore
@@ -26,13 +28,24 @@ export class UserComponent implements OnInit {
     id: null,
     currGroup: null,
     privList: null,
-    email: null
+    email: null,
+    image: null
+  };
+
+  editedUser: User ={
+    username: this.user.username,
+    email: null,
+    id: null,
+    currGroup: null,
+    privList: null,
+    image: null
   };
 
   constructor(private groupService: GroupService,
               public authService: AuthService,
               private userService: UserService,
-              private modalService: NgbModal) { }
+              private modalService: NgbModal,
+              private notifications: NotificationsComponent) { }
 
   ngOnInit(): void {
     this.getCurrentGroup();
@@ -89,13 +102,60 @@ export class UserComponent implements OnInit {
     this.groupService.addUser(this.userToAdd, this.groupId).subscribe({
       next: data => {
         console.log('added user {} to group {}', this.userToAdd, this.groupId);
-        this.showSuccess('Successful');
+        this.notifications.pushSuccess('User added successfully');
       },
       error: error => {
         console.error(error.message);
         this.showError('Error while adding user to group: ' + error.error.message);
       }
     });
+  }
+
+  onFileChange(event){
+    this.editedUser.image = event.target.files[0];
+    console.log(event);
+    console.log(this.editedUser);
+
+    this.userService.editPicture(this.editedUser.image).subscribe({
+      next: data => {
+        this.user.image = data.image;
+        this.notifications.pushSuccess('New profile picture set!');
+      },
+      error: error => {
+        console.error(error.message);
+        this.notifications.pushFailure(error.message);
+      }
+    });
+  }
+
+  editUsername(){
+    this.userEditMode = false;
+    if(this.editedUser.username !== this.user.username){
+      this.userService.editUsername(this.editedUser.username).subscribe({
+        next: data => {
+
+          console.log(data);
+          // @ts-ignore
+          this.authService.setToken(data.token);
+          HeaderComponent.username = this.editedUser.username;
+          for (const user of this.users) {
+            if(user.username === this.user.username ){
+              user.username = this.editedUser.username;
+            }
+          }
+
+          this.user.username = this.editedUser.username;
+          this.notifications.pushSuccess('Username changed successfully');
+        },
+        error: error => {
+          console.log(error);
+          this.notifications.pushFailure(error.error.message);
+          this.editedUser.username = this.user.username;
+        }
+      });
+
+    }
+
   }
 
   deleteUserById() {
@@ -118,22 +178,18 @@ export class UserComponent implements OnInit {
   }
 
   public vanishError(): void {
-    console.log('vanishError');
     this.error = null;
   }
 
   public vanishSuccess(): void {
-    console.log('vanishError');
     this.success = null;
   }
 
   private showError(msg: string) {
-    console.log('show error' + msg);
     this.error = msg;
   }
 
   private showSuccess(msg: string) {
-    console.log('show error' + msg);
     this.success = msg;
   }
 }
