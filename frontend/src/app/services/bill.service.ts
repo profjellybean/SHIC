@@ -36,8 +36,18 @@ export class BillService {
       '&secondAdditionalId=' + userId, billId);
   }
 
+  deleteBillById(id: number) {
+    console.log('delete bill', id);
+    return this.httpClient.delete(this.billBaseUri  + '/' + id);
+  }
+
   bill(bill: BillDto): Observable<BillDto> {
     console.log('Add a new bill');
     return this.httpClient.post<BillDto>(this.billBaseUri, bill);
+  }
+
+  editBill(billToEdit: BillDto) {
+    console.log('Edit a bill');
+    return this.httpClient.put<BillDto>(this.billBaseUri, billToEdit);
   }
 }

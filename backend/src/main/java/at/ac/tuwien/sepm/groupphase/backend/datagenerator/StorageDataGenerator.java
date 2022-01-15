@@ -2,13 +2,14 @@ package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Item;
+import at.ac.tuwien.sepm.groupphase.backend.entity.LocationClass;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Storage;
+import at.ac.tuwien.sepm.groupphase.backend.repository.LocationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.lang.invoke.MethodHandles;
 import java.util.Set;
 
@@ -23,9 +24,11 @@ public class StorageDataGenerator {
     private static final Set<Item> TEST_STORAGE_ITEMS = null;
 
     private final StorageRepository storageRepository;
+    private final LocationRepository locationRepository;
 
-    public StorageDataGenerator(StorageRepository storageRepository) {
+    public StorageDataGenerator(StorageRepository storageRepository, LocationRepository locationRepository) {
         this.storageRepository = storageRepository;
+        this.locationRepository = locationRepository;
     }
 
     //@PostConstruct

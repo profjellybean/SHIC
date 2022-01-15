@@ -3,6 +3,15 @@
 <p></p>
 <hr>
 
+<button type="button" class="btn btn-secondary btn-sm mr-4">Edit user</button>
+&nbsp;
+<button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(userDeleteModal)">delete profile</button>
+&nbsp;
+<button *ngIf="!(groupId===null || groupId === undefined)" type="button" class="btn btn-secondary btn-sm mr-4" routerLink="/custom-item">Custom Items</button>
+&nbsp;
+<button *ngIf="!(groupId===null || groupId === undefined)" type="button" class="btn btn-secondary btn-sm mr-4" routerLink="/locationTag">Custom LocationTags</button>
+<br>
+>>>>>>> origin/dev
 <p></p>
 <div class="parent">
   <div style="width: 50%">
@@ -52,12 +61,20 @@
 
 
 <div align="left">
-  <button type="button" class="btn btn-secondary btn-sm mr-4" *ngIf="groupId===null || groupId === undefined" (click)="generateGroup()"
+  <br>
+  <label *ngIf="groupId===null || groupId === undefined" for="name">Group-Name: </label> &nbsp;
+  <input *ngIf="groupId===null || groupId === undefined" id="name" [(ngModel)]="newGroupName" placeholder="group name">&nbsp;
+  <p></p><button type="button" class="btn btn-secondary btn-sm mr-4" *ngIf="groupId===null || groupId === undefined" (click)="generateGroup()"
           data-dismiss="alert" aria-label="Close">Generate new Group
   </button>
   <p></p>
+<<<<<<< HEAD
   <div *ngIf="groupId !== null">
   Add a new user to your group {{groupId.valueOf()}}: <p></p>
+=======
+  <div>
+  Add a new user to your group {{this.currGroup.name}}: <p></p>
+>>>>>>> origin/dev
   <input *ngIf="groupId!==null && groupId !== undefined" [(ngModel)]="userToAdd" placeholder="enter username">&nbsp;
   <button type="button" class="btn btn-secondary btn-sm mr-4" *ngIf="groupId!==null && groupId !== undefined" (click)="addUser()">add user</button>
   </div>
@@ -66,7 +83,7 @@
 <table class="table table-striped">
   <thead class="thead-dark">
   <tr>
-    <th>Users currently in this group</th>
+    <th>Users currently in group {{this.currGroup.name}}<th>
   </tr>
   </thead>
   <tbody>

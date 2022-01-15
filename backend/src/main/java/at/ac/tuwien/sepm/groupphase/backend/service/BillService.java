@@ -18,6 +18,12 @@ public interface BillService {
     Bill findOne(Long id);
 
     /**
+     * delete bill by given id.
+     *
+     */
+    void deleteById(Long id);
+
+    /**
      * Find all bills.
      *
      * @return a list of all bills
@@ -30,4 +36,12 @@ public interface BillService {
      * @param bill the bill that will be added
      */
     Bill bill(Bill bill);
+
+    /**
+     * Updates a bill.
+     *
+     * @param billDtoToBill the updated bill
+     * @return the updated bill
+     */
+    Bill updateBill(Bill billDtoToBill);
 }

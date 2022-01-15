@@ -7,6 +7,7 @@ import java.util.Set;
 public class UserGroupDto {
     private Long id;
     private Set<String> user;
+    private String name;
     private Long storageId;
     private Long publicShoppingListId;
     private Long registerId;
@@ -14,12 +15,13 @@ public class UserGroupDto {
     public UserGroupDto() {
     }
 
-    public UserGroupDto(Long id, Set<String> user, Long storageId, Long publicShoppingListId, Long registerId) {
+    public UserGroupDto(Long id, Set<String> user, Long storageId, Long publicShoppingListId, Long registerId, String name) {
         this.id = id;
         this.user = user;
         this.storageId = storageId;
         this.publicShoppingListId = publicShoppingListId;
         this.registerId = registerId;
+        this.name = name;
     }
 
     public Long getRegisterId() {
@@ -28,6 +30,14 @@ public class UserGroupDto {
 
     public void setRegisterId(Long registerId) {
         this.registerId = registerId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Long getId() {

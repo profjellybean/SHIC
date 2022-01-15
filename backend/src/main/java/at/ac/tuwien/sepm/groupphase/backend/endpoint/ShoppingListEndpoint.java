@@ -16,6 +16,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ShoppingListMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.service.ShoppingListService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
@@ -148,22 +149,47 @@ public class ShoppingListEndpoint {
     }
 
 
-
     @Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.OK)
     @PutMapping
     @Operation(summary = "Plan a recipe: adds missing ingredients to shoppingList", security = @SecurityRequirement(name = "apiKey"))
-    public List<ItemStorageDto> planRecipe(Authentication authentication, @RequestParam(name = "recipeId") Long recipeId) {
-        LOGGER.info("Endpoint: POST /api/v1/shoppinglist/recipeId={},userName={}", recipeId, authentication.getName());
+    public List<ItemStorageDto> planRecipe(Authentication authentication,
+                                           @RequestParam(name = "recipeId") Long recipeId, @RequestParam(name = "people") Integer numberOfPeople) {
+        LOGGER.info("Endpoint: POST /shoppinglist/recipeId={},people={},userName={}", recipeId, numberOfPeople, authentication.getName());
         try {
             return itemStorageMapper.itemsStorageToItemsStorageDto(
-                shoppingListService.planRecipe(recipeId, authentication.getName()));
+                shoppingListService.planRecipe(recipeId, authentication.getName(), numberOfPeople)); // TODO authentication != null?
         } catch (ValidationException e) {
-            LOGGER.error("Error during planning recipe", e);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+            LOGGER.error("Error during planRecipe: {}", e.getMessage());
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
         } catch (NotFoundException e) {
-            LOGGER.error("Error during planning recipe", e);
+            LOGGER.error("Error during planRecipe: {}", e.getMessage());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        } catch (ServiceException e) {
+            LOGGER.error("Error during planRecipe: {}", e.getMessage());
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
+        }
+    }
+
+    @Secured("ROLE_USER")
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping(value = "/putAllIngredientsOfRecipe")
+    @Operation(summary = "Adds all ingredients of a recipe to shoppingList", security = @SecurityRequirement(name = "apiKey"))
+    public List<ItemStorageDto> putRecipeOnShoppingList(Authentication authentication,
+                                                        @RequestParam(name = "recipeId") Long recipeId, @RequestParam(name = "people") Integer people) {
+        LOGGER.info("Endpoint: POST /shoppinglist/putAllIngredientsOfRecipe/recipeId={},people={},userName={}", recipeId, people, authentication.getName());
+        try {
+            return itemStorageMapper.itemsStorageToItemsStorageDto(
+                shoppingListService.putRecipeOnShoppingList(recipeId, authentication.getName(), people));
+        } catch (ValidationException e) {
+            LOGGER.error("Error while putting all Ingredients of Recipe to ShoppingList: {}", e.getMessage());
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
+        } catch (NotFoundException e) {
+            LOGGER.error("Error while putting all Ingredients of Recipe to ShoppingList: {}", e.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        } catch (ServiceException e) {
+            LOGGER.error("Error while putting all Ingredients of Recipe to ShoppingList: {}", e.getMessage());
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
         }
     }
 
@@ -232,17 +258,22 @@ public class ShoppingListEndpoint {
     @PermitAll
     @PutMapping("/private/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ItemStorageDto changeAmountOfItemOnPrivateShoppingListForUser(Authentication authentication, @RequestBody ItemStorageDto itemStorageDto) {
+    public ItemStorageDto changeAmountOfItemOnPrivateShoppingListForUser(Authentication authentication,
+                                                                         @RequestBody ItemStorageDto itemStorageDto) {
         LOGGER.info("PUT /private/id {}", itemStorageDto);
         try {
+            itemStorageValidator.validateItemStorageDto(itemStorageDto);
+            Long shoppingListId = userService.getPrivateShoppingListIdByUsername(authentication.getName());
 
             return itemStorageMapper.itemStorageToItemStorageDto(shoppingListService.changeAmountOfItem(
-                itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto)));
+                itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto), shoppingListId));
 
         } catch (ValidationException e) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
         } catch (NotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (ServiceException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()); // Todo
         }
@@ -252,17 +283,22 @@ public class ShoppingListEndpoint {
     @PermitAll
     @PutMapping("/public/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ItemStorageDto changeAmountOfItemOnPublicShoppingListForUser(Authentication authentication, @RequestBody ItemStorageDto itemStorageDto) {
+    public ItemStorageDto changeAmountOfItemOnPublicShoppingListForUser(Authentication authentication,
+                                                                        @RequestBody ItemStorageDto itemStorageDto) {
         LOGGER.info("PUT /public/id {}", itemStorageDto);
         try {
+            itemStorageValidator.validateItemStorageDto(itemStorageDto);
+            Long shoppingListId = userService.getPublicShoppingListIdByUsername(authentication.getName());
 
             return itemStorageMapper.itemStorageToItemStorageDto(shoppingListService.changeAmountOfItem(
-                itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto)));
+                itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto), shoppingListId));
 
         } catch (ValidationException e) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
         } catch (NotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (ServiceException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()); // Todo
         }

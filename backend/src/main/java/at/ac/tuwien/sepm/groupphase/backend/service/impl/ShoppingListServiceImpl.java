@@ -38,6 +38,8 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -101,65 +103,67 @@ public class ShoppingListServiceImpl implements ShoppingListService {
 
     @Override
     @Transactional
-    public List<ItemStorage> planRecipe(Long recipeId, String userName) {
-        LOGGER.debug("Service: plan Recipe {} based on user {}.", recipeId, userName);
+    public List<ItemStorage> planRecipe(Long recipeId, String userName, Integer numberOfPeople) {
+        LOGGER.debug("Service: plan Recipe {} for {} people based on user {}.", recipeId, numberOfPeople, userName);
 
+        // validation
         if (recipeId == null) {
-            throw new ValidationException("Recipe does not exist");
+            throw new ValidationException("Recipe is not specified");
         }
-
-        ApplicationUser user = userService.findApplicationUserByUsername(userName);
-        if (user == null) {
-            throw new ValidationException("User does not exist");
+        if (userName == null) {
+            throw new ValidationException("User is not specified");
         }
-        UserGroup group = user.getCurrGroup();
-        if (group == null) {
-            throw new ValidationException("User has no Group");
-        }
-        Long storageId = group.getStorageId();
+        Long storageId = userService.loadGroupStorageByUsername(userName);
         if (storageId == null) {
-            throw new ValidationException("Storage does not exist");
+            throw new NotFoundException("Storage could not be found");
         }
-        Long shoppingListId = group.getPublicShoppingListId();
+        Long shoppingListId = userService.getPublicShoppingListIdByUsername(userName);
         if (shoppingListId == null) {
-            throw new ValidationException("Public ShoppingList does not exist");
+            throw new NotFoundException("Public ShoppingList could not be found");
+        }
+        if (numberOfPeople == null || numberOfPeople < 1) {
+            throw new ValidationException("Number of people has to be 1 or bigger");
+        }
+        if (numberOfPeople > 100) {
+            throw new ValidationException("Number of people can not be bigger than 100");
         }
 
         Recipe recipe;
-        List<ItemStorage> storageItems;
-
         try {
             recipe = recipeRepository.findRecipeById(recipeId);
             if (recipe == null) {
                 throw new NotFoundException("Could not find recipe with id " + recipeId);
             }
         } catch (ObjectNotFoundException e) {
-            throw new NotFoundException("Could not find recipe with id " + recipeId, e);
+            throw new NotFoundException("Could not find recipe with id " + recipeId);
         }
 
+        List<ItemStorage> storageItems;
         try {
             storageItems = itemStorageRepository.findAllByStorageId(storageId);
             if (storageItems == null) {
                 throw new NotFoundException("Could not find storage with id " + storageId);
             }
         } catch (ObjectNotFoundException e) {
-            throw new NotFoundException("Could not find storage with id " + storageId, e);
+            throw new NotFoundException("Could not find storage with id " + storageId);
         }
 
-        List<ItemStorage> returnList;
-        returnList = compareItemSets(recipe.getIngredients(), storageItems);
+        Set<ItemStorage> calculatedIngredients = new HashSet<>();
+        for (ItemStorage item :
+            recipe.getIngredients()) {
+            ItemStorage calculatedItem = new ItemStorage(item);
+            calculatedItem.setAmount(item.getAmount() * numberOfPeople);
+            calculatedIngredients.add(calculatedItem);
+        }
+        List<ItemStorage> returnList = compareItemSets(calculatedIngredients, storageItems);
 
-        Long groupId = userService.getGroupIdByUsername(userName);
-        String notes = "Ingredient required for recipe: " + recipe.getName();
+        String notes = "Ingredient for recipe: " + recipe.getName();
         for (ItemStorage item :
             returnList) {
-            ItemStorage shoppingListItem = new ItemStorage(item);
-            shoppingListItem.setShoppingListId(shoppingListId);
+            ItemStorage shoppingListItem = new ItemStorage(item); // TODO use item of returnSet
             shoppingListItem.setNotes(notes);
-            //shoppingListItem = itemStorageRepository.saveAndFlush(shoppingListItem);
-            saveItem(shoppingListItem, shoppingListId, groupId);
+            saveItem(shoppingListItem, shoppingListId, null);
         }
-
         return returnList;
     }
 
@@ -169,7 +173,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
      * If they appear, the amount of the Items is compared.
      *
      * @param recipeIngredients set of items e.g. representing ingredients of a recipe
-     * @param storedItems       set of items e.g. representing the stored Items in a Storage
+     * @param storedItems       set of items e.g. representing the stored Items in a Storage.
      * @return Set of all Items that occur in recipeIngredients but not in storedItem or occur in both, but the amount in recipeIngredients is bigger than the amount in storedItems.
      */
     private List<ItemStorage> compareItemSets(Set<ItemStorage> recipeIngredients, List<ItemStorage> storedItems) {
@@ -205,7 +209,48 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     }
 
     @Override
-    public ItemStorage saveItem(ItemStorage itemStorage, Long id, Long groupId) {
+    @Transactional
+    public List<ItemStorage> putRecipeOnShoppingList(Long recipeId, String userName, Integer numberOfPeople) {
+        LOGGER.debug("Service: put all Recipe-Ingredients {} on ShoppingList for {} people based on user {}.", recipeId, numberOfPeople, userName);
+
+        // validation
+        if (recipeId == null) {
+            throw new ValidationException("Recipe is not specified");
+        }
+        Recipe recipe = recipeRepository.findRecipeById(recipeId);
+        if (recipe == null) {
+            throw new NotFoundException("Recipe could not be found");
+        }
+        if (userName == null) {
+            throw new ValidationException("User is not specified");
+        }
+        Long shoppingListId = userService.getPublicShoppingListIdByUsername(userName);
+        if (shoppingListId == null) {
+            throw new NotFoundException("ShoppingList could not be found");
+        }
+        if (numberOfPeople == null || numberOfPeople < 1) {
+            throw new ValidationException("Number of people has to be 1 or bigger");
+        }
+        if (numberOfPeople > 100) {
+            throw new ValidationException("Number of people can not be bigger than 100");
+        }
+
+        List<ItemStorage> returnList = new ArrayList<>();
+        String notes = "Ingredient for recipe: " + recipe.getName();
+        for (ItemStorage item :
+            recipe.getIngredients()) {
+            ItemStorage itemToSave = new ItemStorage(item);
+            itemToSave.setNotes(notes);
+            itemToSave.setAmount(item.getAmount() * numberOfPeople);
+            saveItem(itemToSave, shoppingListId, null);
+            returnList.add(itemToSave);
+        }
+        return returnList;
+    }
+
+
+    @Override
+    public ItemStorage saveItem(ItemStorage itemStorage, Long shoppingListId, Long groupId) {
         LOGGER.debug("save item in shopping list");
 
         if (itemStorage.getLocationTag() != null) {
@@ -216,12 +261,14 @@ public class ShoppingListServiceImpl implements ShoppingListService {
             }
         }
 
-        itemService.checkForBluePrintForGroup(itemStorage, groupId);
+        if (groupId != null) {
+            itemService.checkForBluePrintForGroup(itemStorage, groupId);
+        }
 
         // check if there is already an item with the same name in the shoppinglist
-        if (itemStorage.getShoppingListId() != null) {
+        if (shoppingListId != null) {
             List<ItemStorage> itemsInShoppingList = itemStorageRepository
-                .findAllByShoppingListId(itemStorage.getShoppingListId());
+                .findAllByShoppingListId(shoppingListId);
             Map<String, ItemStorage> storedItemsMap = itemsInShoppingList.stream()
                 .collect(Collectors.toMap(ItemStorage::getName, Function.identity()));
             ItemStorage storedItem = storedItemsMap.get(itemStorage.getName());
@@ -247,22 +294,27 @@ public class ShoppingListServiceImpl implements ShoppingListService {
                     storedItem.setQuantity(itemStorage.getQuantity());
                     return itemStorageRepository.saveAndFlush(storedItem);
                 } else {
-                    throw new ValidationException("Incompatible types: Same item with different unit of quantity found");
+                    throw new ServiceException("Incompatible types: Same item with different unit of quantity found");
                 }
             }
         }
 
+        itemStorage.setShoppingListId(shoppingListId);
         shoppingListItemRepository.saveAndFlush(itemStorage);
-        shoppingListItemRepository.insert(id, itemStorage.getId());
+        shoppingListItemRepository.insert(shoppingListId, itemStorage.getId());
 
         return itemStorage;
 
     }
 
     @Override
-    public ItemStorage changeAmountOfItem(ItemStorage itemStorage) {
+    public ItemStorage changeAmountOfItem(ItemStorage itemStorage, Long shoppingListId) {
         LOGGER.debug("change amount of item in shopping list");
-        return shoppingListItemRepository.saveAndFlush(itemStorage);
+        if (itemStorage.getShoppingListId() != null && itemStorage.getShoppingListId().equals(shoppingListId)) {
+            return shoppingListItemRepository.saveAndFlush(itemStorage);
+        } else {
+            throw new ServiceException("This item is not on the given shopping list");
+        }
     }
 
     @Transactional
@@ -271,7 +323,6 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         LOGGER.debug("Find all items");
         return itemRepository.findAll();
     }
-
 
     @Override
     public List<ItemStorage> findAllByShoppingListId(Long storageId) {

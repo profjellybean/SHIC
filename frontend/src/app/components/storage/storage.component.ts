@@ -10,6 +10,8 @@ import {UserService} from '../../services/user.service';
 import {User} from '../../dtos/user';
 import jwt_decode from 'jwt-decode';
 import {AuthService} from '../../services/auth.service';
+import {LocationTag} from '../../dtos/locationTag';
+import {LocationTagService} from '../../services/location-tag.service';
 
 
 @Component({
@@ -58,6 +60,7 @@ export class StorageComponent implements OnInit {
   shopAgainNotes: string;
 
   unitsOfQuantity: UnitOfQuantity[];
+  locationTags: LocationTag[] = null;
 
 
   constructor(private storageService: StorageService,
@@ -65,7 +68,8 @@ export class StorageComponent implements OnInit {
               private shoppingListService: ShoppingListService,
               private itemService: ItemService,
               private userService: UserService,
-              private authService: AuthService) {
+              private authService: AuthService,
+              private locationTagService: LocationTagService) {
   }
 
   ngOnInit(): void {
@@ -81,6 +85,7 @@ export class StorageComponent implements OnInit {
         this.user = data;
         this.getAllItemsByStorageId({id: this.user.currGroup.storageId});
         this.searchItem.storageId = this.user.currGroup.storageId;
+        this.loadLocationTags(data.currGroup.storageId);
       },
       error: error => {
         console.error(error.message);
@@ -88,6 +93,19 @@ export class StorageComponent implements OnInit {
     });
   }
 
+  loadLocationTags(storageId: number) {
+    this.locationTagService.getLocationTags({storageId}).subscribe({
+        next: data => {
+          console.log('successfully loaded custom location tags', data);
+          this.locationTags = data;
+        },
+        error: err => {
+          console.log(err);
+          this.defaultServiceErrorHandling(err);
+        }
+      }
+    );
+  }
 
   addItem(item: Item) {
     item.storageId = this.user.currGroup.storageId;

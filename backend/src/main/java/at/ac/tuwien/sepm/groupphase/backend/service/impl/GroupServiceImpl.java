@@ -1,24 +1,23 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Register;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Storage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.RegisterRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserGroupRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.GroupService;
-import org.h2.engine.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
-import java.rmi.server.ServerCloneException;
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -29,20 +28,27 @@ public class GroupServiceImpl implements GroupService {
     private final StorageRepository storageRepository;
     private final ShoppingListRepository shoppingListRepository;
     private final UserRepository userRepository;
+    private final RegisterRepository registerRepository;
 
-    public GroupServiceImpl(UserGroupRepository userGroupRepository, StorageRepository storageRepository, ShoppingListRepository shoppingListRepository, UserRepository userRepository) {
+    public GroupServiceImpl(UserGroupRepository userGroupRepository, StorageRepository storageRepository, ShoppingListRepository shoppingListRepository, UserRepository userRepository, RegisterRepository registerRepository) {
         this.userGroupRepository = userGroupRepository;
         this.storageRepository = storageRepository;
         this.shoppingListRepository = shoppingListRepository;
         this.userRepository = userRepository;
+        this.registerRepository = registerRepository;
     }
 
 
     @Override
-    public Long generateUserGroup() {
+    public Long generateUserGroup(String groupName, String username) {
         LOGGER.debug("Generate new group");
-        UserGroup group = new UserGroup(this.storageRepository.saveAndFlush(new Storage()).getId(), this.shoppingListRepository.save(new ShoppingList()).getId());
-        return this.userGroupRepository.saveAndFlush(group).getId();
+        UserGroup group = new UserGroup(groupName, this.storageRepository.saveAndFlush(new Storage()).getId(),
+            this.shoppingListRepository.saveAndFlush(new ShoppingList()).getId(), this.registerRepository.saveAndFlush(new Register()).getId());
+        Long ret = this.userGroupRepository.saveAndFlush(group).getId();
+        if (username != null) {
+            addUser(ret, username);
+        }
+        return ret;
     }
 
     @Override

@@ -2,9 +2,11 @@ package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
+import at.ac.tuwien.sepm.groupphase.backend.entity.LocationClass;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.LocationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitOfQuantityRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +31,7 @@ public class ItemStorageDataGenerator {
     private final UnitOfQuantityRepository unitOfQuantityRepository;
     private final StorageDataGenerator storageDataGenerator;
     private final UserDataGenerator userDataGenerator;
+    private final LocationRepository locationRepository;
 
     private final UnitOfQuantityDataGenerator unitOfQuantityDataGenerator;
 
@@ -37,13 +40,14 @@ public class ItemStorageDataGenerator {
                                     UnitOfQuantityRepository unitOfQuantityRepository,
                                     UnitOfQuantityDataGenerator unitOfQuantityDataGenerator,
                                     StorageDataGenerator storageDataGenerator,
-                                    UserDataGenerator userDataGenerator) {
+                                    UserDataGenerator userDataGenerator, LocationRepository locationRepository) {
         this.itemStorageRepository = itemStorageRepository;
         this.unitOfQuantityRepository = unitOfQuantityRepository;
         this.unitOfQuantityDataGenerator = unitOfQuantityDataGenerator;
 
         this.storageDataGenerator = storageDataGenerator;
         this.userDataGenerator = userDataGenerator;
+        this.locationRepository = locationRepository;
     }
 
     //@PostConstruct
@@ -56,6 +60,11 @@ public class ItemStorageDataGenerator {
             this.storageDataGenerator.generateStorage();
             this.unitOfQuantityDataGenerator.generateUnitOfQuantity();
             this.userDataGenerator.generateUser();
+
+            locationRepository.saveAndFlush(new LocationClass(Location.fridge.toString(), null));
+            locationRepository.saveAndFlush(new LocationClass(Location.freezer.toString(), null));
+            locationRepository.saveAndFlush(new LocationClass(Location.shelf.toString(), null));
+
 
             List<UnitOfQuantity> unitList = unitOfQuantityRepository.findAll();
             Map<String, UnitOfQuantity> mappedUnits = new HashMap<>();

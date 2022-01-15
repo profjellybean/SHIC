@@ -1,20 +1,25 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.entity.LocationClass;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Storage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Storage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitsRelation;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
+
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.StorageItemStorageRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.LocationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.UnitOfQuantityRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitsRelationRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.StorageItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserGroupRepository;
+
+import at.ac.tuwien.sepm.groupphase.backend.repository.UnitOfQuantityRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.ItemService;
 import at.ac.tuwien.sepm.groupphase.backend.service.StorageService;
 import org.slf4j.Logger;
@@ -41,13 +46,17 @@ public class StorageServiceImpl implements StorageService {
     private final StorageItemStorageRepository storageItemStorageRepository;
     private final UserGroupRepository userGroupRepository;
     private final ItemService itemService;
+    private final LocationRepository locationRepository;
 
     @Autowired
-    public StorageServiceImpl(StorageRepository storageRepository, ItemStorageRepository itemStorageRepository,
+    public StorageServiceImpl(StorageRepository storageRepository,
+                              ItemStorageRepository itemStorageRepository,
                               UnitOfQuantityRepository unitOfQuantityRepository,
                               UnitsRelationRepository unitsRelationRepository,
                               StorageItemStorageRepository storageItemStorageRepository,
-                              UserGroupRepository userGroupRepository, ItemService itemService) {
+                              UserGroupRepository userGroupRepository,
+                              ItemService itemService,
+                              LocationRepository locationRepository) {
         this.storageRepository = storageRepository;
         this.itemStorageRepository = itemStorageRepository;
         this.unitOfQuantityRepository = unitOfQuantityRepository;
@@ -55,6 +64,7 @@ public class StorageServiceImpl implements StorageService {
         this.storageItemStorageRepository = storageItemStorageRepository;
         this.userGroupRepository = userGroupRepository;
         this.itemService = itemService;
+        this.locationRepository = locationRepository;
     }
 
     @Override
@@ -85,8 +95,9 @@ public class StorageServiceImpl implements StorageService {
             Storage storage = storageOptional.get();
 
             if (Objects.equals(itemToDelete.getStorageId(), storage.getId())) {
-                //storageItemStorageRepository.deleteFromTable(storageId, itemId);
                 itemStorageRepository.delete(itemToDelete);
+            } else {
+                throw new NotFoundException("No item in this storage with id: " + itemId);
             }
             return itemToDelete;
         }
@@ -94,15 +105,16 @@ public class StorageServiceImpl implements StorageService {
 
     @Override
     public ItemStorage saveItem(ItemStorage itemStorage, Long groupId) {
-        LOGGER.debug("Save item");
+        LOGGER.debug("Service: Save item {} for group {}", itemStorage, groupId);
 
+        /*
         if (itemStorage.getLocationTag() != null) {
             try {
                 Location.valueOf(itemStorage.getLocationTag());
             } catch (IllegalArgumentException i) {
                 throw new ValidationException("Location is not valid");
             }
-        }
+        }*/
 
         itemService.checkForBluePrintForGroup(itemStorage, groupId);
 
@@ -143,6 +155,8 @@ public class StorageServiceImpl implements StorageService {
     public ItemStorage updateItem(ItemStorage itemStorage, Long groupId) {
         LOGGER.debug("Service: Update item {}", itemStorage);
 
+        Long storageId = null;
+
         if (itemStorage.getLocationTag() != null) {
             try {
                 Location.valueOf(itemStorage.getLocationTag());
@@ -150,8 +164,16 @@ public class StorageServiceImpl implements StorageService {
                 throw new ValidationException("Location is not valid");
             }
         }
+        if (groupId != null) {
+            UserGroup group = userGroupRepository.getById(groupId);
+            storageId = group.getStorageId();
+        }
 
-        return itemStorageRepository.saveAndFlush(itemStorage);
+        if (storageId != null && itemStorage.getStorageId().equals(storageId)) {
+            return itemStorageRepository.saveAndFlush(itemStorage);
+        } else {
+            throw new NotFoundException("No such item in this storage");
+        }
     }
 
     @Override
@@ -192,6 +214,58 @@ public class StorageServiceImpl implements StorageService {
     public List<UnitOfQuantity> getAllUnitOfQuantity() {
         LOGGER.debug("Getting all units of quantity");
         return unitOfQuantityRepository.findAll();
+    }
+
+    @Override
+    public List<LocationClass> getAllLocations() {
+        return locationRepository.findAll();
+    }
+
+    @Override
+    public List<LocationClass> getAllLocationsByStorageId(Long storageId) {
+        LOGGER.debug("Getting the locations with the storageid");
+
+        List<LocationClass> locationDefault = locationRepository.findAllByStorageId(null);
+        List<LocationClass> locationStorage = locationRepository.findAllByStorageId(storageId);
+
+        for (int i = 0; i < locationDefault.size(); i++) {
+            locationStorage.add(locationDefault.get(i));
+        }
+        return locationStorage;
+    }
+
+    @Override
+    public List<LocationClass> getAllLocationsByName(String name) {
+        LOGGER.debug("Getting the locations with the name");
+        return locationRepository.findAllByName(name);
+    }
+
+    @Override
+    public List<LocationClass> getAllLocationsByNameAndStorageId(String name, Long storageId) {
+        LOGGER.debug("Getting the locations with the storageid and name");
+        return locationRepository.findAllByNameAndStorageId(name, storageId);
+    }
+
+
+    @Override
+    public void saveLocation(LocationClass locationClass) {
+        LOGGER.debug("Saving a location");
+        List<LocationClass> existingLocation = locationRepository.findAllByNameAndStorageId(locationClass.getName(), locationClass.getStorageId());
+        if (!existingLocation.isEmpty()) {
+            throw new ServiceException("location already exists!");
+        }
+        locationRepository.saveAndFlush(locationClass);
+    }
+
+    @Override
+    public void deleteLocation(Long id) {
+        LOGGER.debug("Deleting a location");
+        LocationClass locationToDelete = locationRepository.getById(id);
+        if (locationToDelete.getStorageId() == null) {
+            throw new ServiceException("location cannot be delete!");
+        }
+
+        locationRepository.deleteById(id);
     }
 
     @Override

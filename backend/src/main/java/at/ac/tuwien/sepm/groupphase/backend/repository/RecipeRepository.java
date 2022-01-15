@@ -31,4 +31,13 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
      * @return recipe with given name
      */
     Recipe findByName(String name);
+
+    /**
+     * delete recipe by id.
+     *
+     * @param id of the recipe
+     *
+     * @return recipe with given id
+     */
+    Recipe deleteRecipeById(Long id);
 }
