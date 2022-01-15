@@ -29,7 +29,8 @@ export class RegisterComponent implements OnInit {
     email: null,
     currGroup: null,
     username: null,
-    privList: null
+    privList: null,
+    image: null
   };
 
   register: Register = {

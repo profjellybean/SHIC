@@ -52,7 +52,7 @@ export class UserComponent implements OnInit {
   }
 
   generateGroup(){
-    this.groupService.generateGroup().subscribe({
+    this.groupService.generateGroup('WG-Wipplingerstraße', this.user.username).subscribe({
       next: data => {
         console.log('received items10', data);
         this.groupId = data;
