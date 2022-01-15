@@ -8,6 +8,7 @@ export class User {
   privList: number;
   image: any;
 
+
   constructor(id: number, username: string, currGroup: Group, privList: number, email: string) {
     this.id = id;
     this.username = username;
