@@ -29,7 +29,8 @@ export class RegisterComponent implements OnInit {
     email: null,
     currGroup: null,
     username: null,
-    privList: null
+    privList: null,
+    image: null
   };
 
   register: Register = {
@@ -48,6 +49,10 @@ export class RegisterComponent implements OnInit {
   billId: number;
   monthlySum: number;
   newMonthlyBudget: number;
+  monthlyDifference: number;
+  billSumGroup: number;
+  billSumUser: number;
+  billToDelete: Bill;
 
   user: User = {
     // @ts-ignore
@@ -55,7 +60,9 @@ export class RegisterComponent implements OnInit {
     id: null,
     currGroup: null,
     privList: null,
-    email: null
+    email: null,
+
+    image: null
   };
 
   constructor(private registerService: RegisterService, private billService: BillService, public route: ActivatedRoute,
@@ -82,6 +89,8 @@ export class RegisterComponent implements OnInit {
         this.getAllUsers(data.currGroup.id);
         this.loadRegister(data.currGroup.registerId);
         this.getMonthlySum();
+        this.getBillSumGroup();
+        this.getBillSumUser();
       },
       error: error => {
         console.error(error.message);
@@ -125,6 +134,7 @@ export class RegisterComponent implements OnInit {
         this.register.monthlyPayments = register.monthlyPayments;
         this.register.monthlyBudget = register.monthlyBudget;
         this.loadRegister(this.user.currGroup.registerId);
+        this.getBillSumUser();
       }, error: err => {
         this.defaultServiceErrorHandling(err);
       }
@@ -138,6 +148,7 @@ export class RegisterComponent implements OnInit {
         this.register.bills = register.bills;
         this.register.monthlyPayments = register.monthlyPayments;
         this.register.monthlyBudget = register.monthlyBudget;
+        this.monthlyDifference = this.register.monthlyBudget - this.monthlySum;
 
         this.counter = 0;
         for (const bill of register.bills) {
@@ -153,6 +164,9 @@ export class RegisterComponent implements OnInit {
             bill.notPaidNameList = bill.notPaidNameList + name.username + ', ';
             this.secondCounter++;
           }
+          bill.notPaidNameList = bill.notPaidNameList.substring(0, bill.notPaidNameList.length - 2);
+          bill.nameList = bill.nameList.substring(0, bill.nameList.length - 2);
+          console.log(bill.notPaidNameList);
           this.billArray[this.counter] = bill;
           this.counter++;
         }
@@ -178,25 +192,29 @@ export class RegisterComponent implements OnInit {
     this.modalService.open(billModal, {ariaLabelledBy: 'modal-basic-title'});
   }
 
+  openAddModal(billDeleteModal: TemplateRef<any>) {
+    this.modalService.open(billDeleteModal, {ariaLabelledBy: 'modal-basic-title'});
+  }
+
   editBill(form) {
     this.submitted = true;
 
     if (form.valid) {
       console.log('form item to add', this.billToEdit);
-      if(this.billToEdit.names[0].id === null){
+      if (this.billToEdit.names[0].id === null) {
         console.log('Set allUsers {}', this.allUsers);
         this.billToEdit.names = this.allUsers;
       }
       this.billToEdit.notPaidNames = this.billToEdit.names;
-      if(this.billToEdit.names.length > 0) {
+      if (this.billToEdit.names.length > 0) {
         this.billToEdit.sumPerPerson = this.billToEdit.sum / this.billToEdit.names.length;
       } else {
         this.billToEdit.sumPerPerson = this.billToEdit.sum;
       }
-      for(const name of this.billToEdit.names){
+      for (const name of this.billToEdit.names) {
         delete name.currGroup;
       }
-      for(const name of this.billToEdit.notPaidNames){
+      for (const name of this.billToEdit.notPaidNames) {
         delete name.currGroup;
       }
       this.billService.editBill(this.billToEdit).subscribe({
@@ -213,6 +231,31 @@ export class RegisterComponent implements OnInit {
     }
   }
 
+  deleteBillById() {
+    this.billService.deleteBillById(this.billToDelete.id).subscribe({
+      next: data => {
+        const deleteIndex = this.billArray.indexOf(this.billToDelete);
+        if (deleteIndex !== -1) {
+          this.billArray.splice(deleteIndex, 1);
+        }
+      },
+      error: error => {
+        console.error(error.message);
+        this.defaultServiceErrorHandling(error);
+      }
+    });
+  }
+
+
+  payAll() {
+    console.log('Confirm all');
+    this.register.bills.forEach(b => {
+      if (b.notPaidNameList.includes(this.user.username)) {
+        this.confirmPayment(b.id);
+      }
+    });
+  }
+
   private getMonthlySum() {
     console.log('getting sum of all Bills this month');
     this.registerService.getMonthlySum().subscribe({
@@ -227,12 +270,41 @@ export class RegisterComponent implements OnInit {
     });
   }
 
+  private getBillSumGroup() {
+    console.log('getting sum of all Bills for the group');
+    this.registerService.getBillSumGroup().subscribe({
+      next: data => {
+        console.log('received um of all Bills for the group', data);
+        this.billSumGroup = data;
+      },
+      error: error => {
+        console.error(error.message);
+        this.defaultServiceErrorHandling(error);
+      }
+    });
+  }
+
+  private getBillSumUser() {
+    console.log('getting sum of all Bills for the user');
+    this.registerService.getBillSumUser().subscribe({
+      next: data => {
+        console.log('received um of all Bills for the user', data);
+        this.billSumUser = data;
+      },
+      error: error => {
+        console.error(error.message);
+        this.defaultServiceErrorHandling(error);
+      }
+    });
+  }
+
   private editMonthlyBudget(budget: number) {
     console.log('edit monthly budget', budget);
     this.registerService.editMonthlyBudget(budget).subscribe({
       next: data => {
         console.log('edited monthly budget', data);
         this.register.monthlyBudget = data;
+        this.monthlyDifference = this.register.monthlyBudget - this.monthlySum;
       },
       error: error => {
         console.error(error.message);

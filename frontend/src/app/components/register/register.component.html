@@ -5,7 +5,8 @@
   </button>
 </div>
 
-<h1 class="alert-heading">Register</h1>
+<br>
+<h1 class="alert-heading">Bills</h1>
 <p></p>
 <hr>
 
@@ -13,46 +14,63 @@
 <br>
 {{monthlySum}}  €
 <br>
-<th>Budget:</th>
+<th>Group Budget:</th>
 <br>
 {{register.monthlyBudget}}  €
 <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openEditBudgetModal(budgetEditModal)">Edit</button>
 <br>
+<th>Rest Group Budget for this month:</th>
+<br>
+{{monthlyDifference}}  €
+<br>
+
 <br>
 
 <th>Bills:</th>
 
-<table class='table'>
-  <thead>
+<table class="table table-striped">
+  <thead class="thead-dark">
   <tr>
-    <th>Included: </th>
-    <th>Not paid yet: </th>
-    <th>Items bought: </th>
-    <th>Sum of the purchase: </th>
-    <th>To pay per person: </th>
     <th>Date: </th>
+    <th>Included: </th>
+    <th>Yet to pay: </th>
+    <th>Items: </th>
+    <th>Sum: </th>
+    <th>To pay per person: </th>
     <th>Notes:</th>
   </tr>
   </thead>
   <tbody>
   <tr *ngFor="let bill of billArray;">
+    <td>{{bill.date}}</td>
     <td>{{bill.nameList}}</td>
     <td>{{bill.notPaidNameList}}</td>
     <td><div *ngFor="let grocery of bill.groceries">{{grocery.name}}</div></td>
     <td>{{bill.sum}} €</td>
     <td>{{bill.sumPerPerson}} €</td>
-    <td>{{bill.date}}</td>
     <td>{{bill.notes}}</td>
     <td>
       <div>
-        <button type="button" style="BACKGROUND-COLOR:green;" class="btn btn-secondary" (click)="confirmPayment(bill.id);">Confirm Payment</button> &nbsp;
-        <button type="button" class="btn btn-secondary" (click)="openBillModal(billEditModal, bill);">Edit Bill</button>
-
+        <button *ngIf="bill.notPaidNameList.includes(this.user.username)" type="button" style="BACKGROUND-COLOR:green;" class="btn btn-secondary" (click)="confirmPayment(bill.id);">Confirm Payment</button> &nbsp;
+        <button type="button" class="btn btn-secondary" (click)="openBillModal(billEditModal, bill);">Edit Bill</button> &nbsp;
+        <button type="button" style="BACKGROUND-COLOR:darkred;" class="btn btn-secondary" (click)="openAddModal(billDeleteModal); this.billToDelete=bill">Delete</button>
       </div>
     </td>
   </tr>
-  {{this.help}}
   </tbody>
+  <tfoot>
+  <tr>
+    <th>TOTAL:</th>
+    <th></th>
+    <th>{{billSumGroup}} €</th>
+    <th>{{billSumUser}} € (for you to pay)</th>
+    <th><button class=" btn btn-outline-info" (click)="payAll()">Pay all bills</button></th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+  </tfoot>
+  {{this.help}}
 </table>
 
 
@@ -125,5 +143,22 @@
     </div>
   </ng-template>
 </div>
+
+
+<ng-template #billDeleteModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Alert</h5>
+    <button type="button" class="close" (click)="modal.dismiss('X')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <div>
+      <p>Do you really want to delete this bill?</p>
+      <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="deleteBillById(); modal.dismiss('X')">delete bill</button>
+    </div>
+  </div>
+</ng-template>
 
 {{this.billToEdit | json}}

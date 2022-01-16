@@ -1,10 +1,12 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.LocationClass;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Storage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitsRelation;
+import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
 
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
@@ -93,8 +95,9 @@ public class StorageServiceImpl implements StorageService {
             Storage storage = storageOptional.get();
 
             if (Objects.equals(itemToDelete.getStorageId(), storage.getId())) {
-                //storageItemStorageRepository.deleteFromTable(storageId, itemId);
                 itemStorageRepository.delete(itemToDelete);
+            } else {
+                throw new NotFoundException("No item in this storage with id: " + itemId);
             }
             return itemToDelete;
         }
@@ -152,6 +155,8 @@ public class StorageServiceImpl implements StorageService {
     public ItemStorage updateItem(ItemStorage itemStorage, Long groupId) {
         LOGGER.debug("Service: Update item {}", itemStorage);
 
+        Long storageId = null;
+
         if (itemStorage.getLocationTag() != null) {
             try {
                 Location.valueOf(itemStorage.getLocationTag());
@@ -159,8 +164,16 @@ public class StorageServiceImpl implements StorageService {
                 throw new ValidationException("Location is not valid");
             }
         }
+        if (groupId != null) {
+            UserGroup group = userGroupRepository.getById(groupId);
+            storageId = group.getStorageId();
+        }
 
-        return itemStorageRepository.saveAndFlush(itemStorage);
+        if (storageId != null && itemStorage.getStorageId().equals(storageId)) {
+            return itemStorageRepository.saveAndFlush(itemStorage);
+        } else {
+            throw new NotFoundException("No such item in this storage");
+        }
     }
 
     @Override

@@ -128,5 +128,38 @@ public class RegisterEndpoint {
         return new TimeSumDto(registerService.billSumOfYear(authentication.getName(), date), date);
     }
 
+    @Secured("ROLE_USER")
+    @GetMapping(value = "/billSumGroup")
+    @Operation(summary = "Get bill sum for group", security = @SecurityRequirement(name = "apiKey"))
+    public Double billSumGroup(Authentication authentication) {
+        LOGGER.info("Endpoint: GET /register/billSumGroup/{}", authentication);
+        if (authentication == null) {
+            LOGGER.error("You are not logged-in");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You are not logged-in"); // TODO legal?
+        }
+        try {
+            return registerService.billGroupTotal(authentication.getName());
+        } catch (NotFoundException e) {
+            LOGGER.error("Error while getting bill sum for group {}", e.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        }
+    }
+
+    @Secured("ROLE_USER")
+    @GetMapping(value = "/billSumUser")
+    @Operation(summary = "Get bill sum for user", security = @SecurityRequirement(name = "apiKey"))
+    public Double billSumUser(Authentication authentication) {
+        LOGGER.info("Endpoint: GET /register/billSumUser/{}", authentication);
+        if (authentication == null) {
+            LOGGER.error("You are not logged-in");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You are not logged-in"); // TODO legal?
+        }
+        try {
+            return registerService.billUserTotal(authentication.getName());
+        } catch (NotFoundException e) {
+            LOGGER.error("Error while getting bill sum for user {}", e.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        }
+    }
 
 }

@@ -1,13 +1,11 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UnitsRelationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserGroupDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoggedInDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegistrationDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
-import at.ac.tuwien.sepm.groupphase.backend.entity.UnitsRelation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 @Component
@@ -54,14 +50,17 @@ public class ComplexUserMapper {
 
     public UserDto userToUserDto(ApplicationUser user) {
         LOGGER.debug("Mapper: User userToUserDto");
-        LinkedHashSet<String> usernames = new LinkedHashSet<>();
-        Set<ApplicationUser> users = user.getCurrGroup().getUser();
-        for (ApplicationUser a : users) {
-            usernames.add(a.getUsername());
+        UserGroupDto group = null;
+        if (user.getCurrGroup() != null) {
+            LinkedHashSet<String> usernames = new LinkedHashSet<>();
+            Set<ApplicationUser> users = user.getCurrGroup().getUser();
+            for (ApplicationUser a : users) {
+                usernames.add(a.getUsername());
+            }
+            group = new UserGroupDto(user.getCurrGroup().getId(), usernames,
+                user.getCurrGroup().getStorageId(), user.getCurrGroup().getPublicShoppingListId(), user.getCurrGroup().getRegisterId(), user.getCurrGroup().getName());
         }
-
-        return new UserDto(user.getId(), user.getUsername(), new UserGroupDto(user.getCurrGroup().getId(), usernames,
-            user.getCurrGroup().getStorageId(), user.getCurrGroup().getPublicShoppingListId(), user.getCurrGroup().getRegisterId(), user.getCurrGroup().getName()), user.getPrivList(), user.getEmail());
+        return new UserDto(user.getId(), user.getUsername(), group, user.getPrivList(), user.getEmail(), user.getImage());
     }
 
     public Set<UserDto> usersToUsersDto(Set<ApplicationUser> allUsers) {

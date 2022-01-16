@@ -2,7 +2,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {HeaderComponent} from './components/header/header.component';
@@ -18,13 +18,13 @@ import {StorageComponent} from './components/storage/storage.component';
 import {RegisterComponent} from './components/register/register.component';
 import {RegisterUserComponent} from './components/registerUser/registerUser.component';
 import { RecipeDetailComponent } from './components/recipe-detail/recipe-detail.component';
-import { ShoppingListListComponent } from './components/shopping-list-list/shopping-list-list.component';
 import { StorageAddItemComponent } from './components/storage-add-item/storage-add-item.component';
 import { UserComponent } from './components/user/user.component';
 import { ConfirmUserEmailComponent } from './components/confirm-user-email/confirm-user-email.component';
 import {NgSelectModule} from '@ng-select/ng-select';
 import { StatisticComponent } from './components/statistic/statistic.component';
 import { LocationTagComponent } from './components/location-tag/location-tag.component';
+import { NotificationsComponent } from './components/notifications/notifications.component';
 
 @NgModule({
   declarations: [
@@ -43,8 +43,8 @@ import { LocationTagComponent } from './components/location-tag/location-tag.com
     ConfirmUserEmailComponent,
     StorageAddItemComponent,
     UserComponent,
-    ShoppingListListComponent,
     StorageAddItemComponent,
+    NotificationsComponent,
     StatisticComponent,
     LocationTagComponent,
   ],
@@ -56,6 +56,7 @@ import { LocationTagComponent } from './components/location-tag/location-tag.com
     NgbModule,
     FormsModule,
     NgSelectModule,
+    BrowserAnimationsModule,
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

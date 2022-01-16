@@ -30,6 +30,16 @@ export class RegisterService {
     return this.httpClient.get<number>(this.registerBaseUri + '/monthlysum');
   }
 
+  getBillSumGroup(): Observable<number> {
+    console.log('Loading sum of Bills for the group');
+    return this.httpClient.get<number>(this.registerBaseUri + '/billSumGroup');
+  }
+
+  getBillSumUser(): Observable<number> {
+    console.log('Loading sum of Bills for the user');
+    return this.httpClient.get<number>(this.registerBaseUri + '/billSumUser');
+  }
+
   editMonthlyBudget(budget: number): Observable<number> {
     console.log('Loading monthly sum of Bills');
     return this.httpClient.put<number>(this.registerBaseUri + '/monthlybudget?budget=' + budget, budget);

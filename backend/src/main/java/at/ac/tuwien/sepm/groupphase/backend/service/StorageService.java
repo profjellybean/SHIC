@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.LocationClass;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
@@ -43,8 +44,8 @@ public interface StorageService {
     /**
      * Saves updated existing item in the storage (specified in the item itself).
      *
-     * @param groupId is used to check if blueprint for this item exists in this group
-     * @param itemStorage the item
+     * @param itemStorage the item to update
+     * @param groupId is used to check if the item to update is in the groups storage
      *
      * @return the updated item
      */
