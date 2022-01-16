@@ -22,6 +22,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.UserGroupRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitOfQuantityRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.ItemService;
 import at.ac.tuwien.sepm.groupphase.backend.service.StorageService;
+import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,7 @@ public class StorageServiceImpl implements StorageService {
     private final UserGroupRepository userGroupRepository;
     private final ItemService itemService;
     private final LocationRepository locationRepository;
+    private final UserService userService;
 
     @Autowired
     public StorageServiceImpl(StorageRepository storageRepository,
@@ -56,7 +58,8 @@ public class StorageServiceImpl implements StorageService {
                               StorageItemStorageRepository storageItemStorageRepository,
                               UserGroupRepository userGroupRepository,
                               ItemService itemService,
-                              LocationRepository locationRepository) {
+                              LocationRepository locationRepository,
+                              UserService userService) {
         this.storageRepository = storageRepository;
         this.itemStorageRepository = itemStorageRepository;
         this.unitOfQuantityRepository = unitOfQuantityRepository;
@@ -65,6 +68,7 @@ public class StorageServiceImpl implements StorageService {
         this.userGroupRepository = userGroupRepository;
         this.itemService = itemService;
         this.locationRepository = locationRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -102,6 +106,13 @@ public class StorageServiceImpl implements StorageService {
             return itemToDelete;
         }
     }
+
+    @Override
+    public ItemStorage saveItemByUsername(ItemStorage itemStorage, String userName) {
+        Long groupId = userService.getGroupIdByUsername(userName);
+        return saveItem(itemStorage, groupId);
+    }
+
 
     @Override
     public ItemStorage saveItem(ItemStorage itemStorage, Long groupId) {

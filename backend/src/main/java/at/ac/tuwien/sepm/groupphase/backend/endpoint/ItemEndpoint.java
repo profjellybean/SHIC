@@ -127,12 +127,8 @@ public class ItemEndpoint {
     @Operation(summary = "Get all available Items for specific Group")
     List<ItemDto> getAllItemsForGroup(Authentication authentication) {
         LOGGER.info("Endpoint: getAllItemsForGroup {}", authentication);
-        Long groupId = null;
-        if (authentication != null) {
-            groupId = userService.getGroupIdByUsername(authentication.getName()); // TODO legal?
-        }
         try {
-            return itemMapper.itemsToItemDtos(itemService.getAllItemsForGroup(groupId));
+            return itemMapper.itemsToItemDtos(itemService.getAllItemsForGroupByUsername(authentication.getName()));
         } catch (ValidationException e) {
             LOGGER.error("Error while getting all Items for Group: {}", e.getMessage());
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
@@ -144,12 +140,8 @@ public class ItemEndpoint {
     @Operation(summary = "Get all Items for specific Group by GroupId")
     List<ItemDto> getAllItemsByGroupId(Authentication authentication) {
         LOGGER.info("Endpoint: getAllItemsByGroupId {}", authentication);
-        Long groupId = null;
-        if (authentication != null) {
-            groupId = userService.getGroupIdByUsername(authentication.getName()); // TODO legal?
-        }
         try {
-            return itemMapper.itemsToItemDtos(itemService.findAllByGroupId(groupId));
+            return itemMapper.itemsToItemDtos(itemService.findAllByGroupIdByUsername(authentication.getName()));
         } catch (ValidationException e) {
             LOGGER.error("Error while getting all Items for Group by groupId: {}", e.getMessage());
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
@@ -161,13 +153,8 @@ public class ItemEndpoint {
     @Operation(summary = "Edit Item of a specific Group")
     ItemDto editCustomItem(Authentication authentication, @RequestBody ItemDto item) {
         LOGGER.info("Endpoint: editCustomItem {}{}", item, authentication);
-
-        if (authentication != null) {
-            Long groupId = userService.getGroupIdByUsername(authentication.getName()); // TODO legal?
-            item.setGroupId(groupId);
-        }
         try {
-            return itemMapper.itemToItemDto(itemService.editCustomItem(itemMapper.itemDtoToItem(item)));
+            return itemMapper.itemToItemDto(itemService.editCustomItem(itemMapper.itemDtoToItem(item), authentication.getName()));
         } catch (ValidationException e) {
             LOGGER.error("Error while editing custom Item for Group: {}", e.getMessage());
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
@@ -179,13 +166,8 @@ public class ItemEndpoint {
     @Operation(summary = "Add Item to Groups custom Items")
     ItemDto addCustomItem(Authentication authentication, @RequestBody ItemDto item) {
         LOGGER.info("Endpoint: addCustomItem {}{}", item, authentication);
-
-        if (authentication != null) {
-            Long groupId = userService.getGroupIdByUsername(authentication.getName()); // TODO legal?
-            item.setGroupId(groupId);
-        }
         try {
-            return itemMapper.itemToItemDto(itemService.addCustomItem(itemMapper.itemDtoToItem(item)));
+            return itemMapper.itemToItemDto(itemService.addCustomItem(itemMapper.itemDtoToItem(item), authentication.getName()));
         } catch (ValidationException e) {
             LOGGER.error("Error while adding custom Item for Group: {}", e.getMessage());
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);

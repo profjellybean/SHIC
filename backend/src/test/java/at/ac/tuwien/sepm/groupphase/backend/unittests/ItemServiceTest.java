@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.unittests;
 
 
+import at.ac.tuwien.sepm.groupphase.backend.datagenerator.TestDataGenerator;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Item;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
@@ -34,6 +35,8 @@ public class ItemServiceTest {
     ItemService itemService;
     @Autowired
     ItemRepository itemRepository;
+    @Autowired
+    TestDataGenerator testDataGenerator;
     @Autowired
     PlatformTransactionManager txm;
 
@@ -101,77 +104,80 @@ public class ItemServiceTest {
     @Test
     public void givenNoItem_whenAddingCustomItem_shouldThrowValidationException() throws Exception {
 
-        assertThrows(ValidationException.class, () -> itemService.addCustomItem(null));
+        assertThrows(ValidationException.class, () -> itemService.addCustomItem(null, null));
     }
 
     @Test
-    public void givenNoGroupId_whenAddingCustomItem_shouldThrowValidationException() throws Exception {
-        Item item = new Item(null, "NO_GROUPID_TEST", new UnitOfQuantity(1L, "kg"), null);
+    public void givenNoUserName_whenAddingCustomItem_shouldThrowValidationException() throws Exception {
+        Item item = new Item(null, "NO_USERNAME_TEST", new UnitOfQuantity(1L, "kg"), null);
 
-        assertThrows(ValidationException.class, () -> itemService.addCustomItem(item));
+        assertThrows(ValidationException.class, () -> itemService.addCustomItem(item, null));
     }
 
     @Test
     public void givenNoName_whenAddingCustomItem_shouldThrowValidationException() throws Exception {
         Item item = new Item(null, null, new UnitOfQuantity(1L, "kg"), -1L);
 
-        assertThrows(ValidationException.class, () -> itemService.addCustomItem(item));
+        assertThrows(ValidationException.class, () -> itemService.addCustomItem(item, null));
     }
 
     @Test
     public void givenNoQuantity_whenAddingCustomItem_shouldThrowValidationException() throws Exception {
-        Item item = new Item(null, "NO_QUANTITY_TEST", null, -1L);
+        Item item = new Item(null, "NO_QUANTITY_TEST", null, null);
 
-        assertThrows(ValidationException.class, () -> itemService.addCustomItem(item));
+        assertThrows(ValidationException.class, () -> itemService.addCustomItem(item, null));
     }
 
     @Test
     public void givenItem_whenAddingCustomItemTwice_shouldThrowValidationException() throws Exception {
-        Item item = new Item(null, "DOUBLE_ITEM", new UnitOfQuantity(1L, "kg"), -1L);
+        testDataGenerator.generateData_generateUser_withGroup();
+        Item item = new Item(null, "DOUBLE_ITEM", new UnitOfQuantity(1L, "kg"), null);
         itemRepository.saveAndFlush(item);
 
-        assertThrows(ValidationException.class, () -> itemService.addCustomItem(item));
+        assertThrows(ValidationException.class, () -> itemService.addCustomItem(item, "testUser"));
     }
 
     @Test
     public void givenValidItem_whenAddingCustomItem_shouldNotThrowValidationException() throws Exception {
-        Item item = new Item(null, "DOUBLE_ITEM", new UnitOfQuantity(1L, "kg"), -1L);
+        testDataGenerator.generateData_generateUser_withGroup();
+        Item item = new Item(null, "DOUBLE_ITEM", new UnitOfQuantity(1L, "kg"), null);
 
-        assertDoesNotThrow(() -> itemService.addCustomItem(item));
+        assertDoesNotThrow(() -> itemService.addCustomItem(item, "testUser"));
     }
 
     @Test
     public void givenNoItem_whenEditingCustomItem_shouldThrowValidationException() throws Exception {
 
-        assertThrows(ValidationException.class, () -> itemService.editCustomItem(null));
+        assertThrows(ValidationException.class, () -> itemService.editCustomItem(null, null));
     }
 
     @Test
-    public void givenNoGroupId_whenEditingCustomItem_shouldThrowValidationException() throws Exception {
+    public void givenNoUserName_whenEditingCustomItem_shouldThrowValidationException() throws Exception {
         Item item = new Item(null, "NO_GROUPID_TEST", new UnitOfQuantity(1L, "kg"), null);
 
-        assertThrows(ValidationException.class, () -> itemService.editCustomItem(item));
+        assertThrows(ValidationException.class, () -> itemService.editCustomItem(item, null));
     }
 
     @Test
     public void givenNoName_whenEditingCustomItem_shouldThrowValidationException() throws Exception {
-        Item item = new Item(null, null, new UnitOfQuantity(1L, "kg"), -1L);
+        Item item = new Item(null, null, new UnitOfQuantity(1L, "kg"), null);
 
-        assertThrows(ValidationException.class, () -> itemService.editCustomItem(item));
+        assertThrows(ValidationException.class, () -> itemService.editCustomItem(item, null));
     }
 
     @Test
     public void givenNoQuantity_whenEditingCustomItem_shouldThrowValidationException() throws Exception {
         Item item = new Item(null, "NO_QUANTITY_TEST", null, -1L);
 
-        assertThrows(ValidationException.class, () -> itemService.editCustomItem(item));
+        assertThrows(ValidationException.class, () -> itemService.editCustomItem(item, null));
     }
 
     @Test
     public void givenValidItem_whenEditingCustomItem_shouldNotThrowValidationException() throws Exception {
-        Item item = new Item(null, "DOUBLE_ITEM", new UnitOfQuantity(1L, "kg"), -1L);
+        testDataGenerator.generateData_generateUser_withGroup();
+        Item item = new Item(null, "DOUBLE_ITEM", new UnitOfQuantity(1L, "kg"), null);
 
-        assertDoesNotThrow(() -> itemService.editCustomItem(item));
+        assertDoesNotThrow(() -> itemService.editCustomItem(item, "testUser"));
     }
 
 

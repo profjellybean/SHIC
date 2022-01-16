@@ -28,26 +28,26 @@ public interface ItemService {
     List<Item> getAllItems();
 
     /**
-     * gets all items for a group. where groupId is either null or the id of the group.
+     * gets all items for a group, specified by userName, where groupId is either null or the id of the group.
      *
-     * @param groupId id of the group
+     * @param userName of a member of the group
      *
      * @return list of said items
      *
-     * @throws ValidationException if groupId is null
+     * @throws ValidationException if userName or groupId of user is null
      */
-    List<Item> getAllItemsForGroup(Long groupId);
+    List<Item> getAllItemsForGroupByUsername(String userName);
 
     /**
-     * find all items by specified groupId.
+     * find all custom items for a group, specified by the username.
      *
-     * @param groupId id of the group
+     * @param userName of a member of the group
      *
      * @return all items with specified groupId
      *
-     * @throws ValidationException if groupId is null
+     * @throws ValidationException if userName groupId is null
      */
-    List<Item> findAllByGroupId(Long groupId);
+    List<Item> findAllByGroupIdByUsername(String userName);
 
     /**
      * Adds UnitsRelation in database.
@@ -103,25 +103,25 @@ public interface ItemService {
 
     /**
      * edits a custom item of a group.
-     * groupId has to be set.
      *
      * @param item that replaces stored item.
+     * @param userName used to specify the group of which the item is edited
      *
      * @return edited item.
      *
      * @throws ValidationException if invalid value exists in item
      */
-    Item editCustomItem(Item item);
+    Item editCustomItem(Item item, String userName);
 
     /**
      * saves a custom item of a group.
-     * groupId has to be set.
      *
      * @param item that is saved.
+     * @param userName used to specify the group of which the item is edited
      *
      * @return saved item.
      *
      * @throws ValidationException if invalid value exists in item
      */
-    Item addCustomItem(Item item);
+    Item addCustomItem(Item item, String userName);
 }

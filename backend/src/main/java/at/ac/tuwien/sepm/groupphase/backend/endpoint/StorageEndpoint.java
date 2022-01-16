@@ -69,12 +69,8 @@ public class StorageEndpoint {
     public ItemStorageDto saveItem(Authentication authentication, @Valid @RequestBody ItemStorageDto itemStorageDto) {
         LOGGER.info("Endpoint: POST /storage saveItem {} for user {}", itemStorageDto, authentication.getName());
         try {
-            Long groupId = null;
-            if (authentication != null) {
-                groupId = userService.getGroupIdByUsername(authentication.getName()); // TODO legal?
-            }
-            return itemStorageMapper.itemStorageToItemStorageDto(storageService.saveItem(
-                itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto), groupId));
+            return itemStorageMapper.itemStorageToItemStorageDto(storageService.saveItemByUsername(
+                itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto), authentication.getName()));
         } catch (ServiceException e) {
             LOGGER.error("Error while saving Item to Storage: {}", e.getMessage());
             throw new ResponseStatusException(HttpStatus.CONFLICT);

@@ -158,7 +158,7 @@ public class ShoppingListEndpoint {
         LOGGER.info("Endpoint: POST /shoppinglist/recipeId={},people={},userName={}", recipeId, numberOfPeople, authentication.getName());
         try {
             return itemStorageMapper.itemsStorageToItemsStorageDto(
-                shoppingListService.planRecipe(recipeId, authentication.getName(), numberOfPeople)); // TODO authentication != null?
+                shoppingListService.planRecipe(recipeId, authentication.getName(), numberOfPeople)); 
         } catch (ValidationException e) {
             LOGGER.error("Error during planRecipe: {}", e.getMessage());
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);

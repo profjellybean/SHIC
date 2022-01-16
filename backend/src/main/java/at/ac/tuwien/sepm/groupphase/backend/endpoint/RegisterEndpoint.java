@@ -68,9 +68,9 @@ public class RegisterEndpoint {
     @Operation(summary = "Get sum of all Bills in this month", security = @SecurityRequirement(name = "apiKey"))
     public Double billSumOfCurrentMonth(Authentication authentication) {
         LOGGER.info("Endpoint: GET /register/monthlysum/{}", authentication);
-        if (authentication == null) {
+        if (authentication == null) { // TODO can auth be null?
             LOGGER.error("You are not logged-in");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You are not logged-in"); // TODO legal?
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You are not logged-in");
         }
         try {
             return registerService.billSumOfCurrentMonth(authentication.getName());
@@ -85,7 +85,7 @@ public class RegisterEndpoint {
     @Operation(summary = "Edit Monthly Budget", security = @SecurityRequirement(name = "apiKey"))
     public Double editMonthlyBudget(Authentication authentication, @Param("budget") Double budget) {
         LOGGER.info("Endpoint: Edit /register/monthlybudget/{}{}", authentication, budget);
-        if (authentication == null) {
+        if (authentication == null) { // TODO can auth be null?
             LOGGER.error("You are not logged-in");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You are not logged-in");
         }
@@ -133,10 +133,6 @@ public class RegisterEndpoint {
     @Operation(summary = "Get bill sum for group", security = @SecurityRequirement(name = "apiKey"))
     public Double billSumGroup(Authentication authentication) {
         LOGGER.info("Endpoint: GET /register/billSumGroup/{}", authentication);
-        if (authentication == null) {
-            LOGGER.error("You are not logged-in");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You are not logged-in"); // TODO legal?
-        }
         try {
             return registerService.billGroupTotal(authentication.getName());
         } catch (NotFoundException e) {
@@ -150,10 +146,6 @@ public class RegisterEndpoint {
     @Operation(summary = "Get bill sum for user", security = @SecurityRequirement(name = "apiKey"))
     public Double billSumUser(Authentication authentication) {
         LOGGER.info("Endpoint: GET /register/billSumUser/{}", authentication);
-        if (authentication == null) {
-            LOGGER.error("You are not logged-in");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You are not logged-in"); // TODO legal?
-        }
         try {
             return registerService.billUserTotal(authentication.getName());
         } catch (NotFoundException e) {

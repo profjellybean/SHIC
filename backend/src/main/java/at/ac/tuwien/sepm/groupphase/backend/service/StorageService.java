@@ -42,6 +42,20 @@ public interface StorageService {
     ItemStorage saveItem(ItemStorage itemStorage, Long groupId);
 
     /**
+     * Saves an item in the storage.
+     * if there is already an Item with the same name, the Items are summed up
+     *
+     * @param itemStorage item to save
+     * @param userName is used to get id of the users current group
+     *
+     * @return the item
+     *
+     * @throws ValidationException if invalid value exists in Item
+     * @throws ServiceException if UnitOfQuantity of an ingredient and the stored Item are not compatible
+     */
+    ItemStorage saveItemByUsername(ItemStorage itemStorage, String userName);
+
+    /**
      * Saves updated existing item in the storage (specified in the item itself).
      *
      * @param itemStorage the item to update
