@@ -34,7 +34,7 @@
   <ng-template #itemEditModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Edit Item</h5>
-      <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('X')" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -83,24 +83,25 @@
           </div>
         </div>
 
+
       </form>
     </div>
     <div class="modal-footer">
+      <button type="button" (click)="editItemForm(itemForm)" (click)="modal.dismiss('close')" id="add-msg" class="btn btn-outline-info float-right">Save Changes</button>
 
-      <button type="button" (click)="editItemForm(itemForm)" (click)="modal.dismiss('close')" id="add-msg" class="btn btn-outline-info btn-sm mr-4">Save Changes</button>
-      <button type="button" class="btn btn-outline-dark btn-sm mr-4" id="close-modal-btn" (click)="modal.dismiss('close')">Close</button>
+      <button type="button" class="btn btn-outline-dark" id="close-modal-btn" (click)="modal.dismiss('close')">Close</button>
     </div>
   </ng-template>
 </div>
 
 <!-- ADD ITEM -->
-<button type="button" class="btn btn-outline-info btn-sm mr-4" (click)="openAddModal(itemAddModal)">Add New Custom Item</button>
+
 <div class="row p-2 mb-4">
 
   <ng-template #itemAddModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Add Item</h5>
-      <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('X')" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -135,8 +136,6 @@
             </small>
           </div>
         </div>
-
-
       </form>
     </div>
     <div class="modal-footer">

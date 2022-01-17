@@ -17,7 +17,7 @@
 <th>Group Budget:</th>
 <br>
 {{register.monthlyBudget}}  €
-<button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openEditBudgetModal(budgetEditModal)">Edit</button>
+<button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="openEditBudgetModal(budgetEditModal)">Edit</button>
 <br>
 <th>Rest Group Budget for this month:</th>
 <br>
@@ -51,9 +51,9 @@
     <td>{{bill.notes}}</td>
     <td>
       <div>
-        <button *ngIf="bill.notPaidNameList.includes(this.user.username)" type="button" style="BACKGROUND-COLOR:green;" class="btn btn-secondary" (click)="confirmPayment(bill.id);">Confirm Payment</button> &nbsp;
-        <button type="button" class="btn btn-secondary" (click)="openBillModal(billEditModal, bill);">Edit Bill</button> &nbsp;
-        <button type="button" style="BACKGROUND-COLOR:darkred;" class="btn btn-secondary" (click)="openAddModal(billDeleteModal); this.billToDelete=bill">Delete</button>
+        <button *ngIf="bill.notPaidNameList.includes(this.user.username)" type="button" class="btn btn-outline-info" (click)="confirmPayment(bill.id);">Confirm Payment</button> &nbsp;
+        <button type="button" class="btn btn-outline-dark" (click)="openBillModal(billEditModal, bill);">Edit Bill</button> &nbsp;
+        <button type="button" class="btn btn-outline-danger" (click)="openAddModal(billDeleteModal); this.billToDelete=bill">Delete</button>
       </div>
     </td>
   </tr>
@@ -78,7 +78,7 @@
   <ng-template #budgetEditModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Budget</h5>
-      <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
+      <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -99,9 +99,9 @@
       </form>
     </div>
     <div class="modal-footer">
-      <button type="button" (click)="editBudgetForm(budgetForm)" id="add-msg" class="btn btn-success float-right">Edit Budget
+      <button type="button" (click)="editBudgetForm(budgetForm)" id="add-msg" class="btn btn-outline-info">Save Changes
       </button>
-      <button type="button" class="btn btn-secondary" id="close-modal-btn" (click)="modal.dismiss('close')">Close
+      <button type="button" class="btn btn-outline-dark" id="close-modal-btn" (click)="modal.dismiss('close')">Close
       </button>
     </div>
   </ng-template>
@@ -111,7 +111,7 @@
   <ng-template #billEditModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Bill</h5>
-      <button type="button" class="close" (click)="modal.dismiss('X')" aria-label="Close">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('X')" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -120,7 +120,7 @@
 
 
         <div class="form-group">
-          <label for="price">Bill sum (in Euros):</label>
+          <label for="price">Bill sum (€):</label>
           <input name="price" class="form-control" id="price" required
                  placeholder="Enter price" [(ngModel)]="billToEdit.sum">
         </div>
@@ -137,8 +137,11 @@
           <textarea rows="3" name="notes" class="form-control" id="billNotes"
                     aria-describedby="notesHelp" placeholder="Enter Notes" [(ngModel)]="billToEdit.notes"></textarea>
         </div>
-        <button type="button" (click)="editBill(billForm)" id="add-msg1" class="btn btn-success float-right">Edit bill</button>
-
+        <div class="modal-footer">
+        <button type="button" (click)="editBill(billForm)" id="add-msg1" class="btn btn-outline-info float-right">Save Changes</button>
+          <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('X')" aria-label="Close" >Close
+          </button>
+      </div>
       </form>
     </div>
   </ng-template>
@@ -148,7 +151,7 @@
 <ng-template #billDeleteModal let-modal>
   <div class="modal-header">
     <h5 class="modal-title">Alert</h5>
-    <button type="button" class="close" (click)="modal.dismiss('X')" aria-label="Close">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('X')" aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
@@ -156,8 +159,9 @@
   <div class="modal-body">
     <div>
       <p>Do you really want to delete this bill?</p>
-      <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="deleteBillById(); modal.dismiss('X')">delete bill</button>
-    </div>
+      <div class="modal-footer">
+      <button type="button" class="btn btn-outline-danger" (click)="deleteBillById(); modal.dismiss('X')">Delete Bill</button>
+    </div></div>
   </div>
 </ng-template>
 

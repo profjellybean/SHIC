@@ -25,6 +25,7 @@ import {NgSelectModule} from '@ng-select/ng-select';
 import { StatisticComponent } from './components/statistic/statistic.component';
 import { LocationTagComponent } from './components/location-tag/location-tag.component';
 import { NotificationsComponent } from './components/notifications/notifications.component';
+import { UnitOfQuantityComponent } from './components/unit-of-quantity/unit-of-quantity.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { NotificationsComponent } from './components/notifications/notifications
     NotificationsComponent,
     StatisticComponent,
     LocationTagComponent,
+    UnitOfQuantityComponent,
   ],
   imports: [
     BrowserModule,
