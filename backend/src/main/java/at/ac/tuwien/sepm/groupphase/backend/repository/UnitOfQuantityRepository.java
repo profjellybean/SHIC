@@ -13,6 +13,8 @@ public interface UnitOfQuantityRepository extends JpaRepository<UnitOfQuantity, 
 
     List<UnitOfQuantity> findAll();
 
+    List<UnitOfQuantity> findAllByGroupIdOrGroupIdIsNull(Long groupId);
+
     @Override
     void deleteAll();
 }

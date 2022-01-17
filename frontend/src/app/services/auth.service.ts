@@ -45,7 +45,6 @@ export class AuthService {
     console.log('Logout');
     localStorage.removeItem('authToken');
     this.user = undefined;
-    this.hasGroup = 0;
   }
 
   getToken() {
@@ -69,18 +68,18 @@ export class AuthService {
   }
 
   hasCurrentGroup() {
-   // return true; // TODO bin fast ausgerastet wegen den ganzen Log meldungen
-    if (this.hasGroup === 0) {
+
+    if(this.hasGroup === 0) {
       if (this.isLoggedIn()) {
         if (this.user === undefined) {
           // @ts-ignore
           this.userService.getCurrentUser({username: jwt_decode(this.getToken()).sub.trim()}).subscribe({
             next: data => {
-              console.log('received items20', data);
+              console.log('received items', data);
               this.user = data;
-              if (this.user.currGroup !== null) {
+              if(this.user.currGroup !== null){
                 this.hasGroup = 1;
-              } else {
+              } else{
                 this.hasGroup = -1;
               }
               return this.user.currGroup !== null;
@@ -95,12 +94,12 @@ export class AuthService {
       } else {
         return false;
       }
-    } else {
+    } else{
       return this.hasGroup === 1;
     }
   }
 
-  private setToken(authResponse: string) {
+  public setToken(authResponse: string) {
     localStorage.setItem('authToken', authResponse);
   }
 

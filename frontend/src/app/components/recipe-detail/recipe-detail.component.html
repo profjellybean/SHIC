@@ -12,12 +12,13 @@
     <strong>Details</strong>
   </div>
   <div class="card-body">
-    <p class="card-text">Details of recipe: <strong>{{recipe.id}}</strong></p>
-    <p class="card-text"><strong>{{recipe.name}}</strong></p>
+    <p class="card-text">Details of recipe: <strong>{{recipe.id}}</strong> </p>
+    <h2><strong>{{recipe.name}}</strong></h2>
+    <p class="card-text"> for <input type="number" min="1" [(ngModel)]="numberOfPeople"/> people </p>
     <p class="card-text"><strong>Description:</strong> {{recipe.description}}</p>
     <p class="card-text"><strong>Ingredients:</strong> </p>
     <div class="col-xl-3 col-lg-4 p-2" *ngFor="let ingredient of recipe.ingredients">
-      <p >{{ingredient.name}} {{ingredient.amount}} {{ingredient.quantity.name}}</p>
+      <p >{{ingredient.name}} {{ingredient.amount * numberOfPeople}} {{ingredient.quantity.name}}</p>
 
     </div>
     <p class="card-text"><strong>Categories:</strong> </p>
@@ -28,19 +29,19 @@
   </div>
 </div>
 <br>
-<button class = "btn btn-secondary btn-sm mr-4" [routerLink]="['/recipe']">Back</button> &nbsp;
+<button class = "btn btn-outline-dark btn-sm mr-4" [routerLink]="['/recipe']">Back</button> &nbsp;
 
-<button class = "btn btn-secondary btn-sm mr-4" (click)="planRecipe()">Plan Recipe</button>
+<button class = "btn btn-outline-dark btn-sm mr-4" (click)="planRecipe()">Plan Recipe</button> &nbsp;
 
-<button class = "btn btn-secondary btn-sm mr-4" (click)="putRecipeOnShoppingList()">Put all Ingredients to
-  Shopping-List</button>
+<button class = "btn btn-outline-dark btn-sm mr-4"  (click)="putRecipeOnShoppingList()">Put all Ingredients to
+  Shopping-List</button> &nbsp;
 
-<button *ngIf="recipe.groupId !== null" class = "btn btn-secondary btn-sm mr-4" (click)="setRecipeToUpdate(recipe); openAddModal(recipeAddModal)">Edit Recipe</button>
+<button *ngIf="recipe.groupId !== null" class = "btn btn-outline-dark btn-sm mr-4"  (click)="setRecipeToUpdate(recipe); openAddModal(recipeAddModal)">Edit Recipe</button>
 <div class="row p-2 mb-4">
   <ng-template #recipeAddModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Recipe</h5>
-      <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
+      <button type="button" class = "btn btn-outline-dark btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -75,7 +76,7 @@
             <ul *ngFor="let item of this.recipeToUpdate.ingredients">
               <li>
                 {{item.name}}&nbsp;{{item.amount}}&nbsp;{{item.quantity.name}}
-                <button class = "btn btn-secondary btn-sm mr-4" (click)="removeItem(item)">Remove</button>
+                <button class = "btn btn-outline-danger btn-sm mr-4" (click)="removeItem(item)">Remove</button>
               </li>
             </ul>
           </div>
@@ -94,7 +95,7 @@
           <input *ngIf="tempIngredient!==undefined" [(ngModel)]="this.tempIngredient.amount"
                  placeholder="Enter amount in {{this.tempIngredient.quantity.name}}" name="inputItemQuantity">&nbsp;
           <button *ngIf="tempIngredient!==undefined && tempIngredient.amount > 0" (click)="addTempIngredient()"
-                  class="btn btn-secondary">Add item to recipe
+                  class = "btn btn-outline-info btn-sm mr-4">Add item to recipe
           </button>&nbsp;
           <div *ngIf="error" class="error">
             <small class="form-text text-warning">Ingredients are required!
@@ -129,10 +130,9 @@
       </form>
     </div>
     <div class="modal-footer">
-      <button type="button" (click)="updateRecipeForm(recipeForm); modal.dismiss()" id="add-msg" class="btn btn-success float-right">Update
-        recipe
+      <button type="button" (click)="updateRecipeForm(recipeForm); modal.dismiss()" id="add-msg" class = "btn btn-outline-info btn-sm mr-4">Save Changes
       </button>
-      <button type="button" class="btn btn-secondary" id="close-modal-btn" (click)="modal.dismiss('close')">Close
+      <button type="button" class = "btn btn-outline-dark btn-sm mr-4" id="close-modal-btn" (click)="modal.dismiss('close')">Close
       </button>
     </div>
   </ng-template>

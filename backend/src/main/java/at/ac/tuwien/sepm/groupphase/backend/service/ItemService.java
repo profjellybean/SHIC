@@ -4,6 +4,8 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Item;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitsRelation;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 
 import java.util.List;
 
@@ -31,15 +33,19 @@ public interface ItemService {
      * @param groupId id of the group
      *
      * @return list of said items
+     *
+     * @throws ValidationException if groupId is null
      */
     List<Item> getAllItemsForGroup(Long groupId);
 
     /**
      * find all items by specified groupId.
      *
-     * @param groupId the id
+     * @param groupId id of the group
      *
      * @return all items with specified groupId
+     *
+     * @throws ValidationException if groupId is null
      */
     List<Item> findAllByGroupId(Long groupId);
 
@@ -84,9 +90,14 @@ public interface ItemService {
 
     /**
      * checks if a blueprint of this Item already exists for the group in table ITEM.
-     * If not it adds a blueprint to the table.
+     * If not it adds a blueprint to the table for the group.
      *
+     * @param groupId id of the group
      * @param itemStorage item to check
+     *
+     * @return item that was checked
+     *
+     * @throws ValidationException if invalid value exists in item
      */
     ItemStorage checkForBluePrintForGroup(ItemStorage itemStorage, Long groupId);
 
@@ -97,6 +108,8 @@ public interface ItemService {
      * @param item that replaces stored item.
      *
      * @return edited item.
+     *
+     * @throws ValidationException if invalid value exists in item
      */
     Item editCustomItem(Item item);
 
@@ -107,6 +120,17 @@ public interface ItemService {
      * @param item that is saved.
      *
      * @return saved item.
+     *
+     * @throws ValidationException if invalid value exists in item
      */
     Item addCustomItem(Item item);
+
+    /**
+     * Finds all UnitsOfQuantity in database for specific Group with those without group.
+     *
+     * @param groupId that is saved.
+     *
+     * @return unitsOfQuantities
+     */
+    List<UnitOfQuantity> getAllForGroup(Long groupId);
 }

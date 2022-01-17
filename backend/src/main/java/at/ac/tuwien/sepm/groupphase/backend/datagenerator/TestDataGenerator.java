@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemStorageDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegistrationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ItemStorageMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserLoginMapper;
@@ -9,6 +10,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Register;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Storage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 import at.ac.tuwien.sepm.groupphase.backend.repository.BillRepository;
@@ -16,6 +18,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.RegisterRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitOfQuantityRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserGroupRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
@@ -28,6 +31,7 @@ import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -66,15 +70,17 @@ public class TestDataGenerator {
     RecipeRepository recipeRepository;
     @Autowired
     ShoppingListRepository shoppingListRepository;
+    @Autowired
+    StorageRepository storageRepository;
 
     public TestDataGenerator(RecipeDataGenerator recipeDataGenerator,
-                               ShoppingListDataGenerator shoppingListDataGenerator,
-                               StorageDataGenerator storageDataGenerator,
-                               UserDataGenerator userDataGenerator,
-                               ItemStorageDataGenerator itemStorageDataGenerator,
-                               UnitOfQuantityDataGenerator unitOfQuantityDataGenerator,
-                               UnitOfQuantityRepository unitOfQuantityRepository,
-                               ItemDataGenerator itemDataGenerator) {
+                             ShoppingListDataGenerator shoppingListDataGenerator,
+                             StorageDataGenerator storageDataGenerator,
+                             UserDataGenerator userDataGenerator,
+                             ItemStorageDataGenerator itemStorageDataGenerator,
+                             UnitOfQuantityDataGenerator unitOfQuantityDataGenerator,
+                             UnitOfQuantityRepository unitOfQuantityRepository,
+                             ItemDataGenerator itemDataGenerator) {
         this.recipeDataGenerator = recipeDataGenerator;
         this.shoppingListDataGenerator = shoppingListDataGenerator;
         this.storageDataGenerator = storageDataGenerator;
@@ -95,7 +101,7 @@ public class TestDataGenerator {
 
         ShoppingList shoppingList = new ShoppingList();
         shoppingList = shoppingListRepository.save(shoppingList);
-        UserGroup testGroup = new UserGroup(-1L, shoppingList.getId(), null, new HashSet<ApplicationUser>());
+        UserGroup testGroup = new UserGroup(-1L, shoppingList.getId(), null, new HashSet<ApplicationUser>(), null);
         testGroup = userGroupRepository.saveAndFlush(testGroup);
 
         ApplicationUser testApplicationUser = userLoginMapper.dtoToEntity(testUser, null);
@@ -178,7 +184,7 @@ public class TestDataGenerator {
 
         UserRegistrationDto testUser = new UserRegistrationDto("testUser", "password", "test.user@email.com");
 
-        UserGroup testGroup = new UserGroup(null, null, -1L, new HashSet<ApplicationUser>());
+        UserGroup testGroup = new UserGroup(null, null, -1L, new HashSet<ApplicationUser>(), null);
         testGroup = userGroupRepository.saveAndFlush(testGroup);
 
         ApplicationUser testApplicationUser = userLoginMapper.dtoToEntity(testUser, null);
@@ -202,7 +208,7 @@ public class TestDataGenerator {
 
         UserRegistrationDto testUser = new UserRegistrationDto("testUser", "password", "test.user@email.com");
 
-        UserGroup testGroup = new UserGroup(null, null, -1L, new HashSet<ApplicationUser>());
+        UserGroup testGroup = new UserGroup(null, null, -1L, new HashSet<ApplicationUser>(), null);
         testGroup = userGroupRepository.saveAndFlush(testGroup);
 
         ApplicationUser testApplicationUser = userLoginMapper.dtoToEntity(testUser, null);
@@ -231,7 +237,7 @@ public class TestDataGenerator {
         Register register = new Register(-1L, null, 0.0, 200.0);
         register = registerRepository.saveAndFlush(register);
 
-        UserGroup testGroup = new UserGroup(null, null, register.getId(), new HashSet<ApplicationUser>());
+        UserGroup testGroup = new UserGroup(null, null, register.getId(), new HashSet<ApplicationUser>(), null);
         testGroup = userGroupRepository.saveAndFlush(testGroup);
 
         ApplicationUser testApplicationUser = userLoginMapper.dtoToEntity(testUser, null);
@@ -251,7 +257,7 @@ public class TestDataGenerator {
 
         UserRegistrationDto testUser = new UserRegistrationDto("testUser", "password", "test.user@email.com");
 
-        UserGroup testGroup = new UserGroup(null, null, null, new HashSet<ApplicationUser>());
+        UserGroup testGroup = new UserGroup(null, null, null, new HashSet<ApplicationUser>(), "TestGroup");
         testGroup = userGroupRepository.saveAndFlush(testGroup);
 
         ApplicationUser testApplicationUser = userLoginMapper.dtoToEntity(testUser, null);
@@ -262,6 +268,171 @@ public class TestDataGenerator {
         users.add(testApplicationUser);
         testGroup.setUser(users);
         userGroupRepository.saveAndFlush(testGroup);
+    }
+
+    public void generateData_generateUser_withGroup() {
+        LOGGER.debug("Generating User with Group");
+
+        Storage storage = new Storage();
+        storage = storageRepository.saveAndFlush(storage);
+        ShoppingList shoppingList = new ShoppingList();
+        shoppingList = shoppingListRepository.saveAndFlush(shoppingList);
+        Register register = new Register();
+        register = registerRepository.saveAndFlush(register);
+
+        UserRegistrationDto testUser = new UserRegistrationDto("testUser", "password", "test.user@email.com");
+        UserGroup testGroup = new UserGroup(-1L, shoppingList.getId(), register.getId(), new HashSet<ApplicationUser>(), null);
+        testGroup = userGroupRepository.saveAndFlush(testGroup);
+
+        ApplicationUser testApplicationUser = userLoginMapper.dtoToEntity(testUser, null);
+        testApplicationUser.setCurrGroup(testGroup);
+        userRepository.saveAndFlush(testApplicationUser);
+
+        /*
+        Set<ApplicationUser> users = testGroup.getUser();
+        users.add(testApplicationUser);
+        testGroup.setUser(users);
+        userGroupRepository.saveAndFlush(testGroup);
+
+         */
+    }
+
+    public List<Long> generateData_workOffShoppingList_successfully() {
+        UserRegistrationDto testUser = new UserRegistrationDto("testUser", "password", "test.user@email.com");
+
+        ShoppingList shoppingList = new ShoppingList();
+        shoppingList = shoppingListRepository.save(shoppingList);
+        UserGroup testGroup = new UserGroup(-1L, shoppingList.getId(), null, new HashSet<ApplicationUser>(), null);
+        testGroup = userGroupRepository.saveAndFlush(testGroup);
+
+        ApplicationUser testApplicationUser = userLoginMapper.dtoToEntity(testUser, null);
+        testApplicationUser.setCurrGroup(testGroup);
+        userRepository.saveAndFlush(testApplicationUser);
+
+        shoppingList.setName("Test");
+        shoppingList.setOwner(testApplicationUser);
+        shoppingList.setNotes("test notes");
+        shoppingList = shoppingListRepository.saveAndFlush(shoppingList);
+
+        ItemStorage mushrooms = new ItemStorage("Mushrooms", null, null, null, 200,
+            null, null, null, shoppingList.getId());
+        itemStorageRepository.save(mushrooms);
+        ItemStorage pasta = new ItemStorage("Pasta", null, null, null, 500,
+            null, null, null, shoppingList.getId());
+        itemStorageRepository.save(pasta);
+
+        Set<ItemStorage> itemList = new HashSet<>();
+        itemList.add(mushrooms);
+        itemList.add(pasta);
+
+        shoppingList.setItems(itemList);
+        shoppingListRepository.saveAndFlush(shoppingList);
+
+        List<Long> idList = new LinkedList<>();
+        idList.add(shoppingList.getId());
+        idList.add(mushrooms.getId());
+        idList.add(pasta.getId());
+
+        return idList;
+    }
+
+    public Long generateData_workOffShoppingList_withoutItems() {
+        UserRegistrationDto testUser = new UserRegistrationDto("testUser", "password", "test.user@email.com");
+
+        ShoppingList shoppingList = new ShoppingList();
+        shoppingList = shoppingListRepository.save(shoppingList);
+        UserGroup testGroup = new UserGroup(-1L, shoppingList.getId(), null, new HashSet<ApplicationUser>(), null);
+        testGroup = userGroupRepository.saveAndFlush(testGroup);
+
+        ApplicationUser testApplicationUser = userLoginMapper.dtoToEntity(testUser, null);
+        testApplicationUser.setCurrGroup(testGroup);
+        userRepository.saveAndFlush(testApplicationUser);
+
+        shoppingList.setName("Test");
+        shoppingList.setOwner(testApplicationUser);
+        shoppingList.setNotes("test notes");
+        shoppingList = shoppingListRepository.saveAndFlush(shoppingList);
+
+        return shoppingList.getId();
+    }
+
+    public List<Long> generateData_changeAmountOfItemOnPublicShoppingList_WithValidItem() {
+        UserRegistrationDto testUser = new UserRegistrationDto("testUser", "password", "test.user@email.com");
+
+        ShoppingList shoppingList = new ShoppingList();
+        shoppingList = shoppingListRepository.save(shoppingList);
+        UserGroup testGroup = new UserGroup(-1L, shoppingList.getId(), null, new HashSet<ApplicationUser>(), null);
+        testGroup = userGroupRepository.saveAndFlush(testGroup);
+
+        ApplicationUser testApplicationUser = userLoginMapper.dtoToEntity(testUser, null);
+        testApplicationUser.setCurrGroup(testGroup);
+        userRepository.saveAndFlush(testApplicationUser);
+
+        shoppingList.setName("Test");
+        shoppingList.setOwner(testApplicationUser);
+        shoppingList.setNotes("test notes");
+        shoppingList = shoppingListRepository.saveAndFlush(shoppingList);
+
+        ItemStorage mushrooms = new ItemStorage("Mushrooms", null, null, null, 200,
+            null, null, null, shoppingList.getId());
+        itemStorageRepository.save(mushrooms);
+        ItemStorage pasta = new ItemStorage("Pasta", null, null, null, 500,
+            null, null, null, shoppingList.getId());
+        itemStorageRepository.save(pasta);
+
+        Set<ItemStorage> itemList = new HashSet<>();
+        itemList.add(mushrooms);
+        itemList.add(pasta);
+
+        shoppingList.setItems(itemList);
+        shoppingListRepository.saveAndFlush(shoppingList);
+
+        List<Long> idList = new LinkedList<>();
+        idList.add(shoppingList.getId());
+        idList.add(mushrooms.getId());
+
+        return idList;
+    }
+
+    public List<Long> generateData_changeAmountOfItemOnPrivateShoppingList_WithValidItem() {
+        ShoppingList shoppingList = new ShoppingList();
+        shoppingList = shoppingListRepository.save(shoppingList);
+        UserRegistrationDto testUser = new UserRegistrationDto("testUser", "password", "test.user@email.com");
+        UserGroup testGroup = new UserGroup(-1L, shoppingList.getId(), null, new HashSet<ApplicationUser>(), null);
+        testGroup = userGroupRepository.saveAndFlush(testGroup);
+
+        ShoppingList privateShoppingList = new ShoppingList();
+        privateShoppingList = shoppingListRepository.save(privateShoppingList);
+
+        ApplicationUser testApplicationUser = userLoginMapper.dtoToEntity(testUser, null);
+        testApplicationUser.setCurrGroup(testGroup);
+        testApplicationUser.setPrivList(privateShoppingList.getId());
+        userRepository.saveAndFlush(testApplicationUser);
+
+        privateShoppingList.setName("Test");
+        privateShoppingList.setOwner(testApplicationUser);
+        privateShoppingList.setNotes("test notes");
+        privateShoppingList = shoppingListRepository.saveAndFlush(privateShoppingList);
+
+        ItemStorage mushrooms = new ItemStorage("Mushrooms", null, null, null, 200,
+            null, null, null, privateShoppingList.getId());
+        itemStorageRepository.save(mushrooms);
+        ItemStorage pasta = new ItemStorage("Pasta", null, null, null, 500,
+            null, null, null, privateShoppingList.getId());
+        itemStorageRepository.save(pasta);
+
+        Set<ItemStorage> itemList = new HashSet<>();
+        itemList.add(mushrooms);
+        itemList.add(pasta);
+
+        privateShoppingList.setItems(itemList);
+        shoppingListRepository.saveAndFlush(privateShoppingList);
+
+        List<Long> idList = new LinkedList<>();
+        idList.add(privateShoppingList.getId());
+        idList.add(mushrooms.getId());
+
+        return idList;
     }
 
     /**
@@ -295,5 +466,6 @@ public class TestDataGenerator {
         Recipe recipe = new Recipe(-1L, "testRecipe", "recipe for tests", ingredients, null, null);
         recipeRepository.saveAndFlush(recipe);
     }
+
 
 }

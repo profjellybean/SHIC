@@ -2,7 +2,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {HeaderComponent} from './components/header/header.component';
@@ -18,12 +18,14 @@ import {StorageComponent} from './components/storage/storage.component';
 import {RegisterComponent} from './components/register/register.component';
 import {RegisterUserComponent} from './components/registerUser/registerUser.component';
 import { RecipeDetailComponent } from './components/recipe-detail/recipe-detail.component';
-import { ShoppingListAddComponent } from './components/shopping-list-add/shopping-list-add.component';
-import { ShoppingListListComponent } from './components/shopping-list-list/shopping-list-list.component';
 import { StorageAddItemComponent } from './components/storage-add-item/storage-add-item.component';
 import { UserComponent } from './components/user/user.component';
 import { ConfirmUserEmailComponent } from './components/confirm-user-email/confirm-user-email.component';
 import {NgSelectModule} from '@ng-select/ng-select';
+import { StatisticComponent } from './components/statistic/statistic.component';
+import { LocationTagComponent } from './components/location-tag/location-tag.component';
+import { NotificationsComponent } from './components/notifications/notifications.component';
+import { UnitOfQuantityComponent } from './components/unit-of-quantity/unit-of-quantity.component';
 
 @NgModule({
   declarations: [
@@ -42,9 +44,11 @@ import {NgSelectModule} from '@ng-select/ng-select';
     ConfirmUserEmailComponent,
     StorageAddItemComponent,
     UserComponent,
-    ShoppingListAddComponent,
-    ShoppingListListComponent,
     StorageAddItemComponent,
+    NotificationsComponent,
+    StatisticComponent,
+    LocationTagComponent,
+    UnitOfQuantityComponent,
   ],
   imports: [
     BrowserModule,
@@ -54,6 +58,7 @@ import {NgSelectModule} from '@ng-select/ng-select';
     NgbModule,
     FormsModule,
     NgSelectModule,
+    BrowserAnimationsModule,
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

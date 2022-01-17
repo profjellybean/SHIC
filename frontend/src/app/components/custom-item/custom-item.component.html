@@ -4,7 +4,7 @@
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
-<p></p>
+<br>
 <h1>Custom Items</h1>
 <p></p>
 <table class="table table-striped">
@@ -22,7 +22,7 @@
     <td>
       <div *ngIf="item.quantity !== null">{{item.quantity.name}}</div></td>
     <td>
-      <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openEditModal(itemEditModal, item)">Edit</button>
+      <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="openEditModal(itemEditModal, item)">Edit</button>
     </td>
   </tr>
   </tbody>
@@ -34,7 +34,7 @@
   <ng-template #itemEditModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Edit Item</h5>
-      <button type="button" class="close" (click)="modal.dismiss('X')" aria-label="Close">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('X')" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -83,24 +83,25 @@
           </div>
         </div>
 
-        <button type="button" (click)="editItemForm(itemForm)" (click)="modal.dismiss('close')" id="add-msg" class="btn btn-success float-right">Edit Item</button>
 
       </form>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" id="close-modal-btn" (click)="modal.dismiss('close')">Close</button>
+      <button type="button" (click)="editItemForm(itemForm)" (click)="modal.dismiss('close')" id="add-msg" class="btn btn-outline-info float-right">Save Changes</button>
+
+      <button type="button" class="btn btn-outline-dark" id="close-modal-btn" (click)="modal.dismiss('close')">Close</button>
     </div>
   </ng-template>
 </div>
 
 <!-- ADD ITEM -->
-<button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(itemAddModal)">Add New Custom Item</button>
+
 <div class="row p-2 mb-4">
 
   <ng-template #itemAddModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Add Item</h5>
-      <button type="button" class="close" (click)="modal.dismiss('X')" aria-label="Close">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('X')" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -135,13 +136,33 @@
             </small>
           </div>
         </div>
-
-        <button type="button" (click)="addItemForm(itemForm)" (click)="modal.dismiss('close')" id="add-msg2" class="btn btn-success float-right">Add Item</button>
-
       </form>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" id="close-modal-btn2" (click)="modal.dismiss('close')">Close</button>
+      <button type="button" (click)="addItemForm(itemForm)" (click)="modal.dismiss('close')" id="add-msg2" class="btn btn-outline-info float-right">Add Item</button>
+      <button type="button" class="btn btn-outline-dark" id="close-modal-btn2" (click)="modal.dismiss('close')">Close</button>
     </div>
   </ng-template>
 </div>
+<h1>Units Of Quantity</h1>
+<table class="table table-striped">
+  <thead class="thead-dark">
+  <tr>
+    <th>Name</th>
+    <th></th>
+  </tr>
+  </thead>
+  <tbody>
+
+  <tr *ngFor="let item of unitsOfQuantity">
+    <td>{{item.name}}</td>
+  </tr>
+  </tbody>
+</table>
+<div>
+  <input #name (keyup)="name.value = this.helpUnityOfQuantity" [(ngModel)]="helpUnityOfQuantity" placeholder="UnityOfQuantity name">
+  <button type="button" class="btn btn-secondary" (click)="this.addUnityOfQuantity()">Add Unity of Quantity</button>
+</div>
+<span></span>
+
+

@@ -98,7 +98,9 @@ public class RegisterDataGenerator {
             Register savedRegister = registerRepository.saveAndFlush(register);
 
 
-            /*
+
+
+
             //bills
             Bill bill2 = Bill.BillBuilder.aBill()
                 .withRegisterId(savedRegister.getId())
@@ -111,9 +113,10 @@ public class RegisterDataGenerator {
                 .withDate(DATE)
                 .build();
             Bill savedBill2 = billRepository.saveAndFlush(bill2);
+            TEST_BILLS.add(savedBill2);
+            savedRegister.setBills(TEST_BILLS);
             savedRegister = registerRepository.saveAndFlush(savedRegister);
 
-            savedRegister = registerRepository.saveAndFlush(savedRegister);
 
 
             //items
@@ -170,7 +173,7 @@ public class RegisterDataGenerator {
             savedBill2 = billRepository.saveAndFlush(savedBill2);
             savedRegister = registerRepository.saveAndFlush(savedRegister);
 
-            List<Bill> billList = billRepository.findAll();
+            billList = billRepository.findAll();
             Bill finalSavedBill2 = savedBill2;
             HashSet<Bill> billSet = new HashSet<Bill>();
             billSet.add(finalSavedBill2);
@@ -179,7 +182,9 @@ public class RegisterDataGenerator {
 
             registerRepository.saveAndFlush(savedRegister);
 
-            */
+             */
+
+
 
         }
     }

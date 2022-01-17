@@ -13,6 +13,8 @@ import jwt_decode from 'jwt-decode';
 import {AuthService} from '../../services/auth.service';
 import {BillService} from '../../services/bill.service';
 import {BillDto} from '../../dtos/billDto';
+import {LocationTagService} from '../../services/location-tag.service';
+import {LocationTag} from '../../dtos/locationTag';
 
 @Component({
   selector: 'app-shopping-list',
@@ -29,7 +31,8 @@ export class ShoppingListComponent implements OnInit {
     email: null,
     currGroup: null,
     username: null,
-    privList: null
+    privList: null,
+    image: null
   };
 
   billToAdd: BillDto = new BillDto();
@@ -53,7 +56,8 @@ export class ShoppingListComponent implements OnInit {
     id: null,
     currGroup: null,
     privList: null,
-    email: null
+    email: null,
+    image: null
   };
   groupId: number;
   constructor(private shoppingListService: ShoppingListService,
@@ -63,7 +67,8 @@ export class ShoppingListComponent implements OnInit {
               private groupService: GroupService,
               private userService: UserService,
               private authService: AuthService,
-              private billService: BillService) {
+              private billService: BillService,
+              ) {
   }
 
   ngOnInit(): void {
@@ -75,6 +80,7 @@ export class ShoppingListComponent implements OnInit {
     this.loadGroupShoppingListId();
     this.getPrivateShoppingList();
     this.getPublicShoppingList();
+
   }
 
   getCurrentGroup(){
@@ -96,13 +102,13 @@ export class ShoppingListComponent implements OnInit {
       next: data => {
         console.log('received items', data);
         this.allUsers = data;
-        //this.billToAdd.names = data;
       },
       error: error => {
         console.error(error.message);
       }
     });
   }
+
 
   switchMode(publicMode: boolean){
     this.isInPublic = publicMode;

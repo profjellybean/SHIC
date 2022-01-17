@@ -24,6 +24,8 @@ export class CustomItemComponent implements OnInit {
   itemToAdd: Item = this.nullItem;
   items: Item[] = null;
   unitsOfQuantity: UnitOfQuantity[];
+  helpUnityOfQuantity: string;
+  unitOfQuantity: UnitOfQuantity= {id: null, name: null};
 
   testQuantity: UnitOfQuantity = {id: 5, name: 'pieces'};
   testItemToEdit: Item = {image:null, id: 1, storageId: null, name: 'Edited Avocado 2',
@@ -65,6 +67,20 @@ export class CustomItemComponent implements OnInit {
           console.log(err);
           this.defaultServiceErrorHandling(err);
         }
+    });
+  }
+
+  addUnityOfQuantity(){
+    this.itemService.createUnitOfQuantity(this.helpUnityOfQuantity).subscribe({
+      next: data => {
+        this.unitOfQuantity.name=this.helpUnityOfQuantity;
+        this.unitsOfQuantity.push(this.unitOfQuantity);
+        this.helpUnityOfQuantity='';
+      },
+      error: err => {
+        console.log(err);
+        this.defaultServiceErrorHandling(err);
+      }
     });
   }
 
@@ -131,6 +147,7 @@ export class CustomItemComponent implements OnInit {
     this.itemToEdit = this.nullItem;
     this.itemToAdd = this.nullItem;
     this.submitted = false;
+
   }
 
   private defaultServiceErrorHandling(error: any) {

@@ -58,9 +58,25 @@ public class ItemEndpoint {
     @PostMapping(value = "/unitOfQuantity")
     @PermitAll
     @Operation(summary = "create new Unit of Quantity")
-    public UnitOfQuantityDto createUnitOfQuantity(@Param("name") String name) {
+    public UnitOfQuantityDto createUnitOfQuantity(Authentication authentication, @Param("name") String name) {
         LOGGER.info("POST /unitOfQuantity: {}", name);
-        return unitOfQuantityMapper.unitOfQuantityToUnitOfQuantityDto(itemService.addUnitOfQuantity(unitOfQuantityMapper.unitOfQuantityDtoToUnitOfQuantity(new UnitOfQuantityDto(name.trim().equals("") ? null : name))));
+        if (name == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "name must not be empty");
+        }
+        if (name.trim().equals("")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "name must not be empty");
+        }
+        Long groupId = null;
+        if (authentication != null) {
+            groupId = userService.getGroupIdByUsername(authentication.getName());
+        }
+        try {
+            return unitOfQuantityMapper.unitOfQuantityToUnitOfQuantityDto(itemService.addUnitOfQuantity(unitOfQuantityMapper.unitOfQuantityDtoToUnitOfQuantity(new UnitOfQuantityDto(name, groupId))));
+
+        } catch (ValidationException e) {
+            LOGGER.error("Error while creating UnitOfQuantity: {}", e.getMessage());
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
+        }
 
     }
 
@@ -98,6 +114,23 @@ public class ItemEndpoint {
         return unitOfQuantityMapper.unitsOfQuantityToUnitsOfQuantityDto(itemService.getAll());
     }
 
+    @GetMapping(value = "/unitOfQuantity/forGroup")
+    @PermitAll
+    @Operation(summary = "Get all Units of quantity")
+    public List<UnitOfQuantityDto> getAllByGroupId(Authentication authentication) {
+        LOGGER.info("getAllunitOfQuantity, itemEndpoint");
+        Long groupId = null;
+        if (authentication != null) {
+            groupId = userService.getGroupIdByUsername(authentication.getName()); // TODO legal?
+        }
+        try {
+            return unitOfQuantityMapper.unitsOfQuantityToUnitsOfQuantityDto(itemService.getAllForGroup(groupId));
+        } catch (ValidationException e) {
+            LOGGER.error("Error while getting all Items for Group: {}", e.getMessage());
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
+        }
+    }
+
     @GetMapping(value = "/unitOfQuantity/byId")
     @PermitAll
     @Operation(summary = "Get all Units of quantity")
@@ -124,70 +157,71 @@ public class ItemEndpoint {
 
     @GetMapping("/groupItems")
     @Secured("ROLE_USER")
-    //@PermitAll // TODO add security
     @Operation(summary = "Get all available Items for specific Group")
     List<ItemDto> getAllItemsForGroup(Authentication authentication) {
         LOGGER.info("Endpoint: getAllItemsForGroup {}", authentication);
         Long groupId = null;
         if (authentication != null) {
-            groupId = userService.getGroupIdByUsername(authentication.getName());
+            groupId = userService.getGroupIdByUsername(authentication.getName()); // TODO legal?
         }
-        return itemMapper.itemsToItemDtos(itemService.getAllItemsForGroup(groupId));
+        try {
+            return itemMapper.itemsToItemDtos(itemService.getAllItemsForGroup(groupId));
+        } catch (ValidationException e) {
+            LOGGER.error("Error while getting all Items for Group: {}", e.getMessage());
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
+        }
     }
 
     @GetMapping("/groupItemsByGroupId")
-    //@Secured("ROLE_USER")
-    @PermitAll // TODO add security
+    @Secured("ROLE_USER")
     @Operation(summary = "Get all Items for specific Group by GroupId")
     List<ItemDto> getAllItemsByGroupId(Authentication authentication) {
         LOGGER.info("Endpoint: getAllItemsByGroupId {}", authentication);
         Long groupId = null;
         if (authentication != null) {
-            groupId = userService.getGroupIdByUsername(authentication.getName());
+            groupId = userService.getGroupIdByUsername(authentication.getName()); // TODO legal?
         }
         try {
             return itemMapper.itemsToItemDtos(itemService.findAllByGroupId(groupId));
         } catch (ValidationException e) {
-            LOGGER.error("Error while getting Items for Group", e);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+            LOGGER.error("Error while getting all Items for Group by groupId: {}", e.getMessage());
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
         }
     }
 
     @PutMapping("/groupItems")
-    //@Secured("ROLE_USER")
-    @PermitAll // TODO add security
+    @Secured("ROLE_USER")
     @Operation(summary = "Edit Item of a specific Group")
     ItemDto editCustomItem(Authentication authentication, @RequestBody ItemDto item) {
         LOGGER.info("Endpoint: editCustomItem {}{}", item, authentication);
 
         if (authentication != null) {
-            Long groupId = userService.getGroupIdByUsername(authentication.getName());
+            Long groupId = userService.getGroupIdByUsername(authentication.getName()); // TODO legal?
             item.setGroupId(groupId);
         }
         try {
             return itemMapper.itemToItemDto(itemService.editCustomItem(itemMapper.itemDtoToItem(item)));
         } catch (ValidationException e) {
-            LOGGER.error("Error while editing custom Item for Group", e);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+            LOGGER.error("Error while editing custom Item for Group: {}", e.getMessage());
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
         }
     }
 
     @PostMapping("/groupItems")
-    //@Secured("ROLE_USER")
-    @PermitAll // TODO add security
-    @Operation(summary = "Edit Item of a specific Group")
+    @Secured("ROLE_USER")
+    @Operation(summary = "Add Item to Groups custom Items")
     ItemDto addCustomItem(Authentication authentication, @RequestBody ItemDto item) {
         LOGGER.info("Endpoint: addCustomItem {}{}", item, authentication);
 
         if (authentication != null) {
-            Long groupId = userService.getGroupIdByUsername(authentication.getName());
+            Long groupId = userService.getGroupIdByUsername(authentication.getName()); // TODO legal?
             item.setGroupId(groupId);
         }
         try {
             return itemMapper.itemToItemDto(itemService.addCustomItem(itemMapper.itemDtoToItem(item)));
         } catch (ValidationException e) {
-            LOGGER.error("Error while adding custom Item for Group", e);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+            LOGGER.error("Error while adding custom Item for Group: {}", e.getMessage());
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
         }
     }
 

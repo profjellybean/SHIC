@@ -19,6 +19,9 @@ public class UnitOfQuantity {
     @Column(name = "Name", unique = true)
     private String name;
 
+    @Column(name = "GroupId")
+    private Long groupId;
+
     public UnitOfQuantity() {
     }
 
@@ -45,6 +48,14 @@ public class UnitOfQuantity {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
+    }
+
+    public Long getGroupId() {
+        return groupId;
     }
 
     @Override

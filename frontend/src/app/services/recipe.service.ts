@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {Observable} from 'rxjs';
 import {Recipe} from '../dtos/recipe';
@@ -8,7 +8,6 @@ import {Recipe} from '../dtos/recipe';
   providedIn: 'root'
 })
 export class RecipeService {
-
   private recipeBaseUri: string = this.globals.backendUri + '/recipe';
 
   constructor(private httpClient: HttpClient,
@@ -24,6 +23,10 @@ export class RecipeService {
   findRecipeById(id: number): Observable<Recipe>{
     console.log('load recipe with id ' + 1);
     return this.httpClient.get<Recipe>(this.recipeBaseUri + '/' + id);
+  }
+  deleteRecipeById(id: number): Observable<boolean>{
+    console.log('delete recipe with id '+ id);
+    return this.httpClient.delete<boolean>(this.recipeBaseUri+ '/' + id);
   }
   findUnitOfQuantityById(id: number){
     return this.httpClient.get<string>(this.globals.backendUri+'/item/unitOfQuantity/byId?id='+ id);
