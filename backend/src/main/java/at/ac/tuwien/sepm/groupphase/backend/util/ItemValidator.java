@@ -25,8 +25,10 @@ public class ItemValidator {
 
         if (item == null) {
             throw new ValidationException("item can not be null when saving");
-        } else if (item.getName() == null) {
-            throw new ValidationException("name of item can not be null when saving custom item");
+        } else if (item.getName() == null || item.getName().equals("")) {
+            throw new ValidationException("name of item has to be set when saving custom item");
+        } else if (item.getName().isBlank()) {
+            throw new ValidationException("name of item can not consist of only whitespaces when saving custom item");
         } else if (item.getQuantity() == null) {
             throw new ValidationException("unit of quantity of item can not be null when saving custom item");
         }

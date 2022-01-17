@@ -170,7 +170,7 @@ public class ItemServiceImpl implements ItemService {
         item.setGroupId(groupId);
 
         List<Item> items = itemRepository.findItemsByNameForGroup(item.getName(), item.getGroupId());
-        if (!items.isEmpty()) {
+        if (!items.isEmpty() && !items.get(0).getId().equals(item.getId())) {
             throw new ValidationException("Item with same Name already exists");
         }
         return itemRepository.saveAndFlush(item);
