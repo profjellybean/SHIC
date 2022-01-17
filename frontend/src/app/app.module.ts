@@ -2,7 +2,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {HeaderComponent} from './components/header/header.component';
@@ -24,6 +24,7 @@ import { ConfirmUserEmailComponent } from './components/confirm-user-email/confi
 import {NgSelectModule} from '@ng-select/ng-select';
 import { StatisticComponent } from './components/statistic/statistic.component';
 import { LocationTagComponent } from './components/location-tag/location-tag.component';
+import { NotificationsComponent } from './components/notifications/notifications.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { LocationTagComponent } from './components/location-tag/location-tag.com
     StorageAddItemComponent,
     UserComponent,
     StorageAddItemComponent,
+    NotificationsComponent,
     StatisticComponent,
     LocationTagComponent,
   ],
@@ -54,6 +56,7 @@ import { LocationTagComponent } from './components/location-tag/location-tag.com
     NgbModule,
     FormsModule,
     NgSelectModule,
+    BrowserAnimationsModule,
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

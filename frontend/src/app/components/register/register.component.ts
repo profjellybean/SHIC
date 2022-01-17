@@ -29,7 +29,8 @@ export class RegisterComponent implements OnInit {
     email: null,
     currGroup: null,
     username: null,
-    privList: null
+    privList: null,
+    image: null
   };
 
   register: Register = {
@@ -59,7 +60,9 @@ export class RegisterComponent implements OnInit {
     id: null,
     currGroup: null,
     privList: null,
-    email: null
+    email: null,
+
+    image: null
   };
 
   constructor(private registerService: RegisterService, private billService: BillService, public route: ActivatedRoute,
@@ -161,8 +164,8 @@ export class RegisterComponent implements OnInit {
             bill.notPaidNameList = bill.notPaidNameList + name.username + ', ';
             this.secondCounter++;
           }
-          bill.notPaidNameList = bill.notPaidNameList.substring(0, bill.notPaidNameList.length-2);
-          bill.nameList = bill.nameList.substring(0, bill.nameList.length-2);
+          bill.notPaidNameList = bill.notPaidNameList.substring(0, bill.notPaidNameList.length - 2);
+          bill.nameList = bill.nameList.substring(0, bill.nameList.length - 2);
           console.log(bill.notPaidNameList);
           this.billArray[this.counter] = bill;
           this.counter++;
@@ -233,12 +236,22 @@ export class RegisterComponent implements OnInit {
       next: data => {
         const deleteIndex = this.billArray.indexOf(this.billToDelete);
         if (deleteIndex !== -1) {
-          this.billArray.splice(deleteIndex,1);
+          this.billArray.splice(deleteIndex, 1);
         }
       },
       error: error => {
         console.error(error.message);
         this.defaultServiceErrorHandling(error);
+      }
+    });
+  }
+
+
+  payAll() {
+    console.log('Confirm all');
+    this.register.bills.forEach(b => {
+      if (b.notPaidNameList.includes(this.user.username)) {
+        this.confirmPayment(b.id);
       }
     });
   }

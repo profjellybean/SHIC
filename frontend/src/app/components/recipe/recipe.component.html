@@ -1,6 +1,6 @@
 <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
   <strong>Error! </strong> {{ errorMessage }}
-  <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="vanishError()" data-dismiss="alert"
+  <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="vanishError()" data-dismiss="alert"
           aria-label="Close">
     <span aria-hidden="true">&times;</span>
   </button>
@@ -10,7 +10,7 @@
 <ng-template #recipeDeleteModal let-modal>
   <div class="modal-header">
     <h5 class="modal-title">Alert</h5>
-    <button type="button" class="close" (click)="modal.dismiss('X')" aria-label="Close">
+    <button type="button" class="btn btn-outline-dark btn-sm mr-4" class="close" (click)="modal.dismiss('X')" aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
@@ -18,7 +18,7 @@
   <div class="modal-body">
     <div>
       <p>Do you really want to delete this recipe: {{deleteRecipe.name}} ?</p>
-      <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="delete(deleteRecipe); modal.dismiss('X')">delete Recipe</button>
+      <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="delete(deleteRecipe); modal.dismiss('X')">delete Recipe</button>
     </div>
   </div>
 </ng-template>
@@ -31,12 +31,12 @@
 <h1>Recipe</h1>
 <p></p>
 <hr>
-<button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(recipeAddModal)">Add recipe</button>
+<button type="button" class="btn btn-outline-info btn-sm mr-4" (click)="openAddModal(recipeAddModal)">Add New Recipe</button>
 <div class="row p-2 mb-4">
   <ng-template #recipeAddModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Recipe</h5>
-      <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
+      <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -88,7 +88,7 @@
           <input *ngIf="tempIngredient!==undefined" [(ngModel)]="this.tempIngredient.amount"
                  placeholder="Enter amount in {{this.tempIngredient.quantity.name}}" name="inputItemQuantity">&nbsp;
           <button *ngIf="tempIngredient!==undefined && tempIngredient.amount > 0" (click)="addTempIngredient()"
-                  class="btn btn-secondary">Add item to recipe
+                  class="btn btn-outline-info">Add item to recipe
           </button>&nbsp;
           <div *ngIf="error" class="error">
             <small class="form-text text-warning">Ingredients are required!
@@ -123,10 +123,10 @@
       </form>
     </div>
     <div class="modal-footer">
-      <button type="button" (click)="addRecipeForm(recipeForm)" id="add-msg" class="btn btn-success float-right">Add
+      <button type="button" (click)="addRecipeForm(recipeForm)" id="add-msg" class="btn btn-outline-info float-right">Add
         recipe
       </button>
-      <button type="button" class="btn btn-secondary" id="close-modal-btn" (click)="modal.dismiss('close')">Close
+      <button type="button" class="btn btn-outline-dark" id="close-modal-btn" (click)="modal.dismiss('close')">Close
       </button>
     </div>
   </ng-template>
@@ -146,7 +146,7 @@
       <td>{{recipe.name}}</td>
       <td>{{recipe.description}}</td>
       <td>
-        <button type="button" class = "btn btn-outline-secondary btn-sm mr-4" [routerLink]="['/recipe/', recipe.id]">Details</button>
+        <button type="button" class = "btn btn-outline-dark btn-sm mr-4" [routerLink]="['/recipe/', recipe.id]">Details</button>
       </td>
       <td>
         <button type="button" class="btn btn-outline-danger btn-sm mr-4" (click)="openDeleteModal(recipeDeleteModal); deleteRecipe=recipe">Delete</button>
