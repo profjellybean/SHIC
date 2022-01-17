@@ -8,7 +8,7 @@
 <h1>Custom Location Tags</h1>
 <p></p>
 
-<button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openAddModal(locationTagAddModal)">Add New Location Tag</button>
+<button type="button" class="btn btn-outline-info btn-sm mr-4" (click)="openAddModal(locationTagAddModal)">Add New Location Tag</button>
 
 
 <table class="table table-striped">
@@ -35,7 +35,7 @@
   <ng-template #locationTagAddModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Add Location Tag</h5>
-      <button type="button" class="close" (click)="modal.dismiss('X')" aria-label="Close">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('X')" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -53,12 +53,13 @@
           </div>
         </div>
 
-        <button type="button" (click)="addLocationTagForm(locationTagForm)" (click)="modal.dismiss('close')" id="add-msg2" class="btn btn-success float-right">Add Location Tag</button>
-
       </form>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" id="close-modal-btn2" (click)="modal.dismiss('close')">Close</button>
+      <button type="button" (click)="addLocationTagForm(locationTagForm)" (click)="modal.dismiss('close')" id="add-msg2" class="btn btn-outline-info float-right">Add Location Tag</button>
+
+      <button type="button" class="btn btn-outline-dark" id="close-modal-btn2" (click)="modal.dismiss('close')">Close</button>
+
     </div>
   </ng-template>
 </div>
@@ -67,7 +68,7 @@
 <ng-template #locationTagDeleteModal let-modal>
   <div class="modal-header">
     <h5 class="modal-title">Alert</h5>
-    <button type="button" class="close" (click)="modal.dismiss('X')" aria-label="Close">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('X')" aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>

@@ -1,7 +1,7 @@
 
 <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
   <strong>Error! </strong> {{ errorMessage }}
-  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+  <button type="button" class="btn btn-outline-info" (click)="vanishError()" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
@@ -29,7 +29,7 @@
   <ng-template #itemAddModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Item</h5>
-      <button type="button" class="close" (click)="modal.dismiss('X')" aria-label="Close">
+      <button type="button" class="btn btn-outline-info" (click)="modal.dismiss('X')" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -152,7 +152,7 @@
   <ng-template #confirmationModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Your options</h5>
-      <button type="button" class="close" (click)="modal.dismiss('X')" aria-label="Close">
+      <button type="button" class="btn btn-outline-info" (click)="modal.dismiss('X')" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -167,15 +167,16 @@
   <ng-template #billAddModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Bill</h5>
-      <button type="button" class="close" (click)="modal.dismiss('X')" aria-label="Close">
+      <button type="button" class="btn btn-outline-info" (click)="modal.dismiss('X')" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
     <div class="modal-body">
       <form (ngSubmit)="addBillForm(billForm)" #billForm="ngForm">
         <div class="form-group">
-          <label for="itemToAdd2">Add users to bill: </label>
-          <ng-select id="favFood"
+          <label for="users">Add users to bill: </label>
+          <ng-select id="users"
+                     required="true"
                      [(ngModel)]="this.billToAdd.names"
                      [clearable]="true"
                      [multiple]="true"
@@ -185,19 +186,31 @@
               {{user.username}}
             </ng-option>
           </ng-select>
+          <div *ngIf="submitted && this.billToAdd.names.length === 0" class="error">
+            <small class="form-text text-warning" *ngIf="this.billToAdd.names.length === 0">At least one user must be billed!
+            </small>
+          </div>
 
         </div>
 
         <div class="form-group">
           <label for="price">Bill sum:</label>
-          <input name="price" class="form-control" id="price" required
+          <input name="price" type="text" pattern="[0-9]*" class="form-control" id="price" required
                   placeholder="Enter price" [(ngModel)]="billToAdd.sum">
+        </div>
+        <div *ngIf="submitted && !this.isThisNumber(this.billToAdd.sum)" class="error">
+          <small class="form-text text-warning" *ngIf="!this.isThisNumber(this.billToAdd.sum)">Enter a valid sum!
+          </small>
         </div>
 
         <div class="form-group">
           <label for="date">Bill date:</label>
           <input type="date" name="date" class="form-control" id="date" required
-                 aria-describedby="expDateHelp" placeholder="Enter expDate" [(ngModel)]="billToAdd.date">
+                 aria-describedby="expDateHelp" [(ngModel)]="billToAdd.date">
+        </div>
+        <div *ngIf="submitted && !this.isValidDate(this.billToAdd.date)" class="error">
+          <small class="form-text text-warning" *ngIf="!this.isValidDate(this.billToAdd.date)">You must enter a valid date!
+          </small>
         </div>
 
 
@@ -206,7 +219,14 @@
           <textarea rows="3" name="notes" class="form-control" id="billNotes"
                     aria-describedby="notesHelp" placeholder="Enter Notes" [(ngModel)]="billToAdd.notes"></textarea>
         </div>
-        <button type="button" (click)="addBillForm(billForm)" id="add-msg1" class="btn btn-outline-success float-right">Add bill and buy</button>
+        <div class="modal-footer">
+          <button type="button" (click)="addBillForm(billForm)" id="add-msg1" class="btn btn-outline-success float-right">Add bill and buy</button>
+        </div>
+        <div *ngIf="submitted && this.billToAdd.groceries.length === 0" class="error">
+          <small class="form-text text-warning" *ngIf="this.billToAdd.groceries.length === 0">You must add items to your bill!
+          </small>
+        </div>
+
 
       </form>
     </div>

@@ -8,8 +8,15 @@ public class UnitOfQuantityDto {
     @NotNull
     private String name;
 
+    private Long groupId;
+
     public UnitOfQuantityDto() {
 
+    }
+
+    public UnitOfQuantityDto(String name, Long groupId) {
+        this.name = name;
+        this.groupId = groupId;
     }
 
     public UnitOfQuantityDto(String name) {
@@ -30,6 +37,14 @@ public class UnitOfQuantityDto {
 
     public String getName() {
         return name;
+    }
+
+    public Long getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
     }
 
     @Override

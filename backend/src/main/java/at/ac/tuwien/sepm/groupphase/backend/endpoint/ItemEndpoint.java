@@ -58,9 +58,25 @@ public class ItemEndpoint {
     @PostMapping(value = "/unitOfQuantity")
     @PermitAll
     @Operation(summary = "create new Unit of Quantity")
-    public UnitOfQuantityDto createUnitOfQuantity(@Param("name") String name) {
+    public UnitOfQuantityDto createUnitOfQuantity(Authentication authentication, @Param("name") String name) {
         LOGGER.info("POST /unitOfQuantity: {}", name);
-        return unitOfQuantityMapper.unitOfQuantityToUnitOfQuantityDto(itemService.addUnitOfQuantity(unitOfQuantityMapper.unitOfQuantityDtoToUnitOfQuantity(new UnitOfQuantityDto(name.trim().equals("") ? null : name))));
+        if (name == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "name must not be empty");
+        }
+        if (name.trim().equals("")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "name must not be empty");
+        }
+        Long groupId = null;
+        if (authentication != null) {
+            groupId = userService.getGroupIdByUsername(authentication.getName());
+        }
+        try {
+            return unitOfQuantityMapper.unitOfQuantityToUnitOfQuantityDto(itemService.addUnitOfQuantity(unitOfQuantityMapper.unitOfQuantityDtoToUnitOfQuantity(new UnitOfQuantityDto(name, groupId))));
+
+        } catch (ValidationException e) {
+            LOGGER.error("Error while creating UnitOfQuantity: {}", e.getMessage());
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
+        }
 
     }
 
@@ -96,6 +112,23 @@ public class ItemEndpoint {
     public List<UnitOfQuantityDto> getAll() {
         LOGGER.info("getAllunitOfQuantity, itemEndpoint");
         return unitOfQuantityMapper.unitsOfQuantityToUnitsOfQuantityDto(itemService.getAll());
+    }
+
+    @GetMapping(value = "/unitOfQuantity/forGroup")
+    @PermitAll
+    @Operation(summary = "Get all Units of quantity")
+    public List<UnitOfQuantityDto> getAllByGroupId(Authentication authentication) {
+        LOGGER.info("getAllunitOfQuantity, itemEndpoint");
+        Long groupId = null;
+        if (authentication != null) {
+            groupId = userService.getGroupIdByUsername(authentication.getName()); // TODO legal?
+        }
+        try {
+            return unitOfQuantityMapper.unitsOfQuantityToUnitsOfQuantityDto(itemService.getAllForGroup(groupId));
+        } catch (ValidationException e) {
+            LOGGER.error("Error while getting all Items for Group: {}", e.getMessage());
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
+        }
     }
 
     @GetMapping(value = "/unitOfQuantity/byId")

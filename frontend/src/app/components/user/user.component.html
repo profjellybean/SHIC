@@ -19,8 +19,12 @@
 
     <br><br><br><br><br><br><br>
     <button type="button" class="btn btn-secondary btn-sm mr-4 button" (click)="openAddModal(userDeleteModal)">delete profile</button>
-    <br>
+    <br><br><br>
     <button type="button" class="btn btn-secondary btn-sm mr-4 button" routerLink="/custom-item">Custom Items</button>
+    <br>
+    <button type="button" class="btn btn-secondary btn-sm mr-4 button" routerLink="/unitOfQuantity">Custom Units of Quantity</button>
+    <br>
+    <button type="button" class="btn btn-secondary btn-sm mr-4 button" routerLink="/locationTag">Custom Location Tags</button>
   </div>
 
   <div class="profilePictureContainer">
@@ -39,7 +43,7 @@
 <ng-template #userDeleteModal let-modal>
   <div class="modal-header">
     <h5 class="modal-title">Alert</h5>
-    <button type="button" class="close" (click)="modal.dismiss('X')" aria-label="Close">
+    <button type="button" class="close btn btn-outline-dark btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
@@ -47,7 +51,7 @@
   <div class="modal-body">
     <div>
       <p>Do you really want to delete your profile?</p>
-      <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="deleteUserById(); modal.dismiss('X')" routerLink="/">delete profile</button>
+      <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="deleteUserById(); modal.dismiss('X')" routerLink="/">Delete Profile</button>
     </div>
   </div>
 </ng-template>
@@ -57,8 +61,8 @@
   <br>
   <label *ngIf="groupId===null || groupId === undefined" for="name">Group-Name: </label> &nbsp;
   <input *ngIf="groupId===null || groupId === undefined" id="name" [(ngModel)]="newGroupName" placeholder="group name">&nbsp;
-  <p></p><button type="button" class="btn btn-secondary btn-sm mr-4" *ngIf="groupId===null || groupId === undefined" (click)="generateGroup()"
-          data-dismiss="alert" aria-label="Close">Generate new Group
+  <p></p><button type="button" class="btn btn-info btn-sm mr-4" *ngIf="groupId===null || groupId === undefined" (click)="generateGroup()"
+          data-dismiss="alert" aria-label="Close">Generate New Group
   </button>
   <p></p>
 
@@ -68,7 +72,7 @@
   <div>
 
   <input *ngIf="groupId!==null && groupId !== undefined" [(ngModel)]="userToAdd" placeholder="enter username">&nbsp;
-  <button type="button" class="btn btn-secondary btn-sm mr-4" *ngIf="groupId!==null && groupId !== undefined" (click)="addUser()">add user</button>
+  <button type="button" class="btn btn-outline-info btn-sm mr-4" *ngIf="groupId!==null && groupId !== undefined" (click)="addUser()">Add User</button>
   </div>
 </div>
 <p></p>
@@ -103,5 +107,4 @@
       <span aria-hidden="true">&times;</span>
     </button>
   </h4>
-</div>
 </div>

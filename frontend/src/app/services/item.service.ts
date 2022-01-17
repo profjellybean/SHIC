@@ -4,6 +4,7 @@ import {HttpClient} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {Observable} from 'rxjs';
 import {Item} from '../dtos/item';
+import {UnitOfQuantity} from '../dtos/unitOfQuantity';
 
 
 @Injectable({
@@ -46,6 +47,11 @@ export class ItemService {
   addCustomItem(item: Item): Observable<Item> {
     console.log('add custom item', item);
     return this.httpClient.post<Item>(this.itemBaseUri + '/groupItems', item);
+  }
+
+  createUnitOfQuantity(unityOfQuantity: string): Observable<UnitOfQuantity> {
+    console.log('add unity of quantity: '+unityOfQuantity);
+    return this.httpClient.post<UnitOfQuantity>(this.itemBaseUri+'/unitOfQuantity?name='+ unityOfQuantity, unityOfQuantity);
   }
 
 }

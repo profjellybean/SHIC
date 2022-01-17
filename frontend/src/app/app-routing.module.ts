@@ -15,6 +15,7 @@ import {ConfirmUserEmailComponent} from './components/confirm-user-email/confirm
 import {CustomItemComponent} from './components/custom-item/custom-item.component';
 import {StatisticComponent} from './components/statistic/statistic.component';
 import {LocationTagComponent} from './components/location-tag/location-tag.component';
+import {UnitOfQuantityComponent} from './components/unit-of-quantity/unit-of-quantity.component';
 
 
 const routes: Routes = [
@@ -33,6 +34,7 @@ const routes: Routes = [
   {path: 'user', canActivate: [AuthGuard], component: UserComponent},
   {path: 'statistic', component: StatisticComponent},
   {path: 'locationTag', component: LocationTagComponent},
+  {path: 'unitOfQuantity', component: UnitOfQuantityComponent}
 
 ];
 
