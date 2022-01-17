@@ -154,11 +154,11 @@ public class ShoppingListEndpoint {
     @PutMapping
     @Operation(summary = "Plan a recipe: adds missing ingredients to shoppingList", security = @SecurityRequirement(name = "apiKey"))
     public List<ItemStorageDto> planRecipe(Authentication authentication,
-                                           @RequestParam(name = "recipeId") Long recipeId, @RequestParam(name = "people") Integer numberOfPeople) {
-        LOGGER.info("Endpoint: POST /shoppinglist/recipeId={},people={},userName={}", recipeId, numberOfPeople, authentication.getName());
+                                           @RequestParam(name = "recipeId") Long recipeId, @RequestParam(name = "numberOfPeople") Integer numberOfPeople) {
+        LOGGER.info("Endpoint: POST /shoppinglist/recipeId={},numberOfPeople={},userName={}", recipeId, numberOfPeople, authentication.getName());
         try {
             return itemStorageMapper.itemsStorageToItemsStorageDto(
-                shoppingListService.planRecipe(recipeId, authentication.getName(), numberOfPeople)); 
+                shoppingListService.planRecipe(recipeId, authentication.getName(), numberOfPeople));
         } catch (ValidationException e) {
             LOGGER.error("Error during planRecipe: {}", e.getMessage());
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
@@ -176,8 +176,8 @@ public class ShoppingListEndpoint {
     @PutMapping(value = "/putAllIngredientsOfRecipe")
     @Operation(summary = "Adds all ingredients of a recipe to shoppingList", security = @SecurityRequirement(name = "apiKey"))
     public List<ItemStorageDto> putRecipeOnShoppingList(Authentication authentication,
-                                                        @RequestParam(name = "recipeId") Long recipeId, @RequestParam(name = "people") Integer people) {
-        LOGGER.info("Endpoint: POST /shoppinglist/putAllIngredientsOfRecipe/recipeId={},people={},userName={}", recipeId, people, authentication.getName());
+                                                        @RequestParam(name = "recipeId") Long recipeId, @RequestParam(name = "numberOfPeople") Integer people) {
+        LOGGER.info("Endpoint: POST /shoppinglist/putAllIngredientsOfRecipe/recipeId={},numberOfPeople={},userName={}", recipeId, people, authentication.getName());
         try {
             return itemStorageMapper.itemsStorageToItemsStorageDto(
                 shoppingListService.putRecipeOnShoppingList(recipeId, authentication.getName(), people));
