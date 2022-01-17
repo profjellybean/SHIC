@@ -159,7 +159,7 @@ public class ShoppinglistEndpointTest implements TestData {
 
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI)
                 .param("recipeId", "-1")
-                .param("people", "1")
+                .param("numberOfPeople", "1")
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
             .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResponseStatusException))
             .andReturn();
@@ -189,7 +189,7 @@ public class ShoppinglistEndpointTest implements TestData {
 
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI)
                 .param("recipeId", recipe.getId().toString())
-                .param("people", "0")
+                .param("numberOfPeople", "0")
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -204,7 +204,7 @@ public class ShoppinglistEndpointTest implements TestData {
 
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI)
                 .param("recipeId", recipe.getId().toString())
-                .param("people", "100000")
+                .param("numberOfPeople", "100000")
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -219,7 +219,7 @@ public class ShoppinglistEndpointTest implements TestData {
 
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI)
                 .param("recipeId", recipe.getId().toString())
-                .param("people", "1")
+                .param("numberOfPeople", "1")
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -248,7 +248,7 @@ public class ShoppinglistEndpointTest implements TestData {
 
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI)
                 .param("recipeId", recipe.getId().toString())
-                .param("people", "1")
+                .param("numberOfPeople", "1")
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -277,7 +277,7 @@ public class ShoppinglistEndpointTest implements TestData {
 
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI)
                 .param("recipeId", recipe.getId().toString())
-                .param("people", String.valueOf(numberOfPeople))
+                .param("numberOfPeople", String.valueOf(numberOfPeople))
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -305,7 +305,7 @@ public class ShoppinglistEndpointTest implements TestData {
 
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI)
                 .param("recipeId", recipe.getId().toString())
-                .param("people", "1")
+                .param("numberOfPeople", "1")
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -335,7 +335,7 @@ public class ShoppinglistEndpointTest implements TestData {
 
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI + "/putAllIngredientsOfRecipe")
                 .param("recipeId", "-1")
-                .param("people", "1")
+                .param("numberOfPeople", "1")
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
             .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResponseStatusException))
             .andReturn();
@@ -365,7 +365,7 @@ public class ShoppinglistEndpointTest implements TestData {
 
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI + "/putAllIngredientsOfRecipe")
                 .param("recipeId", recipe.getId().toString())
-                .param("people", "0")
+                .param("numberOfPeople", "0")
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -380,7 +380,7 @@ public class ShoppinglistEndpointTest implements TestData {
 
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI + "/putAllIngredientsOfRecipe")
                 .param("recipeId", recipe.getId().toString())
-                .param("people", "100000")
+                .param("numberOfPeople", "100000")
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -395,7 +395,7 @@ public class ShoppinglistEndpointTest implements TestData {
 
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI + "/putAllIngredientsOfRecipe")
                 .param("recipeId", recipe.getId().toString())
-                .param("people", "1")
+                .param("numberOfPeople", "1")
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -419,11 +419,11 @@ public class ShoppinglistEndpointTest implements TestData {
     public void givenValidRecipe_andNumberOfPeople_thenAddMoreIngredients_whenPutRecipeOnShoppingList() throws Exception {
         testDataGenerator.generateData_planRecipe_allIngredientsPresent();
         Recipe recipe = recipeRepository.findByName("testRecipe");
-        int amountOfPeople = 3;
+        int numberOfPeople = 3;
 
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI + "/putAllIngredientsOfRecipe")
                 .param("recipeId", recipe.getId().toString())
-                .param("people", String.valueOf(amountOfPeople))
+                .param("numberOfPeople", String.valueOf(numberOfPeople))
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -438,7 +438,7 @@ public class ShoppinglistEndpointTest implements TestData {
         assertAll(
             () -> assertEquals("testItem", itemStorageDto.getName()),
             () -> assertEquals("Ingredient for recipe: testRecipe", itemStorageDto.getNotes()),
-            () -> assertEquals(10 * amountOfPeople, itemStorageDto.getAmount()),
+            () -> assertEquals(10 * numberOfPeople, itemStorageDto.getAmount()),
             () -> assertEquals("g", itemStorageDto.getQuantity().getName())
         );
     }
@@ -452,7 +452,7 @@ public class ShoppinglistEndpointTest implements TestData {
 
         MvcResult mvcResult = this.mockMvc.perform(put(SHOPPINGLIST_ENDPOINT_URI + "/putAllIngredientsOfRecipe")
                 .param("recipeId", recipe.getId().toString())
-                .param("people", "1")
+                .param("numberOfPeople", "1")
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
             .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResponseStatusException))
             .andReturn();
