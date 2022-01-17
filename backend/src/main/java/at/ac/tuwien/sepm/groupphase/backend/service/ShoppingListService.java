@@ -37,8 +37,9 @@ public interface ShoppingListService {
     ShoppingList getShoppingListByid(Long id);
 
     /**
-     * plans a recipe. Checks which of the required ingredients are not present
-     * and puts them on the public shopping-list.
+     * Plans a recipe.
+     * Checks which of the required ingredients are not present
+     * and puts them on the public shopping-list, with the amount that is missing from the storage.
      *
      * @param recipeId  id of recipe that user wants to plan
      * @param userName of user who sent the request

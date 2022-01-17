@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {Observable} from 'rxjs';
 import {ShoppingList} from '../dtos/shopping-list';
@@ -46,14 +46,24 @@ export class ShoppingListService {
     return this.httpClient.put<Item>(this.shoppingListBaseUri + '/public/' + item.id, item);
   }
 
-  planRecipe(id: number, people: number): Observable<Item[]> {
-    console.log('service: plan recipe with id: ' + id + 'for number of people: ' + people);
-    return this.httpClient.put<Item[]>(this.shoppingListBaseUri+'/?recipeId='+id+'&people='+people, id);
+  planRecipe(id: number, numOfPeople: number): Observable<Item[]> {
+    console.log('service: plan recipe with id: ' + id + 'for number of people: ' + numOfPeople);
+    //return this.httpClient.put<Item[]>(this.shoppingListBaseUri+'/?recipeId='+id+'&numberOfPeople='+numOfPeople, id);
+    const httpParams = new HttpParams()
+      .set('recipeId', id)
+      .set('numberOfPeople', numOfPeople);
+    return this.httpClient.put<Item[]>(this.shoppingListBaseUri, httpParams.toString(), {params: httpParams});
   }
 
-  putRecipeOnShoppingList(id: number, people: number): Observable<Item[]> {
-    console.log('service: put all ingredients to shoppinglist of recipe with id: ' + id + 'for number of people: ' + people);
-    return this.httpClient.put<Item[]>(this.shoppingListBaseUri+'/putAllIngredientsOfRecipe/?recipeId='+id+'&people='+people, id);
+  putRecipeOnShoppingList(id: number, numOfPeople: number): Observable<Item[]> {
+    console.log('service: put all ingredients to shoppinglist of recipe with id: ' + id + 'for number of people: ' + numOfPeople);
+    //return this.httpClient.put<Item[]>(
+    //  this.shoppingListBaseUri+'/putAllIngredientsOfRecipe/?recipeId='+id+'&numberOfPeople='+numOfPeople, id);
+    const httpParams = new HttpParams()
+      .set('recipeId', id)
+      .set('numberOfPeople', numOfPeople);
+    return this.httpClient.put<Item[]>(
+      this.shoppingListBaseUri+'/putAllIngredientsOfRecipe', httpParams.toString(), {params: httpParams});
   }
 
   addItemToShoppingList(item: Item): Observable<Item>{

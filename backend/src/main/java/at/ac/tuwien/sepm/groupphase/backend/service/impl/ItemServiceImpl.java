@@ -10,6 +10,8 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.ItemRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitOfQuantityRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitsRelationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.ItemService;
+import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
+import at.ac.tuwien.sepm.groupphase.backend.util.ItemValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,12 +32,17 @@ public class ItemServiceImpl implements ItemService {
     private final UnitOfQuantityRepository unitOfQuantityRepository;
     private final ItemRepository itemRepository;
     private final UnitsRelationRepository unitsRelationRepository;
+    private final UserService userService;
+    private final ItemValidator itemValidator;
 
     @Autowired
-    public ItemServiceImpl(UnitOfQuantityRepository unitOfQuantityRepository, ItemRepository itemRepository, UnitsRelationRepository unitsRelationRepository) {
+    public ItemServiceImpl(UnitOfQuantityRepository unitOfQuantityRepository, ItemRepository itemRepository,
+                           UnitsRelationRepository unitsRelationRepository, UserService userService, ItemValidator itemValidator) {
         this.unitOfQuantityRepository = unitOfQuantityRepository;
         this.itemRepository = itemRepository;
         this.unitsRelationRepository = unitsRelationRepository;
+        this.userService = userService;
+        this.itemValidator = itemValidator;
     }
 
     @Override
@@ -107,8 +114,12 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Item> getAllItemsForGroup(Long groupId) {
-        LOGGER.debug("Service: Getting all items for group {}", groupId);
+    public List<Item> getAllItemsForGroupByUsername(String userName) {
+        LOGGER.debug("Service: Getting all items for group of user {}", userName);
+        if (userName == null) {
+            throw new ValidationException("User can not be null");
+        }
+        Long groupId = userService.getGroupIdByUsername(userName);
         if (groupId == null) {
             throw new ValidationException("groupId can not be null");
         }
@@ -116,8 +127,12 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Item> findAllByGroupId(Long groupId) {
-        LOGGER.debug("Service: Getting all items by groupId {}", groupId);
+    public List<Item> findAllByGroupIdByUsername(String userName) {
+        LOGGER.debug("Service: Getting all items by groupId of user {}", userName);
+        if (userName == null) {
+            throw new ValidationException("User can not be null");
+        }
+        Long groupId = userService.getGroupIdByUsername(userName);
         if (groupId == null) {
             throw new ValidationException("groupId can not be null");
         }
@@ -146,39 +161,29 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Item editCustomItem(Item item) {
-        LOGGER.debug("Service: Edit Item {}", item);
+    public Item editCustomItem(Item item, String userName) {
+        LOGGER.debug("Service: Edit Item {} for User {}", item, userName);
 
-        if (item == null) {
-            throw new ValidationException("item can not be null when editing");
-        } else if (item.getGroupId() == null) {
-            throw new ValidationException("groupId of item can not be null when editing custom item");
-        } else if (item.getName() == null) {
-            throw new ValidationException("name of item can not be null when adding custom item");
-        } else if (item.getQuantity() == null) {
-            throw new ValidationException("unit of quantity of item can not be null when adding custom item");
-        }
+        itemValidator.validate_saveCustomItem(item, userName);
+
+        Long groupId = userService.getGroupIdByUsername(userName);
+        item.setGroupId(groupId);
 
         List<Item> items = itemRepository.findItemsByNameForGroup(item.getName(), item.getGroupId());
-        if (!items.isEmpty()) {
+        if (!items.isEmpty() && !items.get(0).getId().equals(item.getId())) {
             throw new ValidationException("Item with same Name already exists");
         }
         return itemRepository.saveAndFlush(item);
     }
 
     @Override
-    public Item addCustomItem(Item item) {
-        LOGGER.debug("Service: Add Item {}", item);
+    public Item addCustomItem(Item item, String userName) {
+        LOGGER.debug("Service: Add Item {} for User {}", item, userName);
 
-        if (item == null) {
-            throw new ValidationException("item can not be null when adding");
-        } else if (item.getGroupId() == null) {
-            throw new ValidationException("groupId of item can not be null when adding custom item");
-        } else if (item.getName() == null) {
-            throw new ValidationException("name of item can not be null when adding custom item");
-        } else if (item.getQuantity() == null) {
-            throw new ValidationException("unit of quantity of item can not be null when adding custom item");
-        }
+        itemValidator.validate_saveCustomItem(item, userName);
+
+        Long groupId = userService.getGroupIdByUsername(userName);
+        item.setGroupId(groupId);
 
         List<Item> items = itemRepository.findItemsByNameForGroup(item.getName(), item.getGroupId());
         if (!items.isEmpty()) {

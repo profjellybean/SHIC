@@ -13,8 +13,7 @@ import jwt_decode from 'jwt-decode';
 import {AuthService} from '../../services/auth.service';
 import {BillService} from '../../services/bill.service';
 import {BillDto} from '../../dtos/billDto';
-import {LocationTagService} from '../../services/location-tag.service';
-import {LocationTag} from '../../dtos/locationTag';
+import {NotificationsComponent} from '../notifications/notifications.component';
 
 @Component({
   selector: 'app-shopping-list',
@@ -38,8 +37,10 @@ export class ShoppingListComponent implements OnInit {
   billToAdd: BillDto = new BillDto();
   itemsAdd: Item[] = null;
   itemToAdd: Item = null;
-  itemAmountChange: Item = {image:null, id: null, storageId: null, name: null,
-    notes: null, expDate: null, amount: 0, locationTag: null, shoppingListId: null, quantity: null};
+  itemAmountChange: Item = {
+    image: null, id: null, storageId: null, name: null,
+    notes: null, expDate: null, amount: 0, locationTag: null, shoppingListId: null, quantity: null
+  };
   itemsToBuy: Item[] = [];
   items: Item[] = null;
   privateList: ShoppingList;
@@ -60,6 +61,7 @@ export class ShoppingListComponent implements OnInit {
     image: null
   };
   groupId: number;
+
   constructor(private shoppingListService: ShoppingListService,
               private storageService: StorageService,
               private itemService: ItemService,
@@ -68,7 +70,8 @@ export class ShoppingListComponent implements OnInit {
               private userService: UserService,
               private authService: AuthService,
               private billService: BillService,
-              ) {
+              private notifications: NotificationsComponent
+  ) {
   }
 
   ngOnInit(): void {
@@ -83,7 +86,7 @@ export class ShoppingListComponent implements OnInit {
 
   }
 
-  getCurrentGroup(){
+  getCurrentGroup() {
     this.userService.getCurrentUser({username: this.user.username}).subscribe({
       next: data => {
         console.log('received items11', data);
@@ -97,7 +100,7 @@ export class ShoppingListComponent implements OnInit {
     });
   }
 
-  getAllUsers(id: number){
+  getAllUsers(id: number) {
     this.groupService.getAllUsers(id).subscribe({
       next: data => {
         console.log('received items', data);
@@ -110,14 +113,15 @@ export class ShoppingListComponent implements OnInit {
   }
 
 
-  switchMode(publicMode: boolean){
+  switchMode(publicMode: boolean) {
     this.isInPublic = publicMode;
-    if(publicMode){
+    if (publicMode) {
       this.items = this.publicList.items;
-    }else{
+    } else {
       this.items = this.privateList.items;
     }
   }
+
   /**
    * Error flag will be deactivated, which clears the error message
    */
@@ -126,8 +130,8 @@ export class ShoppingListComponent implements OnInit {
   }
 
 
-  deleteItem(item: Item){
-    if(this.isInPublic){
+  deleteItem(item: Item) {
+    if (this.isInPublic) {
       this.shoppingListService.deleteItemFromPublic(item.id).subscribe(
         {
           next: res => {
@@ -140,7 +144,7 @@ export class ShoppingListComponent implements OnInit {
           }
         }
       );
-    }else{
+    } else {
       this.shoppingListService.deleteItemFromPrivate(item.id).subscribe(
         {
           next: res => {
@@ -161,7 +165,7 @@ export class ShoppingListComponent implements OnInit {
     this.shoppingListService.getPrivateShoppingList().subscribe({
         next: res => {
           this.privateList = res;
-          if(!this.isInPublic){
+          if (!this.isInPublic) {
             this.items = this.privateList.items;
             console.log(' items = private');
           }
@@ -180,7 +184,7 @@ export class ShoppingListComponent implements OnInit {
     this.shoppingListService.getPublicShoppingList().subscribe({
         next: res => {
           this.publicList = res;
-          if(this.isInPublic){
+          if (this.isInPublic) {
             this.items = this.publicList.items;
             console.log(' items = public');
           }
@@ -234,19 +238,19 @@ export class ShoppingListComponent implements OnInit {
 
   addItemToShoppingList(item: Item) {
     this.itemToAdd.id = null;
-    if(item.quantity === undefined) {
+    if (item.quantity === undefined) {
       item.quantity = null;
     }
-    if(item.amount === undefined) {
+    if (item.amount === undefined) {
       item.amount = null;
     }
-    if(this.isInPublic){
+    if (this.isInPublic) {
       console.log('add item to public list', item);
       this.shoppingListService.addToPublicShoppingList(item).subscribe({
         next: data => {
-          if(data === null){
+          if (data === null) {
             this.getPublicShoppingList();
-          }else{
+          } else {
             this.items.push(data);
           }
 
@@ -258,13 +262,13 @@ export class ShoppingListComponent implements OnInit {
           this.defaultServiceErrorHandling(err);
         }
       });
-    }else{
+    } else {
       console.log('add item to private list', item);
       this.shoppingListService.addToPrivateShoppingList(item).subscribe({
         next: data => {
-          if(data === null){
+          if (data === null) {
             this.getPrivateShoppingList();
-          }else{
+          } else {
             this.items.push(data);
           }
 
@@ -286,13 +290,13 @@ export class ShoppingListComponent implements OnInit {
     this.removeItemFromShoppingList(item);
     console.log('deleted old item ', item);
 
-    if(this.isInPublic){
+    if (this.isInPublic) {
       console.log('change amount if item in public list', item);
       this.shoppingListService.changeAmountOfItemInPublicShoppingList(this.itemAmountChange).subscribe({
         next: data => {
-          if(data === null){
+          if (data === null) {
             this.getPublicShoppingList();
-          }else{
+          } else {
             this.items.push(data);
           }
           // todo dont reload every time
@@ -302,14 +306,14 @@ export class ShoppingListComponent implements OnInit {
           this.defaultServiceErrorHandling(err);
         }
       });
-    }else{
+    } else {
       console.log('change amount of item of private list', item);
       this.shoppingListService.changeAmountOfItemInPrivateShoppingList(this.itemAmountChange).subscribe({
         next: data => {
           console.log('hey i am back ', data);
-          if(data === null){
+          if (data === null) {
             this.getPrivateShoppingList();
-          }else{
+          } else {
             this.items.push(data);
           }
           // todo dont reload every time
@@ -326,7 +330,6 @@ export class ShoppingListComponent implements OnInit {
 
   addItemForm(form) {
     this.submitted = true;
-
     if (form.valid) {
       console.log('form item to add', this.itemToAdd);
       this.addItemToShoppingList(this.itemToAdd);
@@ -334,13 +337,33 @@ export class ShoppingListComponent implements OnInit {
     }
   }
 
-  addBillForm(form) {
-    this.submitted = true;
+  isThisNumber(number: any): boolean {
+    return !isNaN(parseFloat(number)) && !isNaN(number - 0);
+  }
 
-    if (form.valid) {
+  isValidDate(date: Date): boolean {
+    if(this.submitted) {
+      console.log('Validate date');
+      if (date === null) {
+        return false;
+      }
+      const datee = new Date();
+      datee.setFullYear(Number(date.toString().substring(0, 4)), Number(date.toString().substring(6, 7)),
+        Number(date.toString().substring(9, 10)));
+      const now = new Date();
+      console.log(datee <= now);
+      return datee <= now;
+    }
+  }
+
+
+  addBillForm(form) {
+    console.log('Add bill');
+    this.submitted = true;
+    if (form.valid && this.itemsToBuy.length !== 0) {
       console.log('form item to add', this.billToAdd.names);
 
-      if(this.billToAdd.names[0].id === null){
+      if (this.billToAdd.names[0].id === null) {
         console.log('Set allUsers {}', this.allUsers);
         this.billToAdd.names = this.allUsers;
       }
@@ -349,25 +372,26 @@ export class ShoppingListComponent implements OnInit {
         this.billToAdd.groceries.push(item);
       }
       this.billToAdd.notPaidNames = this.billToAdd.names;
-      if(this.billToAdd.names.length > 0) {
+      if (this.billToAdd.names.length > 0) {
         this.billToAdd.sumPerPerson = this.billToAdd.sum / this.billToAdd.names.length;
       } else {
         this.billToAdd.sumPerPerson = this.billToAdd.sum;
       }
-      for(const name of this.billToAdd.names){
+      for (const name of this.billToAdd.names) {
         delete name.currGroup;
       }
-      for(const name of this.billToAdd.notPaidNames){
+      for (const name of this.billToAdd.notPaidNames) {
         delete name.currGroup;
       }
       this.billToAdd.registerId = this.user.currGroup.registerId;
       this.addBill(this.billToAdd);
       this.workOffShoppingList();
       this.clearForm();
+      this.modalService.dismissAll();
     }
   }
 
-  addBill(bill: BillDto){
+  addBill(bill: BillDto) {
     console.log(bill);
     this.billService.bill(bill).subscribe({
       next: data => {
@@ -392,7 +416,7 @@ export class ShoppingListComponent implements OnInit {
 
   private removeItemFromShoppingList(item: Item) {
     for (let i = 0; i < this.items.length; i++) {
-      if(this.items[i].id === item.id) {
+      if (this.items[i].id === item.id) {
         this.items.splice(i, 1);
       }
     }
