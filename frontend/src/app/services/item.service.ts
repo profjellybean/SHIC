@@ -51,7 +51,7 @@ export class ItemService {
 
   createUnitOfQuantity(unityOfQuantity: string): Observable<UnitOfQuantity> {
     console.log('add unity of quantity: '+unityOfQuantity);
-    return this.httpClient.post<UnitOfQuantity>(this.itemBaseUri+'/unitOfQuantity?name='+ unityOfQuantity, unityOfQuantity)
+    return this.httpClient.post<UnitOfQuantity>(this.itemBaseUri+'/unitOfQuantity?name='+ unityOfQuantity, unityOfQuantity);
   }
 
 }
