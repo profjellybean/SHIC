@@ -264,5 +264,36 @@ public class TestDataGenerator {
         userGroupRepository.saveAndFlush(testGroup);
     }
 
+    /**
+     * generates Data used in Tests for following method.
+     * planRecipe(Long recipeId, String userName) method
+     * in ShoppingListService.
+     */
+    public void generateData_editExpistingRecipe() {
+        LOGGER.debug("Generating Data for planning Recipe");
+        UserRegistrationDto testUser = new UserRegistrationDto("testUser", "password", "test.user@email.com");
+
+        ShoppingList shoppingList = new ShoppingList();
+        shoppingList = shoppingListRepository.save(shoppingList);
+        UserGroup testGroup = new UserGroup(-1L, shoppingList.getId(), null, new HashSet<ApplicationUser>());
+        testGroup = userGroupRepository.saveAndFlush(testGroup);
+
+        ApplicationUser testApplicationUser = userLoginMapper.dtoToEntity(testUser, null);
+        testApplicationUser.setCurrGroup(testGroup);
+        userRepository.saveAndFlush(testApplicationUser);
+
+        unitOfQuantityDataGenerator.generateUnitOfQuantity();
+        List<UnitOfQuantity> quantities = unitOfQuantityRepository.findAll();
+        Map<String, UnitOfQuantity> mappedUnits = new HashMap<>();
+        for (UnitOfQuantity unit :
+            quantities) {
+            mappedUnits.put(unit.getName(), unit);
+        }
+        HashSet<ItemStorage> ingredients = new HashSet<ItemStorage>();
+        ingredients.add(new ItemStorage("testItem", "item for tests", null, null,
+            10, null, mappedUnits.get("g"), null, null));
+        Recipe recipe = new Recipe(-1L, "testRecipe", "recipe for tests", ingredients, null, null);
+        recipeRepository.saveAndFlush(recipe);
+    }
 
 }
