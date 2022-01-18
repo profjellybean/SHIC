@@ -29,7 +29,7 @@ public class ShoppingListDataGenerator {
     private static final String TEST_SHOPPINGLIST_NAME = "Name";
     private static final String TEST_SHOPPINGLIST_NOTES = "Notes of the shoppinglist";
     private static final ApplicationUser TEST_SHOPPINGLIST_OWNER = null;
-    private static final Long ID_OF_SHOPPINGLIST = 1L;
+    private static final Long ID_OF_SHOPPINGLIST = 2L;
 
     private Set<ItemStorage> testShoppingListItems = null;
 
