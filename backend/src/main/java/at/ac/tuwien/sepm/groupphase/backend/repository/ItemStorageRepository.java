@@ -28,7 +28,7 @@ public interface ItemStorageRepository extends JpaRepository<ItemStorage, Long> 
     @Modifying
     @Query(value = "SELECT * FROM ITEM_STORAGE WHERE (STORAGE_ID = :storageId) AND ((:amount = 0) OR (AMOUNT>= :amount)) AND ((:locationTag IS NULL) OR (LOCATION_TAG = :locationTag)) "
                                 + "AND ((:name IS NULL) OR (LOWER(NAME) like LOWER(:name))) "
-                            + "AND ((:notes IS NULL) OR (LOWER(NOTES) like LOWER(:notes))) AND ((:expDate IS NULL) OR (EXP_DATE >= :expDate))", nativeQuery = true)
+                            + "AND ((:notes IS NULL) OR (LOWER(NOTES) like LOWER(:notes))) AND ((:expDate IS NULL) OR (EXP_DATE <= :expDate))", nativeQuery = true)
     @Transactional
     List<ItemStorage> findAllByItemStorage(@Param("storageId") Long storageId, @Param("amount") int amount, @Param("locationTag") String locationTag, @Param("name") String name,
                                            @Param("notes") String notes, @Param("expDate") Date expDate);
