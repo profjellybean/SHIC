@@ -30,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 
@@ -98,5 +99,39 @@ public class BillEndpointTest {
 
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertNotNull(billRepository.findAll());
+    }
+
+    @Test
+    public void gettingBillByIdShouldWork() throws Exception {
+        Register register = new Register();
+        register = registerRepository.saveAndFlush(register);
+        BillDto bill = new BillDto(null, null, "TestBill", null, null, 10000, 0, LocalDate.now(), register.getId());
+        billRepository.saveAndFlush(billMapper.billDtoToBill(bill));
+
+        MvcResult mvcResult = this.mockMvc.perform(get(BILLENDPOINT_URI+ "/" +3)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertNotNull(billRepository.findAll());
+    }
+
+    @Test
+    public void deletingBillByIdShouldWork() throws Exception {
+        Register register = new Register();
+        register = registerRepository.saveAndFlush(register);
+        BillDto bill = new BillDto(4L, null, "TestBill", null, null, 10000, 0, LocalDate.now(), register.getId());
+        billRepository.saveAndFlush(billMapper.billDtoToBill(bill));
+
+        MvcResult mvcResult = this.mockMvc.perform(delete(BILLENDPOINT_URI+ "/" +4)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
 }
