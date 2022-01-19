@@ -77,11 +77,6 @@ export class NotificationsComponent{
 
 
   }
-  private showError(msg: string) {
-    this.error = msg;
-  }
-
-
 }
 
 
