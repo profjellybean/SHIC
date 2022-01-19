@@ -273,7 +273,7 @@ public class RegisterEndpointTest implements TestData {
         testDataGenerator.generateData_billSumOfCurrentMonth();
 
         MvcResult mvcResult = this.mockMvc.perform(get(REGISTERENDPOINT_URI + "/monthlysum")
-                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, USER_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
@@ -288,7 +288,7 @@ public class RegisterEndpointTest implements TestData {
         testDataGenerator.generateData_billSumOfCurrentMonth_noBills();
 
         MvcResult mvcResult = this.mockMvc.perform(get(REGISTERENDPOINT_URI + "/monthlysum")
-                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, USER_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
