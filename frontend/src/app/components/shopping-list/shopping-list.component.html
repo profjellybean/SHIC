@@ -3,6 +3,7 @@
 <h1>Shopping List</h1>
 <p></p>
 <hr>
+
 <div class="tabs">
 
   <input type="radio" class="tabbutton" name="tabs" id="tab1" checked/>
@@ -15,7 +16,7 @@
 </div>
 <br>
 
-<button type="button" class="btn btn-outline-info btn-sm mr-4" (click)="openAddModal(itemAddModal)">Add new Item</button>
+
 
 <div class="row p-2 mb-4">
 
@@ -138,6 +139,7 @@
   </div>
 </div>
 <div>
+  <button type="button" class="btn btn-outline-info" (click)="openAddModal(itemAddModal)">Add new Item</button> &nbsp;
   <button *ngIf="items.length !== 0" type="button" class="btn btn-outline-info" id="buy-item" (click)="openBillModal(confirmationModal)" data-toggle="modal">Buy these Items</button>
 </div>
 

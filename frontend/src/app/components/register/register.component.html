@@ -11,7 +11,7 @@
 <th>Group Budget:</th>
 <br>
 {{register.monthlyBudget}}  €
-<button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="openEditBudgetModal(budgetEditModal)">Edit</button>
+&nbsp;<button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="openEditBudgetModal(budgetEditModal)">Edit</button>
 <br>
 <th>Rest Group Budget for this month:</th>
 <br>
@@ -45,9 +45,9 @@
     <td>{{bill.notes}}</td>
     <td>
       <div>
-        <button *ngIf="bill.notPaidNameList.includes(this.user.username)" type="button" class="btn btn-outline-info" (click)="confirmPayment(bill.id);">Confirm Payment</button> &nbsp;
-        <button type="button" class="btn btn-outline-dark" (click)="openBillModal(billEditModal, bill);">Edit Bill</button> &nbsp;
-        <button type="button" class="btn btn-outline-danger" (click)="openAddModal(billDeleteModal); this.billToDelete=bill">Delete</button>
+        <button *ngIf="bill.notPaidNameList.includes(this.user.username)" type="button" class="btn btn-outline-info btn-sm mr-4" (click)="confirmPayment(bill.id);">Confirm Payment</button> &nbsp;
+        <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="openBillModal(billEditModal, bill);">Edit Bill</button> &nbsp;
+        <button type="button" class="btn btn-outline-danger btn-sm mr-4" (click)="openAddModal(billDeleteModal); this.billToDelete=bill">Delete</button>
       </div>
     </td>
   </tr>
@@ -58,7 +58,7 @@
     <th></th>
     <th>{{billSumGroup}} €</th>
     <th>{{billSumUser}} € (for you to pay)</th>
-    <th><button class=" btn btn-outline-info" (click)="payAll()">Pay all bills</button></th>
+    <th><button class=" btn btn-outline-info btn-sm mr-4" (click)="payAll()">Pay all bills</button></th>
     <th></th>
     <th></th>
     <th></th>
