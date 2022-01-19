@@ -10,11 +10,13 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.TooFewIngredientsException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.service.GroupService;
 import at.ac.tuwien.sepm.groupphase.backend.service.StorageService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,6 +82,29 @@ public class StorageEndpoint {
         }
     }
 
+    @Secured("ROLE_USER")
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping(value = "/recipe")
+    @Operation(summary = "Cook a recipe: deleted ingredients of recipe from storage", security = @SecurityRequirement(name = "apiKey"))
+    public List<ItemStorageDto> cookRecipe(Authentication authentication, @RequestParam(name = "recipeId") Long recipeId, @RequestParam(name = "numberOfPeople") Integer numberOfPeople) {
+        LOGGER.info("Endpoint: POST /storage/recipeId={},numberOfPeople={},userName={}", recipeId, numberOfPeople, authentication.getName());
+        try {
+            return itemStorageMapper.itemsStorageToItemsStorageDto(
+                storageService.cookRecipe(recipeId, authentication.getName(), numberOfPeople));
+        } catch (ValidationException e) {
+            LOGGER.error("Error during planRecipe: {}", e.getMessage());
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
+        } catch (NotFoundException e) {
+            LOGGER.error("Error during planRecipe: {}", e.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        } catch (TooFewIngredientsException e) {
+            LOGGER.error("Error during planRecipe: {}", e.getMessage());
+            throw new ResponseStatusException(HttpStatus.PRECONDITION_FAILED, e.getMessage());
+        }  catch (ServiceException e) {
+            LOGGER.error("Error during planRecipe: {}", e.getMessage());
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
+        }
+    }
 
     @PutMapping
     @PermitAll

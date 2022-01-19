@@ -1,7 +1,7 @@
 <br>
 <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
   <strong>Error! </strong> {{ errorMessage }}
-  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+  <button type="button" (click)="vanishError()" class="btn btn-outline-info" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
@@ -29,11 +29,11 @@
   </div>
 </div>
 <br>
-<button class = "btn btn-outline-dark btn-sm mr-4" [routerLink]="['/recipe']">Back</button> &nbsp;
+<button class = "btn btn-outline-info btn-sm mr-4" [routerLink]="['/recipe']">Back</button> &nbsp;
 
-<button class = "btn btn-outline-dark btn-sm mr-4" (click)="planRecipe()">Plan Recipe</button> &nbsp;
+<button class = "btn btn-outline-info btn-sm mr-4" (click)="planRecipe()">Plan Recipe</button> &nbsp;
 
-<button class = "btn btn-outline-dark btn-sm mr-4"  (click)="putRecipeOnShoppingList()">Put all Ingredients to
+<button class = "btn btn-outline-info btn-sm mr-4"  (click)="putRecipeOnShoppingList()">Put all Ingredients to
   Shopping-List</button> &nbsp;
 
 <button class = "btn btn-outline-dark btn-sm mr-4"  (click)="cookRecipe()">Cook Recipe</button> &nbsp;
