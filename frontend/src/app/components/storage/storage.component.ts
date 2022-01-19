@@ -280,6 +280,7 @@ export class StorageComponent implements OnInit {
 
   putOnPublicShoppinglist(item: Item) {
     console.log('hey i am public ', item);
+    item.shoppingListId = this.user.currGroup.publicShoppingListId;
     item.storageId = null;
     item.amount = this.shopAgainAmount;
     this.shopAgainAmount = 0;
@@ -290,6 +291,7 @@ export class StorageComponent implements OnInit {
         next: data => {
           console.log('i got in public');
           this.deleteItem(item);
+          this.getCurrUser();
         },
         error: err => {
           this.defaultServiceErrorHandling(err);
@@ -301,6 +303,7 @@ export class StorageComponent implements OnInit {
   putOnPrivateShoppinglist(item: Item) {
     console.log('hey i am private ', item);
     item.storageId = null;
+    item.shoppingListId = this.user.privList;
     item.amount = this.shopAgainAmount;
     this.shopAgainAmount = 0;
     item.notes = this.shopAgainNotes;
@@ -310,6 +313,7 @@ export class StorageComponent implements OnInit {
         next: data => {
           console.log('i got in private');
           this.deleteItem(item);
+          this.getCurrUser();
         },
         error: err => {
           this.defaultServiceErrorHandling(err);
