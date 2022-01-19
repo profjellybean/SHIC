@@ -168,6 +168,46 @@
     <td>
       <button type="button" class="btn btn-outline-danger btn-sm mr-4" (click)="openAddModal(itemDeleteModal)">Remove
       </button>
+
+      <!-- popUp if deleted-->
+      <div>
+        <ng-template #itemDeleteModal let-modal>
+          <div class="modal-header">
+            <h5 class="modal-title">Do you want to put {{item.name}} on the shoppinglist again?</h5>
+            <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="inputAmount">Amount</label>
+              <input type="number" name="amount" class="form-control" id="amount" min="1" required
+                     aria-describedby="amountHelp" [(ngModel)]="this.shopAgainAmount">
+            </div>
+            <div class="form-group">
+              <label for="inputNotes">Notes</label>
+              <textarea rows="3" name="notes" class="form-control" id="notes"
+                        aria-describedby="notesHelp" placeholder="Enter Notes"
+                        [(ngModel)]="this.shopAgainNotes"></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="shoppinglist-public-msg"
+                    (click)="putOnPublicShoppinglist(item); modal.dismiss('close')"
+                    class="btn btn-outline-info float-right">Yes, on public Shoppinglist
+            </button>
+
+            <button type="button" id="shoppinglist-private-msg"
+                    (click)="putOnPrivateShoppinglist(item); modal.dismiss('close')"
+                    class="btn btn-outline-info float-right">Yes, on private Shoppinglist
+            </button>
+            <button type="button" (click)="deleteItem(item); modal.dismiss('close')" class="btn btn-outline-danger"
+                    id="delete-btn">No, just Delete it
+            </button>
+          </div>
+        </ng-template>
+      </div>
+
     </td>
   </tr>
   </tbody>
@@ -261,45 +301,6 @@
       <button type="button" class="btn btn-outline-dark" id="close-update-modal-btn"
               (click)="modal.dismiss('close')">
         Close
-      </button>
-    </div>
-  </ng-template>
-</div>
-
-<!-- popUp if deleted-->
-<div class="row p-2 mb-4">
-  <ng-template #itemDeleteModal let-modal>
-    <div class="modal-header">
-      <h5 class="modal-title">Do you want to put {{item.name}} on the shoppinglist again?</h5>
-      <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <label for="inputAmount">Amount</label>
-        <input type="number" name="amount" class="form-control" id="amount" min="1" required
-               aria-describedby="amountHelp" [(ngModel)]="this.shopAgainAmount">
-      </div>
-      <div class="form-group">
-        <label for="inputNotes">Notes</label>
-        <textarea rows="3" name="notes" class="form-control" id="notes"
-                  aria-describedby="notesHelp" placeholder="Enter Notes"
-                  [(ngModel)]="this.shopAgainNotes"></textarea>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button type="button" id="shoppinglist-public-msg"
-              (click)="putOnPublicShoppinglist(item); modal.dismiss('close')"
-              class="btn btn-outline-info float-right">Yes, on public Shoppinglist
-      </button>
-
-      <button type="button" id="shoppinglist-private-msg"
-              (click)="putOnPrivateShoppinglist(item); modal.dismiss('close')"
-              class="btn btn-outline-info float-right">Yes, on private Shoppinglist
-      </button>
-      <button type="button" (click)="deleteItem(item); modal.dismiss('close')" class="btn btn-outline-danger"
-              id="delete-btn">No, just Delete it
       </button>
     </div>
   </ng-template>
