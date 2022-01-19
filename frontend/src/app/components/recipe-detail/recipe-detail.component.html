@@ -36,6 +36,8 @@
 <button class = "btn btn-outline-dark btn-sm mr-4"  (click)="putRecipeOnShoppingList()">Put all Ingredients to
   Shopping-List</button> &nbsp;
 
+<button class = "btn btn-outline-dark btn-sm mr-4"  (click)="cookRecipe()">Cook Recipe</button> &nbsp;
+
 <button *ngIf="recipe.groupId !== null" class = "btn btn-outline-dark btn-sm mr-4"  (click)="setRecipeToUpdate(recipe); openAddModal(recipeAddModal)">Edit Recipe</button>
 <div class="row p-2 mb-4">
   <ng-template #recipeAddModal let-modal>
@@ -141,10 +143,27 @@
 <br>
 <br>
 
+
+
+<div *ngIf="deletedItems && deletedItems.length > 0">
+  <div class="card">
+      <div class="card-header">
+        <strong>Removed following ingredients from Storage</strong>
+      </div>
+      <div class="col-xl-3 col-lg-4 p-2" *ngFor="let item of deletedItems">
+
+        <div class="card-body" style="display: inline-block">
+         <strong>{{item.name}}</strong> {{item.amount}} {{item.quantity.name}}
+        </div>
+
+      </div>
+    </div>
+</div>
+
 <div *ngIf="items && items.length > 0">
   <div class="card">
     <div class="card-header">
-      <strong>Added following Ingredients to Shopping List</strong>
+      <strong>Added following ingredients to Shopping List</strong>
     </div>
     <div class="col-xl-3 col-lg-4 p-2" *ngFor="let item of items">
 
@@ -161,7 +180,10 @@
     <div class="card-header">
       <strong>Nothing to add</strong>
     </div>
-        <p class="card-text"> &nbsp; There is already enough of each Ingredient in your Storage! </p>
+        <p class="card-text"> &nbsp; There is already enough of each ingredient in your Storage! </p>
   </div>
 </div>
 
+<br>
+<br>
+<br>

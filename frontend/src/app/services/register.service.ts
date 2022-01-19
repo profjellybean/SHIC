@@ -36,7 +36,8 @@ export class RegisterService {
   }
 
   getBillSumUser(): Observable<number> {
-    console.log('Loading sum of Bills for the user');
+
+    console.log('Loading sum of Bills for the user ');
     return this.httpClient.get<number>(this.registerBaseUri + '/billSumUser');
   }
 

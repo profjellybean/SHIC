@@ -9,23 +9,23 @@
     <ul class="navbar-nav mr-auto" style="width: 100%">
 
       <li class="nav-item">
-        <a class="nav-link" *ngIf="this.hasCurrentGroup()" routerLink="/storage" routerLinkActive="active">Storage</a>
+        <a class="nav-link" *ngIf="authService.isLoggedIn() && this.hasCurrentGroup()" routerLink="/storage" routerLinkActive="active">Storage</a>
       </li>
 
       <li class="nav-item">
-        <a class="nav-link" *ngIf="this.hasCurrentGroup()" routerLink="/recipe" routerLinkActive="active">Recipe</a>
+        <a class="nav-link" *ngIf="authService.isLoggedIn() && this.hasCurrentGroup()" routerLink="/recipe" routerLinkActive="active">Recipe</a>
       </li>
 
       <li class="nav-item">
-        <a class="nav-link" *ngIf="this.hasCurrentGroup()" routerLink="/register" routerLinkActive="active">Bills</a>
+        <a class="nav-link" *ngIf="authService.isLoggedIn() && this.hasCurrentGroup()" routerLink="/register" routerLinkActive="active">Bills</a>
       </li>
 
       <li class="nav-item">
-        <a class="nav-link" *ngIf="this.hasCurrentGroup()" routerLink="/shopping-list" routerLinkActive="active">Shopping List</a>
+        <a class="nav-link" *ngIf="authService.isLoggedIn() && this.hasCurrentGroup()" routerLink="/shopping-list" routerLinkActive="active">Shopping List</a>
       </li>
 
       <li class="nav-item">
-        <a class="nav-link" *ngIf="this.hasCurrentGroup()" routerLink="/statistic" routerLinkActive="active">Statistic</a>
+        <a class="nav-link" *ngIf="authService.isLoggedIn() && this.hasCurrentGroup()" routerLink="/statistic" routerLinkActive="active">Statistic</a>
       </li>
 
       <li class="nav-item">
@@ -36,11 +36,16 @@
         <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/" (click)="authService.logoutUser()">Logout</a>
       </li>
 
+      <li class="nav-item">
+        <a class="nav-link" *ngIf="!authService.isLoggedIn()" routerLink="/login" routerLinkActive="active">Login</a>
+
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" *ngIf="!authService.isLoggedIn()" routerLink="/registerUser" routerLinkActive="active">Register</a>
+      </li>
+      {{authService.getToken()}}
     </ul>
-    <ul class="navbar-nav mr-5">
-      <a class="nav-link" *ngIf="!authService.isLoggedIn()" routerLink="/login" routerLinkActive="active">Login</a>
-      <a class="nav-link" *ngIf="!authService.isLoggedIn()" routerLink="/registerUser" routerLinkActive="active">Register</a>
-    </ul>
+
 
   </div>
 </nav>
