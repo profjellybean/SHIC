@@ -435,4 +435,45 @@ public class TestDataGenerator {
         return idList;
     }
 
+    /**
+     * generates Data used in Tests for following method.
+     * several methods in Recipe.
+     */
+    public void generateData_ValidRecipe() {
+        LOGGER.debug("Generating Data for Recipe tests");
+        unitOfQuantityDataGenerator.generateUnitOfQuantity();
+        List<UnitOfQuantity> quantities = unitOfQuantityRepository.findAll();
+        Map<String, UnitOfQuantity> mappedUnits = new HashMap<>();
+        for (UnitOfQuantity unit :
+            quantities) {
+            mappedUnits.put(unit.getName(), unit);
+        }
+        HashSet<ItemStorage> ingredients = new HashSet<ItemStorage>();
+        ingredients.add(new ItemStorage("testItem", "item for tests", null, null,
+            10, null, mappedUnits.get("g"), null, null));
+        Recipe recipe = new Recipe(-1L, "testRecipe", "recipe for tests", ingredients, null, null);
+        recipeRepository.saveAndFlush(recipe);
+    }
+
+    public void generateData_moreValidRecipes() {
+        LOGGER.debug("Generating Data for Recipe tests");
+        unitOfQuantityDataGenerator.generateUnitOfQuantity();
+        List<UnitOfQuantity> quantities = unitOfQuantityRepository.findAll();
+        Map<String, UnitOfQuantity> mappedUnits = new HashMap<>();
+        for (UnitOfQuantity unit :
+            quantities) {
+            mappedUnits.put(unit.getName(), unit);
+        }
+        HashSet<ItemStorage> ingredients = new HashSet<ItemStorage>();
+        ingredients.add(new ItemStorage("testItem", "item for tests", null, null,
+            10, null, mappedUnits.get("g"), null, null));
+        Recipe recipe = new Recipe(-1L, "testRecipe", "recipe for tests", ingredients, null, null);
+        recipeRepository.saveAndFlush(recipe);
+        Recipe recipe2 = new Recipe(-2L, "testRecipe2", "recipe for tests", ingredients, null, null);
+        recipeRepository.saveAndFlush(recipe2);
+        Recipe recipe3 = new Recipe(-3L, "testRecipe3", "recipe for tests", ingredients, null, null);
+        recipeRepository.saveAndFlush(recipe3);
+    }
+
+
 }

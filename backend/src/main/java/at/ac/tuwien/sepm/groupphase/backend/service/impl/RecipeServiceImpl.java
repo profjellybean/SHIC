@@ -56,10 +56,15 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public Recipe updateRecipe(Recipe recipe, Long groupId) {
         LOGGER.debug("Service: Update recipe {}", recipe);
-        if (groupId == null) {
+        if (recipe.getGroupId() == null) {
             throw new UnchangeableException("This recipe cannot be updated because it is available for all groups");
         }
-        return recipeRepository.saveAndFlush(recipe);
+        Recipe excisting = findRecipeById(recipe.getId());
+        if (excisting != null) {
+            return recipeRepository.saveAndFlush(recipe);
+        } else {
+            throw new NotFoundException("No Recipe expists in Database with Id: " + recipe.getId());
+        }
     }
 
 
@@ -68,7 +73,7 @@ public class RecipeServiceImpl implements RecipeService {
     public void deleteRecipe(String userName, Long id) {
         LOGGER.debug("Service: delete recipe by id: {}", id);
         Long registerId = userService.loadGroupRegisterIdByUsername(userName);
-        if (!Objects.equals(registerId, findRecipeById(id).getGroupId())) {
+        if (findRecipeById(id) == null || !Objects.equals(registerId, findRecipeById(id).getGroupId())) {
             throw new NotFoundException("you are not authorized");
         }
         Recipe helpRecipe = findRecipeById(id);
