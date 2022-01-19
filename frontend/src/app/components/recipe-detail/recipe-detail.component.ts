@@ -9,6 +9,7 @@ import {UnitOfQuantity} from '../../dtos/unitOfQuantity';
 import {ShowItem} from '../../dtos/ShowItem';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ItemService} from '../../services/item.service';
+import {StorageService} from '../../services/storage.service';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -28,6 +29,7 @@ export class RecipeDetailComponent implements OnInit {
   unitOfQuantity: string;
   ingredients: Item[];
   items; // = [];
+  deletedItems;
   ingredientsShow: ShowItem[];
   showItem: ShowItem;
   submitted = false;
@@ -44,7 +46,8 @@ export class RecipeDetailComponent implements OnInit {
               private route: ActivatedRoute,
               private shoppingListService: ShoppingListService,
               private modalService: NgbModal,
-              private itemService: ItemService) {
+              private itemService: ItemService,
+              private storageService: StorageService) {
   }
 
   ngOnInit(): void {
@@ -67,6 +70,19 @@ export class RecipeDetailComponent implements OnInit {
       return this.showItem;
     }
   */
+  cookRecipe(){
+    this.storageService.cookRecipe(this.recipe.id, this.numberOfPeople).subscribe({
+      next: res => {
+        this.items = null;
+        this.deletedItems = res;
+      },
+      error: err => {
+        this.defaultServiceErrorHandling(err);
+      }
+
+    });
+
+  }
 
   planRecipe() {
     this.shoppingListService.planRecipe(this.recipe.id, this.numberOfPeople).subscribe({
