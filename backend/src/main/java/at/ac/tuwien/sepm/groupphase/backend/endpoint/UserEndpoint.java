@@ -87,7 +87,7 @@ public class UserEndpoint {
         try {
             userService.editUsername(newUsernameDto.getUsername(), authentication.getName());
             List<String> roles = new LinkedList<>();
-            roles.add(newUsernameDto.getUsername());
+            roles.add("ROLE_USER");
             return "{ \"token\":\"" + jwtTokenizer.getAuthToken(newUsernameDto.getUsername(), roles) + " \"}";
         } catch (UsernameTakenException e) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
