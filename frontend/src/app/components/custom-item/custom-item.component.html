@@ -1,9 +1,3 @@
-<div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
-  <strong>Error! </strong> {{ errorMessage }}
-  <button type="button" (click)="vanishError()" class="btn btn-outline-info" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
 <br>
 <h1>Custom Items</h1> <button type="button" class="btn btn-outline-info btn-sm mr-4" (click)="openAddModal(itemAddModal)">Add new item</button>
 <p></p>
@@ -35,7 +29,7 @@
   <ng-template #itemEditModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Edit Item</h5>
-      <button type="button" class="btn btn-outline-info" (click)="modal.dismiss('X')" aria-label="Close">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('X')" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -101,7 +95,7 @@
   <ng-template #itemAddModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Add Item</h5>
-      <button type="button" class="btn btn-outline-info" (click)="modal.dismiss('X')" aria-label="Close">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('X')" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>

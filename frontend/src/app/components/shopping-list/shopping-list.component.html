@@ -1,11 +1,4 @@
 
-<div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
-  <strong>Error! </strong> {{ errorMessage }}
-  <button type="button" class="btn btn-outline-info" (click)="vanishError()" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-
 <br>
 <h1>Shopping List</h1>
 <p></p>
@@ -29,7 +22,7 @@
   <ng-template #itemAddModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Item</h5>
-      <button type="button" class="btn btn-outline-info" (click)="modal.dismiss('X')" aria-label="Close">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('X')" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -152,7 +145,7 @@
   <ng-template #confirmationModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Your options</h5>
-      <button type="button" class="btn btn-outline-info" (click)="modal.dismiss('X')" aria-label="Close">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('X')" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -167,7 +160,7 @@
   <ng-template #billAddModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Bill</h5>
-      <button type="button" class="btn btn-outline-info" (click)="modal.dismiss('X')" aria-label="Close">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('X')" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -220,7 +213,7 @@
                     aria-describedby="notesHelp" placeholder="Enter Notes" [(ngModel)]="billToAdd.notes"></textarea>
         </div>
         <div class="modal-footer">
-          <button type="button" (click)="addBillForm(billForm)" id="add-msg1" class="btn btn-outline-success float-right">Add bill and buy</button>
+          <button type="button" (click)="addBillForm(billForm)" id="add-msg1" class="btn btn-outline-info float-right">Add bill and buy</button>
         </div>
         <div *ngIf="submitted && this.billToAdd.groceries.length === 0" class="error">
           <small class="form-text text-warning" *ngIf="this.billToAdd.groceries.length === 0">You must add items to your bill!
