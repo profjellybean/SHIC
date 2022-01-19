@@ -270,10 +270,29 @@
       <div class="row p-2 mb-4">
         <ng-template #itemDeleteModal let-modal>
           <div class="modal-header">
-            <h5 class="modal-title">Do you want to put {{item.name}} on the shoppinglist again?</h5>
+          <h5 class="modal-title">Did you use {{item.name}} or did you throw it away?</h5>
             <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
+          </div>
+          <div class="modal-body">
+
+              <form >
+                <fieldset >
+                  <input type="radio" id="mc" name="trashOrNot" [(ngModel)]="this.trash" value="true" checked>
+                  <label for="mc">  &nbsp;&nbsp; Thrown away    </label>
+                  <br>
+                  <br>
+                  <input type="radio" id="vi" name="trashOrNot" [(ngModel)]="this.trash" value="false">
+
+                  <label for="vi">  &nbsp;&nbsp;   Used     </label>
+
+                </fieldset>
+              </form>
+            </div>
+          <div class="modal-header"></div>
+          <div class="modal-header">
+            <h5 class="modal-title">Do you want to put {{item.name}} on the shoppinglist again?</h5>
           </div>
           <div class="modal-body">
             <div class="form-group">

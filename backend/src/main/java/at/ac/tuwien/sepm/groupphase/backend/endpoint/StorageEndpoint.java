@@ -138,11 +138,11 @@ public class StorageEndpoint {
     @PermitAll
     @DeleteMapping
     @ResponseStatus(HttpStatus.OK)
-    public ItemStorageDto deleteItemFromStorage(Authentication authentication, @RequestParam Long itemId) {
+    public ItemStorageDto deleteItemFromStorage(Authentication authentication, @RequestParam Long itemId, boolean trash) {
         try {
             Long groupId = userService.getGroupIdByUsername(authentication.getName());
             UserGroup group = groupService.getOneById(groupId);
-            return itemStorageMapper.itemStorageToItemStorageDto(storageService.deleteItemInStorageById(itemId, group.getStorageId()));
+            return itemStorageMapper.itemStorageToItemStorageDto(storageService.deleteItemInStorageById(itemId, group.getStorageId(), trash));
 
         } catch (ValidationException e) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());

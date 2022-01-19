@@ -25,7 +25,7 @@ public interface StorageService {
      * @param storageId the id of the storage which the item is in
      * @return a Spring Security user
      */
-    ItemStorage deleteItemInStorageById(Long itemId, Long storageId);
+    ItemStorage deleteItemInStorageById(Long itemId, Long storageId, boolean trash);
 
     /**
      * Saves an item in the storage.

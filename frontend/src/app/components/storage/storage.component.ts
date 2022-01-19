@@ -37,6 +37,8 @@ export class StorageComponent implements OnInit {
     image: null, id: null, storageId: null, name: null,
     notes: null, expDate: null, amount: 0, locationTag: null, shoppingListId: null, quantity: null
   };
+  trash: string;
+  trashBoolean: boolean;
 
   items: Item[] = null;
   item: Item = new Item();
@@ -63,6 +65,7 @@ export class StorageComponent implements OnInit {
   locationTags: LocationTag[] = null;
 
 
+
   constructor(private storageService: StorageService,
               private modalService: NgbModal,
               private shoppingListService: ShoppingListService,
@@ -76,6 +79,8 @@ export class StorageComponent implements OnInit {
     this.getCurrUser();
     this.loadItemsToAdd();
     this.loadUnitsOfQuantity();
+    this.trash='true';
+
   }
 
   getCurrUser() {
@@ -264,7 +269,13 @@ export class StorageComponent implements OnInit {
   }
 
   deleteItem(item: Item) {
-    this.storageService.deleteItemFromStorage({itemId: item.id}).subscribe(
+    if (this.trash==='true'){
+      this.trashBoolean= true;
+    }
+    if(this.trash==='false'){
+      this.trashBoolean=false;
+    }
+    this.storageService.deleteItemFromStorage({itemId: item.id, trash: this.trash}).subscribe(
       {
         next: data => {
           console.log(data);

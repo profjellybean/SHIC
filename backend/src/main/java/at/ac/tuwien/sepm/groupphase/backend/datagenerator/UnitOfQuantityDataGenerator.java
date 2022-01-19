@@ -22,9 +22,11 @@ public class UnitOfQuantityDataGenerator {
     private final UnitOfQuantityRepository unitOfQuantityRepository;
     private final UnitsRelationRepository unitsRelationRepository;
     private final ItemService itemService;
-    private static final String[] UNITS = {"kg", "g", "L", "ml", "pieces", "can", "cup", "jar"};
+    private static final String[] UNITS = {"kg", "g", "L", "ml", "pieces", "can", "cup", "jar", "dag"};
     private static final UnitsRelation unitsRelation = new UnitsRelation("kg", "g", 1000.0);
     private static final UnitsRelation unitsRelation2 = new UnitsRelation("L", "ml", 1000.0);
+    private static final UnitsRelation unitsRelation3 = new UnitsRelation("kg", "dag", 100.0);
+    private static final UnitsRelation unitsRelation4 = new UnitsRelation("g", "dag", 0.1);
 
     public UnitOfQuantityDataGenerator(UnitOfQuantityRepository unitOfQuantityRepository, UnitsRelationRepository unitsRelationRepository, ItemService itemService) {
         this.unitOfQuantityRepository = unitOfQuantityRepository;
@@ -52,6 +54,8 @@ public class UnitOfQuantityDataGenerator {
         } else {
             itemService.addUnitsRelation(unitsRelation2);
             itemService.addUnitsRelation(unitsRelation);
+            itemService.addUnitsRelation(unitsRelation3);
+            itemService.addUnitsRelation(unitsRelation4);
         }
 
     }
