@@ -88,6 +88,8 @@ public class ItemServiceImpl implements ItemService {
         return unitOfQuantityRepository.findAllByGroupIdOrGroupIdIsNull(groupId);
     }
 
+
+
     @Override
     public List<UnitOfQuantity> getAll() {
         LOGGER.debug("Getting all units of quantity");
@@ -99,6 +101,25 @@ public class ItemServiceImpl implements ItemService {
         LOGGER.debug("Delete item {}", item.getName());
         itemRepository.delete(item);
         return !itemRepository.existsById(item.getId());
+    }
+
+    @Override
+    public List<Item> searchByName(String name, String userName) {
+        LOGGER.debug("Get items by name {}", name);
+        String partName = name;
+        if (userName == null) {
+            throw new ValidationException("User can not be null");
+        }
+        Long groupId = userService.getGroupIdByUsername(userName);
+        if (groupId == null) {
+            throw new ValidationException("groupId can not be null");
+        }
+        if(name == null) {
+            return this.getAllItemsForGroupByUsername(userName);
+        } else {
+            partName = "%" + name + "%";
+            return itemRepository.findAllItemsByNameForGroup(partName, groupId);
+        }
     }
 
     @Override
