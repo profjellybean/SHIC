@@ -29,7 +29,8 @@ public class ShoppingListDataGenerator {
     private static final String TEST_SHOPPINGLIST_NAME = "Name";
     private static final String TEST_SHOPPINGLIST_NOTES = "Notes of the shoppinglist";
     private static final ApplicationUser TEST_SHOPPINGLIST_OWNER = null;
-    private static final Long ID_OF_SHOPPINGLIST = 1L;
+    private static final Long ID_OF_SHOPPINGLIST = 2L;
+    private static final boolean GENERATE_REAL_SHOPPINGLIST = true;
 
     private Set<ItemStorage> testShoppingListItems = null;
 
@@ -59,9 +60,7 @@ public class ShoppingListDataGenerator {
         }
 
 
-        if (shoppingListRepository.findAll().size() > 0) {
-            LOGGER.debug("shoppinglist already generated");
-        } else {
+        if (!GENERATE_REAL_SHOPPINGLIST) {
             LOGGER.debug("generating {} shoppinglist entries", NUMBER_OF_SHOPPINGLISTS_TO_GENERATE);
             for (int i = 0; i < NUMBER_OF_SHOPPINGLISTS_TO_GENERATE; i++) {
                 ShoppingList shoppingList = ShoppingList.ShoppingListBuilder.aShoppingList()
@@ -73,7 +72,8 @@ public class ShoppingListDataGenerator {
                 LOGGER.debug("saving shoppinglist {}", shoppingList);
                 shoppingListRepository.saveAndFlush(shoppingList);
             }
-
+        } else {
+            LOGGER.debug("generating items for shoppinglist");
 
             //ItemStorage
             ItemStorage mushrooms = new ItemStorage("Mushrooms", null, null, null, 200,
@@ -89,13 +89,87 @@ public class ShoppingListDataGenerator {
                 200, Location.fridge.toString(), mappedUnits.get("g"), null, ID_OF_SHOPPINGLIST);
             itemStorageRepository.save(parsley);
 
+            ItemStorage fish = new ItemStorage("Fish", null, null, null,
+                200, Location.fridge.toString(), mappedUnits.get("g"), null, ID_OF_SHOPPINGLIST);
+            itemStorageRepository.save(fish);
+            ItemStorage chips = new ItemStorage("Chips", "Spicy", null, null,
+                100, Location.fridge.toString(), mappedUnits.get("g"), null, ID_OF_SHOPPINGLIST);
+            itemStorageRepository.save(chips);
+            ItemStorage salad = new ItemStorage("Salad", null, null, null,
+                1, Location.fridge.toString(), mappedUnits.get("pieces"), null, ID_OF_SHOPPINGLIST);
+            itemStorageRepository.save(salad);
+            ItemStorage fries = new ItemStorage("Fries", null, null, null,
+                500, Location.fridge.toString(), mappedUnits.get("g"), null, ID_OF_SHOPPINGLIST);
+            itemStorageRepository.save(fries);
+            ItemStorage cake = new ItemStorage("Cake", "For Emmis Birthday", null, null,
+                1, Location.fridge.toString(), mappedUnits.get("pieces"), null, ID_OF_SHOPPINGLIST);
+            itemStorageRepository.save(cake);
+            ItemStorage bananas = new ItemStorage("Bananas", null, null, null,
+                1, Location.fridge.toString(), mappedUnits.get("kg"), null, ID_OF_SHOPPINGLIST);
+            itemStorageRepository.save(bananas);
+            ItemStorage ananas = new ItemStorage("Ananas", null, null, null,
+                1, Location.fridge.toString(), mappedUnits.get("pieces"), null, ID_OF_SHOPPINGLIST);
+            itemStorageRepository.save(ananas);
+            ItemStorage garlic = new ItemStorage("Garlic", null, null, null,
+                3, Location.fridge.toString(), mappedUnits.get("pieces"), null, ID_OF_SHOPPINGLIST);
+            itemStorageRepository.save(garlic);
+            ItemStorage onions = new ItemStorage("Onions", null, null, null,
+                100, Location.fridge.toString(), mappedUnits.get("g"), null, ID_OF_SHOPPINGLIST);
+            itemStorageRepository.save(onions);
+            ItemStorage orange = new ItemStorage("Oranges", null, null, null,
+                5, Location.fridge.toString(), mappedUnits.get("pieces"), null, ID_OF_SHOPPINGLIST);
+            itemStorageRepository.save(orange);
+            ItemStorage lemon = new ItemStorage("Lemons", null, null, null,
+                3, Location.fridge.toString(), mappedUnits.get("pieces"), null, ID_OF_SHOPPINGLIST);
+            itemStorageRepository.save(lemon);
+            ItemStorage milk = new ItemStorage("Milk", null, null, null,
+                4, Location.fridge.toString(), mappedUnits.get("L"), null, ID_OF_SHOPPINGLIST);
+            itemStorageRepository.save(milk);
+            ItemStorage oliveOil = new ItemStorage("Olive Oil", null, null, null,
+                1, Location.fridge.toString(), mappedUnits.get("L"), null, ID_OF_SHOPPINGLIST);
+            itemStorageRepository.save(oliveOil);
+            ItemStorage lemonJuice = new ItemStorage("Lemon Juice", null, null, null,
+                250, Location.fridge.toString(), mappedUnits.get("ml"), null, ID_OF_SHOPPINGLIST);
+            itemStorageRepository.save(lemonJuice);
+            ItemStorage chocolate = new ItemStorage("Chocolate", null, null, null,
+                200, Location.fridge.toString(), mappedUnits.get("g"), null, ID_OF_SHOPPINGLIST);
+            itemStorageRepository.save(chocolate);
+            ItemStorage waterMelon = new ItemStorage("Water Melon", null, null, null,
+                1, Location.fridge.toString(), mappedUnits.get("pieces"), null, ID_OF_SHOPPINGLIST);
+            itemStorageRepository.save(waterMelon);
+            ItemStorage greenTea = new ItemStorage("Green Tea", null, null, null,
+                2, Location.fridge.toString(), mappedUnits.get("L"), null, ID_OF_SHOPPINGLIST);
+            itemStorageRepository.save(greenTea);
+            ItemStorage baguette = new ItemStorage("Baguette", null, null, null,
+                2, Location.fridge.toString(), mappedUnits.get("pieces"), null, ID_OF_SHOPPINGLIST);
+            itemStorageRepository.save(baguette);
+
             testShoppingListItems = new HashSet<ItemStorage>();
             testShoppingListItems.add(mushrooms);
             testShoppingListItems.add(pasta);
             testShoppingListItems.add(whippedCream);
             testShoppingListItems.add(parsley);
 
-            ShoppingList shoppingList = shoppingListRepository.getById(1L);
+            testShoppingListItems.add(fish);
+            testShoppingListItems.add(chips);
+            testShoppingListItems.add(salad);
+            testShoppingListItems.add(fries);
+            testShoppingListItems.add(cake);
+            testShoppingListItems.add(bananas);
+            testShoppingListItems.add(ananas);
+            testShoppingListItems.add(garlic);
+            testShoppingListItems.add(onions);
+            testShoppingListItems.add(orange);
+            testShoppingListItems.add(lemon);
+            testShoppingListItems.add(milk);
+            testShoppingListItems.add(oliveOil);
+            testShoppingListItems.add(lemonJuice);
+            testShoppingListItems.add(chocolate);
+            testShoppingListItems.add(waterMelon);
+            testShoppingListItems.add(greenTea);
+            testShoppingListItems.add(baguette);
+
+            ShoppingList shoppingList = shoppingListRepository.getById(ID_OF_SHOPPINGLIST);
             shoppingList.setItems(testShoppingListItems);
             shoppingListRepository.saveAndFlush(shoppingList);
         }
