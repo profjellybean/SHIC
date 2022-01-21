@@ -1,8 +1,10 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Item;
 import at.ac.tuwien.sepm.groupphase.backend.entity.LocationClass;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Storage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitsRelation;
@@ -11,9 +13,11 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
 
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.TooFewIngredientsException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.LocationRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitsRelationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageItemStorageRepository;
@@ -28,11 +32,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -49,6 +56,7 @@ public class StorageServiceImpl implements StorageService {
     private final ItemService itemService;
     private final LocationRepository locationRepository;
     private final UserService userService;
+    private final RecipeRepository recipeRepository;
 
     @Autowired
     public StorageServiceImpl(StorageRepository storageRepository,
@@ -59,7 +67,8 @@ public class StorageServiceImpl implements StorageService {
                               UserGroupRepository userGroupRepository,
                               ItemService itemService,
                               LocationRepository locationRepository,
-                              UserService userService) {
+                              UserService userService,
+                              RecipeRepository recipeRepository) {
         this.storageRepository = storageRepository;
         this.itemStorageRepository = itemStorageRepository;
         this.unitOfQuantityRepository = unitOfQuantityRepository;
@@ -69,7 +78,53 @@ public class StorageServiceImpl implements StorageService {
         this.itemService = itemService;
         this.locationRepository = locationRepository;
         this.userService = userService;
+        this.recipeRepository = recipeRepository;
     }
+
+
+    @Override
+    @Transactional
+    public List<ItemStorage> cookRecipe(Long recipeId, String userName, Integer numberOfPeople) {
+        LOGGER.debug("Service: cook Recipe {} for {} people based on user {}.", recipeId, numberOfPeople, userName);
+
+        //shoppingListValidator.validate_planRecipe(recipeId, userName, numberOfPeople);
+
+        Recipe recipe = recipeRepository.findRecipeById(recipeId);
+        Set<ItemStorage> calculatedIngredients = new HashSet<>();
+
+        for (ItemStorage item : recipe.getIngredients()) {
+
+            ItemStorage calculatedItem = new ItemStorage(item);
+            calculatedItem.setAmount(item.getAmount() * numberOfPeople);
+            calculatedIngredients.add(calculatedItem);
+        }
+
+        Long storageId = userService.loadGroupStorageByUsername(userName);
+
+        for (ItemStorage ingredient : calculatedIngredients) {
+            LOGGER.info("::: " + storageId + "  " + ingredient.getId() + "  " + ingredient.getAmount() + "  " +  ingredient.getQuantity());
+            Optional<ItemStorage> availableItem = itemStorageRepository.itemExistsInStorage(storageId, ingredient.getName(), ingredient.getAmount(), ingredient.getQuantity());
+            if (availableItem.isEmpty()) {
+                throw new TooFewIngredientsException("Not enough of {" + ingredient.getName() + "} in storage");
+            }
+
+            if (availableItem.get().getAmount() == ingredient.getAmount()) {
+                itemStorageRepository.delete(availableItem.get());
+            } else {
+
+                itemStorageRepository.reduceQuantity(availableItem.get(), ingredient.getAmount());
+
+            }
+
+
+        }
+
+
+
+
+        return calculatedIngredients.stream().toList();
+    }
+
 
     @Override
     public ItemStorage deleteItemById(Long id) {
@@ -282,7 +337,7 @@ public class StorageServiceImpl implements StorageService {
     @Override
     public List<ItemStorage> getAll(Long id) {
         LOGGER.debug("Getting all items");
-        return itemStorageRepository.findAllByStorageId(id);
+        return itemStorageRepository.findAllByStorageIdOrderByNameAsc(id);
     }
 
     @Override

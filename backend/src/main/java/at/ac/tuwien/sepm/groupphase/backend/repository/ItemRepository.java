@@ -23,13 +23,23 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
      */
     List<Item> findAll();
 
+    /**
+     * Find all item entries, sorted by Name A-Z.
+     *
+     * @return orderd list of all item entities
+     */
+    List<Item> findAllByOrderByNameAsc();
+
     @Query(value = "SELECT * FROM ITEM WHERE ((GROUP_ID = :groupId) OR (GROUP_ID IS NULL)) AND (UPPER(NAME) = UPPER(:name))", nativeQuery = true)
     List<Item> findItemsByNameForGroup(@Param("name") String name, @Param("groupId") Long groupId);
 
     @Query(value = "SELECT * FROM ITEM WHERE (GROUP_ID = :groupId) OR (GROUP_ID IS NULL)", nativeQuery = true)
+    List<Item> findAllItemsForGroupOrderByNameAsc(@Param("groupId") Long groupId);
+
+    @Query(value = "SELECT * FROM ITEM WHERE (GROUP_ID = :groupId) OR (GROUP_ID IS NULL)", nativeQuery = true)
     List<Item> findAllItemsForGroup(@Param("groupId") Long groupId);
 
-    List<Item> findAllByGroupId(Long groupId);
+    List<Item> findAllByGroupIdOrderByNameAsc(Long groupId);
 
 
     @Query(value = "SELECT * FROM ITEM WHERE ((GROUP_ID = :groupId) OR (GROUP_ID IS NULL)) AND ((:name IS NULL) OR (LOWER(NAME) like LOWER(:name)))", nativeQuery = true)

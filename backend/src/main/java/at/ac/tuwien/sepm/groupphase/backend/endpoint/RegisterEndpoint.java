@@ -46,7 +46,7 @@ public class RegisterEndpoint {
     //@Secured("ROLE_USER")
     @PermitAll
     @GetMapping(value = "/{id}")
-    @Operation(summary = "Get detailed information about a specific register", security = @SecurityRequirement(name = "apiKey"))
+    @Operation(summary = "Get detailed information about a specific register")
     public RegisterDto findById(@PathVariable Long id) {
         LOGGER.info("GET /api/v1/register/{}", id);
         return registerMapper.registerToRegisterDto(registerService.findOne(id));
@@ -56,7 +56,7 @@ public class RegisterEndpoint {
     @PermitAll
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Get detailed information about a specific register", security = @SecurityRequirement(name = "apiKey"))
+    @Operation(summary = "Get detailed information about a specific register")
     public RegisterDto confirmPayment(@Param("id") Long id, @Param("additionalId") Long additionalId,
                                       @Param("additionalString") String additionalString) {
         LOGGER.info("PUT /api/v1/register {}", id);
@@ -65,7 +65,7 @@ public class RegisterEndpoint {
 
     @Secured("ROLE_USER")
     @GetMapping(value = "/monthlysum")
-    @Operation(summary = "Get sum of all Bills in this month", security = @SecurityRequirement(name = "apiKey"))
+    @Operation(summary = "Get sum of all Bills in this month")
     public Double billSumOfCurrentMonth(Authentication authentication) {
         LOGGER.info("Endpoint: GET /register/monthlysum/{}", authentication);
         if (authentication == null) { // TODO can auth be null?
@@ -82,7 +82,7 @@ public class RegisterEndpoint {
 
     @Secured("ROLE_USER")
     @PutMapping(value = "/monthlybudget")
-    @Operation(summary = "Edit Monthly Budget", security = @SecurityRequirement(name = "apiKey"))
+    @Operation(summary = "Edit Monthly Budget")
     public Double editMonthlyBudget(Authentication authentication, @Param("budget") Double budget) {
         LOGGER.info("Endpoint: Edit /register/monthlybudget/{}{}", authentication, budget);
         if (authentication == null) { // TODO can auth be null?
@@ -102,7 +102,7 @@ public class RegisterEndpoint {
 
     @Secured("ROLE_USER")
     @GetMapping(value = "/sumOfMonthAndYear")
-    @Operation(summary = "Get sum of all Bills of specific Month and year", security = @SecurityRequirement(name = "apiKey"))
+    @Operation(summary = "Get sum of all Bills of specific Month and year")
     public TimeSumDto billSumOfMonthAndYear(Authentication authentication, @Param("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
         LOGGER.info("Endpoint: GET /api/v1/register/{}", authentication);
         if (authentication == null) {
@@ -116,7 +116,7 @@ public class RegisterEndpoint {
 
     @Secured("ROLE_USER")
     @GetMapping(value = "/sumOfYear")
-    @Operation(summary = "Get sum of all Bills of specific year", security = @SecurityRequirement(name = "apiKey"))
+    @Operation(summary = "Get sum of all Bills of specific year")
     public TimeSumDto billSumOfYear(Authentication authentication, @Param("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
         LOGGER.info("Endpoint: GET /api/v1/register/{}", authentication);
         if (authentication == null) {
@@ -130,7 +130,7 @@ public class RegisterEndpoint {
 
     @Secured("ROLE_USER")
     @GetMapping(value = "/billSumGroup")
-    @Operation(summary = "Get bill sum for group", security = @SecurityRequirement(name = "apiKey"))
+    @Operation(summary = "Get bill sum for group")
     public Double billSumGroup(Authentication authentication) {
         LOGGER.info("Endpoint: GET /register/billSumGroup/{}", authentication);
         try {
@@ -143,7 +143,7 @@ public class RegisterEndpoint {
 
     @Secured("ROLE_USER")
     @GetMapping(value = "/billSumUser")
-    @Operation(summary = "Get bill sum for user", security = @SecurityRequirement(name = "apiKey"))
+    @Operation(summary = "Get bill sum for user")
     public Double billSumUser(Authentication authentication) {
         LOGGER.info("Endpoint: GET /register/billSumUser/{}", authentication);
         try {

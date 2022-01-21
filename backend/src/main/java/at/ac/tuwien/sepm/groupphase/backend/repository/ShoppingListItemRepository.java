@@ -17,6 +17,8 @@ public interface ShoppingListItemRepository extends JpaRepository<ItemStorage, L
 
     List<ItemStorage> findAllByShoppingListId(Long shoppingListId);
 
+    List<ItemStorage> findAllByShoppingListIdOrderByNameAsc(Long shoppingListId);
+
     @Modifying
     @Query(value = "insert into SHOPPING_LIST_ITEMS (SHOPPING_LIST_ID, ITEMS_ID) VALUES (:shoppingListId, :itemId)", nativeQuery = true)
     @Transactional

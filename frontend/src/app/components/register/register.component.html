@@ -1,9 +1,3 @@
-<div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
-  <strong>Error! </strong> {{ errorMessage }}
-  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
 
 <br>
 <h1 class="alert-heading">Bills</h1>
@@ -17,7 +11,7 @@
 <th>Group Budget:</th>
 <br>
 {{register.monthlyBudget}}  €
-<button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="openEditBudgetModal(budgetEditModal)">Edit</button>
+&nbsp;<button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="openEditBudgetModal(budgetEditModal)">Edit</button>
 <br>
 <th>Rest Group Budget for this month:</th>
 <br>
@@ -34,9 +28,9 @@
     <th>Date: </th>
     <th>Included: </th>
     <th>Yet to pay: </th>
-    <th>Items: </th>
     <th>Sum: </th>
-    <th>To pay per person: </th>
+    <th>Sum per person: </th>
+    <th>Items: </th>
     <th>Notes:</th>
   </tr>
   </thead>
@@ -45,15 +39,17 @@
     <td>{{bill.date}}</td>
     <td>{{bill.nameList}}</td>
     <td>{{bill.notPaidNameList}}</td>
-    <td><div *ngFor="let grocery of bill.groceries">{{grocery.name}}</div></td>
     <td>{{bill.sum}} €</td>
     <td>{{bill.sumPerPerson}} €</td>
+    <td><div *ngFor="let grocery of bill.groceries">{{grocery.name}}</div></td>
     <td>{{bill.notes}}</td>
     <td>
       <div>
-        <button *ngIf="bill.notPaidNameList.includes(this.user.username)" type="button" class="btn btn-outline-info" (click)="confirmPayment(bill.id);">Confirm Payment</button> &nbsp;
-        <button type="button" class="btn btn-outline-dark" (click)="openBillModal(billEditModal, bill);">Edit Bill</button> &nbsp;
-        <button type="button" class="btn btn-outline-danger" (click)="openAddModal(billDeleteModal); this.billToDelete=bill">Delete</button>
+        <button *ngIf="bill.notPaidNameList.includes(this.user.username)" type="button" class="btn btn-outline-info btn-sm mr-4" (click)="confirmPayment(bill.id);">Confirm Payment</button> &nbsp;
+        <div style="float: right;">
+        <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="openBillModal(billEditModal, bill);" >Edit Bill</button> &nbsp;
+        <button type="button" class="btn btn-outline-danger btn-sm mr-4" (click)="openAddModal(billDeleteModal); this.billToDelete=bill" >Delete</button>
+        </div>
       </div>
     </td>
   </tr>
@@ -62,12 +58,13 @@
   <tr>
     <th>TOTAL:</th>
     <th></th>
+    <th></th>
     <th>{{billSumGroup}} €</th>
     <th>{{billSumUser}} € (for you to pay)</th>
-    <th><button class=" btn btn-outline-info" (click)="payAll()">Pay all bills</button></th>
     <th></th>
+
     <th></th>
-    <th></th>
+    <th><button class=" btn btn-outline-info btn-sm mr-4" (click)="payAll()">Pay all bills</button></th>
   </tr>
   </tfoot>
   {{this.help}}

@@ -191,7 +191,6 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
     @Override
     public void createUser(UserRegistrationDto userRegistrationDto, Long confirmationToken) {
         LOGGER.debug("Service: Create new user: {}", userRegistrationDto.getUsername());
@@ -244,6 +243,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void editUsername(String newUsername, String username) {
+        if (newUsername.isBlank()) {
+            throw new UsernameTakenException("Username cannot be emtpy");
+        }
         Optional<ApplicationUser> u = customUserRepository.findUserByUsername(newUsername);
         if (u.isPresent()) {
             throw new UsernameTakenException("This username is already taken");

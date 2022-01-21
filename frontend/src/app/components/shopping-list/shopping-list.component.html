@@ -1,15 +1,9 @@
 
-<div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
-  <strong>Error! </strong> {{ errorMessage }}
-  <button type="button" class="btn btn-outline-info" (click)="vanishError()" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-
 <br>
 <h1>Shopping List</h1>
 <p></p>
 <hr>
+
 <div class="tabs">
 
   <input type="radio" class="tabbutton" name="tabs" id="tab1" checked/>
@@ -22,14 +16,14 @@
 </div>
 <br>
 
-<button type="button" class="btn btn-outline-info btn-sm mr-4" (click)="openAddModal(itemAddModal)">Add new Item</button>
+
 
 <div class="row p-2 mb-4">
 
   <ng-template #itemAddModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Item</h5>
-      <button type="button" class="btn btn-outline-info" (click)="modal.dismiss('X')" aria-label="Close">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('X')" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -110,6 +104,11 @@
 
 </div>
 
+<div>
+  <button type="button" class="btn btn-outline-info" (click)="openAddModal(itemAddModal)">Add new Item</button> &nbsp;
+  <button *ngIf="items.length !== 0" type="button" class="btn btn-outline-info" id="buy-item" (click)="openBillModal(confirmationModal)" data-toggle="modal">Buy these Items</button>
+</div>
+
 <div *ngIf="items.length !== 0">
   <div class="shopping-list-list">
     <table class="table table-striped">
@@ -144,15 +143,13 @@
     </table>
   </div>
 </div>
-<div>
-  <button *ngIf="items.length !== 0" type="button" class="btn btn-outline-info" id="buy-item" (click)="openBillModal(confirmationModal)" data-toggle="modal">Buy these Items</button>
-</div>
+
 
 <div>
   <ng-template #confirmationModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Your options</h5>
-      <button type="button" class="btn btn-outline-info" (click)="modal.dismiss('X')" aria-label="Close">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('X')" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -167,7 +164,7 @@
   <ng-template #billAddModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Bill</h5>
-      <button type="button" class="btn btn-outline-info" (click)="modal.dismiss('X')" aria-label="Close">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('X')" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -220,7 +217,7 @@
                     aria-describedby="notesHelp" placeholder="Enter Notes" [(ngModel)]="billToAdd.notes"></textarea>
         </div>
         <div class="modal-footer">
-          <button type="button" (click)="addBillForm(billForm)" id="add-msg1" class="btn btn-outline-success float-right">Add bill and buy</button>
+          <button type="button" (click)="addBillForm(billForm)" id="add-msg1" class="btn btn-outline-info float-right">Add bill and buy</button>
         </div>
         <div *ngIf="submitted && this.billToAdd.groceries.length === 0" class="error">
           <small class="form-text text-warning" *ngIf="this.billToAdd.groceries.length === 0">You must add items to your bill!

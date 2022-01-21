@@ -8,6 +8,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
 import at.ac.tuwien.sepm.groupphase.backend.repository.BillRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
+import org.apache.tomcat.jni.Local;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -67,6 +68,9 @@ public class BillDataGenerator {
                     .withSumPerPerson((10 * (i + 1)) / 2)
                     .withDate(DATE)
                     .build();
+                if (i == 2) {
+                    bill.setDate(LocalDate.now());
+                }
                 Bill savedBill = billRepository.saveAndFlush(bill);
 
                 //user
@@ -84,8 +88,35 @@ public class BillDataGenerator {
                 admin.ifPresent(notPaid::add);
                 savedBill.setNotPaidNames(notPaid);
                 savedBill = billRepository.saveAndFlush(savedBill);
-
             }
+            Bill bill = Bill.BillBuilder.aBill()
+                .withId(5L)
+                .withRegisterId(1L)
+                .withGroceries(GROCERIES)
+                .withNotes("bought at Billa")
+                .withNames(NAMES)
+                .withNotPaidNames(NOT_PAID_NAMES)
+                .withSum(30)
+                .withSumPerPerson(15)
+                .withDate(LocalDate.of(2021, 11, 15))
+                .build();
+            Bill savedBill = billRepository.saveAndFlush(bill);
+
+            //user
+            Optional<ApplicationUser> user = userRepository.findUserByUsername("Leopold");
+            Optional<ApplicationUser> admin = userRepository.findUserByUsername("Heidi");
+
+            HashSet<ApplicationUser> names = new HashSet<>();
+            user.ifPresent(names::add);
+            admin.ifPresent(names::add);
+            savedBill.setNames(names);
+            savedBill = billRepository.saveAndFlush(savedBill);
+
+            HashSet<ApplicationUser> notPaid = new HashSet<>();
+            user.ifPresent(notPaid::add);
+            admin.ifPresent(notPaid::add);
+            savedBill.setNotPaidNames(notPaid);
+            savedBill = billRepository.saveAndFlush(savedBill);
 
             /*
             //items

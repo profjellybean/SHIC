@@ -167,7 +167,7 @@ export class ShoppingListComponent implements OnInit {
           this.privateList = res;
           if (!this.isInPublic) {
             this.items = this.privateList.items;
-            console.log(' items = private');
+            console.log('items = private');
           }
           console.log(this.privateList);
         },
@@ -186,7 +186,7 @@ export class ShoppingListComponent implements OnInit {
           this.publicList = res;
           if (this.isInPublic) {
             this.items = this.publicList.items;
-            console.log(' items = public');
+            console.log('items = public');
           }
           console.log(this.publicList);
         },

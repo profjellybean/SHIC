@@ -131,7 +131,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<Item> getAllItems() {
         LOGGER.debug("Service: Getting all items");
-        return itemRepository.findAll();
+        return itemRepository.findAllByOrderByNameAsc();
     }
 
     @Override
@@ -144,7 +144,7 @@ public class ItemServiceImpl implements ItemService {
         if (groupId == null) {
             throw new ValidationException("groupId can not be null");
         }
-        return itemRepository.findAllItemsForGroup(groupId);
+        return itemRepository.findAllItemsForGroupOrderByNameAsc(groupId);
     }
 
     @Override
@@ -157,7 +157,7 @@ public class ItemServiceImpl implements ItemService {
         if (groupId == null) {
             throw new ValidationException("groupId can not be null");
         }
-        return itemRepository.findAllByGroupId(groupId);
+        return itemRepository.findAllByGroupIdOrderByNameAsc(groupId);
     }
 
     @Override
