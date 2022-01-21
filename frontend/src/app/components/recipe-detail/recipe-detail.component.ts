@@ -85,11 +85,10 @@ export class RecipeDetailComponent implements OnInit {
       },
       error: error => {
         console.error(error.message);
-        this.notifications.pushFailure('Error while cooking Recipe: ' + error.error.message);
+        //this.notifications.pushFailure('Error while cooking Recipe: ' + error.error.message);
+        this.notifications.pushFailure('Cooking failed, insufficient items in storage!');
       }
-
     });
-
   }
 
   planRecipe() {
@@ -240,5 +239,14 @@ export class RecipeDetailComponent implements OnInit {
     this.submitted = false;
   }
 
+  private defaultServiceErrorHandling(error: any) {
+    console.log(error);
+    this.error = null;
+    if (typeof error.error === 'object') {
+      this.notifications.pushFailure(error.error.error);
+    } else {
+      this.notifications.pushFailure(error.error);
+    }
+  }
 
 }
