@@ -4,6 +4,9 @@
 <p></p>
 <hr>
 
+<!--SEARCH START-->
+
+
 <div class="tabs">
 
   <input type="radio" class="tabbutton" name="tabs" id="tab1" checked/>
@@ -15,6 +18,14 @@
 
 </div>
 <br>
+
+<div>
+  <h5>Filter Storage</h5>
+  <div>
+    <label for="new-name">Name: &nbsp;</label>
+    <input #name (keyup)="name.value= this.searchItem.name; this.searchItems()"
+           (change)="searchItems()" id="new-name" [(ngModel)]="this.searchItem.name"/>
+  </div>
 
 
 
