@@ -75,7 +75,7 @@ export class RecipeDetailComponent implements OnInit {
   */
   cookRecipe(){
     if (!Number.isInteger(this.numberOfPeople)) {
-      this.error = 'Number of people has to be a whole number';
+      this.notifications.pushFailure('Number of people has to be a whole number');
       return;
     }
     this.storageService.cookRecipe(this.recipe.id, this.numberOfPeople).subscribe({
@@ -93,7 +93,7 @@ export class RecipeDetailComponent implements OnInit {
 
   planRecipe() {
     if (!Number.isInteger(this.numberOfPeople)) {
-      this.error = 'Number of people has to be a whole number';
+      this.notifications.pushFailure('Number of people has to be a whole number');
       return;
     }
     this.shoppingListService.planRecipe(this.recipe.id, this.numberOfPeople).subscribe({
@@ -110,7 +110,7 @@ export class RecipeDetailComponent implements OnInit {
 
   putRecipeOnShoppingList() {
     if (!Number.isInteger(this.numberOfPeople)) {
-      this.error = 'Number of people has to be a whole number';
+      this.notifications.pushFailure('Number of people has to be a whole number');
       return;
     }
     this.shoppingListService.putRecipeOnShoppingList(this.recipe.id, this.numberOfPeople).subscribe({
