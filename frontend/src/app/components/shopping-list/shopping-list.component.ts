@@ -50,6 +50,7 @@ export class ShoppingListComponent implements OnInit {
   groupShoppingListId: number;
   unitsOfQuantity: UnitOfQuantity[];
   allUsers: User[] = null;
+  itemToDelete: Item;
 
   user: User = {
     // @ts-ignore
