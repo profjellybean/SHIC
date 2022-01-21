@@ -5,8 +5,10 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -17,16 +19,11 @@ public interface TrashOrUsedRepository extends JpaRepository<TrashOrUsed, Long> 
      */
     void deleteTrashOrUsedByDateLessThan(Date date);
 
-    @Query(value = "SELECT SUM(T.AMOUNT) FROM TRASH_OR_USED AS T WHERE (T.STORAGE_ID = :storageId) AND (YEAR(T.DATE) = YEAR(:date)) AND (MONTH(T.DATE) = MONTH(:date)) AND (DAY(T.DATE) = DAY(:date))AND T.TRASH = :trash", nativeQuery = true)
-    Double sumOfSpecificMonth(Long storageId, Date date, boolean trash);
+    @Query(value = "SELECT COUNT(T.ITEM_NAME) from TRASH_OR_USED AS T WHERE (YEAR(T.DATE) = YEAR(:day)) AND (MONTH(T.DATE) = MONTH(:day)) AND (T.STORAGE_ID= :storageId)", nativeQuery = true)
+    Double sumOfArticlesOfSpecificMonth(@Param("storageId") Long storageId, @Param("day") LocalDate day);
 
-    @Modifying
-    @Query(value = "SELECT * FROM TRASH_OR_USED AS T WHERE (T.STORAGE_ID = :storageId) AND (YEAR(T.DATE) = YEAR(:date)) AND (MONTH(T.DATE) = MONTH(:date)) AND T.TRASH = :trash", nativeQuery = true)
-    List<TrashOrUsed> getTrashOrUsedByDateEqualsAndStorageIdEqualsAndTrashEquals(Date date, Long storageId, boolean trash);
+    @Query(value = "SELECT COUNT(T.ITEM_NAME) from TRASH_OR_USED AS T WHERE (YEAR(T.DATE) = YEAR(:day)) AND (T.STORAGE_ID= :storageId)", nativeQuery = true)
+    Double sumOfArticlesOfSpecificYear(@Param("storageId") Long storageId, @Param("day") LocalDate day);
 
-    @Modifying
-    @Query(value = "update TRASH_OR_USED AS T SET AMOUNT = AMOUNT+1 WHERE (T.STORAGE_ID = :storageId) AND (YEAR(T.DATE) = YEAR(:date)) AND (MONTH(T.DATE) = MONTH(:date)) AND (DAY(T.DATE) = DAY(:date))AND"
-        + " T.TRASH = :trash", nativeQuery = true)
-    void update(Date date, Long storageId, boolean trash);
 
 }

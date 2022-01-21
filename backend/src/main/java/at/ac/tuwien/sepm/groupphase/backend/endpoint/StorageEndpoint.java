@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemStorageDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.LocationDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TimeSumDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UnitOfQuantityDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ItemStorageMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.LocationMapper;
@@ -37,6 +38,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -151,6 +153,34 @@ public class StorageEndpoint {
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
+    }
+
+    @Secured("ROLE_USER")
+    @GetMapping(value = "/thrownAwayInSpecificMonth")
+    @ResponseStatus(HttpStatus.OK)
+    public TimeSumDto sumOfArticlesOfSpecificMonth(Authentication authentication, @Param("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
+        LOGGER.info("Endpoint: GET /api/v1/storage/{}", authentication);
+        if (authentication == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You are not logged-in");
+        }
+        if (date == null) {
+            return null;
+        }
+        return new TimeSumDto(storageService.sumOfArticlesOfSpecificMonth(authentication.getName(), date), date);
+    }
+
+    @Secured("ROLE_USER")
+    @GetMapping(value = "/thrownAwayInSpecificYear")
+    @ResponseStatus(HttpStatus.OK)
+    public TimeSumDto sumOfArticlesOfSpecificYear(Authentication authentication, @Param("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
+        LOGGER.info("Endpoint: GET /api/v1/storage/{}", authentication);
+        if (authentication == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You are not logged-in");
+        }
+        if (date == null) {
+            return null;
+        }
+        return new TimeSumDto(storageService.sumOfArticlesOfSpecificYear(authentication.getName(), date), date);
     }
 
     @GetMapping(value = "/location")

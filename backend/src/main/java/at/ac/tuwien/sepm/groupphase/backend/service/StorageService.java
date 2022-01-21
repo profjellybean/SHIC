@@ -7,6 +7,8 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 public interface StorageService {
@@ -161,4 +163,9 @@ public interface StorageService {
      *
      */
     void deleteLocation(Long id);
+
+    Double sumOfArticlesOfSpecificMonth(String user, LocalDate date);
+
+    Double sumOfArticlesOfSpecificYear(String user, LocalDate date);
+
 }

@@ -295,6 +295,28 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
+    public Double sumOfArticlesOfSpecificMonth(String user, LocalDate date) {
+        LOGGER.debug("Service: get sum of all articles thrown away in specific month");
+        Long registerId = userService.loadGroupStorageByUsername(user);
+        Double count = trashOrUsedRepository.sumOfArticlesOfSpecificMonth(registerId, date);
+        if (count == null) {
+            return 0.0;
+        }
+        return count;
+    }
+
+    @Override
+    public Double sumOfArticlesOfSpecificYear(String user, LocalDate date) {
+        LOGGER.debug("Service: get sum of all articles thrown away in specific year");
+        Long registerId = userService.loadGroupStorageByUsername(user);
+        Double count = trashOrUsedRepository.sumOfArticlesOfSpecificYear(registerId, date);
+        if (count == null) {
+            return 0.0;
+        }
+        return count;
+    }
+
+    @Override
     public List<ItemStorage> getAll(Long id) {
         LOGGER.debug("Getting all items");
         return itemStorageRepository.findAllByStorageId(id);

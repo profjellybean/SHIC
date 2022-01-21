@@ -35,5 +35,53 @@
   </tbody>
 
 </table>
+<br>
+<br>
+<br>
+<br>
+
+<h4>Articles thrown away per month</h4>
+<div *ngIf="sumOfLastTwelveMonthsThrownAway.length!==0">
+<table class='table'>
+  <thead>
+  <tr>
+    <th>Month</th>
+    <th>Number of articles you have thrown away</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let bill of sumOfLastTwelveMonthsThrownAway;">
+    <td >{{bill.date}}</td>
+    <td>{{bill.sum}} </td>
+  </tr>
+
+  </tbody>
+</table>
+</div>
+<div *ngIf="sumOfLastTwelveMonthsThrownAway.length===0">
+  <span>you have not thrown away any articles in the last twelve months!</span>
+</div>
+<br>
+<h4>Articles thrown away per year</h4>
+<div *ngIf="sumOfLastTenYearsThrownAway.length!==0">
+<table class='table'>
+  <thead>
+  <tr>
+    <th>Year </th>
+    <th>Number of articles you have thrown away</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let bill of sumOfLastTenYearsThrownAway;">
+    <td >{{bill.date}}</td>
+    <td>{{bill.sum}} </td>
+  </tr>
+  </tbody>
+</table>
+</div>
+<div *ngIf="sumOfLastTenYearsThrownAway.length===0">
+  <span>you have not thrown away any articles in the last ten years!</span>
+</div>
+<br>
 
 
