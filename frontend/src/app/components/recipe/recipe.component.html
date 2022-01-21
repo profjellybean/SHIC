@@ -19,7 +19,6 @@
 <h1>Recipe</h1>
 <p></p>
 <hr>
-<button type="button" class="btn btn-outline-info" (click)="openAddModal(recipeAddModal)">Add New Recipe</button>
 <div class="row p-2 mb-4">
   <ng-template #recipeAddModal let-modal>
     <div class="modal-header">
@@ -119,6 +118,17 @@
     </div>
   </ng-template>
 </div>
+
+<div>
+  <h5>Filter Recipes</h5>
+
+  <label for="search-by-name">Name: &nbsp;</label>
+  <input [(ngModel)]="searchName" type="search" id="search-by-name" (keyup)="findAllByName(searchName)">
+</div>
+<br>
+
+<button type="button" class="btn btn-outline-info" (click)="openAddModal(recipeAddModal)">Add New Recipe</button>
+
 <div class="recipe-list">
   <table class="table table-striped">
     <thead class="thead-dark">

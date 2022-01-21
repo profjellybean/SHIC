@@ -82,4 +82,9 @@ public class RecipeServiceImpl implements RecipeService {
         }
         recipeRepository.delete(helpRecipe);
     }
+
+    public List<Recipe> findRecipeBySubstring(String name) {
+        LOGGER.debug("Service: find all recipes with substring {} in name", name);
+        return recipeRepository.findAllByNameContainingIgnoreCaseOrderByNameAsc(name);
+    }
 }
