@@ -26,6 +26,7 @@ import { StatisticComponent } from './components/statistic/statistic.component';
 import { LocationTagComponent } from './components/location-tag/location-tag.component';
 import { NotificationsComponent } from './components/notifications/notifications.component';
 import { UnitOfQuantityComponent } from './components/unit-of-quantity/unit-of-quantity.component';
+import { HomepageComponent } from './components/homepage/homepage.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { UnitOfQuantityComponent } from './components/unit-of-quantity/unit-of-q
     StatisticComponent,
     LocationTagComponent,
     UnitOfQuantityComponent,
+    HomepageComponent,
   ],
   imports: [
     BrowserModule,
