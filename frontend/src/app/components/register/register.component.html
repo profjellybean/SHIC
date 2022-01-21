@@ -28,9 +28,9 @@
     <th>Date: </th>
     <th>Included: </th>
     <th>Yet to pay: </th>
-    <th>Items: </th>
     <th>Sum: </th>
     <th>To pay per person: </th>
+    <th>Items: </th>
     <th>Notes:</th>
   </tr>
   </thead>
@@ -39,15 +39,17 @@
     <td>{{bill.date}}</td>
     <td>{{bill.nameList}}</td>
     <td>{{bill.notPaidNameList}}</td>
-    <td><div *ngFor="let grocery of bill.groceries">{{grocery.name}}</div></td>
     <td>{{bill.sum}} €</td>
     <td>{{bill.sumPerPerson}} €</td>
+    <td><div *ngFor="let grocery of bill.groceries">{{grocery.name}}</div></td>
     <td>{{bill.notes}}</td>
     <td>
       <div>
         <button *ngIf="bill.notPaidNameList.includes(this.user.username)" type="button" class="btn btn-outline-info btn-sm mr-4" (click)="confirmPayment(bill.id);">Confirm Payment</button> &nbsp;
-        <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="openBillModal(billEditModal, bill);">Edit Bill</button> &nbsp;
-        <button type="button" class="btn btn-outline-danger btn-sm mr-4" (click)="openAddModal(billDeleteModal); this.billToDelete=bill">Delete</button>
+        <div style="float: right;">
+        <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="openBillModal(billEditModal, bill);" >Edit Bill</button> &nbsp;
+        <button type="button" class="btn btn-outline-danger btn-sm mr-4" (click)="openAddModal(billDeleteModal); this.billToDelete=bill" >Delete</button>
+        </div>
       </div>
     </td>
   </tr>
@@ -56,12 +58,13 @@
   <tr>
     <th>TOTAL:</th>
     <th></th>
+    <th></th>
     <th>{{billSumGroup}} €</th>
     <th>{{billSumUser}} € (for you to pay)</th>
+    <th></th>
+
+    <th></th>
     <th><button class=" btn btn-outline-info btn-sm mr-4" (click)="payAll()">Pay all bills</button></th>
-    <th></th>
-    <th></th>
-    <th></th>
   </tr>
   </tfoot>
   {{this.help}}

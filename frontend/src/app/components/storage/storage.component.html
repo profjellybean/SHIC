@@ -20,7 +20,7 @@
       name="location"
       [(ngModel)]="this.searchItem.locationTag"
       (change)="searchItems()">
-      <option [ngValue]="null">none</option>
+      <option [ngValue]="null">All</option>
       <option *ngFor="let locationTag of $any(locationTags)" [ngValue]="locationTag.name">{{locationTag.name}}</option>
     </select>
 
