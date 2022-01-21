@@ -14,7 +14,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ItemStorageRepository extends JpaRepository<ItemStorage, Long> {
+
     List<ItemStorage> findAllByStorageId(Long id);
+
+    List<ItemStorage> findAllByStorageIdOrderByNameAsc(Long id);
 
     List<ItemStorage> findAllByShoppingListId(Long id);
 

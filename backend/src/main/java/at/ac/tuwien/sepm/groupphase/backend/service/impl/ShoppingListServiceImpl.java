@@ -277,13 +277,13 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     @Override
     public List<Item> findAllItems() {
         LOGGER.debug("Find all items");
-        return itemRepository.findAll();
+        return itemRepository.findAllByOrderByNameAsc();
     }
 
     @Override
     public List<ItemStorage> findAllByShoppingListId(Long storageId) {
         LOGGER.debug("find all storage items of shopping list");
-        return shoppingListItemRepository.findAllByShoppingListId(storageId);
+        return shoppingListItemRepository.findAllByShoppingListIdOrderByNameAsc(storageId);
     }
 
     @Override

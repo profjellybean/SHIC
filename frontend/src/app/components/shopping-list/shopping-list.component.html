@@ -104,6 +104,11 @@
 
 </div>
 
+<div>
+  <button type="button" class="btn btn-outline-info" (click)="openAddModal(itemAddModal)">Add new Item</button> &nbsp;
+  <button *ngIf="items.length !== 0" type="button" class="btn btn-outline-info" id="buy-item" (click)="openBillModal(confirmationModal)" data-toggle="modal">Buy these Items</button>
+</div>
+
 <div *ngIf="items.length !== 0">
   <div class="shopping-list-list">
     <table class="table table-striped">
@@ -138,10 +143,7 @@
     </table>
   </div>
 </div>
-<div>
-  <button type="button" class="btn btn-outline-info" (click)="openAddModal(itemAddModal)">Add new Item</button> &nbsp;
-  <button *ngIf="items.length !== 0" type="button" class="btn btn-outline-info" id="buy-item" (click)="openBillModal(confirmationModal)" data-toggle="modal">Buy these Items</button>
-</div>
+
 
 <div>
   <ng-template #confirmationModal let-modal>

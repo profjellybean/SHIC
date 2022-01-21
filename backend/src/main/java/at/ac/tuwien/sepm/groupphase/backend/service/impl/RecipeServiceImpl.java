@@ -35,7 +35,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public List<Recipe> findAll() {
         LOGGER.debug("Find all recipes");
-        return recipeRepository.findAll();
+        return recipeRepository.findAllByOrderByNameAsc();
     }
 
     @Override
