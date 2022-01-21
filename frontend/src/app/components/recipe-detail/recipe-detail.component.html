@@ -1,10 +1,5 @@
 <br>
-<div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
-  <strong>Error! </strong> {{ errorMessage }}
-  <button type="button" (click)="vanishError()" class="btn btn-outline-info" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
+
 
 <div class="card">
 
@@ -138,8 +133,6 @@
     </div>
   </ng-template>
 </div>
-
-<br>
 <br>
 
 
@@ -158,6 +151,7 @@
       </div>
     </div>
 </div>
+<br>
 
 <div *ngIf="items && items.length > 0">
   <div class="card">
@@ -182,7 +176,20 @@
         <p class="card-text"> &nbsp; There is already enough of each ingredient in your Storage! </p>
   </div>
 </div>
+<br>
 
-<br>
-<br>
-<br>
+<div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+  <h4 class="alert-heading">Error
+    <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="vanishError()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </h4>
+  <p>{{error}}</p>
+</div>
+<div *ngIf="success" class="alert alert-success alert-dismissible fade show" role="alert">
+  <h4 class="alert-heading"> {{this.success}}
+    <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="vanishSuccess()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </h4>
+</div>

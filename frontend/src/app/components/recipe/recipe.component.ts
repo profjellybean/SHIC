@@ -9,6 +9,7 @@ import {User} from '../../dtos/user';
 import jwt_decode from 'jwt-decode';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {AuthService} from '../../services/auth.service';
+import {NotificationsComponent} from '../notifications/notifications.component';
 
 
 @Component({
@@ -26,7 +27,8 @@ export class RecipeComponent implements OnInit {
   popup= false;
   deleteRecipe: Recipe;
   recipeToAdd = this.nullRecipe;
-  error = false;
+  error: string;
+  success: string;
   errorMessage = '';
   submitted = false;
   allItems: Item[];
@@ -49,6 +51,7 @@ export class RecipeComponent implements OnInit {
     private itemService: ItemService,
     private userService: UserService,
     private authService: AuthService,
+    private notifications: NotificationsComponent
   ) {
   }
 
@@ -75,7 +78,8 @@ export class RecipeComponent implements OnInit {
         this.allItems = data;
       },
       error: error => {
-        this.defaultServiceErrorHandling(error);
+        console.error(error.message);
+        this.notifications.pushFailure('Error while getting all Items: ' + error.error.message);
       }
     });
   }
@@ -92,7 +96,7 @@ export class RecipeComponent implements OnInit {
   addRecipeForm(form) {
     this.submitted = true;
     if(this.recipeToAdd.ingredients === undefined || this.recipeToAdd.ingredients === null){
-      this.error = true;
+      this.error = 'Recipe needs ingredients';
     } else if (form.valid) {
       //this.storageService.addItem(this.item);
       console.log('form item to add', this.recipeToAdd);
@@ -117,7 +121,8 @@ export class RecipeComponent implements OnInit {
         this.reloadRecipes();
       },
       error: error => {
-        this.defaultServiceErrorHandling(error);
+        console.error(error.message);
+        this.notifications.pushFailure('Error while adding Recipe: ' + error.error.message);
       }
     });
   }
@@ -129,7 +134,8 @@ export class RecipeComponent implements OnInit {
         this.recipes = data;
       },
       error: error => {
-        this.defaultServiceErrorHandling(error);
+        console.error(error.message);
+        this.notifications.pushFailure('Error while reloading Recipes: ' + error.error.message);
       }
     });
   }
@@ -141,6 +147,7 @@ export class RecipeComponent implements OnInit {
       },
       error: error => {
         console.error(error.message);
+        this.notifications.pushFailure('Error while getting current Group: ' + error.error.message);
       }
     });
   }
@@ -149,17 +156,11 @@ export class RecipeComponent implements OnInit {
    * Error flag will be deactivated, which clears the error message
    */
   vanishError() {
-    this.error = false;
+    this.error = null;
   }
 
-  private defaultServiceErrorHandling(error: any) {
-    console.log(error);
-    this.error = true;
-    if (typeof error.error === 'object') {
-      this.errorMessage = error.error.error;
-    } else {
-      this.errorMessage = error.error;
-    }
+  public vanishSuccess(): void {
+    this.success = null;
   }
 
   private clearForm() {

@@ -10,6 +10,7 @@ import {ShowItem} from '../../dtos/ShowItem';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ItemService} from '../../services/item.service';
 import {StorageService} from '../../services/storage.service';
+import {NotificationsComponent} from '../notifications/notifications.component';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -38,7 +39,8 @@ export class RecipeDetailComponent implements OnInit {
   numberOfPeople = 1;
 
 
-  error = false;
+  error: string;
+  success: string;
   errorMessage = '';
   private expDate: number;
 
@@ -47,7 +49,8 @@ export class RecipeDetailComponent implements OnInit {
               private shoppingListService: ShoppingListService,
               private modalService: NgbModal,
               private itemService: ItemService,
-              private storageService: StorageService) {
+              private storageService: StorageService,
+              private notifications: NotificationsComponent) {
   }
 
   ngOnInit(): void {
@@ -71,13 +74,18 @@ export class RecipeDetailComponent implements OnInit {
     }
   */
   cookRecipe(){
+    if (!Number.isInteger(this.numberOfPeople)) {
+      this.error = 'Number of people has to be a whole number';
+      return;
+    }
     this.storageService.cookRecipe(this.recipe.id, this.numberOfPeople).subscribe({
       next: res => {
         this.items = null;
         this.deletedItems = res;
       },
-      error: err => {
-        this.defaultServiceErrorHandling(err);
+      error: error => {
+        console.error(error.message);
+        this.notifications.pushFailure('Error while cooking Recipe: ' + error.error.message);
       }
 
     });
@@ -85,24 +93,34 @@ export class RecipeDetailComponent implements OnInit {
   }
 
   planRecipe() {
+    if (!Number.isInteger(this.numberOfPeople)) {
+      this.error = 'Number of people has to be a whole number';
+      return;
+    }
     this.shoppingListService.planRecipe(this.recipe.id, this.numberOfPeople).subscribe({
       next: res => {
         this.items = res;
       },
-      error: err => {
-        this.defaultServiceErrorHandling(err);
+      error: error => {
+        console.error(error.message);
+        this.notifications.pushFailure('Error while planning Recipe: ' + error.error.message);
       }
     });
 
   }
 
   putRecipeOnShoppingList() {
+    if (!Number.isInteger(this.numberOfPeople)) {
+      this.error = 'Number of people has to be a whole number';
+      return;
+    }
     this.shoppingListService.putRecipeOnShoppingList(this.recipe.id, this.numberOfPeople).subscribe({
       next: res => {
         this.items = res;
       },
-      error: err => {
-        this.defaultServiceErrorHandling(err);
+      error: error => {
+        console.error(error.message);
+        this.notifications.pushFailure('Error while putting Items on Shopping List: ' + error.error.message);
       }
     });
 
@@ -112,11 +130,12 @@ export class RecipeDetailComponent implements OnInit {
   findRecipeById(id: number) {
     this.recipeService.findRecipeById(id).subscribe({
       next: data => {
-        console.log('received recipes', data);
+        console.log('received recipe', data);
         this.recipe = data;
       },
-      error: err => {
-        this.defaultServiceErrorHandling(err);
+      error: error => {
+        console.error(error.message);
+        this.notifications.pushFailure('Error while finding Recipe: ' + error.error.message);
       }
     });
   }
@@ -134,7 +153,8 @@ export class RecipeDetailComponent implements OnInit {
         this.allItems = data;
       },
       error: error => {
-        this.defaultServiceErrorHandling(error);
+        console.error(error.message);
+        this.notifications.pushFailure('Error while getting all Items: ' + error.error.message);
       }
     });
   }
@@ -157,7 +177,8 @@ export class RecipeDetailComponent implements OnInit {
         this.findRecipeById(this.recipe.id);
       },
       error: error => {
-        this.defaultServiceErrorHandling(error);
+        console.error(error.message);
+        this.notifications.pushFailure('Error while updating Recipe: ' + error.error.message);
       }
     });
   }
@@ -188,7 +209,7 @@ export class RecipeDetailComponent implements OnInit {
   updateRecipeForm(form) {
     this.submitted = true;
     if(this.recipeToUpdate.ingredients === undefined || this.recipeToUpdate.ingredients === null){
-      this.error = true;
+      this.error = 'Recipe needs ingredients';
     } else if (form.valid) {
       //this.storageService.addItem(this.item);
       console.log('form item to add', this.recipeToUpdate);
@@ -202,7 +223,11 @@ export class RecipeDetailComponent implements OnInit {
    * Error flag will be deactivated, which clears the error message
    */
   vanishError() {
-    this.error = false;
+    this.error = null;
+  }
+
+  public vanishSuccess(): void {
+    this.success = null;
   }
 
   findUnitOfQuantityById(id: number) {
@@ -215,14 +240,5 @@ export class RecipeDetailComponent implements OnInit {
     this.submitted = false;
   }
 
-  private defaultServiceErrorHandling(error: any) {
-    console.log(error);
-    this.error = true;
-    if (typeof error.error === 'object') {
-      this.errorMessage = error.error.error;
-    } else {
-      this.errorMessage = error.error;
-    }
-  }
 
 }
