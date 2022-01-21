@@ -188,6 +188,7 @@ public class ItemEndpoint {
     @Operation(summary = "Get all Items for specific Group by GroupId and by name")
     List<ItemDto> getAllItemsByGroupIdAndName(@PathVariable("name") String name, Authentication authentication) {
         LOGGER.info("Endpoint: getAllItemsByGroupIdAndName {}", name);
+        LOGGER.info(name);
         try {
             return itemMapper.itemsToItemDtos(itemService.searchByName(name, authentication.getName()));
         } catch (ValidationException e) {

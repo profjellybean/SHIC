@@ -61,6 +61,8 @@ export class ShoppingListComponent implements OnInit {
     image: null
   };
   groupId: number;
+  searchItemByName = null;
+
 
   constructor(private shoppingListService: ShoppingListService,
               private storageService: StorageService,
@@ -78,7 +80,6 @@ export class ShoppingListComponent implements OnInit {
     this.getCurrentGroup();
     this.isInPublic = true;
     this.loadUnitsOfQuantity();
-    this.loadItemsToAdd();
     this.loadGroupStorageId();
     this.loadGroupShoppingListId();
     this.getPrivateShoppingList();
@@ -93,6 +94,11 @@ export class ShoppingListComponent implements OnInit {
         this.user = data;
         this.groupId = this.user.currGroup.id;
         this.getAllUsers(this.groupId);
+        if (this.searchItemByName == null) {
+          this.loadItemsToAdd();
+        } else {
+          this.searchItemsToAdd();
+        }
       },
       error: error => {
         console.error(error.message);
@@ -232,6 +238,24 @@ export class ShoppingListComponent implements OnInit {
       next: data => {
         console.log('received items to add', data);
         this.itemsAdd = data;
+        if (this.itemsAdd.length > 5) {
+          this.itemsAdd = this.itemsAdd.splice(0, 5);
+        }
+      },
+      error: error => {
+        this.defaultServiceErrorHandling(error);
+      }
+    });
+  }
+
+  searchItemsToAdd() {
+    this.itemService.searchItemsByName(this.searchItemByName).subscribe({
+      next: data => {
+        console.log('received items to add by ' + this.searchItemByName, data);
+        this.itemsAdd = data;
+        if(this.itemsAdd.length > 5) {
+          this.itemsAdd = this.itemsAdd.splice(0,5);
+        }
       }
     });
   }
@@ -342,7 +366,7 @@ export class ShoppingListComponent implements OnInit {
   }
 
   isValidDate(date: Date): boolean {
-    if(this.submitted) {
+    if (this.submitted) {
       console.log('Validate date');
       if (date === null) {
         return false;

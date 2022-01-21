@@ -87,11 +87,7 @@ export class StorageComponent implements OnInit {
         this.getAllItemsByStorageId({id: this.user.currGroup.storageId});
         this.searchItem.storageId = this.user.currGroup.storageId;
         this.loadLocationTags(data.currGroup.storageId);
-        if(this.searchItemByName == null) {
-          this.loadItemsToAdd();
-        } else {
-          this.searchItemsToAdd();
-        }
+        this.itemsToAddMethod();
       },
       error: error => {
         console.error(error.message);
@@ -134,12 +130,11 @@ export class StorageComponent implements OnInit {
         this.getAllItemsByStorageId({id: this.user.currGroup.storageId});
         this.itemToAdd = this.nullItem;
         this.searchItemByName = null;
-        this.loadItemsToAdd();
+        this.itemsToAddMethod();
         console.log('added Item', data);
 
         // todo dont reload every time
-        this.searchItemsToAdd();
-
+        this.itemsToAddMethod();
       },
       error: error => {
         this.defaultServiceErrorHandling(error);
@@ -217,13 +212,20 @@ export class StorageComponent implements OnInit {
         console.log('updated Item', data);
 
         // todo dont reload every time
-        this.searchItemsToAdd();
-
+        this.itemsToAddMethod();
       },
       error: error => {
         this.defaultServiceErrorHandling(error);
       }
     });
+  }
+
+  itemsToAddMethod() {
+    if (this.searchItemByName == null || this.searchItemByName === '') {
+      this.loadItemsToAdd();
+    } else {
+      this.searchItemsToAdd();
+    }
   }
 
   loadItemsToAdd() {

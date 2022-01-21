@@ -114,7 +114,7 @@ public class ItemServiceImpl implements ItemService {
         if (groupId == null) {
             throw new ValidationException("groupId can not be null");
         }
-        if (name == null) {
+        if (name == null || name == "") {
             return this.getAllItemsForGroupByUsername(userName);
         } else {
             partName = "%" + name + "%";

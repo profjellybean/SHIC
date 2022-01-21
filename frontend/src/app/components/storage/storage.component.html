@@ -61,15 +61,15 @@
                  aria-describedby="nameHelp"
                  placeholder="Enter Name"
                  [(ngModel)]="this.searchItemByName"
-                 (change)="searchItemsToAdd()"
-                 (keyup)=" this.searchItemsToAdd()"/>
+                 (change)="this.itemsToAddMethod()"
+                 (keyup)=" this.itemsToAddMethod()"/>
         </div>
 
         <div>
           <ul
               id="itemToAdd"
               name="itemToAdd"
-              style="list-style-type: none; padding-left: 7pt;">
+              style="list-style-type: none; padding-left: 3pt;">
             <li *ngFor="let myItem of itemsToAdd;" style="float: left; padding-left: 3pt;">
               <button class="btn btn-outline-dark" (click)="this.itemToAdd = myItem">{{myItem.name}}</button>
             </li>

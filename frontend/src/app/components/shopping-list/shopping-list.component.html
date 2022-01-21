@@ -31,20 +31,35 @@
       <form (ngSubmit)="addItemForm(itemForm)" #itemForm="ngForm">
 
         <div class="form-group">
-          <label for="itemToAdd2">Add item: </label>
-          <select
-            class="form-control"
-            id="itemToAdd2"
-            name="itemToAdd2"
-            [(ngModel)]="this.itemToAdd">
-            <option *ngFor="let myItem of itemsAdd;" [ngValue]="myItem">{{myItem.name}}</option>
-            <option [ngValue]="null">none</option>
-
-
-          </select>
+          <label for="search-name"><h5>Search for Items: </h5></label>
+          <input type="text"
+                 autocomplete="off"
+                 name="name"
+                 class="form-control"
+                 id="search-name"
+                 aria-describedby="nameHelp"
+                 placeholder="Enter Name"
+                 [(ngModel)]="this.searchItemByName"
+                 (change)="searchItemsToAdd()"
+                 (keyup)=" this.searchItemsToAdd()"/>
         </div>
 
+        <div>
+          <ul
+            id="itemToAdd"
+            name="itemToAdd"
+            style="list-style-type: none; padding-left: 3pt;">
+            <li *ngFor="let myItem of itemsAdd;" style="float: left; padding-left: 3pt;">
+              <button class="btn btn-outline-dark" (click)="this.itemToAdd = myItem">{{myItem.name}}</button>
+            </li>
+          </ul>
+        </div>
+
+        <br>
+        <br>
+
         <div class="form-group">
+          <h5 class="modal-title">Enter Data: </h5>
           <label for="inputName">Name</label>
           <input rows="1" name="name" class="form-control" id="inputName" required
                  aria-describedby="nameHelp" placeholder="Enter Name" [(ngModel)]="itemToAdd.name">
