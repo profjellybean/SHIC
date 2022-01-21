@@ -44,7 +44,7 @@
   <ng-template #itemAddModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Item</h5>
-      <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
+      <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="modal.dismiss('X'); this.itemToAdd = nullItem" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -52,7 +52,7 @@
       <form (ngSubmit)="addItemForm(itemForm)" #itemForm="ngForm">
 
         <div class="form-group">
-          <label for="search-name">Search for items: </label>
+          <label for="search-name"><h5>Search for Items: </h5></label>
           <input type="text"
                  autocomplete="off"
                  name="name"
@@ -65,22 +65,21 @@
                  (keyup)=" this.searchItemsToAdd()"/>
         </div>
 
-
-        <div class="form-group">
-          <label for="itemToAdd">choose item: </label>
-          <br>
-          <ul class="form-control"
+        <div>
+          <ul
               id="itemToAdd"
               name="itemToAdd"
-              style="list-style-type: none">
-            <li *ngFor="let myItem of itemsToAdd;">
+              style="list-style-type: none; padding-left: 7pt;">
+            <li *ngFor="let myItem of itemsToAdd;" style="float: left; padding-left: 3pt;">
               <button class="btn btn-outline-dark" (click)="this.itemToAdd = myItem">{{myItem.name}}</button>
             </li>
           </ul>
         </div>
 
         <br>
+        <br>
         <div class="form-group">
+          <h5 class="modal-title">Enter Data: </h5>
           <label for="inputName">Name</label>
           <textarea rows="1" name="name" class="form-control" id="inputName" required
                     aria-describedby="nameHelp" placeholder="Enter Name" [(ngModel)]="itemToAdd.name"></textarea>
@@ -149,7 +148,7 @@
       <button type="button" (click)="addItemForm(itemForm)" id="add-msg" class="btn btn-outline-info float-right">Add
         Item
       </button>
-      <button type="button" class="btn btn-outline-dark" id="close-modal-btn" (click)="modal.dismiss('close')">Close
+      <button type="button" class="btn btn-outline-dark" id="close-modal-btn" (click)="modal.dismiss('close'); this.itemToAdd = nullItem">Close
       </button>
     </div>
   </ng-template>
