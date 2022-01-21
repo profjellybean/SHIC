@@ -4,12 +4,11 @@ import {Item} from '../../dtos/item';
 import {RecipeService} from '../../services/recipe.service';
 import {ActivatedRoute} from '@angular/router';
 import {ShoppingListService} from '../../services/shopping-list.service';
-import {elementAt, Observable} from 'rxjs';
-import {UnitOfQuantity} from '../../dtos/unitOfQuantity';
 import {ShowItem} from '../../dtos/ShowItem';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ItemService} from '../../services/item.service';
 import {StorageService} from '../../services/storage.service';
+import {NotificationsComponent} from '../notifications/notifications.component';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -47,7 +46,8 @@ export class RecipeDetailComponent implements OnInit {
               private shoppingListService: ShoppingListService,
               private modalService: NgbModal,
               private itemService: ItemService,
-              private storageService: StorageService) {
+              private storageService: StorageService,
+              private notfication: NotificationsComponent) {
   }
 
   ngOnInit(): void {
@@ -77,11 +77,9 @@ export class RecipeDetailComponent implements OnInit {
         this.deletedItems = res;
       },
       error: err => {
-        this.defaultServiceErrorHandling(err);
+        this.notfication.pushFailure('Cooking failed, insufficient items in storage!');
       }
-
     });
-
   }
 
   planRecipe() {
@@ -219,9 +217,9 @@ export class RecipeDetailComponent implements OnInit {
     console.log(error);
     this.error = true;
     if (typeof error.error === 'object') {
-      this.errorMessage = error.error.error;
+      this.notfication.pushFailure(error.error.error);
     } else {
-      this.errorMessage = error.error;
+      this.notfication.pushFailure(error.error);
     }
   }
 
