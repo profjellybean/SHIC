@@ -260,6 +260,7 @@ public class ItemStorageDataGenerator {
             itemStorageRepository.save(pesto2);
 
             // Items for fist shoppingList
+            /*
             ItemStorage feta3 = new ItemStorage("Feta", null, null, null, 1, Location.fridge.toString(), mappedUnits.get("pieces"), null, ID_OF_SHOPPINGLIST);
             LOGGER.debug("saving ItemStorage {}", feta3);
             itemStorageRepository.save(feta3);
@@ -275,7 +276,7 @@ public class ItemStorageDataGenerator {
             ItemStorage pesto3 = new ItemStorage("Pesto", "Genovese", null, null, 200, Location.fridge.toString(), mappedUnits.get("g"), null, ID_OF_SHOPPINGLIST);
             LOGGER.debug("saving ItemStorage {}", pesto3);
             itemStorageRepository.save(pesto3);
-
+*/
 
         } else {
             LOGGER.debug("generating {} ItemStorage entries", NUMBER_OF_ITEMSTORAGES);
