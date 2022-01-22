@@ -76,8 +76,7 @@ public class StorageServiceImpl implements StorageService {
                               ItemService itemService,
                               LocationRepository locationRepository,
                               UserService userService,
-                              RecipeRepository recipeRepository) {
-                              UserService userService, TrashOrUsedRepository trashOrUsedRepository, TrashOrUsedItemRepository trashOrUsedItemRepository) {
+                              RecipeRepository recipeRepository, TrashOrUsedRepository trashOrUsedRepository, TrashOrUsedItemRepository trashOrUsedItemRepository) {
         this.storageRepository = storageRepository;
         this.itemStorageRepository = itemStorageRepository;
         this.unitOfQuantityRepository = unitOfQuantityRepository;
