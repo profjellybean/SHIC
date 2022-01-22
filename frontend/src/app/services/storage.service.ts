@@ -5,8 +5,8 @@ import {Globals} from '../global/globals';
 import {Item} from '../dtos/item';
 import {Params} from '@angular/router';
 import {UnitOfQuantity} from '../dtos/unitOfQuantity';
-import {TimeSumBill} from "../dtos/time-sum-bill";
-import {NameSum} from "../dtos/name-sum";
+import {TimeSumBill} from '../dtos/time-sum-bill';
+import {NameSum} from '../dtos/name-sum';
 
 @Injectable({
   providedIn: 'root'
