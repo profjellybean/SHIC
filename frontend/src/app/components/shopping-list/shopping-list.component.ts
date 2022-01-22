@@ -51,6 +51,9 @@ export class ShoppingListComponent implements OnInit {
   unitsOfQuantity: UnitOfQuantity[];
   allUsers: User[] = null;
 
+  checkboxValues: boolean[] = [];
+  toggleAllItems: boolean;
+
   user: User = {
     // @ts-ignore
     username: jwt_decode(this.authService.getToken()).sub.trim(),
@@ -83,6 +86,7 @@ export class ShoppingListComponent implements OnInit {
     this.loadGroupShoppingListId();
     this.getPrivateShoppingList();
     this.getPublicShoppingList();
+    this.toggleAllItems = false;
 
   }
 
@@ -204,6 +208,7 @@ export class ShoppingListComponent implements OnInit {
           console.log(res);
           for (const item of this.itemsToBuy) {
             this.removeItemFromShoppingList(item);
+            this.toggleAllItems = false;
           }
         },
         error: err => {
@@ -214,8 +219,41 @@ export class ShoppingListComponent implements OnInit {
     );
   }
 
+  toggleAll() {
+    if (this.toggleAllItems === true) {
+      console.log('select all: ' + this.toggleAllItems);
+      for (let i = 0; i < this.items.length; i++) {
+        this.decheckCheckbox(this.items[i]);
+        this.checkboxValues[i] = false;
+      }
+    } else {
+      for (let i = 0; i < this.items.length; i++) {
+        this.checkCheckbox(this.items[i]);
+        this.checkboxValues[i] = true;
+      }
+    }
+  }
+
+  toggle(item: Item, i: number) {
+    if (this.checkboxValues[i] === true) {
+      this.decheckCheckbox(item);
+    } else {
+      this.checkCheckbox(item);
+    }
+  }
+
   checkCheckbox(item: Item) {
+    console.log('check: ' + item.name);
     this.itemsToBuy.push(item);
+  }
+
+  decheckCheckbox(item: Item) {
+    console.log('unchecked: ' + item.name);
+    for (let i = 0; i < this.itemsToBuy.length; i++) {
+      if (this.itemsToBuy[i].name === item.name) {
+        this.itemsToBuy.splice(i, 1);
+      }
+    }
   }
 
   loadUnitsOfQuantity() {
@@ -252,6 +290,7 @@ export class ShoppingListComponent implements OnInit {
             this.getPublicShoppingList();
           } else {
             this.items.push(data);
+            this.checkboxValues.push(false);
           }
 
           // todo dont reload every time
@@ -270,6 +309,7 @@ export class ShoppingListComponent implements OnInit {
             this.getPrivateShoppingList();
           } else {
             this.items.push(data);
+            this.checkboxValues.push(false);
           }
 
           // todo dont reload every time
@@ -298,6 +338,7 @@ export class ShoppingListComponent implements OnInit {
             this.getPublicShoppingList();
           } else {
             this.items.push(data);
+            this.checkboxValues.push(false);
           }
           // todo dont reload every time
           this.loadItemsToAdd();
@@ -315,6 +356,7 @@ export class ShoppingListComponent implements OnInit {
             this.getPrivateShoppingList();
           } else {
             this.items.push(data);
+            this.checkboxValues.push(false);
           }
           // todo dont reload every time
           this.loadItemsToAdd();
@@ -342,7 +384,7 @@ export class ShoppingListComponent implements OnInit {
   }
 
   isValidDate(date: Date): boolean {
-    if(this.submitted) {
+    if (this.submitted) {
       console.log('Validate date');
       if (date === null) {
         return false;
@@ -418,6 +460,7 @@ export class ShoppingListComponent implements OnInit {
     for (let i = 0; i < this.items.length; i++) {
       if (this.items[i].id === item.id) {
         this.items.splice(i, 1);
+        this.checkboxValues.splice(i, 1);
       }
     }
   }
