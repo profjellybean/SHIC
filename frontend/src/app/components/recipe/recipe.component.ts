@@ -120,6 +120,7 @@ export class RecipeComponent implements OnInit {
       next: data => {
         console.log('received recipes', data);
         this.reloadRecipes();
+        this.notifications.pushSuccess('Recipe has been added successfully');
       },
       error: error => {
         console.error(error.message);

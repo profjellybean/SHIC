@@ -12,6 +12,7 @@ import jwt_decode from 'jwt-decode';
 import {AuthService} from '../../services/auth.service';
 import {LocationTag} from '../../dtos/locationTag';
 import {LocationTagService} from '../../services/location-tag.service';
+import {NotificationsComponent} from '../notifications/notifications.component';
 
 
 @Component({
@@ -74,7 +75,8 @@ export class StorageComponent implements OnInit {
               private itemService: ItemService,
               private userService: UserService,
               private authService: AuthService,
-              private locationTagService: LocationTagService) {
+              private locationTagService: LocationTagService,
+              private notifications: NotificationsComponent) {
   }
 
   ngOnInit(): void {
@@ -95,7 +97,7 @@ export class StorageComponent implements OnInit {
         this.itemsToAddMethod();
       },
       error: error => {
-        console.error(error.message);
+        this.notifications.pushFailure('Error during getting group: ' + error.error.message);
       }
     });
   }
@@ -107,8 +109,7 @@ export class StorageComponent implements OnInit {
           this.locationTags = data;
         },
         error: err => {
-          console.log(err);
-          this.defaultServiceErrorHandling(err);
+          this.notifications.pushFailure('Error during getting location tags: ' + err.error.message);
         }
       }
     );
@@ -140,9 +141,10 @@ export class StorageComponent implements OnInit {
 
         // todo dont reload every time
         this.itemsToAddMethod();
+        this.notifications.pushSuccess('Item has been successfully added to your storage');
       },
       error: error => {
-        this.defaultServiceErrorHandling(error);
+        this.notifications.pushFailure('Error during adding item: ' + error.error.message);
       }
     });
   }
@@ -218,9 +220,10 @@ export class StorageComponent implements OnInit {
 
         // todo dont reload every time
         this.itemsToAddMethod();
+        this.notifications.pushSuccess('The Item has been successfully updated');
       },
       error: error => {
-        this.defaultServiceErrorHandling(error);
+        this.notifications.pushFailure('Error during updating item: ' + error.error.message);
       }
     });
   }
@@ -244,7 +247,7 @@ export class StorageComponent implements OnInit {
         }
       },
       error: error => {
-        this.defaultServiceErrorHandling(error);
+        this.notifications.pushFailure('Error while loading items to add: ' + error.error.message);
       }
     });
   }
@@ -286,8 +289,7 @@ export class StorageComponent implements OnInit {
         this.items = data;
       },
       error: error => {
-        console.error(error.message);
-        this.defaultServiceErrorHandling(error);
+        this.notifications.pushFailure('Error while searching item: ' + error.error.message);
       }
     });
   }
@@ -304,17 +306,16 @@ export class StorageComponent implements OnInit {
         next: data => {
           console.log(data);
           this.removeItemFromStorage(item);
+          this.notifications.pushSuccess('Item has been successfully deleted');
         },
         error: err => {
-          console.error(err);
-          this.defaultServiceErrorHandling(err);
+          this.notifications.pushFailure('Error while deleting item: ' + err.error.message);
         }
       }
     );
   }
 
   putOnPublicShoppinglist(item: Item) {
-    console.log('hey i am public ', item);
     item.shoppingListId = this.user.currGroup.publicShoppingListId;
     item.storageId = null;
     item.amount = this.shopAgainAmount;
@@ -324,19 +325,18 @@ export class StorageComponent implements OnInit {
     this.shoppingListService.addToPublicShoppingList(item).subscribe(
       {
         next: data => {
-          console.log('i got in public');
           this.deleteItem(item);
           this.getCurrUser();
+          this.notifications.pushSuccess('Item has been successfully added to shopping list');
         },
         error: err => {
-          this.defaultServiceErrorHandling(err);
+          this.notifications.pushFailure('Error while adding item to shopping list: ' + err.error.message);
         }
       }
     );
   }
 
   putOnPrivateShoppinglist(item: Item) {
-    console.log('hey i am private ', item);
     item.storageId = null;
     item.shoppingListId = this.user.privList;
     item.amount = this.shopAgainAmount;
@@ -346,12 +346,12 @@ export class StorageComponent implements OnInit {
     this.shoppingListService.addToPrivateShoppingList(item).subscribe(
       {
         next: data => {
-          console.log('i got in private');
           this.deleteItem(item);
           this.getCurrUser();
+          this.notifications.pushSuccess('Item has been successfully added to shopping list');
         },
         error: err => {
-          this.defaultServiceErrorHandling(err);
+          this.notifications.pushFailure('Error while adding item to shopping list: ' + err.error.message);
         }
       }
     );
@@ -419,7 +419,7 @@ export class StorageComponent implements OnInit {
         this.items = data;
       },
       error: error => {
-        console.error(error.message);
+        this.notifications.pushFailure('Error while getting all items: ' + error.error.message);
       }
     });
   }
@@ -428,16 +428,6 @@ export class StorageComponent implements OnInit {
     this.item = new Item();
     this.itemToAdd = new Item();
     this.submitted = false;
-  }
-
-  private defaultServiceErrorHandling(error: any) {
-    console.log(error);
-    this.error = true;
-    if (typeof error.error === 'object') {
-      this.errorMessage = error.error.error;
-    } else {
-      this.errorMessage = error.error;
-    }
   }
 
 }

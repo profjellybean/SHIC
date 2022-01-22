@@ -111,7 +111,7 @@ export class ShoppingListComponent implements OnInit {
         }
       },
       error: error => {
-        console.error(error.message);
+        this.notifications.pushFailure('Error during getting your group: ' + error.error.message);
       }
     });
   }
@@ -123,7 +123,7 @@ export class ShoppingListComponent implements OnInit {
         this.allUsers = data;
       },
       error: error => {
-        console.error(error.message);
+        this.notifications.pushFailure('Error during getting all users in this group: ' + error.error.message);
       }
     });
   }
@@ -148,8 +148,7 @@ export class ShoppingListComponent implements OnInit {
         this.items = data;
       },
       error: error => {
-        console.error(error.message);
-        this.defaultServiceErrorHandling(error);
+        this.notifications.pushFailure('Error during searching items: ' + error.error.message);
       }
     });
   }
@@ -170,10 +169,11 @@ export class ShoppingListComponent implements OnInit {
           next: res => {
             console.log(res);
             this.removeItemFromShoppingList(item);
+            this.notifications.pushSuccess('Item has been successfully deleted');
           },
           error: err => {
-            console.error(err);
-            this.defaultServiceErrorHandling(err);
+            console.log(err);
+            this.notifications.pushFailure('Error during deleting item: ' + err.error.message);
           }
         }
       );
@@ -182,11 +182,11 @@ export class ShoppingListComponent implements OnInit {
         {
           next: res => {
             console.log(res);
-            this.removeItemFromShoppingList(item);
+            this.notifications.pushSuccess('Item has been successfully deleted');
           },
           error: err => {
             console.error(err);
-            this.defaultServiceErrorHandling(err);
+            this.notifications.pushFailure('Error during deleting item: ' + err.error.message);
           }
         }
       );
@@ -206,7 +206,7 @@ export class ShoppingListComponent implements OnInit {
         },
         error: err => {
           console.error(err);
-          this.defaultServiceErrorHandling(err);
+          this.notifications.pushFailure('Error during getting private shopping list: ' + err.error.message);
         }
       }
     );
@@ -225,7 +225,7 @@ export class ShoppingListComponent implements OnInit {
         },
         error: err => {
           console.error(err);
-          this.defaultServiceErrorHandling(err);
+          this.notifications.pushFailure('Error during getting public shopping list: ' + err.error.message);
         }
       }
     );
@@ -242,7 +242,7 @@ export class ShoppingListComponent implements OnInit {
         },
         error: err => {
           console.log(err);
-          this.defaultServiceErrorHandling(err);
+          this.notifications.pushFailure('Error during moving items to storage: ' + err.error.message);
         }
       }
     );
@@ -303,7 +303,7 @@ export class ShoppingListComponent implements OnInit {
         }
       },
       error: error => {
-        this.defaultServiceErrorHandling(error);
+        this.notifications.pushFailure('Error during loading items to add: ' + error.error.message);
       }
     });
   }
@@ -341,10 +341,11 @@ export class ShoppingListComponent implements OnInit {
 
           // todo dont reload every time
           this.loadItemsToAdd();
+          this.notifications.pushSuccess('Added item successfully to public shopping list');
 
         },
         error: err => {
-          this.defaultServiceErrorHandling(err);
+          this.notifications.pushFailure('Error during adding item to shopping list: ' + err.error.message);
         }
       });
     } else {
@@ -360,10 +361,11 @@ export class ShoppingListComponent implements OnInit {
 
           // todo dont reload every time
           this.loadItemsToAdd();
+          this.notifications.pushSuccess('Added item successfully to private shopping list');
 
         },
         error: err => {
-          this.defaultServiceErrorHandling(err);
+          this.notifications.pushFailure('Error during adding item to shopping list: ' + err.error.message);
         }
       });
     }
@@ -374,7 +376,6 @@ export class ShoppingListComponent implements OnInit {
     this.setItemAmountChange(item);
     console.log('item amount change ', this.itemAmountChange);
     this.removeItemFromShoppingList(item);
-    console.log('deleted old item ', item);
 
     if (this.isInPublic) {
       console.log('change amount if item in public list', item);
@@ -388,9 +389,10 @@ export class ShoppingListComponent implements OnInit {
           }
           // todo dont reload every time
           this.loadItemsToAdd();
+          this.notifications.pushSuccess('Amount if this item has been successfully changed');
         },
         error: err => {
-          this.defaultServiceErrorHandling(err);
+          this.notifications.pushFailure('Error during changing amount of item: ' + err.error.message);
         }
       });
     } else {
@@ -406,10 +408,11 @@ export class ShoppingListComponent implements OnInit {
           }
           // todo dont reload every time
           this.loadItemsToAdd();
+          this.notifications.pushSuccess('Amount if this item has been successfully changed');
 
         },
         error: err => {
-          this.defaultServiceErrorHandling(err);
+          this.notifications.pushFailure('Error during changing amount of item: ' + err.error.message);
         }
       });
     }
@@ -484,10 +487,11 @@ export class ShoppingListComponent implements OnInit {
     this.billService.bill(bill).subscribe({
       next: data => {
         console.log(data);
+        this.notifications.pushSuccess('Bil has been created successfully');
       }
       ,
       error: err => {
-        this.defaultServiceErrorHandling(err);
+        this.notifications.pushFailure('Error during creating bill: ' + err.error.message);
       }
     });
   }
@@ -577,7 +581,7 @@ export class ShoppingListComponent implements OnInit {
         this.groupStorageId = data;
       },
       error: err => {
-        this.defaultServiceErrorHandling(err);
+        this.notifications.pushFailure('Error during loading group storage: ' + err.error.message);
       }
     });
   }
@@ -589,7 +593,7 @@ export class ShoppingListComponent implements OnInit {
         this.searchItem.shoppingListId = data;
       },
       error: err => {
-        this.defaultServiceErrorHandling(err);
+        this.notifications.pushFailure('Error during loading group shopping list: ' + err.error.message);
       }
     });
   }
@@ -640,17 +644,6 @@ export class ShoppingListComponent implements OnInit {
       this.itemAmountChange.shoppingListId = null;
     } else {
       this.itemAmountChange.shoppingListId = item.shoppingListId;
-    }
-  }
-
-  private defaultServiceErrorHandling(error: any) {
-    console.log(error);
-    this.error = true;
-    if (typeof error.error === 'object') {
-
-      this.errorMessage = error.error.message;
-    } else {
-      this.errorMessage = error.error;
     }
   }
 }

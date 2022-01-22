@@ -82,6 +82,7 @@ export class RecipeDetailComponent implements OnInit {
       next: res => {
         this.items = null;
         this.deletedItems = res;
+        this.notifications.pushSuccess('Recipe has been successfully cooked');
       },
       error: error => {
         console.error(error.message);
@@ -99,6 +100,7 @@ export class RecipeDetailComponent implements OnInit {
     this.shoppingListService.planRecipe(this.recipe.id, this.numberOfPeople).subscribe({
       next: res => {
         this.items = res;
+        this.notifications.pushSuccess('Ingredients has been successfully added to shopping list');
       },
       error: error => {
         console.error(error.message);
@@ -116,6 +118,7 @@ export class RecipeDetailComponent implements OnInit {
     this.shoppingListService.putRecipeOnShoppingList(this.recipe.id, this.numberOfPeople).subscribe({
       next: res => {
         this.items = res;
+        this.notifications.pushSuccess('Ingredients has been successfully added to shopping list');
       },
       error: error => {
         console.error(error.message);
@@ -174,6 +177,7 @@ export class RecipeDetailComponent implements OnInit {
       next: data => {
         console.log('received recipes', data);
         this.findRecipeById(this.recipe.id);
+        this.notifications.pushSuccess('Recipe has been updated successfully');
       },
       error: error => {
         console.error(error.message);
@@ -247,16 +251,6 @@ export class RecipeDetailComponent implements OnInit {
     this.tempIngredient = undefined;
     this.recipeToUpdate = new Recipe();
     this.submitted = false;
-  }
-
-  private defaultServiceErrorHandling(error: any) {
-    console.log(error);
-    this.error = null;
-    if (typeof error.error === 'object') {
-      this.notifications.pushFailure(error.error.error);
-    } else {
-      this.notifications.pushFailure(error.error);
-    }
   }
 
 }

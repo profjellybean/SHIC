@@ -12,6 +12,7 @@ import {UserService} from '../../services/user.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {BillDto} from '../../dtos/billDto';
 import {GroupService} from '../../services/group.service';
+import {NotificationsComponent} from '../notifications/notifications.component';
 
 @Component({
   selector: 'app-register',
@@ -67,7 +68,8 @@ export class RegisterComponent implements OnInit {
 
   constructor(private registerService: RegisterService, private billService: BillService, public route: ActivatedRoute,
               private authService: AuthService, private userService: UserService,
-              private modalService: NgbModal, private groupService: GroupService) {
+              private modalService: NgbModal, private groupService: GroupService,
+              private notifications: NotificationsComponent) {
   }
 
   ngOnInit(): void {
@@ -93,7 +95,7 @@ export class RegisterComponent implements OnInit {
         this.getBillSumUser();
       },
       error: error => {
-        console.error(error.message);
+        this.notifications.pushFailure('Error during getting your group: ' + error.error.message);
       }
     });
   }
@@ -105,7 +107,7 @@ export class RegisterComponent implements OnInit {
         this.allUsers = data;
       },
       error: error => {
-        console.error(error.message);
+        this.notifications.pushFailure('Error during getting all users in this group: ' + error.error.message);
       }
     });
   }
@@ -135,8 +137,9 @@ export class RegisterComponent implements OnInit {
         this.register.monthlyBudget = register.monthlyBudget;
         this.loadRegister(this.user.currGroup.registerId);
         this.getBillSumUser();
+        this.notifications.pushSuccess('Your payment has been confirmed');
       }, error: err => {
-        this.defaultServiceErrorHandling(err);
+        this.notifications.pushFailure('Error during confirming payment: ' + err.error.message);
       }
     });
   }
@@ -173,7 +176,7 @@ export class RegisterComponent implements OnInit {
         console.log(this.billArray);
         this.newMonthlyBudget = register.monthlyBudget;
       }, error: err => {
-        this.defaultServiceErrorHandling(err);
+        this.notifications.pushFailure('Error during loading register: ' + err.error.message);
       }
     });
   }
@@ -221,10 +224,10 @@ export class RegisterComponent implements OnInit {
         next: data => {
           console.log('received sum of all Bills this month', data);
           this.loadRegister(this.user.currGroup.registerId);
+          this.notifications.pushSuccess('Bill has been successfully updated');
         },
         error: error => {
-          console.error(error.message);
-          this.defaultServiceErrorHandling(error);
+          this.notifications.pushFailure('Error during editing the bill: ' + error.error.message);
         }
       });
       this.clearForm();
@@ -238,10 +241,10 @@ export class RegisterComponent implements OnInit {
         if (deleteIndex !== -1) {
           this.billArray.splice(deleteIndex, 1);
         }
+        this.notifications.pushSuccess('Bill has been successfully deleted');
       },
       error: error => {
-        console.error(error.message);
-        this.defaultServiceErrorHandling(error);
+        this.notifications.pushFailure('Error during deleting bill: ' + error.error.message);
       }
     });
   }
@@ -254,6 +257,7 @@ export class RegisterComponent implements OnInit {
         this.confirmPayment(b.id);
       }
     });
+    this.notifications.pushSuccess('All your bills have been payed');
   }
 
   private getMonthlySum() {
@@ -264,8 +268,7 @@ export class RegisterComponent implements OnInit {
         this.monthlySum = data;
       },
       error: error => {
-        console.error(error.message);
-        this.defaultServiceErrorHandling(error);
+        this.notifications.pushFailure('Error during loading monthly sum: ' + error.error.message);
       }
     });
   }
@@ -278,8 +281,7 @@ export class RegisterComponent implements OnInit {
         this.billSumGroup = data;
       },
       error: error => {
-        console.error(error.message);
-        this.defaultServiceErrorHandling(error);
+        this.notifications.pushFailure('Error during loading monthly group sum: ' + error.error.message);
       }
     });
   }
@@ -292,8 +294,7 @@ export class RegisterComponent implements OnInit {
         this.billSumUser = data;
       },
       error: error => {
-        console.error(error.message);
-        this.defaultServiceErrorHandling(error);
+        this.notifications.pushFailure('Error during loading your personal monthly sum: ' + error.error.message);
       }
     });
   }
@@ -305,10 +306,10 @@ export class RegisterComponent implements OnInit {
         console.log('edited monthly budget', data);
         this.register.monthlyBudget = data;
         this.monthlyDifference = this.register.monthlyBudget - this.monthlySum;
+        this.notifications.pushSuccess('Your group budget has been successfully updated');
       },
       error: error => {
-        console.error(error.message);
-        this.defaultServiceErrorHandling(error);
+        this.notifications.pushFailure('Error during editing monthly group budget: ' + error.error.message);
       }
     });
   }
