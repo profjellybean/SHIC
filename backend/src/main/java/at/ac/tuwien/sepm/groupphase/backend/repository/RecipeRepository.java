@@ -12,9 +12,25 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     /**
      * Find all recipes entries.
      *
-     * @return orderd list of all recipes entities
+     * @return list of all recipes entities
      */
     List<Recipe> findAll();
+
+    /**
+     * Find all recipes where name contains parameter name.
+     *
+     * @param name String that should be in the recipes name
+     *
+     * @return list of all recipes with names that contain specified String
+     */
+    List<Recipe> findAllByNameContainingIgnoreCaseOrderByNameAsc(String name);
+
+    /**
+     * Find all recipes entries, sorted by name A-Z.
+     *
+     * @return sorted list of all recipes entities
+     */
+    List<Recipe> findAllByOrderByNameAsc();
 
     /**
      * Find one recipe entry by id.

@@ -1,36 +1,45 @@
-
 <br>
 <h1 class="alert-heading">Bills</h1>
 <p></p>
 <hr>
 
-<th>Spending this month:</th>
-<br>
-{{monthlySum}}  €
-<br>
-<th>Group Budget:</th>
-<br>
-{{register.monthlyBudget}}  €
-&nbsp;<button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="openEditBudgetModal(budgetEditModal)">Edit</button>
-<br>
-<th>Rest Group Budget for this month:</th>
-<br>
-{{monthlyDifference}}  €
-<br>
+<table class="table tab-content" style="width:50%">
+  <tbody>
+  <tr>
+    <td><strong>Spending this month:</strong></td>
+    <td>{{monthlySum}}  €</td>
+  </tr>
+
+  <tr>
+    <td><strong>Group Budget:</strong></td>
+    <td>{{register.monthlyBudget}}  €
+      &nbsp;
+      <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="openEditBudgetModal(budgetEditModal)">Edit
+      </button>
+    </td>
+  </tr>
+
+  <tr>
+    <td><strong>Rest Group Budget for this month:</strong></td>
+    <td *ngIf="monthlyDifference !== undefined || monthlyDifference !== null">{{monthlyDifference}}  €</td>
+  </tr>
+  </tbody>
+</table>
 
 <br>
+<br>
 
-<th>Bills:</th>
+<h3>Bills:</h3>
 
 <table class="table table-striped">
   <thead class="thead-dark">
   <tr>
-    <th>Date: </th>
-    <th>Included: </th>
-    <th>Yet to pay: </th>
-    <th>Sum: </th>
-    <th>Sum per person: </th>
-    <th>Items: </th>
+    <th>Date:</th>
+    <th>Included:</th>
+    <th>Yet to pay:</th>
+    <th>Sum:</th>
+    <th>Sum per person:</th>
+    <th>Items:</th>
     <th>Notes:</th>
   </tr>
   </thead>
@@ -41,14 +50,22 @@
     <td>{{bill.notPaidNameList}}</td>
     <td>{{bill.sum}} €</td>
     <td>{{bill.sumPerPerson}} €</td>
-    <td><div *ngFor="let grocery of bill.groceries">{{grocery.name}}</div></td>
+    <td>
+      <div *ngFor="let grocery of bill.groceries">{{grocery.name}}</div>
+    </td>
     <td>{{bill.notes}}</td>
     <td>
       <div>
-        <button *ngIf="bill.notPaidNameList.includes(this.user.username)" type="button" class="btn btn-outline-info btn-sm mr-4" (click)="confirmPayment(bill.id);">Confirm Payment</button> &nbsp;
+        <button *ngIf="bill.notPaidNameList.includes(this.user.username)" type="button"
+                class="btn btn-outline-info btn-sm mr-4" (click)="confirmPayment(bill.id);">Confirm Payment
+        </button> &nbsp;
         <div style="float: right;">
-        <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="openBillModal(billEditModal, bill);" >Edit Bill</button> &nbsp;
-        <button type="button" class="btn btn-outline-danger btn-sm mr-4" (click)="openAddModal(billDeleteModal); this.billToDelete=bill" >Delete</button>
+          <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="openBillModal(billEditModal, bill);">
+            Edit Bill
+          </button> &nbsp;
+          <button type="button" class="btn btn-outline-danger btn-sm mr-4"
+                  (click)="openAddModal(billDeleteModal); this.billToDelete=bill">Delete
+          </button>
         </div>
       </div>
     </td>
@@ -64,7 +81,9 @@
     <th></th>
 
     <th></th>
-    <th><button class=" btn btn-outline-info btn-sm mr-4" (click)="payAll()">Pay all bills</button></th>
+    <th>
+      <button class=" btn btn-outline-info btn-sm mr-4" (click)="payAll()">Pay all bills</button>
+    </th>
   </tr>
   </tfoot>
   {{this.help}}
@@ -135,10 +154,12 @@
                     aria-describedby="notesHelp" placeholder="Enter Notes" [(ngModel)]="billToEdit.notes"></textarea>
         </div>
         <div class="modal-footer">
-        <button type="button" (click)="editBill(billForm)" id="add-msg1" class="btn btn-outline-info float-right">Save Changes</button>
-          <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('X')" aria-label="Close" >Close
+          <button type="button" (click)="editBill(billForm)" id="add-msg1" class="btn btn-outline-info float-right">Save
+            Changes
           </button>
-      </div>
+          <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('X')" aria-label="Close">Close
+          </button>
+        </div>
       </form>
     </div>
   </ng-template>
@@ -157,8 +178,11 @@
     <div>
       <p>Do you really want to delete this bill?</p>
       <div class="modal-footer">
-      <button type="button" class="btn btn-outline-danger" (click)="deleteBillById(); modal.dismiss('X')">Delete Bill</button>
-    </div></div>
+        <button type="button" class="btn btn-outline-danger" (click)="deleteBillById(); modal.dismiss('X')">Delete
+          Bill
+        </button>
+      </div>
+    </div>
   </div>
 </ng-template>
 

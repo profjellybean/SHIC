@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListItemRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitOfQuantityRepository;
 import org.slf4j.Logger;
@@ -37,14 +38,18 @@ public class ShoppingListDataGenerator {
     private final ShoppingListRepository shoppingListRepository;
     private final ItemStorageRepository itemStorageRepository;
     private final UnitOfQuantityRepository unitOfQuantityRepository;
+    private final ShoppingListItemRepository shoppingListItemRepository;
 
     private final UnitOfQuantityDataGenerator unitOfQuantityDataGenerator;
 
-    public ShoppingListDataGenerator(ShoppingListRepository shoppingListRepository, ItemStorageRepository itemStorageRepository, UnitOfQuantityRepository unitOfQuantityRepository, UnitOfQuantityDataGenerator unitOfQuantityDataGenerator) {
+    public ShoppingListDataGenerator(ShoppingListRepository shoppingListRepository, ItemStorageRepository itemStorageRepository,
+                                     UnitOfQuantityRepository unitOfQuantityRepository, UnitOfQuantityDataGenerator unitOfQuantityDataGenerator,
+                                     ShoppingListItemRepository shoppingListItemRepository) {
         this.shoppingListRepository = shoppingListRepository;
         this.itemStorageRepository = itemStorageRepository;
         this.unitOfQuantityRepository = unitOfQuantityRepository;
         this.unitOfQuantityDataGenerator = unitOfQuantityDataGenerator;
+        this.shoppingListItemRepository = shoppingListItemRepository;
     }
 
     //@PostConstruct
@@ -78,71 +83,71 @@ public class ShoppingListDataGenerator {
             //ItemStorage
             ItemStorage mushrooms = new ItemStorage("Mushrooms", null, null, null, 200,
                 Location.fridge.toString(), mappedUnits.get("g"), null, ID_OF_SHOPPINGLIST);
-            mushrooms = itemStorageRepository.save(mushrooms);
+            mushrooms = itemStorageRepository.saveAndFlush(mushrooms);
             ItemStorage pasta = new ItemStorage("Pasta", null, null, null, 500,
                 Location.shelf.toString(), mappedUnits.get("g"), null, ID_OF_SHOPPINGLIST);
-            pasta = itemStorageRepository.save(pasta);
+            pasta = itemStorageRepository.saveAndFlush(pasta);
             ItemStorage whippedCream = new ItemStorage("Whipped Cream", null, null, null,
                 1, Location.fridge.toString(), mappedUnits.get("L"), null, ID_OF_SHOPPINGLIST);
-            whippedCream = itemStorageRepository.save(whippedCream);
+            whippedCream = itemStorageRepository.saveAndFlush(whippedCream);
             ItemStorage parsley = new ItemStorage("Parsley", "Genovese", null, null,
                 200, Location.fridge.toString(), mappedUnits.get("g"), null, ID_OF_SHOPPINGLIST);
-            parsley = itemStorageRepository.save(parsley);
+            parsley = itemStorageRepository.saveAndFlush(parsley);
 
             ItemStorage fish = new ItemStorage("Fish", null, null, null,
                 200, Location.fridge.toString(), mappedUnits.get("g"), null, ID_OF_SHOPPINGLIST);
-            fish = itemStorageRepository.save(fish);
+            fish = itemStorageRepository.saveAndFlush(fish);
             ItemStorage chips = new ItemStorage("Chips", "Spicy", null, null,
                 100, Location.fridge.toString(), mappedUnits.get("g"), null, ID_OF_SHOPPINGLIST);
-            chips = itemStorageRepository.save(chips);
+            chips = itemStorageRepository.saveAndFlush(chips);
             ItemStorage salad = new ItemStorage("Salad", null, null, null,
                 1, Location.fridge.toString(), mappedUnits.get("pieces"), null, ID_OF_SHOPPINGLIST);
-            salad = itemStorageRepository.save(salad);
+            salad = itemStorageRepository.saveAndFlush(salad);
             ItemStorage fries = new ItemStorage("Fries", null, null, null,
                 500, Location.fridge.toString(), mappedUnits.get("g"), null, ID_OF_SHOPPINGLIST);
-            fries = itemStorageRepository.save(fries);
+            fries = itemStorageRepository.saveAndFlush(fries);
             ItemStorage cake = new ItemStorage("Cake", "For Emmis Birthday", null, null,
                 1, Location.fridge.toString(), mappedUnits.get("pieces"), null, ID_OF_SHOPPINGLIST);
-            cake = itemStorageRepository.save(cake);
+            cake = itemStorageRepository.saveAndFlush(cake);
             ItemStorage bananas = new ItemStorage("Bananas", null, null, null,
                 1, Location.fridge.toString(), mappedUnits.get("kg"), null, ID_OF_SHOPPINGLIST);
-            bananas = itemStorageRepository.save(bananas);
+            bananas = itemStorageRepository.saveAndFlush(bananas);
             ItemStorage ananas = new ItemStorage("Ananas", null, null, null,
                 1, Location.fridge.toString(), mappedUnits.get("pieces"), null, ID_OF_SHOPPINGLIST);
-            ananas = itemStorageRepository.save(ananas);
+            ananas = itemStorageRepository.saveAndFlush(ananas);
             ItemStorage garlic = new ItemStorage("Garlic", null, null, null,
                 3, Location.fridge.toString(), mappedUnits.get("pieces"), null, ID_OF_SHOPPINGLIST);
-            garlic = itemStorageRepository.save(garlic);
+            garlic = itemStorageRepository.saveAndFlush(garlic);
             ItemStorage onions = new ItemStorage("Onions", null, null, null,
                 100, Location.fridge.toString(), mappedUnits.get("g"), null, ID_OF_SHOPPINGLIST);
-            onions = itemStorageRepository.save(onions);
+            onions = itemStorageRepository.saveAndFlush(onions);
             ItemStorage orange = new ItemStorage("Oranges", null, null, null,
                 5, Location.fridge.toString(), mappedUnits.get("pieces"), null, ID_OF_SHOPPINGLIST);
-            orange = itemStorageRepository.save(orange);
+            orange = itemStorageRepository.saveAndFlush(orange);
             ItemStorage lemon = new ItemStorage("Lemons", null, null, null,
                 3, Location.fridge.toString(), mappedUnits.get("pieces"), null, ID_OF_SHOPPINGLIST);
-            lemon = itemStorageRepository.save(lemon);
+            lemon = itemStorageRepository.saveAndFlush(lemon);
             ItemStorage milk = new ItemStorage("Milk", null, null, null,
                 4, Location.fridge.toString(), mappedUnits.get("L"), null, ID_OF_SHOPPINGLIST);
-            milk = itemStorageRepository.save(milk);
+            milk = itemStorageRepository.saveAndFlush(milk);
             ItemStorage oliveOil = new ItemStorage("Olive Oil", null, null, null,
                 1, Location.fridge.toString(), mappedUnits.get("L"), null, ID_OF_SHOPPINGLIST);
-            oliveOil = itemStorageRepository.save(oliveOil);
+            oliveOil = itemStorageRepository.saveAndFlush(oliveOil);
             ItemStorage lemonJuice = new ItemStorage("Lemon Juice", null, null, null,
                 250, Location.fridge.toString(), mappedUnits.get("ml"), null, ID_OF_SHOPPINGLIST);
-            lemonJuice = itemStorageRepository.save(lemonJuice);
+            lemonJuice = itemStorageRepository.saveAndFlush(lemonJuice);
             ItemStorage chocolate = new ItemStorage("Chocolate", null, null, null,
                 200, Location.fridge.toString(), mappedUnits.get("g"), null, ID_OF_SHOPPINGLIST);
-            chocolate = itemStorageRepository.save(chocolate);
+            chocolate = itemStorageRepository.saveAndFlush(chocolate);
             ItemStorage waterMelon = new ItemStorage("Water Melon", null, null, null,
                 1, Location.fridge.toString(), mappedUnits.get("pieces"), null, ID_OF_SHOPPINGLIST);
-            waterMelon = itemStorageRepository.save(waterMelon);
+            waterMelon = itemStorageRepository.saveAndFlush(waterMelon);
             ItemStorage greenTea = new ItemStorage("Green Tea", null, null, null,
                 2, Location.fridge.toString(), mappedUnits.get("L"), null, ID_OF_SHOPPINGLIST);
-            greenTea = itemStorageRepository.save(greenTea);
+            greenTea = itemStorageRepository.saveAndFlush(greenTea);
             ItemStorage baguette = new ItemStorage("Baguette", null, null, null,
                 2, Location.fridge.toString(), mappedUnits.get("pieces"), null, ID_OF_SHOPPINGLIST);
-            baguette = itemStorageRepository.save(baguette);
+            baguette = itemStorageRepository.saveAndFlush(baguette);
 
             testShoppingListItems = new HashSet<ItemStorage>();
             testShoppingListItems.add(mushrooms);
@@ -169,9 +174,15 @@ public class ShoppingListDataGenerator {
             testShoppingListItems.add(greenTea);
             testShoppingListItems.add(baguette);
 
+            for (ItemStorage item :
+                testShoppingListItems) {
+                shoppingListItemRepository.insert(ID_OF_SHOPPINGLIST, item.getId());
+            }
+            /*
             ShoppingList shoppingList = shoppingListRepository.getById(ID_OF_SHOPPINGLIST);
             shoppingList.setItems(testShoppingListItems);
             shoppingListRepository.saveAndFlush(shoppingList);
+             */
         }
     }
 }

@@ -27,6 +27,7 @@ export class RecipeComponent implements OnInit {
   popup= false;
   deleteRecipe: Recipe;
   recipeToAdd = this.nullRecipe;
+  searchName = '';
   error: string;
   success: string;
   errorMessage = '';
@@ -135,7 +136,20 @@ export class RecipeComponent implements OnInit {
       },
       error: error => {
         console.error(error.message);
-        this.notifications.pushFailure('Error while reloading Recipes: ' + error.error.message);
+        this.notifications.pushFailure('Error while loading Recipes: ' + error.error.message);
+      }
+    });
+  }
+
+  findAllByName(name: string) {
+    this.recipeService.findAllByName(name).subscribe({
+      next: data => {
+        console.log('received recipes', data);
+        this.recipes = data;
+      },
+      error: error => {
+        console.error(error.message);
+        this.notifications.pushFailure('Error while loading Recipes: ' + error.error.message);
       }
     });
   }

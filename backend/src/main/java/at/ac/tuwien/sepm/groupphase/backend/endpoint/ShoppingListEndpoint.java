@@ -24,6 +24,7 @@ import at.ac.tuwien.sepm.groupphase.backend.util.ItemStorageValidator;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 //import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.hibernate.ObjectNotFoundException;
 import org.slf4j.Logger;
@@ -125,8 +126,6 @@ public class ShoppingListEndpoint {
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
-
-
     }
 
 
@@ -200,6 +199,16 @@ public class ShoppingListEndpoint {
         LOGGER.info("GET /items");
         return itemMapper.itemsToItemDtos(shoppingListService.findAllItems());
     }
+
+    @GetMapping(value = "/search")
+    @PermitAll
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Search for items from shopping list by Dto")
+    public List<ItemStorageDto> searchItem(@DateTimeFormat(pattern = "yyyy-MM-dd") ItemStorageDto itemStorageDto) {
+        LOGGER.info("searchItem, endpoint");
+        return itemStorageMapper.itemsStorageToItemsStorageDto(shoppingListService.searchItem(itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto)));
+    }
+
 
 
     @PermitAll

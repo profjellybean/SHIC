@@ -337,7 +337,7 @@ public class StorageServiceImpl implements StorageService {
     @Override
     public List<ItemStorage> getAll(Long id) {
         LOGGER.debug("Getting all items");
-        return itemStorageRepository.findAllByStorageId(id);
+        return itemStorageRepository.findAllByStorageIdOrderByNameAsc(id);
     }
 
     @Override

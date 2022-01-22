@@ -14,7 +14,7 @@
 
   &nbsp;
 
-    <label for="searchLocation">Location: &nbsp;</label>
+    <label for="searchLocation">Storage Location: &nbsp;</label>
     <select
       id="searchLocation"
       name="location"
@@ -37,13 +37,14 @@
 
 <!--TABLE START-->
 
-<button type="button" class="btn btn-outline-info" (click)="openAddModal(itemAddModal)">Add new Item</button>
+<button type="button" class="btn btn-outline-info" (click)="openAddModal(itemAddModal)">Add new Item
+</button>
 
 <div class="row p-2 mb-4">
   <ng-template #itemAddModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Item</h5>
-      <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
+      <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="modal.dismiss('X'); this.itemToAdd = nullItem" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -51,18 +52,34 @@
       <form (ngSubmit)="addItemForm(itemForm)" #itemForm="ngForm">
 
         <div class="form-group">
-          <label for="itemToAdd">Add item: </label>
-          <select
-            class="form-control"
-            id="itemToAdd"
-            name="itemToAdd"
-            [(ngModel)]="this.itemToAdd">
-            <option *ngFor="let myItem of itemsToAdd;" [ngValue]="myItem">{{myItem.name}}</option>
-            <option [ngValue]="null">none</option>
-          </select>
+          <label for="search-name"><h5>Search for Items: </h5></label>
+          <input type="text"
+                 autocomplete="off"
+                 name="name"
+                 class="form-control"
+                 id="search-name"
+                 aria-describedby="nameHelp"
+                 placeholder="Enter Name"
+                 [(ngModel)]="this.searchItemByName"
+                 (change)="this.itemsToAddMethod()"
+                 (keyup)=" this.itemsToAddMethod()"/>
         </div>
 
+        <div>
+          <ul
+              id="itemToAdd"
+              name="itemToAdd"
+              style="list-style-type: none; padding-left: 3pt;">
+            <li *ngFor="let myItem of itemsToAdd;" style="float: left; padding-left: 3pt;">
+              <button class="btn btn-outline-dark" (click)="this.itemToAdd = myItem">{{myItem.name}}</button>
+            </li>
+          </ul>
+        </div>
+
+        <br>
+        <br>
         <div class="form-group">
+          <h5 class="modal-title">Enter Data: </h5>
           <label for="inputName">Name</label>
           <textarea rows="1" name="name" class="form-control" id="inputName" required
                     aria-describedby="nameHelp" placeholder="Enter Name" [(ngModel)]="itemToAdd.name"></textarea>
@@ -108,7 +125,7 @@
         </div>
 
         <div class="form-group">
-          <label for="inputLocation">Location</label>
+          <label for="inputLocation">Storage Location</label>
           <select
             class="form-control"
             id="inputLocation"
@@ -128,9 +145,10 @@
       </form>
     </div>
     <div class="modal-footer">
-      <button type="button" (click)="addItemForm(itemForm)" id="add-msg" class="btn btn-outline-info float-right">Add Item
+      <button type="button" (click)="addItemForm(itemForm)" id="add-msg" class="btn btn-outline-info float-right">Add
+        Item
       </button>
-      <button type="button" class="btn btn-outline-dark" id="close-modal-btn" (click)="modal.dismiss('close')">Close
+      <button type="button" class="btn btn-outline-dark" id="close-modal-btn" (click)="modal.dismiss('close'); this.itemToAdd = nullItem">Close
       </button>
     </div>
   </ng-template>
@@ -143,7 +161,7 @@
     <th>Amount</th>
     <th>Quantity</th>
     <th>ExpDate</th>
-    <th>LocationTag</th>
+    <th>Storage LocationTag</th>
     <th>Notes</th>
     <th></th>
     <th></th>
@@ -273,7 +291,7 @@
         </div>
 
         <div class="form-group">
-          <label for="inputLocation">Location</label>
+          <label for="inputLocation">Storage Location</label>
           <select
             class="form-control"
             id="updateLocation"

@@ -35,7 +35,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public List<Recipe> findAll() {
         LOGGER.debug("Find all recipes");
-        return recipeRepository.findAll();
+        return recipeRepository.findAllByOrderByNameAsc();
     }
 
     @Override
@@ -81,5 +81,10 @@ public class RecipeServiceImpl implements RecipeService {
             throw new NotFoundException("recipe not found");
         }
         recipeRepository.delete(helpRecipe);
+    }
+
+    public List<Recipe> findRecipeBySubstring(String name) {
+        LOGGER.debug("Service: find all recipes with substring {} in name", name);
+        return recipeRepository.findAllByNameContainingIgnoreCaseOrderByNameAsc(name);
     }
 }

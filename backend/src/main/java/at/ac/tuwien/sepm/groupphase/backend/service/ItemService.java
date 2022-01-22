@@ -27,6 +27,16 @@ public interface ItemService {
 
     List<Item> getAllItems();
 
+
+    /**
+     * search all items for a group, specified by name, where groupId is either null or the id of the group.
+     *
+     *
+     * @return list of said items
+     *
+     */
+    List<Item> searchByName(String name, String userName);
+
     /**
      * gets all items for a group, specified by userName, where groupId is either null or the id of the group.
      *

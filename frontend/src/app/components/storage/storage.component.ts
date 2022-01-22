@@ -62,6 +62,8 @@ export class StorageComponent implements OnInit {
   unitsOfQuantity: UnitOfQuantity[];
   locationTags: LocationTag[] = null;
 
+  searchItemByName = null;
+
 
   constructor(private storageService: StorageService,
               private modalService: NgbModal,
@@ -74,7 +76,6 @@ export class StorageComponent implements OnInit {
 
   ngOnInit(): void {
     this.getCurrUser();
-    this.loadItemsToAdd();
     this.loadUnitsOfQuantity();
   }
 
@@ -86,6 +87,7 @@ export class StorageComponent implements OnInit {
         this.getAllItemsByStorageId({id: this.user.currGroup.storageId});
         this.searchItem.storageId = this.user.currGroup.storageId;
         this.loadLocationTags(data.currGroup.storageId);
+        this.itemsToAddMethod();
       },
       error: error => {
         console.error(error.message);
@@ -127,11 +129,12 @@ export class StorageComponent implements OnInit {
         //this.items.push(item);
         this.getAllItemsByStorageId({id: this.user.currGroup.storageId});
         this.itemToAdd = this.nullItem;
+        this.searchItemByName = null;
+        this.itemsToAddMethod();
         console.log('added Item', data);
 
         // todo dont reload every time
-        this.loadItemsToAdd();
-
+        this.itemsToAddMethod();
       },
       error: error => {
         this.defaultServiceErrorHandling(error);
@@ -209,8 +212,7 @@ export class StorageComponent implements OnInit {
         console.log('updated Item', data);
 
         // todo dont reload every time
-        this.loadItemsToAdd();
-
+        this.itemsToAddMethod();
       },
       error: error => {
         this.defaultServiceErrorHandling(error);
@@ -218,16 +220,38 @@ export class StorageComponent implements OnInit {
     });
   }
 
+  itemsToAddMethod() {
+    if (this.searchItemByName == null || this.searchItemByName === '') {
+      this.loadItemsToAdd();
+    } else {
+      this.searchItemsToAdd();
+    }
+  }
+
   loadItemsToAdd() {
     //this.shoppingListService.findAllItems().subscribe({
     this.itemService.findAllItemsForGroup().subscribe({
       next: data => {
         console.log('received items to add', data);
-
         this.itemsToAdd = data;
+        if(this.itemsToAdd.length > 5) {
+          this.itemsToAdd = this.itemsToAdd.splice(0,5);
+        }
       },
       error: error => {
         this.defaultServiceErrorHandling(error);
+      }
+    });
+  }
+
+  searchItemsToAdd() {
+    this.itemService.searchItemsByName(this.searchItemByName).subscribe({
+      next: data => {
+        console.log('received items to add by ' + this.searchItemByName, data);
+        this.itemsToAdd = data;
+        if(this.itemsToAdd.length > 5) {
+          this.itemsToAdd = this.itemsToAdd.splice(0,5);
+        }
       }
     });
   }

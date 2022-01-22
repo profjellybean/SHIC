@@ -21,13 +21,15 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.annotation.security.PermitAll;
@@ -177,6 +179,20 @@ public class ItemEndpoint {
             return itemMapper.itemsToItemDtos(itemService.findAllByGroupIdByUsername(authentication.getName()));
         } catch (ValidationException e) {
             LOGGER.error("Error while getting all Items for Group by groupId: {}", e.getMessage());
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
+        }
+    }
+
+    @GetMapping("/groupItemsByGroupIdAndName/{name}")
+    @Secured("ROLE_USER")
+    @Operation(summary = "Get all Items for specific Group by GroupId and by name")
+    List<ItemDto> getAllItemsByGroupIdAndName(@PathVariable("name") String name, Authentication authentication) {
+        LOGGER.info("Endpoint: getAllItemsByGroupIdAndName {}", name);
+        LOGGER.info(name);
+        try {
+            return itemMapper.itemsToItemDtos(itemService.searchByName(name, authentication.getName()));
+        } catch (ValidationException e) {
+            LOGGER.error("Error while getting all Items for Group by groupId and name: {}", e.getMessage());
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
         }
     }
