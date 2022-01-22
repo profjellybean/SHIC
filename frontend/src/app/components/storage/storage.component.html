@@ -200,13 +200,13 @@
 
               <form >
                 <fieldset >
-                  <input type="radio" id="mc" name="trashOrNot" [(ngModel)]="this.trash" value="true" checked>
-                  <label for="mc">  &nbsp;&nbsp; Thrown away    </label>
+                  <input type="radio" id="mc" name="trashOrNot" [(ngModel)]="this.trash" value="false" checked>
+                  <label for="mc">  &nbsp;&nbsp;   Used  </label>
                   <br>
                   <br>
-                  <input type="radio" id="vi" name="trashOrNot" [(ngModel)]="this.trash" value="false">
+                  <input type="radio" id="vi" name="trashOrNot" [(ngModel)]="this.trash" value="true" >
 
-                  <label for="vi">  &nbsp;&nbsp;   Used     </label>
+                  <label for="vi">  &nbsp;&nbsp;   Thrown away     </label>
 
                 </fieldset>
               </form>

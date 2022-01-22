@@ -82,7 +82,7 @@ export class StorageComponent implements OnInit {
   ngOnInit(): void {
     this.getCurrUser();
     this.loadUnitsOfQuantity();
-    this.trash='true';
+    this.trash='false';
 
   }
 
