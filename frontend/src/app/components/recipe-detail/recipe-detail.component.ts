@@ -186,14 +186,24 @@ export class RecipeDetailComponent implements OnInit {
     this.recipeToUpdate.id = recipe.id;
     this.recipeToUpdate.name = recipe.name;
     this.recipeToUpdate.description = recipe.description;
-    this.recipeToUpdate.ingredients = recipe.ingredients;
-    this.recipeToUpdate.categories = recipe.categories;
+    if(recipe.ingredients != null) {
+      for (const ingredient of recipe.ingredients) {
+        this.recipeToUpdate.ingredients.push(ingredient);
+      }
+    } else {
+      this.recipeToUpdate.ingredients = null;
+    }
+    if(recipe.categories != null) {
+      for (const categorie of recipe.categories) {
+        this.recipeToUpdate.categories.push(categorie);
+      }
+    } else {
+      this.recipeToUpdate.categories = null;
+    }
     this.recipeToUpdate.groupId = recipe.groupId;
-    console.log('I am set ' + this.recipeToUpdate.name);
   }
 
   removeItem(item: Item) {
-    console.log('now i will delete you ' + this.recipeToUpdate.ingredients);
     for (let i = 0; i < this.recipeToUpdate.ingredients.length; i++) {
       if(this.recipeToUpdate.ingredients[i].id === item.id) {
         this.recipeToUpdate.ingredients.splice(i, 1);
