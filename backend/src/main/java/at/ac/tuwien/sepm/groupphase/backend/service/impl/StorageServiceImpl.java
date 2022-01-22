@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 import at.ac.tuwien.sepm.groupphase.backend.entity.LocationClass;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrashOrUsed;
+import at.ac.tuwien.sepm.groupphase.backend.entity.TrashOrUsedItem;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Storage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitsRelation;
@@ -15,6 +16,7 @@ import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.LocationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.TrashOrUsedItemRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TrashOrUsedRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitsRelationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageItemStorageRepository;
@@ -24,16 +26,12 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.UnitOfQuantityRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.ItemService;
 import at.ac.tuwien.sepm.groupphase.backend.service.StorageService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
-import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -57,6 +55,7 @@ public class StorageServiceImpl implements StorageService {
     private final LocationRepository locationRepository;
     private final UserService userService;
     private final TrashOrUsedRepository trashOrUsedRepository;
+    private final TrashOrUsedItemRepository trashOrUsedItemRepository;
 
     @Autowired
     public StorageServiceImpl(StorageRepository storageRepository,
@@ -67,7 +66,7 @@ public class StorageServiceImpl implements StorageService {
                               UserGroupRepository userGroupRepository,
                               ItemService itemService,
                               LocationRepository locationRepository,
-                              UserService userService, TrashOrUsedRepository trashOrUsedRepository) {
+                              UserService userService, TrashOrUsedRepository trashOrUsedRepository, TrashOrUsedItemRepository trashOrUsedItemRepository) {
         this.storageRepository = storageRepository;
         this.itemStorageRepository = itemStorageRepository;
         this.unitOfQuantityRepository = unitOfQuantityRepository;
@@ -78,6 +77,7 @@ public class StorageServiceImpl implements StorageService {
         this.locationRepository = locationRepository;
         this.userService = userService;
         this.trashOrUsedRepository = trashOrUsedRepository;
+        this.trashOrUsedItemRepository = trashOrUsedItemRepository;
     }
 
     @Override
@@ -112,6 +112,16 @@ public class StorageServiceImpl implements StorageService {
                 if (trash) {
                     TrashOrUsed trashOrUsed = new TrashOrUsed(new Date(), itemToDelete.getAmount(), itemToDelete.getStorageId(), itemToDelete.getQuantity(), itemToDelete.getName());
                     trashOrUsedRepository.saveAndFlush(trashOrUsed);
+                    List<TrashOrUsedItem> trashOrUsedItems = trashOrUsedItemRepository.findAllByItemNameEqualsAndStorageIdEquals(itemToDelete.getName(), itemToDelete.getStorageId());
+                    if (trashOrUsedItems == null) {
+                        trashOrUsedItemRepository.saveAndFlush(new TrashOrUsedItem(1, itemToDelete.getName(), itemToDelete.getStorageId()));
+
+                    } else if (trashOrUsedItems.isEmpty()) {
+                        trashOrUsedItemRepository.saveAndFlush(new TrashOrUsedItem(1, itemToDelete.getName(), itemToDelete.getStorageId()));
+                    } else {
+                        trashOrUsedItems.get(0).setAmount(trashOrUsedItems.get(0).getAmount() + 1);
+                        trashOrUsedItemRepository.saveAndFlush(trashOrUsedItems.get(0));
+                    }
                 }
 
 
@@ -314,6 +324,13 @@ public class StorageServiceImpl implements StorageService {
             return 0.0;
         }
         return count;
+    }
+
+    @Override
+    public List<TrashOrUsedItem> getMostThrownAwayArticles(String user) {
+        LOGGER.debug("Get most thrown away articles");
+        Long storageId = userService.loadGroupStorageByUsername(user);
+        return trashOrUsedItemRepository.getTenMostOftenThrownAwayItem(storageId);
     }
 
     @Override

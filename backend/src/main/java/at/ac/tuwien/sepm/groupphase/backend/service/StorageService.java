@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.LocationClass;
+import at.ac.tuwien.sepm.groupphase.backend.entity.TrashOrUsedItem;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
@@ -167,5 +168,7 @@ public interface StorageService {
     Double sumOfArticlesOfSpecificMonth(String user, LocalDate date);
 
     Double sumOfArticlesOfSpecificYear(String user, LocalDate date);
+
+    List<TrashOrUsedItem> getMostThrownAwayArticles(String user);
 
 }

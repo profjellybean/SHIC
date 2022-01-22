@@ -2,12 +2,14 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemStorageDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.LocationDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NameSumDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TimeSumDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UnitOfQuantityDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ItemStorageMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.LocationMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UnitOfQuantityMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.entity.TrashOrUsedItem;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
@@ -182,6 +184,26 @@ public class StorageEndpoint {
         }
         return new TimeSumDto(storageService.sumOfArticlesOfSpecificYear(authentication.getName(), date), date);
     }
+
+    @Secured("ROLE_USER")
+    @GetMapping(value = "/mostOftenThrownAwayArticles")
+    @ResponseStatus(HttpStatus.OK)
+    public NameSumDto[] mostOftenThrownAwayArticles(Authentication authentication) {
+        LOGGER.info("Endpoint: GET /api/v1/storage/{}", authentication);
+        if (authentication == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You are not logged-in");
+        }
+        List<TrashOrUsedItem> trashOrUsedItems = storageService.getMostThrownAwayArticles(authentication.getName());
+        NameSumDto[] nameSumDtos = new NameSumDto[10];
+        int sum = 0;
+        for (TrashOrUsedItem i : trashOrUsedItems) {
+            nameSumDtos[sum] = new NameSumDto(i.getItemName(), i.getAmount());
+            sum++;
+        }
+        return nameSumDtos;
+
+    }
+
 
     @GetMapping(value = "/location")
     @PermitAll
