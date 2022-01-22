@@ -256,6 +256,7 @@ export class ShoppingListComponent implements OnInit {
         this.checkboxValues[i] = false;
       }
     } else {
+      console.log('unselect all: ' + this.toggleAllItems);
       for (let i = 0; i < this.items.length; i++) {
         this.checkCheckbox(this.items[i]);
         this.checkboxValues[i] = true;

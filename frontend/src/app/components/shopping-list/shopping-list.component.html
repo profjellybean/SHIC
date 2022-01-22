@@ -128,7 +128,7 @@
   <div>
     <input *ngIf="items !== null && items.length !== 0" type="checkbox" class="btn-check" id="select-all" (click)="toggleAll()" [(ngModel)]="toggleAllItems" autocomplete="off"><label class="btn btn-outline-info" for="select-all">Select all Items</label> &nbsp;
     <button type="button" class="btn btn-outline-info" (click)="openAddModal(itemAddModal)">Add new Item</button> &nbsp;
-    <button *ngIf="items.length !== 0" type="button" class="btn btn-outline-info" id="buy-item"
+    <button *ngIf="items !== null && items.length !== 0" type="button" class="btn btn-outline-info" id="buy-item"
             (click)="openBillModal(confirmationModal)" data-toggle="modal">Buy these Items
     </button>
   </div>
