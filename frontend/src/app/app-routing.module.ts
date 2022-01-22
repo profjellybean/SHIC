@@ -16,6 +16,7 @@ import {CustomItemComponent} from './components/custom-item/custom-item.componen
 import {StatisticComponent} from './components/statistic/statistic.component';
 import {LocationTagComponent} from './components/location-tag/location-tag.component';
 import {UnitOfQuantityComponent} from './components/unit-of-quantity/unit-of-quantity.component';
+import {HomepageComponent} from './components/homepage/homepage.component';
 
 
 const routes: Routes = [
@@ -34,7 +35,9 @@ const routes: Routes = [
   {path: 'user', canActivate: [AuthGuard], component: UserComponent},
   {path: 'statistic', component: StatisticComponent},
   {path: 'locationTag', component: LocationTagComponent},
-  {path: 'unitOfQuantity', component: UnitOfQuantityComponent}
+  {path: 'unitOfQuantity', component: UnitOfQuantityComponent},
+  {path: 'homepage', component: HomepageComponent}
+
 
 ];
 

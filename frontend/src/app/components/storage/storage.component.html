@@ -1,9 +1,3 @@
-<div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
-  <strong>Error! </strong> {{ errorMessage }}
-  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
 
 <br>
 <h1>Storage</h1><h4>{{this.user.currGroup.name}}</h4>
@@ -14,25 +8,25 @@
 <div>
   <h5>Filter Storage</h5>
   <div>
-    <label for="new-name">name: &nbsp;</label>
+    <label for="new-name">Name: &nbsp;</label>
     <input #name (keyup)="name.value= this.searchItem.name; this.searchItems()"
-           (change)="searchItems()" id="new-name" [(ngModel)]="this.searchItem.name" placeholder="name"/>
-  </div>
-  <br>
-  <div>
-    <label for="searchLocation">Location:  </label>
+           (change)="searchItems()" id="new-name" [(ngModel)]="this.searchItem.name"/>
+
+  &nbsp;
+
+    <label for="searchLocation">Storage Location: &nbsp;</label>
     <select
       id="searchLocation"
       name="location"
       [(ngModel)]="this.searchItem.locationTag"
       (change)="searchItems()">
-      <option [ngValue]="null">none</option>
+      <option [ngValue]="null">All</option>
       <option *ngFor="let locationTag of $any(locationTags)" [ngValue]="locationTag.name">{{locationTag.name}}</option>
     </select>
-  </div>
-  <br>
-  <div>
-    <label for="searchDate">Exp.Date:  </label>
+
+  &nbsp;
+
+    <label for="searchDate">Exp.Date: &nbsp; </label>
     <input type="date" [(ngModel)]="this.searchItem.expDate" id="searchDate" (change)="searchItems()" />
   </div>
 
@@ -43,13 +37,14 @@
 
 <!--TABLE START-->
 
-<button type="button" class="btn btn-outline-info btn-sm mr-4" (click)="openAddModal(itemAddModal)">Add new Item</button>
+<button type="button" class="btn btn-outline-info" (click)="openAddModal(itemAddModal)">Add new Item
+</button>
 
 <div class="row p-2 mb-4">
   <ng-template #itemAddModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Item</h5>
-      <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
+      <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="modal.dismiss('X'); this.itemToAdd = nullItem" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -57,18 +52,34 @@
       <form (ngSubmit)="addItemForm(itemForm)" #itemForm="ngForm">
 
         <div class="form-group">
-          <label for="itemToAdd">Add item: </label>
-          <select
-            class="form-control"
-            id="itemToAdd"
-            name="itemToAdd"
-            [(ngModel)]="this.itemToAdd">
-            <option *ngFor="let myItem of itemsToAdd;" [ngValue]="myItem">{{myItem.name}}</option>
-            <option [ngValue]="null">none</option>
-          </select>
+          <label for="search-name"><h5>Search for Items: </h5></label>
+          <input type="text"
+                 autocomplete="off"
+                 name="name"
+                 class="form-control"
+                 id="search-name"
+                 aria-describedby="nameHelp"
+                 placeholder="Enter Name"
+                 [(ngModel)]="this.searchItemByName"
+                 (change)="this.itemsToAddMethod()"
+                 (keyup)=" this.itemsToAddMethod()"/>
         </div>
 
+        <div>
+          <ul
+              id="itemToAdd"
+              name="itemToAdd"
+              style="list-style-type: none; padding-left: 3pt;">
+            <li *ngFor="let myItem of itemsToAdd;" style="float: left; padding-left: 3pt;">
+              <button class="btn btn-outline-dark" (click)="this.itemToAdd = myItem">{{myItem.name}}</button>
+            </li>
+          </ul>
+        </div>
+
+        <br>
+        <br>
         <div class="form-group">
+          <h5 class="modal-title">Enter Data: </h5>
           <label for="inputName">Name</label>
           <textarea rows="1" name="name" class="form-control" id="inputName" required
                     aria-describedby="nameHelp" placeholder="Enter Name" [(ngModel)]="itemToAdd.name"></textarea>
@@ -114,7 +125,7 @@
         </div>
 
         <div class="form-group">
-          <label for="inputLocation">Location</label>
+          <label for="inputLocation">Storage Location</label>
           <select
             class="form-control"
             id="inputLocation"
@@ -134,9 +145,10 @@
       </form>
     </div>
     <div class="modal-footer">
-      <button type="button" (click)="addItemForm(itemForm)" id="add-msg" class="btn btn-outline-info float-right">Add Item
+      <button type="button" (click)="addItemForm(itemForm)" id="add-msg" class="btn btn-outline-info float-right">Add
+        Item
       </button>
-      <button type="button" class="btn btn-outline-dark" id="close-modal-btn" (click)="modal.dismiss('close')">Close
+      <button type="button" class="btn btn-outline-dark" id="close-modal-btn" (click)="modal.dismiss('close'); this.itemToAdd = nullItem">Close
       </button>
     </div>
   </ng-template>
@@ -149,7 +161,7 @@
     <th>Amount</th>
     <th>Quantity</th>
     <th>ExpDate</th>
-    <th>LocationTag</th>
+    <th>Storage LocationTag</th>
     <th>Notes</th>
     <th></th>
     <th></th>
@@ -170,104 +182,13 @@
       <button type="button" class="btn btn-outline-dark btn-sm mr-4"
               (click)="openAddModal(itemUpdateModal); setUpdateItem(item)">Edit
       </button>
-      <div class="row p-2 mb-4">
-        <ng-template #itemUpdateModal let-modal>
-          <div class="modal-header">
-            <h5 class="modal-title">Edit {{item.name}}</h5>
-            <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form (ngSubmit)="updateItemForm(updateitemForm, item)" #updateitemForm="ngForm">
-
-              <div class="form-group">
-                <label for="UpdateName">Amount</label>
-                <input type="string" name="name" class="form-control" id="updateName" min="1" required
-                       aria-describedby="nameHelp" placeholder="Input name" [(ngModel)]="this.itemToUpdate.name">
-                <div *ngIf="submitted && updateitemForm.controls.amount.errors" class="error">
-                  <small class="form-text text-warning" *ngIf="updateitemForm.controls.amount.errors.required"> Name is
-                    required!
-                  </small>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label for="inputAmount">Amount</label>
-                <input type="number" name="amount" class="form-control" id="updateAmount" min="1" required
-                       aria-describedby="amountHelp" placeholder="Add amount" [(ngModel)]="this.itemToUpdate.amount">
-                <div *ngIf="submitted && updateitemForm.controls.amount.errors" class="error">
-                  <small class="form-text text-warning" *ngIf="updateitemForm.controls.amount.errors.required"> Amount
-                    is
-                    required!
-                  </small>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label for="inputNotes">Notes</label>
-                <textarea rows="3" name="notes" class="form-control" id="updateNotes"
-                          aria-describedby="notesHelp" placeholder="Add some notes"
-                          [(ngModel)]="this.itemToUpdate.notes"></textarea>
-              </div>
-
-              <div class="form-group">
-                <label for="inputLocation">Location</label>
-                <select
-                  class="form-control"
-                  id="updateLocation"
-                  name="location"
-                  [(ngModel)]="this.itemToUpdate.locationTag">
-                  <option *ngFor="let locationTag of $any(locationTags)"
-                          [ngValue]="locationTag.name">{{locationTag.name}}</option>
-                  <option [ngValue]="null">none</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="inputExpDate">Expiration Date</label>
-                <input type="date" name="expDate" class="form-control" id="updateExpDate"
-                       aria-describedby="expDateHelp" placeholder="Add expiration Date"
-                       [(ngModel)]="this.itemToUpdate.expDate">
-              </div>
-
-              <div class="form-group">
-                <label for="inputUnitOfQuantity">Unit of Quantity</label>
-                <select
-                  class="form-control"
-                  id="updateUnitOfQuantity"
-                  name="updateUnitOfQuantity"
-                  required="true"
-                  [(ngModel)]="this.itemToUpdate.quantity.id">
-                  <option *ngFor="let myUoQ of unitsOfQuantity;" [ngValue]="myUoQ.id">{{myUoQ.name}}</option>
-                </select>
-                <div *ngIf="submitted && updateitemForm.controls.inputUnitOfQuantity.errors" class="error">
-                  <small class="form-text text-warning"
-                         *ngIf="updateitemForm.controls.inputUnitOfQuantity.errors.required">Unit
-                    of Quantity is required!
-                  </small>
-                </div>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" (click)="updateItemForm(updateitemForm, item); modal.dismiss('close')"
-                    id="update-msg"
-                    class="btn btn-outline-info float-right">Save Changes
-            </button>
-            <button type="button" class="btn btn-outline-dark" id="close-update-modal-btn"
-                    (click)="modal.dismiss('close')">
-              Close
-            </button>
-          </div>
-        </ng-template>
-      </div>
     </td>
-
-    <td><!-- popUp if deleted-->
+    <td>
       <button type="button" class="btn btn-outline-danger btn-sm mr-4" (click)="openAddModal(itemDeleteModal)">Remove
       </button>
-      <div class="row p-2 mb-4">
+
+      <!-- popUp if deleted-->
+      <div>
         <ng-template #itemDeleteModal let-modal>
           <div class="modal-header">
           <h5 class="modal-title">Did you use {{item.name}} or did you throw it away?</h5>
@@ -323,8 +244,101 @@
           </div>
         </ng-template>
       </div>
-    </td>
 
+    </td>
   </tr>
   </tbody>
 </table>
+<div class="row p-2 mb-4">
+  <ng-template #itemUpdateModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Edit {{item.name}}</h5>
+      <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form (ngSubmit)="updateItemForm(updateitemForm, item)" #updateitemForm="ngForm">
+
+        <div class="form-group">
+          <label for="UpdateName">Name</label>
+          <input type="string" name="name" class="form-control" id="updateName" min="1" required
+                 aria-describedby="nameHelp" placeholder="Input name" [(ngModel)]="this.itemToUpdate.name">
+          <div *ngIf="submitted && updateitemForm.controls.amount.errors" class="error">
+            <small class="form-text text-warning" *ngIf="updateitemForm.controls.amount.errors.required"> Name is
+              required!
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="inputAmount">Amount</label>
+          <input type="number" name="amount" class="form-control" id="updateAmount" min="1" required
+                 aria-describedby="amountHelp" placeholder="Add amount" [(ngModel)]="this.itemToUpdate.amount">
+          <div *ngIf="submitted && updateitemForm.controls.amount.errors" class="error">
+            <small class="form-text text-warning" *ngIf="updateitemForm.controls.amount.errors.required"> Amount
+              is
+              required!
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="inputUnitOfQuantity">Unit of Quantity</label>
+          <select
+            class="form-control"
+            id="updateUnitOfQuantity"
+            name="updateUnitOfQuantity"
+            required="true"
+            [(ngModel)]="this.itemToUpdate.quantity.id">
+            <option *ngFor="let myUoQ of unitsOfQuantity;" [ngValue]="myUoQ.id">{{myUoQ.name}}</option>
+          </select>
+          <div *ngIf="submitted && updateitemForm.controls.inputUnitOfQuantity.errors" class="error">
+            <small class="form-text text-warning"
+                   *ngIf="updateitemForm.controls.inputUnitOfQuantity.errors.required">Unit
+              of Quantity is required!
+            </small>
+          </div>
+        </div>
+
+
+        <div class="form-group">
+          <label for="inputExpDate">Expiration Date</label>
+          <input type="date" name="expDate" class="form-control" id="updateExpDate"
+                 aria-describedby="expDateHelp" placeholder="Add expiration Date"
+                 [(ngModel)]="this.itemToUpdate.expDate">
+        </div>
+
+        <div class="form-group">
+          <label for="inputLocation">Storage Location</label>
+          <select
+            class="form-control"
+            id="updateLocation"
+            name="location"
+            [(ngModel)]="this.itemToUpdate.locationTag">
+            <option *ngFor="let locationTag of $any(locationTags)"
+                    [ngValue]="locationTag.name">{{locationTag.name}}</option>
+            <option [ngValue]="null">none</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="inputNotes">Notes</label>
+          <textarea rows="3" name="notes" class="form-control" id="updateNotes"
+                    aria-describedby="notesHelp" placeholder="Add some notes"
+                    [(ngModel)]="this.itemToUpdate.notes"></textarea>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" (click)="updateItemForm(updateitemForm, item); modal.dismiss('close')"
+              id="update-msg"
+              class="btn btn-outline-info float-right">Save Changes
+      </button>
+      <button type="button" class="btn btn-outline-dark" id="close-update-modal-btn"
+              (click)="modal.dismiss('close')">
+        Close
+      </button>
+    </div>
+  </ng-template>
+</div>

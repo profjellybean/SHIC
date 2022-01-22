@@ -1,15 +1,9 @@
 
-<div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
-  <strong>Error! </strong> {{ errorMessage }}
-  <button type="button" class="btn btn-outline-info" (click)="vanishError()" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-
 <br>
 <h1>Shopping List</h1>
 <p></p>
 <hr>
+
 <div class="tabs">
 
   <input type="radio" class="tabbutton" name="tabs" id="tab1" checked/>
@@ -22,95 +16,124 @@
 </div>
 <br>
 
-<button type="button" class="btn btn-outline-info btn-sm mr-4" (click)="openAddModal(itemAddModal)">Add new Item</button>
-
-<div class="row p-2 mb-4">
-
-  <ng-template #itemAddModal let-modal>
-    <div class="modal-header">
-      <h5 class="modal-title">Item</h5>
-      <button type="button" class="btn btn-outline-info" (click)="modal.dismiss('X')" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <form (ngSubmit)="addItemForm(itemForm)" #itemForm="ngForm">
-
-        <div class="form-group">
-          <label for="itemToAdd2">Add item: </label>
-          <select
-            class="form-control"
-            id="itemToAdd2"
-            name="itemToAdd2"
-            [(ngModel)]="this.itemToAdd">
-            <option *ngFor="let myItem of itemsAdd;" [ngValue]="myItem">{{myItem.name}}</option>
-            <option [ngValue]="null">none</option>
+<div>
+  <h5>Filter Shopping List</h5>
+  <div>
+    <label for="new-name">Name: &nbsp;</label>
+    <input #name (keyup)="name.value= this.searchItem.name; this.searchItems()"
+           (change)="searchItems()" id="new-name" [(ngModel)]="this.searchItem.name"/>
+  </div>
 
 
-          </select>
-        </div>
+  <div class="row p-2 mb-4">
 
-        <div class="form-group">
-          <label for="inputName">Name</label>
-          <input rows="1" name="name" class="form-control" id="inputName" required
-                 aria-describedby="nameHelp" placeholder="Enter Name" [(ngModel)]="itemToAdd.name">
-          <div *ngIf="submitted && itemForm.controls.name.errors" class="error">
-            <small class="form-text text-warning" *ngIf="itemForm.controls.name.errors.required">
-              Name is
-              required!
-            </small>
+    <ng-template #itemAddModal let-modal>
+      <div class="modal-header">
+        <h5 class="modal-title">Item</h5>
+        <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('X')" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="addItemForm(itemForm)" #itemForm="ngForm">
+
+          <div class="form-group">
+            <label for="search-name"><h5>Search for Items: </h5></label>
+            <input type="text"
+                   autocomplete="off"
+                   name="name"
+                   class="form-control"
+                   id="search-name"
+                   aria-describedby="nameHelp"
+                   placeholder="Enter Name"
+                   [(ngModel)]="this.searchItemByName"
+                   (change)="searchItemsToAdd()"
+                   (keyup)=" this.searchItemsToAdd()"/>
           </div>
-        </div>
 
-        <div class="form-group">
-          <label for="inputAmount">Amount</label>
-          <input type="number" name="amount" class="form-control" id="inputAmount" min="1" required
-                 aria-describedby="amountHelp" placeholder="Enter Amount" [(ngModel)]="itemToAdd.amount">
-          <div *ngIf="submitted && itemForm.controls.amount.errors" class="error">
-            <small class="form-text text-warning" *ngIf="itemForm.controls.amount.errors.required"> Amount is
-              required!
-            </small>
+          <div>
+            <ul
+              id="itemToAdd"
+              name="itemToAdd"
+              style="list-style-type: none; padding-left: 3pt;">
+              <li *ngFor="let myItem of itemsAdd;" style="float: left; padding-left: 3pt;">
+                <button class="btn btn-outline-dark" (click)="this.itemToAdd = myItem">{{myItem.name}}</button>
+              </li>
+            </ul>
           </div>
-        </div>
 
-        <div class="form-group">
-          <label for="inputUnitOfQuantity">Unit of Quantity</label>
-          <select
-            class="form-control"
-            id="inputUnitOfQuantity"
-            name="inputUnitOfQuantity"
-            required="true"
-            [(ngModel)]="this.itemToAdd.quantity">
-            <option *ngFor="let myItem of unitsOfQuantity;" [ngValue]="myItem">{{myItem.name}}</option>
-          </select>
-          <div *ngIf="submitted && itemForm.controls.inputUnitOfQuantity.errors" class="error">
-            <small class="form-text text-warning" *ngIf="itemForm.controls.inputUnitOfQuantity.errors.required">Unit
-              of Quantity is required!
-            </small>
+          <br>
+          <br>
+          <div class="form-group">
+            <h5 class="modal-title">Enter Data: </h5>
+            <label for="inputName">Name</label>
+            <input rows="1" name="name" class="form-control" id="inputName" required
+                   aria-describedby="nameHelp" placeholder="Enter Name" [(ngModel)]="itemToAdd.name">
+            <div *ngIf="submitted && itemForm.controls.name.errors" class="error">
+              <small class="form-text text-warning" *ngIf="itemForm.controls.name.errors.required">
+                Name is
+                required!
+              </small>
+            </div>
           </div>
-        </div>
 
-        <div class="form-group">
-          <label for="inputNotes">Notes</label>
-          <textarea rows="3" name="notes" class="form-control" id="inputNotes"
-                    aria-describedby="notesHelp" placeholder="Enter Notes" [(ngModel)]="itemToAdd.notes"></textarea>
-        </div>
+          <div class="form-group">
+            <label for="inputAmount">Amount</label>
+            <input type="number" name="amount" class="form-control" id="inputAmount" min="1" required
+                   aria-describedby="amountHelp" placeholder="Enter Amount" [(ngModel)]="itemToAdd.amount">
+            <div *ngIf="submitted && itemForm.controls.amount.errors" class="error">
+              <small class="form-text text-warning" *ngIf="itemForm.controls.amount.errors.required"> Amount is
+                required!
+              </small>
+            </div>
+          </div>
 
-      </form>
-    </div>
-    <div class="modal-footer">
-      <button type="button" (click)="addItemForm(itemForm)" id="add-msg" class="btn btn-outline-info float-right">Add
-        Item
-      </button>
-      <button type="button" class="btn btn-outline-dark" id="close-modal-btn" (click)="modal.dismiss('close')">Close
-      </button>
-    </div>
-  </ng-template>
+          <div class="form-group">
+            <label for="inputUnitOfQuantity">Unit of Quantity</label>
+            <select
+              class="form-control"
+              id="inputUnitOfQuantity"
+              name="inputUnitOfQuantity"
+              required="true"
+              [(ngModel)]="this.itemToAdd.quantity">
+              <option *ngFor="let myItem of unitsOfQuantity;" [ngValue]="myItem">{{myItem.name}}</option>
+            </select>
+            <div *ngIf="submitted && itemForm.controls.inputUnitOfQuantity.errors" class="error">
+              <small class="form-text text-warning" *ngIf="itemForm.controls.inputUnitOfQuantity.errors.required">Unit
+                of Quantity is required!
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="inputNotes">Notes</label>
+            <textarea rows="3" name="notes" class="form-control" id="inputNotes"
+                      aria-describedby="notesHelp" placeholder="Enter Notes" [(ngModel)]="itemToAdd.notes"></textarea>
+          </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" (click)="addItemForm(itemForm)" id="add-msg" class="btn btn-outline-info float-right">Add
+          Item
+        </button>
+        <button type="button" class="btn btn-outline-dark" id="close-modal-btn" (click)="modal.dismiss('close')">Close
+        </button>
+      </div>
+    </ng-template>
 
 
-</div>
+  </div>
 
-<div *ngIf="items.length !== 0">
+  <div>
+    <input *ngIf="items !== null && items.length !== 0" type="checkbox" class="btn-check" id="select-all" (click)="toggleAll()" [(ngModel)]="toggleAllItems" autocomplete="off"><label class="btn btn-outline-info" for="select-all">Select all Items</label> &nbsp;
+    <button type="button" class="btn btn-outline-info" (click)="openAddModal(itemAddModal)">Add new Item</button> &nbsp;
+    <button *ngIf="items !== null && items.length !== 0" type="button" class="btn btn-outline-info" id="buy-item"
+            (click)="openBillModal(confirmationModal)" data-toggle="modal">Buy these Items
+    </button>
+  </div>
+
+<div *ngIf="items !== null && items.length !== 0">
   <div class="shopping-list-list">
     <table class="table table-striped">
       <thead class="thead-dark">
@@ -123,10 +146,10 @@
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let item of items">
+      <tr *ngFor="let item of items; index as i">
         <td>
           <div class="form-check">
-            <input type="checkbox" name="item" id="item" (click)="checkCheckbox(item)">
+            <input type="checkbox" name="approved" id="item" (click)="toggle(item, i)" [(ngModel)]="checkboxValues[i]">
           </div>
         </td>
         <td>{{item.name}}</td>
@@ -136,99 +159,133 @@
         </td>
         <td>{{item.notes}}</td>
 
-        <td>
-          <button type="button" class="btn btn-outline-danger btn-sm mr-4" (click)="deleteItem(item)">Remove</button>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+          <td>
+            <button type="button" class="btn btn-outline-danger btn-sm mr-4"
+                    (click)="openAddModal(itemDeleteModal); this.itemToDelete=item">Remove
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
-</div>
-<div>
-  <button *ngIf="items.length !== 0" type="button" class="btn btn-outline-info" id="buy-item" (click)="openBillModal(confirmationModal)" data-toggle="modal">Buy these Items</button>
-</div>
 
-<div>
-  <ng-template #confirmationModal let-modal>
+  <ng-template #itemDeleteModal let-modal>
     <div class="modal-header">
-      <h5 class="modal-title">Your options</h5>
-      <button type="button" class="btn btn-outline-info" (click)="modal.dismiss('X')" aria-label="Close">
+      <h5 class="modal-title">Alert</h5>
+      <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('X')" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
+
     <div class="modal-body">
-  <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="openBillModal(billAddModal)">Move and Generate Bill</button><p></p>
-  <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="workOffShoppingList()">Move to Storage</button>
+      <div>
+        <p>Do you really want to remove this item from the shoppingList?
+          <br>
+          <strong>{{this.itemToDelete.name}}</strong>
+        </p>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-danger" (click)="deleteItem(itemToDelete); modal.dismiss('X')">
+            Remove
+            Item
+          </button>
+        </div>
+      </div>
     </div>
   </ng-template>
-</div>
 
-<div class="row p-2 mb-4">
-  <ng-template #billAddModal let-modal>
-    <div class="modal-header">
-      <h5 class="modal-title">Bill</h5>
-      <button type="button" class="btn btn-outline-info" (click)="modal.dismiss('X')" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <form (ngSubmit)="addBillForm(billForm)" #billForm="ngForm">
-        <div class="form-group">
-          <label for="users">Add users to bill: </label>
-          <ng-select id="users"
-                     required="true"
-                     [(ngModel)]="this.billToAdd.names"
-                     [clearable]="true"
-                     [multiple]="true"
-                     [ngModelOptions]="{standalone: true}">
-            <ng-option [value]="nullUser">Everyone</ng-option>
-            <ng-option [value]="user" *ngFor="let user of allUsers">
-              {{user.username}}
-            </ng-option>
-          </ng-select>
-          <div *ngIf="submitted && this.billToAdd.names.length === 0" class="error">
-            <small class="form-text text-warning" *ngIf="this.billToAdd.names.length === 0">At least one user must be billed!
+
+  <div>
+    <ng-template #confirmationModal let-modal>
+      <div class="modal-header">
+        <h5 class="modal-title">Your options</h5>
+        <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('X')" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="openBillModal(billAddModal)">Move and
+          Generate Bill
+        </button>
+        <p></p>
+        <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="workOffShoppingList()">Move to Storage
+        </button>
+      </div>
+    </ng-template>
+  </div>
+
+  <div class="row p-2 mb-4">
+    <ng-template #billAddModal let-modal>
+      <div class="modal-header">
+        <h5 class="modal-title">Bill</h5>
+        <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('X')" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="addBillForm(billForm)" #billForm="ngForm">
+          <div class="form-group">
+            <label for="users">Add users to bill: </label>
+            <ng-select id="users"
+                       required="true"
+                       [(ngModel)]="this.billToAdd.names"
+                       [clearable]="true"
+                       [multiple]="true"
+                       [ngModelOptions]="{standalone: true}">
+              <ng-option [value]="nullUser">Everyone</ng-option>
+              <ng-option [value]="user" *ngFor="let user of allUsers">
+                {{user.username}}
+              </ng-option>
+            </ng-select>
+            <div *ngIf="submitted && this.billToAdd.names.length === 0" class="error">
+              <small class="form-text text-warning" *ngIf="this.billToAdd.names.length === 0">At least one user must be
+                billed!
+              </small>
+            </div>
+
+          </div>
+
+          <div class="form-group">
+            <label for="price">Bill sum:</label>
+            <input name="price" type="text" pattern="[0-9]*" class="form-control" id="price" required
+                   placeholder="Enter price" [(ngModel)]="billToAdd.sum">
+          </div>
+          <div *ngIf="submitted && !this.isThisNumber(this.billToAdd.sum)" class="error">
+            <small class="form-text text-warning" *ngIf="!this.isThisNumber(this.billToAdd.sum)">Enter a valid sum!
             </small>
           </div>
 
-        </div>
-
-        <div class="form-group">
-          <label for="price">Bill sum:</label>
-          <input name="price" type="text" pattern="[0-9]*" class="form-control" id="price" required
-                  placeholder="Enter price" [(ngModel)]="billToAdd.sum">
-        </div>
-        <div *ngIf="submitted && !this.isThisNumber(this.billToAdd.sum)" class="error">
-          <small class="form-text text-warning" *ngIf="!this.isThisNumber(this.billToAdd.sum)">Enter a valid sum!
-          </small>
-        </div>
-
-        <div class="form-group">
-          <label for="date">Bill date:</label>
-          <input type="date" name="date" class="form-control" id="date" required
-                 aria-describedby="expDateHelp" [(ngModel)]="billToAdd.date">
-        </div>
-        <div *ngIf="submitted && !this.isValidDate(this.billToAdd.date)" class="error">
-          <small class="form-text text-warning" *ngIf="!this.isValidDate(this.billToAdd.date)">You must enter a valid date!
-          </small>
-        </div>
+          <div class="form-group">
+            <label for="date">Bill date:</label>
+            <input type="date" name="date" class="form-control" id="date" required
+                   aria-describedby="expDateHelp" [(ngModel)]="billToAdd.date">
+          </div>
+          <div *ngIf="submitted && !this.isValidDate(this.billToAdd.date)" class="error">
+            <small class="form-text text-warning" *ngIf="!this.isValidDate(this.billToAdd.date)">You must enter a valid
+              date!
+            </small>
+          </div>
 
 
-        <div class="form-group">
-          <label for="inputNotes">Notes</label>
-          <textarea rows="3" name="notes" class="form-control" id="billNotes"
-                    aria-describedby="notesHelp" placeholder="Enter Notes" [(ngModel)]="billToAdd.notes"></textarea>
-        </div>
-        <div class="modal-footer">
-          <button type="button" (click)="addBillForm(billForm)" id="add-msg1" class="btn btn-outline-success float-right">Add bill and buy</button>
-        </div>
-        <div *ngIf="submitted && this.billToAdd.groceries.length === 0" class="error">
-          <small class="form-text text-warning" *ngIf="this.billToAdd.groceries.length === 0">You must add items to your bill!
-          </small>
-        </div>
+          <div class="form-group">
+            <label for="inputNotes">Notes</label>
+            <textarea rows="3" name="notes" class="form-control" id="billNotes"
+                      aria-describedby="notesHelp" placeholder="Enter Notes" [(ngModel)]="billToAdd.notes"></textarea>
+          </div>
+          <div class="modal-footer">
+            <button type="button" (click)="addBillForm(billForm)" id="add-msg1"
+                    class="btn btn-outline-info float-right">Add bill and buy
+            </button>
+          </div>
+          <div *ngIf="submitted && this.billToAdd.groceries.length === 0" class="error">
+            <small class="form-text text-warning" *ngIf="this.billToAdd.groceries.length === 0">You must add items to
+              your bill!
+            </small>
+          </div>
 
 
-      </form>
-    </div>
-  </ng-template>
+        </form>
+      </div>
+    </ng-template>
+  </div>
 </div>

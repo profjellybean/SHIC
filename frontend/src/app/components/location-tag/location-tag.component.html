@@ -1,11 +1,6 @@
-<div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
-  <strong>Error! </strong> {{ errorMessage }}
-  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
+
 <br>
-<h1>Custom Location Tags</h1>
+<h1>Custom Storage Location Tags</h1>
 <p></p>
 
 <button type="button" class="btn btn-outline-info btn-sm mr-4" (click)="openAddModal(locationTagAddModal)">Add New Location Tag</button>
@@ -23,7 +18,7 @@
   <tr *ngFor="let locationTag of $any(locationTags)">
     <td>{{locationTag.name}}</td>
     <td>
-      <button *ngIf="this.locationTagDefaultCheck(locationTag)" type="button" class="btn btn-secondary btn-sm mr-4" (click)="this.locationTagToDelete = locationTag; openDeleteModal(locationTagDeleteModal)">delete</button>
+      <button *ngIf="this.locationTagDefaultCheck(locationTag)" type="button" class="btn btn-outline-info btn-sm mr-4" (click)="this.locationTagToDelete = locationTag; openDeleteModal(locationTagDeleteModal)">delete</button>
     </td>
   </tr>
 
@@ -34,7 +29,7 @@
 
   <ng-template #locationTagAddModal let-modal>
     <div class="modal-header">
-      <h5 class="modal-title">Add Location Tag</h5>
+      <h5 class="modal-title">Add Storage Location Tag</h5>
       <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('X')" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -58,7 +53,7 @@
     <div class="modal-footer">
       <button type="button" (click)="addLocationTagForm(locationTagForm)" (click)="modal.dismiss('close')" id="add-msg2" class="btn btn-outline-info float-right">Add Location Tag</button>
 
-      <button type="button" class="btn btn-outline-dark" id="close-modal-btn2" (click)="modal.dismiss('close')">Close</button>
+      <button type="button" class="btn btn-outline-info" id="close-modal-btn2" (click)="modal.dismiss('close')">Close</button>
 
     </div>
   </ng-template>
@@ -76,7 +71,7 @@
   <div class="modal-body">
     <div>
       <p>Do you really want to delete this location tag: {{this.locationTagToDelete.name}}?</p>
-      <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="deleteLocationTagById(this.locationTagToDelete.id); modal.dismiss('X')">delete location tag</button>
+      <button type="button" class="btn btn-outline-danger btn-sm mr-4" (click)="deleteLocationTagById(this.locationTagToDelete.id); modal.dismiss('X')">Delete location tag</button>
     </div>
   </div>
 </ng-template>

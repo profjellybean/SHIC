@@ -122,6 +122,20 @@ public class ItemServiceTest {
     }
 
     @Test
+    public void givenEmptyName_whenAddingCustomItem_shouldThrowValidationException() throws Exception {
+        Item item = new Item(null, "", new UnitOfQuantity(1L, "kg"), -1L);
+
+        assertThrows(ValidationException.class, () -> itemService.addCustomItem(item, null));
+    }
+
+    @Test
+    public void givenWhitespaceName_whenAddingCustomItem_shouldThrowValidationException() throws Exception {
+        Item item = new Item(null, "   ", new UnitOfQuantity(1L, "kg"), -1L);
+
+        assertThrows(ValidationException.class, () -> itemService.addCustomItem(item, null));
+    }
+
+    @Test
     public void givenNoQuantity_whenAddingCustomItem_shouldThrowValidationException() throws Exception {
         Item item = new Item(null, "NO_QUANTITY_TEST", null, null);
 
@@ -153,7 +167,7 @@ public class ItemServiceTest {
 
     @Test
     public void givenNoUserName_whenEditingCustomItem_shouldThrowValidationException() throws Exception {
-        Item item = new Item(null, "NO_GROUPID_TEST", new UnitOfQuantity(1L, "kg"), null);
+        Item item = new Item(null, "NO_USERNAME_TEST", new UnitOfQuantity(1L, "kg"), null);
 
         assertThrows(ValidationException.class, () -> itemService.editCustomItem(item, null));
     }
@@ -161,6 +175,20 @@ public class ItemServiceTest {
     @Test
     public void givenNoName_whenEditingCustomItem_shouldThrowValidationException() throws Exception {
         Item item = new Item(null, null, new UnitOfQuantity(1L, "kg"), null);
+
+        assertThrows(ValidationException.class, () -> itemService.editCustomItem(item, null));
+    }
+
+    @Test
+    public void givenEmptyName_whenEditingCustomItem_shouldThrowValidationException() throws Exception {
+        Item item = new Item(null, "", new UnitOfQuantity(1L, "kg"), null);
+
+        assertThrows(ValidationException.class, () -> itemService.editCustomItem(item, null));
+    }
+
+    @Test
+    public void givenWhitespaceName_whenEditingCustomItem_shouldThrowValidationException() throws Exception {
+        Item item = new Item(null, "   ", new UnitOfQuantity(1L, "kg"), null);
 
         assertThrows(ValidationException.class, () -> itemService.editCustomItem(item, null));
     }

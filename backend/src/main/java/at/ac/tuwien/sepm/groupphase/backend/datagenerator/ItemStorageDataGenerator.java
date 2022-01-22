@@ -25,11 +25,12 @@ public class ItemStorageDataGenerator {
     private static final int NUMBER_OF_ITEMSTORAGES = 5;
     private static final Long ID_OF_STORAGE = 6L;
     private static final Long ID_OF_SECOND_STORAGE = 1L;
-    private static final Long ID_OF_SHOPPINGLIST = 1L;
+    private static final Long ID_OF_SHOPPINGLIST = 2L;
     private static final boolean CREATE_REAL_ITEMSTORAGES = true;
     private final ItemStorageRepository itemStorageRepository;
     private final UnitOfQuantityRepository unitOfQuantityRepository;
     private final StorageDataGenerator storageDataGenerator;
+    private final ShoppingListDataGenerator shoppingListDataGenerator;
     private final UserDataGenerator userDataGenerator;
     private final LocationRepository locationRepository;
 
@@ -40,12 +41,13 @@ public class ItemStorageDataGenerator {
                                     UnitOfQuantityRepository unitOfQuantityRepository,
                                     UnitOfQuantityDataGenerator unitOfQuantityDataGenerator,
                                     StorageDataGenerator storageDataGenerator,
-                                    UserDataGenerator userDataGenerator, LocationRepository locationRepository) {
+                                    ShoppingListDataGenerator shoppingListDataGenerator, UserDataGenerator userDataGenerator, LocationRepository locationRepository) {
         this.itemStorageRepository = itemStorageRepository;
         this.unitOfQuantityRepository = unitOfQuantityRepository;
         this.unitOfQuantityDataGenerator = unitOfQuantityDataGenerator;
 
         this.storageDataGenerator = storageDataGenerator;
+        this.shoppingListDataGenerator = shoppingListDataGenerator;
         this.userDataGenerator = userDataGenerator;
         this.locationRepository = locationRepository;
     }
@@ -60,6 +62,7 @@ public class ItemStorageDataGenerator {
             this.storageDataGenerator.generateStorage();
             this.unitOfQuantityDataGenerator.generateUnitOfQuantity();
             this.userDataGenerator.generateUser();
+            this.shoppingListDataGenerator.generateShoppingList();
 
             locationRepository.saveAndFlush(new LocationClass(Location.fridge.toString(), null));
             locationRepository.saveAndFlush(new LocationClass(Location.freezer.toString(), null));
@@ -255,6 +258,24 @@ public class ItemStorageDataGenerator {
             ItemStorage pesto2 = new ItemStorage("Pesto", "Genovese", null, null, 200, Location.fridge.toString(), mappedUnits.get("g"), ID_OF_SECOND_STORAGE, null);
             LOGGER.debug("saving ItemStorage {}", pesto2);
             itemStorageRepository.save(pesto2);
+
+            // Items for fist shoppingList
+            ItemStorage feta3 = new ItemStorage("Feta", null, null, null, 1, Location.fridge.toString(), mappedUnits.get("pieces"), null, ID_OF_SHOPPINGLIST);
+            LOGGER.debug("saving ItemStorage {}", feta3);
+            itemStorageRepository.save(feta3);
+
+            ItemStorage noodles3 = new ItemStorage("Noodles", null, null, null, 500, Location.shelf.toString(), mappedUnits.get("g"), null, ID_OF_SHOPPINGLIST);
+            LOGGER.debug("saving ItemStorage {}", noodles3);
+            itemStorageRepository.save(noodles3);
+
+            ItemStorage milk3 = new ItemStorage("Milk", null, null, null, 2, Location.fridge.toString(), mappedUnits.get("L"), null, ID_OF_SHOPPINGLIST);
+            LOGGER.debug("saving ItemStorage {}", milk3);
+            itemStorageRepository.save(milk3);
+
+            ItemStorage pesto3 = new ItemStorage("Pesto", "Genovese", null, null, 200, Location.fridge.toString(), mappedUnits.get("g"), null, ID_OF_SHOPPINGLIST);
+            LOGGER.debug("saving ItemStorage {}", pesto3);
+            itemStorageRepository.save(pesto3);
+
 
         } else {
             LOGGER.debug("generating {} ItemStorage entries", NUMBER_OF_ITEMSTORAGES);

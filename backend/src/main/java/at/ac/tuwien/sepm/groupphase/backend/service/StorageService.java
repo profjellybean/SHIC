@@ -13,11 +13,14 @@ import java.util.Date;
 import java.util.List;
 
 public interface StorageService {
+
+    List<ItemStorage> cookRecipe(Long recipeId, String userName, Integer numberOfPeople);
+
     /**
      * Delete an item in the context of Spring Security based on the id.
      *
      * @param id the id
-     * @return a Spring Security user
+     * @return deleted Item
      */
     ItemStorage deleteItemById(Long id);
 

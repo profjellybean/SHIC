@@ -64,6 +64,8 @@ export class StorageComponent implements OnInit {
   unitsOfQuantity: UnitOfQuantity[];
   locationTags: LocationTag[] = null;
 
+  searchItemByName = null;
+
 
 
   constructor(private storageService: StorageService,
@@ -77,7 +79,6 @@ export class StorageComponent implements OnInit {
 
   ngOnInit(): void {
     this.getCurrUser();
-    this.loadItemsToAdd();
     this.loadUnitsOfQuantity();
     this.trash='true';
 
@@ -91,6 +92,7 @@ export class StorageComponent implements OnInit {
         this.getAllItemsByStorageId({id: this.user.currGroup.storageId});
         this.searchItem.storageId = this.user.currGroup.storageId;
         this.loadLocationTags(data.currGroup.storageId);
+        this.itemsToAddMethod();
       },
       error: error => {
         console.error(error.message);
@@ -132,11 +134,12 @@ export class StorageComponent implements OnInit {
         //this.items.push(item);
         this.getAllItemsByStorageId({id: this.user.currGroup.storageId});
         this.itemToAdd = this.nullItem;
+        this.searchItemByName = null;
+        this.itemsToAddMethod();
         console.log('added Item', data);
 
         // todo dont reload every time
-        this.loadItemsToAdd();
-
+        this.itemsToAddMethod();
       },
       error: error => {
         this.defaultServiceErrorHandling(error);
@@ -214,8 +217,7 @@ export class StorageComponent implements OnInit {
         console.log('updated Item', data);
 
         // todo dont reload every time
-        this.loadItemsToAdd();
-
+        this.itemsToAddMethod();
       },
       error: error => {
         this.defaultServiceErrorHandling(error);
@@ -223,16 +225,38 @@ export class StorageComponent implements OnInit {
     });
   }
 
+  itemsToAddMethod() {
+    if (this.searchItemByName == null || this.searchItemByName === '') {
+      this.loadItemsToAdd();
+    } else {
+      this.searchItemsToAdd();
+    }
+  }
+
   loadItemsToAdd() {
     //this.shoppingListService.findAllItems().subscribe({
     this.itemService.findAllItemsForGroup().subscribe({
       next: data => {
         console.log('received items to add', data);
-
         this.itemsToAdd = data;
+        if(this.itemsToAdd.length > 5) {
+          this.itemsToAdd = this.itemsToAdd.splice(0,5);
+        }
       },
       error: error => {
         this.defaultServiceErrorHandling(error);
+      }
+    });
+  }
+
+  searchItemsToAdd() {
+    this.itemService.searchItemsByName(this.searchItemByName).subscribe({
+      next: data => {
+        console.log('received items to add by ' + this.searchItemByName, data);
+        this.itemsToAdd = data;
+        if(this.itemsToAdd.length > 5) {
+          this.itemsToAdd = this.itemsToAdd.splice(0,5);
+        }
       }
     });
   }
@@ -291,6 +315,7 @@ export class StorageComponent implements OnInit {
 
   putOnPublicShoppinglist(item: Item) {
     console.log('hey i am public ', item);
+    item.shoppingListId = this.user.currGroup.publicShoppingListId;
     item.storageId = null;
     item.amount = this.shopAgainAmount;
     this.shopAgainAmount = 0;
@@ -301,6 +326,7 @@ export class StorageComponent implements OnInit {
         next: data => {
           console.log('i got in public');
           this.deleteItem(item);
+          this.getCurrUser();
         },
         error: err => {
           this.defaultServiceErrorHandling(err);
@@ -312,6 +338,7 @@ export class StorageComponent implements OnInit {
   putOnPrivateShoppinglist(item: Item) {
     console.log('hey i am private ', item);
     item.storageId = null;
+    item.shoppingListId = this.user.privList;
     item.amount = this.shopAgainAmount;
     this.shopAgainAmount = 0;
     item.notes = this.shopAgainNotes;
@@ -321,6 +348,7 @@ export class StorageComponent implements OnInit {
         next: data => {
           console.log('i got in private');
           this.deleteItem(item);
+          this.getCurrUser();
         },
         error: err => {
           this.defaultServiceErrorHandling(err);

@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
 import {Item} from '../dtos/item';
@@ -47,6 +47,14 @@ export class StorageService {
 
   addItem(item: Item): Observable<Item> {
     return this.httpClient.post<Item>(this.storageBaseUri, item);
+  }
+
+  cookRecipe(id: number, numOfPeople: number){
+    console.log('service: cook recipe with id: ' + id + 'for number of people: ' + numOfPeople);
+    const httpParams = new HttpParams()
+      .set('recipeId', id)
+      .set('numberOfPeople', numOfPeople);
+    return this.httpClient.put<Item[]>(this.storageBaseUri+'/recipe', httpParams.toString(), {params: httpParams});
   }
 
   updateItem(item: Item): Observable<Item> {

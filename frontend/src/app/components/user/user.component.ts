@@ -97,11 +97,11 @@ export class UserComponent implements OnInit {
 
   addUser() {
     if(this.userToAdd === undefined || this.userToAdd === null){
-      this.showError('Username cannot be null or empty');
+      this.notifications.pushFailure('Username cannot be null or empty');
       return;
     }
     if(this.userToAdd.length > 100){
-      this.showError('Username must be < 100 characters');
+      this.notifications.pushFailure('Username must be < 100 characters');
       return;
     }
     this.groupService.addUser(this.userToAdd, this.groupId).subscribe({
@@ -111,7 +111,7 @@ export class UserComponent implements OnInit {
       },
       error: error => {
         console.error(error.message);
-        this.showError('Error while adding user to group: ' + error.error.message);
+        this.notifications.pushFailure('Error while adding user to group: ' + error.error.message);
       }
     });
   }
@@ -150,7 +150,7 @@ export class UserComponent implements OnInit {
 
   editUsername(){
     this.userEditMode = false;
-    if(this.editedUser.username !== this.user.username){
+    if(this.editedUser.username !== this.user.username && this.editedUser.username != null){
       this.userService.editUsername(this.editedUser.username).subscribe({
         next: data => {
 
@@ -173,7 +173,8 @@ export class UserComponent implements OnInit {
           this.editedUser.username = this.user.username;
         }
       });
-
+    } else {
+      this.notifications.pushFailure('Username cannot be null or empty!');
     }
 
   }
@@ -188,7 +189,7 @@ export class UserComponent implements OnInit {
       },
       error: error => {
         console.error(error.message);
-        this.showError('Error while deleting user: ' + error.error.message);
+        this.notifications.pushFailure('Error while deleting user: ' + error.error.message);
       }
     });
   }
@@ -203,13 +204,5 @@ export class UserComponent implements OnInit {
 
   public vanishSuccess(): void {
     this.success = null;
-  }
-
-  private showError(msg: string) {
-    this.error = msg;
-  }
-
-  private showSuccess(msg: string) {
-    this.success = msg;
   }
 }

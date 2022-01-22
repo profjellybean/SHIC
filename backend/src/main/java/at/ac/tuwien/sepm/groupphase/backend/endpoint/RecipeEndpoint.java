@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -56,6 +57,15 @@ public class RecipeEndpoint {
     public List<RecipeDto> findAll() {
         LOGGER.info("GET /recipe");
         return recipeMapper.recipeToRecipeDto(recipeService.findAll());
+    }
+
+    @GetMapping("/findbyname")
+    @Secured("ROLE_USER")
+    @Transactional
+    @Operation(summary = "Get list of all recipes that contain the String name")
+    public List<RecipeDto> findAllBySubstring(@RequestParam(name = "name") String name) {
+        LOGGER.info("ENDPOINT: GET /recipe/findbyname");
+        return recipeMapper.recipeToRecipeDto(recipeService.findRecipeBySubstring(name));
     }
 
     @GetMapping(value = "/{id}")
