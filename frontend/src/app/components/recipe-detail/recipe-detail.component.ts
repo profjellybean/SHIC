@@ -4,13 +4,15 @@ import {Item} from '../../dtos/item';
 import {RecipeService} from '../../services/recipe.service';
 import {ActivatedRoute} from '@angular/router';
 import {ShoppingListService} from '../../services/shopping-list.service';
-import {elementAt, Observable} from 'rxjs';
-import {UnitOfQuantity} from '../../dtos/unitOfQuantity';
 import {ShowItem} from '../../dtos/ShowItem';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ItemService} from '../../services/item.service';
 import {StorageService} from '../../services/storage.service';
 import {NotificationsComponent} from '../notifications/notifications.component';
+import {User} from '../../dtos/user';
+import jwt_decode from 'jwt-decode';
+import {UserService} from '../../services/user.service';
+import {AuthService} from '../../services/auth.service';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -36,7 +38,17 @@ export class RecipeDetailComponent implements OnInit {
   submitted = false;
   tempIngredient: Item;
   allItems: Item[];
-  numberOfPeople = 1;
+  numberOfPeople = 0;
+  user: User = {
+    // @ts-ignore
+    username: jwt_decode(this.authService.getToken()).sub.trim(),
+    id: null,
+    currGroup: null,
+    privList: null,
+    email: null,
+    image: null
+
+  };
 
 
   error: string;
@@ -50,13 +62,29 @@ export class RecipeDetailComponent implements OnInit {
               private modalService: NgbModal,
               private itemService: ItemService,
               private storageService: StorageService,
-              private notifications: NotificationsComponent) {
+              private notifications: NotificationsComponent,
+              private userService: UserService,
+              private authService: AuthService) {
   }
 
   ngOnInit(): void {
+    this.getCurrentGroup();
     this.recipe.id = this.route.snapshot.params.id;
     this.findRecipeById(this.recipe.id);
     this.getAllItems();
+  }
+
+  getCurrentGroup(){
+    this.userService.getCurrentUser({username: this.user.username}).subscribe({
+      next: data => {
+        this.user = data;
+        data.currGroup.user.forEach(x => this.numberOfPeople++);
+      },
+      error: error => {
+        console.error(error.message);
+        this.notifications.pushFailure('Error while getting current Group: ' + error.error.message);
+      }
+    });
   }
 
   /*

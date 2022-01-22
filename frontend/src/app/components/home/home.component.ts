@@ -13,7 +13,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     if(this.authService.isLoggedIn()){
-      this.router.navigateByUrl('/user');
+      this.router.navigateByUrl('/homepage');
     }
   }
 

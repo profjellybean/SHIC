@@ -73,7 +73,7 @@ export class LoginComponent implements OnInit {
       () => {
         console.log('Successfully logged in user: ' + authRequest.username);
         HeaderComponent.username = authRequest.username;
-        this.router.navigate(['/user']);
+        this.router.navigate(['/homepage']);
       },
       error => {
         console.log('Could not log in due to:');
