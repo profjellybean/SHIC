@@ -108,6 +108,7 @@ export class UserComponent implements OnInit {
       next: data => {
         console.log('added user {} to group {}', this.userToAdd, this.groupId);
         this.notifications.pushSuccess('User added successfully');
+        this.getCurrentGroup();
       },
       error: error => {
         console.error(error.message);
