@@ -1,6 +1,6 @@
 
 <br>
-<h1>Shopping List</h1>
+<h1>Shoppinglist</h1>
 <p></p>
 <hr>
 
@@ -126,8 +126,10 @@
   </div>
 
   <div>
-    <input *ngIf="items !== null && items.length !== 0" type="checkbox" class="btn-check" id="select-all" (click)="toggleAll()" [(ngModel)]="toggleAllItems" autocomplete="off"><label class="btn btn-outline-info" for="select-all">Select all Items</label> &nbsp;
     <button type="button" class="btn btn-outline-info" (click)="openAddModal(itemAddModal)">Add new Item</button> &nbsp;
+    <input *ngIf="items !== null && items.length !== 0" type="checkbox" class="btn-check" id="select-all"
+           (click)="toggleAll()" [(ngModel)]="toggleAllItems" autocomplete="off">
+    <label class="btn btn-outline-info" for="select-all">Select all Items</label> &nbsp;
     <button *ngIf="items !== null && items.length !== 0" type="button" class="btn btn-outline-info" id="buy-item"
             (click)="openBillModal(confirmationModal)" data-toggle="modal">Buy these Items
     </button>
@@ -159,9 +161,9 @@
         </td>
         <td>{{item.notes}}</td>
 
-          <td>
+          <td align="right">
             <button type="button" class="btn btn-outline-danger btn-sm mr-4"
-                    (click)="openAddModal(itemDeleteModal); this.itemToDelete=item">Remove
+                    (click)="openAddModal(itemDeleteModal); this.itemToDelete=item"> Delete
             </button>
           </td>
         </tr>
@@ -180,14 +182,13 @@
 
     <div class="modal-body">
       <div>
-        <p>Do you really want to remove this item from the shoppingList?
+        <p>Do you really want to delete this item from the shoppingList?
           <br>
           <strong>{{this.itemToDelete.name}}</strong>
         </p>
         <div class="modal-footer">
           <button type="button" class="btn btn-outline-danger" (click)="deleteItem(itemToDelete); modal.dismiss('X')">
-            Remove
-            Item
+            Delete
           </button>
         </div>
       </div>

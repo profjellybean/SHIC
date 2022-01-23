@@ -160,8 +160,8 @@
     <th>Name</th>
     <th>Amount</th>
     <th>Quantity</th>
-    <th>ExpDate</th>
-    <th>Storage LocationTag</th>
+    <th>Expiration Date</th>
+    <th>Storage Location</th>
     <th>Notes</th>
     <th></th>
     <th></th>
@@ -178,13 +178,13 @@
     <td>{{item.expDate}}</td>
     <td>{{item.locationTag}}</td>
     <td>{{item.notes}}</td>
-    <td>
+    <td align="right">
       <button type="button" class="btn btn-outline-dark btn-sm mr-4"
               (click)="openAddModal(itemUpdateModal); setUpdateItem(item)">Edit
       </button>
     </td>
-    <td>
-      <button type="button" class="btn btn-outline-danger btn-sm mr-4" (click)="openAddModal(itemDeleteModal)">Remove
+    <td align="right">
+      <button type="button" class="btn btn-outline-danger btn-sm mr-4" (click)="openAddModal(itemDeleteModal)"> Delete
       </button>
 
       <!-- popUp if deleted-->
@@ -225,24 +225,19 @@
                 </fieldset>
               </form>
             </div>
-
-
-
-
-
           </div>
           <div class="modal-footer">
             <button type="button" id="shoppinglist-public-msg"
                     (click)="putOnPublicShoppinglist(item); modal.dismiss('close')"
-                    class="btn btn-outline-info float-right">Yes, on public Shoppinglist
+                    class="btn btn-outline-info float-right"> On Public
             </button>
 
             <button type="button" id="shoppinglist-private-msg"
                     (click)="putOnPrivateShoppinglist(item); modal.dismiss('close')"
-                    class="btn btn-outline-info float-right">Yes, on private Shoppinglist
+                    class="btn btn-outline-info float-right"> On Private
             </button>
             <button type="button" (click)="deleteItem(item); modal.dismiss('close')" class="btn btn-outline-danger"
-                    id="delete-btn">No, just Delete it
+                    id="delete-btn"> Just Delete
             </button>
           </div>
         </ng-template>
@@ -252,10 +247,11 @@
   </tr>
   </tbody>
 </table>
+
 <div class="row p-2 mb-4">
   <ng-template #itemUpdateModal let-modal>
     <div class="modal-header">
-      <h5 class="modal-title">Edit {{item.name}}</h5>
+      <h5 class="modal-title">Edit {{itemToUpdate.name}}</h5>
       <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>

@@ -6,12 +6,12 @@
 <table class="table tab-content" style="width:50%">
   <tbody>
   <tr>
-    <td><strong>Spending this month:</strong></td>
+    <td><strong>Spending this month</strong></td>
     <td>{{monthlySum}}  €</td>
   </tr>
 
   <tr>
-    <td><strong>Group Budget:</strong></td>
+    <td><strong>Group Budget</strong></td>
     <td>{{register.monthlyBudget}}  €
       &nbsp;&nbsp;&nbsp;
       <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="openEditBudgetModal(budgetEditModal)">Edit
@@ -20,7 +20,7 @@
   </tr>
 
   <tr>
-    <td><strong>Rest Group Budget for this month:</strong></td>
+    <td><strong>Rest Group Budget for this month</strong></td>
     <td *ngIf="monthlyDifference !== undefined || monthlyDifference !== null">{{monthlyDifference}}  €</td>
   </tr>
   </tbody>
@@ -30,17 +30,19 @@
 <br>
 
 
-
 <table class="table table-striped">
   <thead class="thead-dark">
   <tr>
-    <th>Date:</th>
-    <th>Included:</th>
-    <th>Yet to pay:</th>
-    <th>Sum:</th>
-    <th>Sum per person:</th>
-    <th>Items:</th>
-    <th>Notes:</th>
+    <th>Date</th>
+    <th>Included</th>
+    <th>Yet to pay</th>
+    <th>Sum</th>
+    <th>Sum per person</th>
+    <th>Items</th>
+    <th>Notes</th>
+    <th></th>
+    <th></th>
+    <th></th>
   </tr>
   </thead>
   <tbody>
@@ -54,26 +56,28 @@
       <div *ngFor="let grocery of bill.groceries">{{grocery.name}}</div>
     </td>
     <td>{{bill.notes}}</td>
-    <td>
-      <div>
-        <button *ngIf="bill.notPaidNameList.includes(this.user.username)" type="button"
-                class="btn btn-outline-info btn-sm mr-4" (click)="confirmPayment(bill.id);">Confirm Payment
-        </button> &nbsp;
-        <div style="float: right;">
-          <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="openBillModal(billEditModal, bill);">
-            Edit Bill
-          </button> &nbsp;
-          <button type="button" class="btn btn-outline-danger btn-sm mr-4"
-                  (click)="openAddModal(billDeleteModal); this.billToDelete=bill">Delete
-          </button>
-        </div>
-      </div>
+    <td align="right">
+      <button *ngIf="bill.notPaidNameList.includes(this.user.username)" type="button"
+              class="btn btn-outline-info btn-sm mr-4" (click)="confirmPayment(bill.id);">Confirm Payment
+      </button>
     </td>
+    <td align="right">
+      <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="openBillModal(billEditModal, bill);">
+        Edit
+      </button>
+    </td>
+    <td align="right">
+      <button type="button" class="btn btn-outline-danger btn-sm mr-4"
+              (click)="openAddModal(billDeleteModal); this.billToDelete=bill">Delete
+      </button>
+    </td>
+
+
   </tr>
   </tbody>
   <tfoot>
   <tr>
-    <th>TOTAL:</th>
+    <th>TOTAL</th>
     <th></th>
     <th></th>
     <th>{{billSumGroup}} €</th>
@@ -82,7 +86,7 @@
 
     <th></th>
     <th>
-      <button class=" btn btn-outline-info btn-sm mr-4" (click)="payAll()">Pay all bills</button>
+      <button class=" btn btn-outline-info btn-sm mr-4" (click)="payAll()">Pay all Bills</button>
     </th>
   </tr>
   </tfoot>
@@ -102,7 +106,7 @@
       <form (ngSubmit)="editBudgetForm(budgetForm)" #budgetForm="ngForm">
 
         <div class="form-group">
-          <label for="inputAmount">New Monthly Budget:</label>
+          <label for="inputAmount">New Monthly Budget</label>
           <input type="number" name="amount" class="form-control" id="inputAmount" min="0" required
                  aria-describedby="amountHelp" placeholder="Enter Amount" [(ngModel)]="newMonthlyBudget">
           <div *ngIf="submitted && budgetForm.controls.amount.errors" class="error">
@@ -136,13 +140,13 @@
 
 
         <div class="form-group">
-          <label for="price">Bill sum (€):</label>
+          <label for="price">Bill sum (€)</label>
           <input name="price" class="form-control" id="price" required
                  placeholder="Enter price" [(ngModel)]="billToEdit.sum">
         </div>
 
         <div class="form-group">
-          <label for="date">Bill date:</label>
+          <label for="date">Bill date</label>
           <input type="date" name="date" class="form-control" id="date" required
                  aria-describedby="expDateHelp" placeholder="Enter expDate" [(ngModel)]="billToEdit.date">
         </div>

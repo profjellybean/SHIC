@@ -7,13 +7,13 @@
 <table class='table'>
   <thead>
   <tr>
-    <th>Month</th>
-    <th>Group Sum</th>
+    <th width="100">Month</th>
+    <th width="100">Group Sum</th>
   </tr>
   </thead>
   <tbody>
   <tr *ngFor="let bill of sumOfLastTwelveMonths;">
-    <td >{{bill.date}}</td>
+    <td>{{bill.date}}</td>
     <td>{{bill.sum}} €</td>
   </tr>
 
@@ -23,13 +23,13 @@
 <table class='table'>
   <thead>
   <tr>
-    <th>Year </th>
-    <th>Group Sum </th>
+    <th width="100">Year</th>
+    <th width="100">Group Sum</th>
   </tr>
   </thead>
   <tbody>
   <tr *ngFor="let bill of sumOfLastTenYears;">
-    <td >{{bill.date}}</td>
+    <td>{{bill.date}}</td>
     <td>{{bill.sum}} €</td>
   </tr>
 
@@ -45,8 +45,8 @@
   <table class='table'>
     <thead>
     <tr>
-      <th>Article</th>
-      <th>Number of times thrown away</th>
+      <th width="100">Article</th>
+      <th width="100">Number of times thrown away</th>
     </tr>
     </thead>
     <tbody>
@@ -65,21 +65,21 @@
 
 <h4>Articles thrown away per month</h4>
 <div *ngIf="sumOfLastTwelveMonthsThrownAway.length!==0">
-<table class='table'>
-  <thead>
-  <tr>
-    <th>Month</th>
-    <th>Number of articles you have thrown away</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr *ngFor="let bill of sumOfLastTwelveMonthsThrownAway;">
-    <td >{{bill.date}}</td>
-    <td>{{bill.sum}} </td>
-  </tr>
+  <table class='table'>
+    <thead>
+    <tr>
+      <th width="100">Month</th>
+      <th width="100">Number of articles you have thrown away</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let bill of sumOfLastTwelveMonthsThrownAway;">
+      <td>{{bill.date}}</td>
+      <td>{{bill.sum}} </td>
+    </tr>
 
-  </tbody>
-</table>
+    </tbody>
+  </table>
 </div>
 <div *ngIf="sumOfLastTwelveMonthsThrownAway.length===0">
   <span>you have not thrown away any articles in the last twelve months!</span>
@@ -87,20 +87,20 @@
 <br>
 <h4>Articles thrown away per year</h4>
 <div *ngIf="sumOfLastTenYearsThrownAway.length!==0">
-<table class='table'>
-  <thead>
-  <tr>
-    <th>Year </th>
-    <th>Number of articles you have thrown away</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr *ngFor="let bill of sumOfLastTenYearsThrownAway;">
-    <td >{{bill.date}}</td>
-    <td>{{bill.sum}} </td>
-  </tr>
-  </tbody>
-</table>
+  <table class='table'>
+    <thead>
+    <tr>
+      <th width="100">Year</th>
+      <th width="100">Number of articles you have thrown away</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let bill of sumOfLastTenYearsThrownAway;">
+      <td>{{bill.date}}</td>
+      <td>{{bill.sum}} </td>
+    </tr>
+    </tbody>
+  </table>
 </div>
 <div *ngIf="sumOfLastTenYearsThrownAway.length===0">
   <span>you have not thrown away any articles in the last ten years!</span>

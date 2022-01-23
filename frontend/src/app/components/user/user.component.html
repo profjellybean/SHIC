@@ -9,6 +9,8 @@
     <hr>
     <input class="basicAttributeEdit big" *ngIf="userEditMode" [(ngModel)]="editedUser.username" value="{{this.user.username}}">
     <button type="button" class="btn btn-outline-dark btn-sm mr-4" *ngIf="!userEditMode" (click)="userEditMode = true">Edit username</button>
+    <br>
+    <br>
     <button type="button" class="btn btn-outline-info btn-sm mr-4" *ngIf="userEditMode" (click)="editUsername()">Accept</button><p></p>
 
     <div class="basicAttribute" *ngIf="!emailEditMode"> <strong>E-Mail: &nbsp;</strong> {{this.user.email}} </div>
@@ -24,7 +26,7 @@
     &nbsp;
     <button type="button" class="btn btn-outline-info btn-sm mr-4 button" routerLink="/locationTag">Custom Storage Location Tags</button>
     <br><br><br>
-    <button type="button" class="btn btn-outline-danger btn-sm mr-4 button" (click)="openAddModal(userDeleteModal)">delete profile</button>
+    <button type="button" class="btn btn-outline-danger btn-sm mr-4 button" (click)="openAddModal(userDeleteModal)">Delete Profile</button>
   </div>
 
   <div class="profilePictureContainer">

@@ -110,8 +110,8 @@
       </form>
     </div>
     <div class="modal-footer">
-      <button type="button" (click)="addRecipeForm(recipeForm)" id="add-msg" class="btn btn-outline-info float-right">Add
-        recipe
+      <button type="button" (click)="addRecipeForm(recipeForm)" id="add-msg" class="btn btn-outline-info float-right">
+        Add Recipe
       </button>
       <button type="button" class="btn btn-outline-dark" id="close-modal-btn" (click)="modal.dismiss('close')">Close
       </button>
@@ -127,7 +127,7 @@
 </div>
 <br>
 
-<button type="button" class="btn btn-outline-info" (click)="openAddModal(recipeAddModal)">Add New Recipe</button>
+<button type="button" class="btn btn-outline-info" (click)="openAddModal(recipeAddModal)">Add new Recipe</button>
 
 <div class="recipe-list">
   <table class="table table-striped">
@@ -135,16 +135,18 @@
     <tr>
       <th>Name</th>
       <th>Description</th>
+      <th></th>
+      <th></th>
     </tr>
     </thead>
     <tbody>
     <tr *ngFor="let recipe of recipes">
       <td>{{recipe.name}}</td>
       <td>{{recipe.description}}</td>
-      <td>
+      <td align="right">
         <button type="button" class = "btn btn-outline-dark btn-sm mr-4" [routerLink]="['/recipe/', recipe.id]">Details</button>
       </td>
-      <td>
+      <td align="right">
         <button type="button" class="btn btn-outline-danger btn-sm mr-4" (click)="openDeleteModal(recipeDeleteModal); deleteRecipe=recipe">Delete</button>
       </td>
       <td>

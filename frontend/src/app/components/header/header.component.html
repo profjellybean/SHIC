@@ -21,7 +21,7 @@
       </li>
 
       <li class="nav-item">
-        <a class="nav-link" *ngIf="authService.isLoggedIn() && this.hasCurrentGroup()" routerLink="/shopping-list" routerLinkActive="active">Shopping List</a>
+        <a class="nav-link" *ngIf="authService.isLoggedIn() && this.hasCurrentGroup()" routerLink="/shopping-list" routerLinkActive="active">Shoppinglist</a>
       </li>
 
       <li class="nav-item">
@@ -29,7 +29,7 @@
       </li>
 
       <li class="nav-item">
-        <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/user" routerLinkActive="active">{{getUsername()}}</a>
+        <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/user" routerLinkActive="active">Profile</a>
       </li>
 
       <li style="margin-left: auto; margin-right: 1em;">
