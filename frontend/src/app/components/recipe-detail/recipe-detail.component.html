@@ -8,7 +8,7 @@
   </div>
   <div class="card-body">
     <h2><strong>{{recipe.name}}</strong></h2>
-    <p class="card-text"> for <input type="number" min="1" [(ngModel)]="numberOfPeople"/> people </p>
+    <p class="card-text"> for <input style="width: 55px" type="number" min="1" [(ngModel)]="numberOfPeople"/> people </p>
     <p class="card-text"><strong>Description:</strong> {{recipe.description}}</p>
     <p class="card-text"><strong>Ingredients:</strong> </p>
     <div class="col-xl-3 col-lg-4 p-2" *ngFor="let ingredient of recipe.ingredients">
