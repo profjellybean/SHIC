@@ -182,6 +182,7 @@ export class ShoppingListComponent implements OnInit {
         {
           next: res => {
             console.log(res);
+            this.removeItemFromShoppingList(item);
             this.notifications.pushSuccess('Item has been successfully deleted');
           },
           error: err => {
@@ -313,8 +314,8 @@ export class ShoppingListComponent implements OnInit {
       next: data => {
         console.log('received items to add by ' + this.searchItemByName, data);
         this.itemsAdd = data;
-        if(this.itemsAdd.length > 5) {
-          this.itemsAdd = this.itemsAdd.splice(0,5);
+        if (this.itemsAdd.length > 5) {
+          this.itemsAdd = this.itemsAdd.splice(0, 5);
         }
       }
     });
@@ -375,7 +376,14 @@ export class ShoppingListComponent implements OnInit {
   changeAmountOfItemInShoppingList(item: Item) {
     this.setItemAmountChange(item);
     console.log('item amount change ', this.itemAmountChange);
-    this.removeItemFromShoppingList(item);
+    let index = -1;
+    let cbValue = false;
+    for (let i = 0; i < this.items.length; i++) {
+      if (this.items[i].id === item.id) {
+        index = i;
+        cbValue = this.checkboxValues[i];
+      }
+    }
 
     if (this.isInPublic) {
       console.log('change amount if item in public list', item);
@@ -384,8 +392,8 @@ export class ShoppingListComponent implements OnInit {
           if (data === null) {
             this.getPublicShoppingList();
           } else {
-            this.items.push(data);
-            this.checkboxValues.push(false);
+            this.items[index] = data;
+            this.checkboxValues[index] = cbValue;
           }
           // todo dont reload every time
           this.loadItemsToAdd();
@@ -403,8 +411,8 @@ export class ShoppingListComponent implements OnInit {
           if (data === null) {
             this.getPrivateShoppingList();
           } else {
-            this.items.push(data);
-            this.checkboxValues.push(false);
+            this.items.splice(index, 0, data);
+            this.checkboxValues.splice(index, 0, false);
           }
           // todo dont reload every time
           this.loadItemsToAdd();
@@ -514,7 +522,7 @@ export class ShoppingListComponent implements OnInit {
       this.searchString = this.searchString + '&shoppingListId=';
     }
     if (this.searchItem.shoppingListId != null) {
-      if(this.isInPublic) {
+      if (this.isInPublic) {
         this.searchString = this.searchString + '&shoppingListId=' + this.publicList.id;
       } else {
         this.searchString = this.searchString + '&shoppingListId=' + this.privateList.id;
