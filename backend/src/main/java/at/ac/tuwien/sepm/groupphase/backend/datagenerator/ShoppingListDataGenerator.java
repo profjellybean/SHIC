@@ -77,7 +77,7 @@ public class ShoppingListDataGenerator {
                 LOGGER.debug("saving shoppinglist {}", shoppingList);
                 shoppingListRepository.saveAndFlush(shoppingList);
             }
-        } else {
+        } else if (!shoppingListItemRepository.findAll().isEmpty()) {
             LOGGER.debug("generating items for shoppinglist");
 
             //ItemStorage
