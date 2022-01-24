@@ -5,6 +5,8 @@ import {Globals} from '../global/globals';
 import {Item} from '../dtos/item';
 import {Params} from '@angular/router';
 import {UnitOfQuantity} from '../dtos/unitOfQuantity';
+import {TimeSumBill} from '../dtos/time-sum-bill';
+import {NameSum} from '../dtos/name-sum';
 
 @Injectable({
   providedIn: 'root'
@@ -67,5 +69,17 @@ export class StorageService {
   deleteItemFromStorage(params: Params): Observable<Item> {
     console.log('service: delete item from storage');
     return this.httpClient.delete<Item>(this.storageBaseUri, {params});
+  }
+  getSumOfArticlesOfSpecificYear(date: string): Observable<TimeSumBill>{
+    console.log('Load sum of articles of specific year');
+    return this.httpClient.get<TimeSumBill>(this.storageBaseUri + '/thrownAwayInSpecificYear'+'?date='+date);
+  }
+  getSumOfArticlesOfSpecificMonth(date: string): Observable<TimeSumBill>{
+    console.log('Load sum of articles of specific month');
+    return this.httpClient.get<TimeSumBill>(this.storageBaseUri + '/thrownAwayInSpecificMonth'+'?date='+date);
+  }
+  getMostThrownAwayArticles(): Observable<NameSum[]>{
+    console.log('get most often thrown away articles');
+    return this.httpClient.get<NameSum[]>(this.storageBaseUri+ '/mostOftenThrownAwayArticles');
   }
 }

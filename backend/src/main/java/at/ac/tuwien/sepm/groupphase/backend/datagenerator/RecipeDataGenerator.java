@@ -16,6 +16,8 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.lang.invoke.MethodHandles;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -161,7 +163,7 @@ public class RecipeDataGenerator {
             // Pudding
             // generate recipe
             Recipe veganPudding = Recipe.RecipeBuilder.aRecipe()
-                .withName("vegan Pudding")
+                .withName("Vegan Pudding")
                 .withDescription("Mix both together and heat it in the microwave.")
                 .withCategories(new HashSet<>(Arrays.asList(RecipeCategory.vegetarian, RecipeCategory.dinner)))
                 .withGroupId(1L)
@@ -180,6 +182,30 @@ public class RecipeDataGenerator {
             Recipe storedVeganPudding = recipeRepository.save(veganPudding);
             storedVeganPudding.setIngredients(new HashSet<>(Arrays.asList(soyaMilk, puddingMix)));
             recipeRepository.save(storedVeganPudding);
+
+            // Pork belly
+            // generate recipe
+            Recipe porkBelly = Recipe.RecipeBuilder.aRecipe()
+                .withName("Pork belly")
+                .withDescription("Put it with all the ingredients in the oven, 200 degrees for 3 hours.")
+                .withCategories(new HashSet<>(Arrays.asList(RecipeCategory.dinner)))
+                .withGroupId(1L)
+                .build();
+            LOGGER.debug("saving recipe {}", porkBelly);
+
+            // generate ingredients
+            ItemStorage pork = new ItemStorage("Pork belly", "organic", null, Date.valueOf(LocalDate.now().plusDays(10).toString()), 1, Location.fridge.toString(), mappedUnits.get("kg"), null, null);
+            LOGGER.debug("saving ingredient {}", pork);
+            pork = itemStorageRepository.save(pork);
+            ItemStorage carrots = new ItemStorage("Carrots", null, null, null, 1, null, mappedUnits.get("kg"), null, null);
+            LOGGER.debug("saving ingredient {}", carrots);
+            carrots = itemStorageRepository.save(carrots);
+            ItemStorage garlic = new ItemStorage("Garlic", null, null, null, 5, null, mappedUnits.get("pieces"), null, null);
+            LOGGER.debug("saving ingredient {}", garlic);
+            garlic = itemStorageRepository.save(garlic);
+            Recipe storedPorkBelly = recipeRepository.save(porkBelly);
+            storedPorkBelly.setIngredients(new HashSet<>(Arrays.asList(pork, garlic, carrots)));
+            recipeRepository.save(storedPorkBelly);
 
         } else {
             LOGGER.debug("generating {} recipes", NUMBER_OF_RECIPES_TO_GENERATE);

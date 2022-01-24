@@ -18,7 +18,6 @@ import {StorageComponent} from './components/storage/storage.component';
 import {RegisterComponent} from './components/register/register.component';
 import {RegisterUserComponent} from './components/registerUser/registerUser.component';
 import { RecipeDetailComponent } from './components/recipe-detail/recipe-detail.component';
-import { StorageAddItemComponent } from './components/storage-add-item/storage-add-item.component';
 import { UserComponent } from './components/user/user.component';
 import { ConfirmUserEmailComponent } from './components/confirm-user-email/confirm-user-email.component';
 import {NgSelectModule} from '@ng-select/ng-select';
@@ -26,6 +25,7 @@ import { StatisticComponent } from './components/statistic/statistic.component';
 import { LocationTagComponent } from './components/location-tag/location-tag.component';
 import { NotificationsComponent } from './components/notifications/notifications.component';
 import { UnitOfQuantityComponent } from './components/unit-of-quantity/unit-of-quantity.component';
+import { HomepageComponent } from './components/homepage/homepage.component';
 
 @NgModule({
   declarations: [
@@ -42,13 +42,12 @@ import { UnitOfQuantityComponent } from './components/unit-of-quantity/unit-of-q
     ShoppingListComponent,
     RecipeDetailComponent,
     ConfirmUserEmailComponent,
-    StorageAddItemComponent,
     UserComponent,
-    StorageAddItemComponent,
     NotificationsComponent,
     StatisticComponent,
     LocationTagComponent,
     UnitOfQuantityComponent,
+    HomepageComponent,
   ],
   imports: [
     BrowserModule,

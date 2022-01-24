@@ -1,12 +1,14 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Bill;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Register;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.BillRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.RegisterRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.BillService;
 import org.slf4j.Logger;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -26,11 +29,13 @@ public class BillServiceImpl implements BillService {
     private final BillRepository billRepository;
     private final RegisterRepository registerRepository;
     private final UserRepository userRepository;
+    private final ItemStorageRepository storageRepository;
 
-    public BillServiceImpl(BillRepository billRepository, RegisterRepository registerRepository, UserRepository userRepository) {
+    public BillServiceImpl(BillRepository billRepository, RegisterRepository registerRepository, UserRepository userRepository, ItemStorageRepository storageRepository) {
         this.billRepository = billRepository;
         this.registerRepository = registerRepository;
         this.userRepository = userRepository;
+        this.storageRepository = storageRepository;
     }
 
     @Transactional
@@ -78,6 +83,18 @@ public class BillServiceImpl implements BillService {
     @Override
     public Bill bill(Bill bill) {
         LOGGER.debug("Service: create new bill");
+        if (bill.getGroceries() != null) {
+            Set<ItemStorage> items = bill.getGroceries();
+            HashSet<ItemStorage> newItems = new HashSet<>();
+            for (ItemStorage i : items) {
+                ItemStorage temp = new ItemStorage(i.getName());
+                this.storageRepository.saveAndFlush(temp);
+                newItems.add(temp);
+            }
+            bill.setGroceries(newItems);
+        }
+
+
         Bill savedBill = billRepository.saveAndFlush(bill);
         Optional<Register> register = registerRepository.findRegisterById(bill.getRegisterId());
         if (register.isPresent()) {

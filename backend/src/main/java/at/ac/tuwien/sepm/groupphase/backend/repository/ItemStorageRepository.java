@@ -14,7 +14,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ItemStorageRepository extends JpaRepository<ItemStorage, Long> {
+
     List<ItemStorage> findAllByStorageId(Long id);
+
+    List<ItemStorage> findAllByStorageIdOrderByNameAsc(Long id);
 
     List<ItemStorage> findAllByShoppingListId(Long id);
 
@@ -29,7 +32,7 @@ public interface ItemStorageRepository extends JpaRepository<ItemStorage, Long> 
     @Modifying
     @Query(value = "SELECT * FROM ITEM_STORAGE WHERE (STORAGE_ID = :storageId) AND ((:amount = 0) OR (AMOUNT>= :amount)) AND ((:locationTag IS NULL) OR (LOCATION_TAG = :locationTag)) "
                                 + "AND ((:name IS NULL) OR (LOWER(NAME) like LOWER(:name))) "
-                            + "AND ((:notes IS NULL) OR (LOWER(NOTES) like LOWER(:notes))) AND ((:expDate IS NULL) OR (EXP_DATE >= :expDate))", nativeQuery = true)
+                            + "AND ((:notes IS NULL) OR (LOWER(NOTES) like LOWER(:notes))) AND ((:expDate IS NULL) OR (EXP_DATE <= :expDate))", nativeQuery = true)
     @Transactional
     List<ItemStorage> findAllByItemStorage(@Param("storageId") Long storageId, @Param("amount") int amount, @Param("locationTag") String locationTag, @Param("name") String name,
                                            @Param("notes") String notes, @Param("expDate") Date expDate);
@@ -41,4 +44,13 @@ public interface ItemStorageRepository extends JpaRepository<ItemStorage, Long> 
     @Modifying
     @Query("UPDATE ItemStorage i SET i.amount = i.amount - ?2 WHERE i = ?1")
     void reduceQuantity(ItemStorage item, int amount);
+
+    @Modifying
+    @Query(value = "SELECT * FROM ITEM_STORAGE WHERE (SHOPPING_LIST_ID = :shoppingListId) AND ((:amount = 0) OR (AMOUNT>= :amount)) AND ((:locationTag IS NULL) OR (LOCATION_TAG = :locationTag)) "
+        + "AND ((:name IS NULL) OR (LOWER(NAME) like LOWER(:name))) "
+        + "AND ((:notes IS NULL) OR (LOWER(NOTES) like LOWER(:notes))) AND ((:expDate IS NULL) OR (EXP_DATE <= :expDate))", nativeQuery = true)
+    @Transactional
+    List<ItemStorage> findAllByItemStorageForShoppingList(@Param("shoppingListId") Long shoppingListId, @Param("amount") int amount, @Param("locationTag") String locationTag, @Param("name") String name,
+                                           @Param("notes") String notes, @Param("expDate") Date expDate);
+
 }

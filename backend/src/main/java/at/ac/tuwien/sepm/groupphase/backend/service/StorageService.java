@@ -3,10 +3,13 @@ package at.ac.tuwien.sepm.groupphase.backend.service;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.LocationClass;
+import at.ac.tuwien.sepm.groupphase.backend.entity.TrashOrUsedItem;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 public interface StorageService {
@@ -28,7 +31,7 @@ public interface StorageService {
      * @param storageId the id of the storage which the item is in
      * @return a Spring Security user
      */
-    ItemStorage deleteItemInStorageById(Long itemId, Long storageId);
+    ItemStorage deleteItemInStorageById(Long itemId, Long storageId, boolean trash);
 
     /**
      * Saves an item in the storage.
@@ -164,4 +167,11 @@ public interface StorageService {
      *
      */
     void deleteLocation(Long id);
+
+    Double sumOfArticlesOfSpecificMonth(String user, LocalDate date);
+
+    Double sumOfArticlesOfSpecificYear(String user, LocalDate date);
+
+    List<TrashOrUsedItem> getMostThrownAwayArticles(String user);
+
 }

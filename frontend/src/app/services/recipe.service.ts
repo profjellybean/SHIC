@@ -20,6 +20,11 @@ export class RecipeService {
     return this.httpClient.get<Recipe[]>(this.recipeBaseUri);
   }
 
+  findAllByName(name: string): Observable<Recipe[]>{
+    console.log('load recipes with name', name);
+    return this.httpClient.get<Recipe[]>(this.recipeBaseUri + '/findbyname?name=' + name);
+  }
+
   findRecipeById(id: number): Observable<Recipe>{
     console.log('load recipe with id ' + 1);
     return this.httpClient.get<Recipe>(this.recipeBaseUri + '/' + id);

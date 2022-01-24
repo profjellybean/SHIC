@@ -14,7 +14,6 @@ import {User} from '../dtos/user';
 })
 export class AuthService {
   private user: User;
-  private hasGroup = 0;
 
   private authBaseUri: string = this.globals.backendUri + '/authentication';
 
@@ -27,6 +26,7 @@ export class AuthService {
    * @param authRequest User data
    */
   loginUser(authRequest: AuthRequest): Observable<string> {
+    localStorage.setItem('username', authRequest.username);
     return this.httpClient.post(this.authBaseUri, authRequest, {responseType: 'text'})
       .pipe(
         tap((authResponse: string) => this.setToken(authResponse))
@@ -68,8 +68,6 @@ export class AuthService {
   }
 
   hasCurrentGroup() {
-
-    if(this.hasGroup === 0) {
       if (this.isLoggedIn()) {
         if (this.user === undefined) {
           // @ts-ignore
@@ -78,9 +76,9 @@ export class AuthService {
               console.log('received items', data);
               this.user = data;
               if(this.user.currGroup !== null){
-                this.hasGroup = 1;
+                localStorage.setItem('currGroup', 'true');
               } else{
-                this.hasGroup = -1;
+                localStorage.setItem('currGroup', 'false');
               }
               return this.user.currGroup !== null;
             },
@@ -94,10 +92,7 @@ export class AuthService {
       } else {
         return false;
       }
-    } else{
-      return this.hasGroup === 1;
     }
-  }
 
   public setToken(authResponse: string) {
     localStorage.setItem('authToken', authResponse);

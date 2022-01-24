@@ -102,6 +102,14 @@ public interface ShoppingListService {
     Long findShoppingListById(Long id);
 
     /**
+     * search itemStorage items with matching parameter.
+     *
+     * @param itemStorage itemStorage with parameters
+     * @return result of the search
+     */
+    List<ItemStorage> searchItem(ItemStorage itemStorage);
+
+    /**
      * Find all item entries.
      *
      * @return ordered list of all item entries

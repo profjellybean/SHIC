@@ -88,6 +88,8 @@ public class ItemServiceImpl implements ItemService {
         return unitOfQuantityRepository.findAllByGroupIdOrGroupIdIsNull(groupId);
     }
 
+
+
     @Override
     public List<UnitOfQuantity> getAll() {
         LOGGER.debug("Getting all units of quantity");
@@ -102,6 +104,25 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    public List<Item> searchByName(String name, String userName) {
+        LOGGER.debug("Get items by name {}", name);
+        String partName = name;
+        if (userName == null) {
+            throw new ValidationException("User can not be null");
+        }
+        Long groupId = userService.getGroupIdByUsername(userName);
+        if (groupId == null) {
+            throw new ValidationException("groupId can not be null");
+        }
+        if (name == null || name == "") {
+            return this.getAllItemsForGroupByUsername(userName);
+        } else {
+            partName = "%" + name + "%";
+            return itemRepository.findAllItemsByNameForGroup(partName, groupId);
+        }
+    }
+
+    @Override
     public String getUnitOfQuantityById(Long id) {
         LOGGER.debug("Find Unit of Quantity by id: {}", id);
         return unitOfQuantityRepository.getUnitOfQuantityById(id).getName();
@@ -110,7 +131,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<Item> getAllItems() {
         LOGGER.debug("Service: Getting all items");
-        return itemRepository.findAll();
+        return itemRepository.findAllByOrderByNameAsc();
     }
 
     @Override
@@ -123,7 +144,7 @@ public class ItemServiceImpl implements ItemService {
         if (groupId == null) {
             throw new ValidationException("groupId can not be null");
         }
-        return itemRepository.findAllItemsForGroup(groupId);
+        return itemRepository.findAllItemsForGroupOrderByNameAsc(groupId);
     }
 
     @Override
@@ -136,7 +157,7 @@ public class ItemServiceImpl implements ItemService {
         if (groupId == null) {
             throw new ValidationException("groupId can not be null");
         }
-        return itemRepository.findAllByGroupId(groupId);
+        return itemRepository.findAllByGroupIdOrderByNameAsc(groupId);
     }
 
     @Override

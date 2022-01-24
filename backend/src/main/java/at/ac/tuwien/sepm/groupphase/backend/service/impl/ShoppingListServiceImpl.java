@@ -105,6 +105,35 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     }
 
     @Override
+    public List<ItemStorage> searchItem(ItemStorage itemStorage) {
+        LOGGER.info("Search for Items by ItemStorage {}", itemStorage);
+        if (itemStorage.getNotes() != null) {
+            if (itemStorage.getNotes().trim().equals("")) {
+                itemStorage.setNotes(null);
+            }
+        }
+        if (itemStorage.getName() != null) {
+            if (itemStorage.getName().trim().equals("")) {
+                itemStorage.setName(null);
+            }
+        }
+        if (itemStorage.getLocationTag() != null) {
+            if (itemStorage.getLocationTag().trim().equals("")) {
+                itemStorage.setLocationTag(null);
+            }
+        }
+
+        return itemStorageRepository.findAllByItemStorageForShoppingList(
+            itemStorage.getShoppingListId(),
+            itemStorage.getAmount(),
+            itemStorage.getLocationTag() == null ? null : itemStorage.getLocationTag(),
+            itemStorage.getName() == null ? null : "%" + itemStorage.getName() + "%",
+            itemStorage.getNotes() == null ? null : "%" + itemStorage.getNotes() + "%",
+            itemStorage.getExpDate());
+
+    }
+
+    @Override
     @Transactional
     public List<ItemStorage> planRecipe(Long recipeId, String userName, Integer numberOfPeople) {
         LOGGER.debug("Service: plan Recipe {} for {} people based on user {}.", recipeId, numberOfPeople, userName);
@@ -277,13 +306,13 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     @Override
     public List<Item> findAllItems() {
         LOGGER.debug("Find all items");
-        return itemRepository.findAll();
+        return itemRepository.findAllByOrderByNameAsc();
     }
 
     @Override
     public List<ItemStorage> findAllByShoppingListId(Long storageId) {
         LOGGER.debug("find all storage items of shopping list");
-        return shoppingListItemRepository.findAllByShoppingListId(storageId);
+        return shoppingListItemRepository.findAllByShoppingListIdOrderByNameAsc(storageId);
     }
 
     @Override

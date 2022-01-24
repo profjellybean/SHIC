@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -77,6 +78,10 @@ public class ItemStorage {
 
     public ItemStorage(String name, long shoppingListId) {
         this.shoppingListId = shoppingListId;
+        this.name = name;
+    }
+
+    public ItemStorage(String name) {
         this.name = name;
     }
 

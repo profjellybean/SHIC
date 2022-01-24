@@ -1,0 +1,25 @@
+<p class="text-info" style="font-size: 100pt; text-align: center">SHIC</p>
+<p class="text-dark" style="font-size: 35pt; text-align: center">Shopping &nbsp;&nbsp;&nbsp;Home&nbsp;&nbsp;&nbsp;Inventory&nbsp;&nbsp;&nbsp;Cash</p>
+<p></p>
+<hr>
+<div style="text-align: center">
+<button class="btn btn-info" *ngIf="authService.isLoggedIn() && authService.hasCurrentGroup()" routerLink="/storage" routerLinkActive="active">
+  <p style="font-size: 20pt">Storage</p>
+</button>
+<button class="btn btn-info" *ngIf="authService.isLoggedIn() && authService.hasCurrentGroup()" routerLink="/recipe" routerLinkActive="active">
+  <p style="font-size: 20pt">Recipe</p>
+</button>
+<button class="btn btn-info" *ngIf="authService.isLoggedIn() && authService.hasCurrentGroup()" routerLink="/register" routerLinkActive="active">
+  <p style="font-size: 20pt">Bills</p>
+</button>
+<button class="btn btn-info" *ngIf="authService.isLoggedIn() && authService.hasCurrentGroup()" routerLink="/shopping-list" routerLinkActive="active">
+  <p style="font-size: 20pt">Shopping List</p>
+</button>
+<button class="btn btn-info" *ngIf="authService.isLoggedIn() && authService.hasCurrentGroup()" routerLink="/statistic" routerLinkActive="active">
+  <p style="font-size: 20pt">Statistic</p>
+</button>
+<button class="btn btn-info" *ngIf="authService.isLoggedIn()" routerLink="/user" routerLinkActive="active">
+  <p style="font-size: 20pt">{{getUsername()}}</p>
+</button>
+</div>
+

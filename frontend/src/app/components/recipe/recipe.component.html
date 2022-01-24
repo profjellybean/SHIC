@@ -2,7 +2,7 @@
 <ng-template #recipeDeleteModal let-modal>
   <div class="modal-header">
     <h5 class="modal-title">Alert</h5>
-    <button type="button" class="btn btn-outline-dark btn-sm mr-4" class="close" (click)="modal.dismiss('X')" aria-label="Close">
+    <button type="button" class="btn btn-dark btn-sm mr-4" class="close" (click)="modal.dismiss('X')" aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
@@ -10,7 +10,7 @@
   <div class="modal-body">
     <div>
       <p>Do you really want to delete this recipe: {{deleteRecipe.name}} ?</p>
-      <button type="button" class="btn btn-outline-danger btn-sm mr-4" (click)="delete(deleteRecipe); modal.dismiss('X')">Delete Recipe</button>
+      <button type="button" class="btn btn-danger btn-sm mr-4" (click)="delete(deleteRecipe); modal.dismiss('X')">Delete Recipe</button>
     </div>
   </div>
 </ng-template>
@@ -19,12 +19,11 @@
 <h1>Recipe</h1>
 <p></p>
 <hr>
-<button type="button" class="btn btn-outline-info" (click)="openAddModal(recipeAddModal)">Add New Recipe</button>
 <div class="row p-2 mb-4">
   <ng-template #recipeAddModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Recipe</h5>
-      <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
+      <button type="button" class="btn btn-dark btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -76,7 +75,7 @@
           <input *ngIf="tempIngredient!==undefined" [(ngModel)]="this.tempIngredient.amount"
                  placeholder="Enter amount in {{this.tempIngredient.quantity.name}}" name="inputItemQuantity">&nbsp;
           <button *ngIf="tempIngredient!==undefined && tempIngredient.amount > 0" (click)="addTempIngredient()"
-                  class="btn btn-outline-info">Add item to recipe
+                  class="btn btn-info">Add item to recipe
           </button>&nbsp;
           <div *ngIf="error" class="error">
             <small class="form-text text-warning">Ingredients are required!
@@ -111,36 +110,63 @@
       </form>
     </div>
     <div class="modal-footer">
-      <button type="button" (click)="addRecipeForm(recipeForm)" id="add-msg" class="btn btn-outline-info float-right">Add
-        recipe
+      <button type="button" (click)="addRecipeForm(recipeForm)" id="add-msg" class="btn btn-info float-right">
+        Add Recipe
       </button>
-      <button type="button" class="btn btn-outline-dark" id="close-modal-btn" (click)="modal.dismiss('close')">Close
+      <button type="button" class="btn btn-dark" id="close-modal-btn" (click)="modal.dismiss('close')">Close
       </button>
     </div>
   </ng-template>
 </div>
+
+<div>
+  <h5>Filter Recipes</h5>
+
+  <label for="search-by-name">Name: &nbsp;</label>
+  <input [(ngModel)]="searchName" type="search" id="search-by-name" (keyup)="findAllByName(searchName)">
+</div>
+<br>
+
+<button type="button" class="btn btn-info" (click)="openAddModal(recipeAddModal)">Add new Recipe</button>
+
 <div class="recipe-list">
   <table class="table table-striped">
     <thead class="thead-dark">
     <tr>
-      <th>ID</th>
       <th>Name</th>
       <th>Description</th>
+      <th></th>
+      <th></th>
     </tr>
     </thead>
     <tbody>
     <tr *ngFor="let recipe of recipes">
-      <td>{{recipe.id}}</td>
       <td>{{recipe.name}}</td>
       <td>{{recipe.description}}</td>
-      <td>
-        <button type="button" class = "btn btn-outline-dark btn-sm mr-4" [routerLink]="['/recipe/', recipe.id]">Details</button>
+      <td align="right">
+        <button type="button" class = "btn btn-dark btn-sm mr-4" [routerLink]="['/recipe/', recipe.id]">Details</button>
       </td>
-      <td>
-        <button type="button" class="btn btn-outline-danger btn-sm mr-4" (click)="openDeleteModal(recipeDeleteModal); deleteRecipe=recipe">Delete</button>
+      <td align="right">
+        <button type="button" class="btn btn-danger btn-sm mr-4" (click)="openDeleteModal(recipeDeleteModal); deleteRecipe=recipe">Delete</button>
       </td>
       <td>
     </tr>
     </tbody>
   </table>
+</div>
+
+<div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+  <h4 class="alert-heading">Error
+    <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="vanishError()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </h4>
+  <p>{{error}}</p>
+</div>
+<div *ngIf="success" class="alert alert-success alert-dismissible fade show" role="alert">
+  <h4 class="alert-heading"> {{this.success}}
+    <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="vanishSuccess()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </h4>
 </div>

@@ -66,6 +66,15 @@ export class ShoppingListService {
       this.shoppingListBaseUri+'/putAllIngredientsOfRecipe', httpParams.toString(), {params: httpParams});
   }
 
+  /**
+   * Loads items from the backend with specific parameters
+   */
+  searchItems(params: string): Observable<Item[]> {
+    console.log('Search for items');
+    return this.httpClient.get<Item[]>(
+      this.shoppingListBaseUri+'/search'+params);
+  }
+
   addItemToShoppingList(item: Item): Observable<Item>{
     console.log('service: add item to shoppinglist: ', item);
     console.log(this.shoppingListBaseUri + '/newItem');
