@@ -19,11 +19,25 @@ public interface TrashOrUsedRepository extends JpaRepository<TrashOrUsed, Long> 
      */
     void deleteTrashOrUsedByDateLessThan(Date date);
 
+    /**
+     * count how many items have been thrown away in a specific month.
+     * return number of thrown away items.
+     */
     @Query(value = "SELECT COUNT(T.ITEM_NAME) from TRASH_OR_USED AS T WHERE (YEAR(T.DATE) = YEAR(:day)) AND (MONTH(T.DATE) = MONTH(:day)) AND (T.STORAGE_ID= :storageId)", nativeQuery = true)
     Double sumOfArticlesOfSpecificMonth(@Param("storageId") Long storageId, @Param("day") LocalDate day);
 
+    /**
+     * count how many items have been thrown away in a specific year.
+     * return number of thrown away items.
+     */
     @Query(value = "SELECT COUNT(T.ITEM_NAME) from TRASH_OR_USED AS T WHERE (YEAR(T.DATE) = YEAR(:day)) AND (T.STORAGE_ID= :storageId)", nativeQuery = true)
     Double sumOfArticlesOfSpecificYear(@Param("storageId") Long storageId, @Param("day") LocalDate day);
+
+    /**
+     * find Trash Or used with specific name and storageId.
+     * return list of Trash or used items.
+     */
+    List<TrashOrUsed> findAllByItemNameEqualsAndStorageIdEquals(@Param("itemName") String itemName, @Param("storageId") Long storageId);
 
 
 }
