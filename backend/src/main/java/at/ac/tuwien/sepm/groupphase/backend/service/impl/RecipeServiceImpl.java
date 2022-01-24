@@ -32,18 +32,21 @@ public class RecipeServiceImpl implements RecipeService {
         this.userService = userService;
     }
 
+    @Transactional
     @Override
     public List<Recipe> findAll() {
         LOGGER.debug("Find all recipes");
         return recipeRepository.findAllByOrderByNameAsc();
     }
 
+    @Transactional
     @Override
     public Recipe findRecipeById(Long id) {
         LOGGER.debug("Find one recipe by id");
         return recipeRepository.findRecipeById(id);
     }
 
+    @Transactional
     @Override
     public Recipe addRecipe(Recipe recipe) {
         LOGGER.debug("Add one recipe");
@@ -83,6 +86,8 @@ public class RecipeServiceImpl implements RecipeService {
         recipeRepository.delete(helpRecipe);
     }
 
+    @Transactional
+    @Override
     public List<Recipe> findRecipeBySubstring(String name) {
         LOGGER.debug("Service: find all recipes with substring {} in name", name);
         return recipeRepository.findAllByNameContainingIgnoreCaseOrderByNameAsc(name);

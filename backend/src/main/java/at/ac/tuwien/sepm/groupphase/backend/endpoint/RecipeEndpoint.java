@@ -50,10 +50,9 @@ public class RecipeEndpoint {
         this.userService = userService;
     }
 
+    @Secured("ROLE_USER")
     @GetMapping
-    @PermitAll
-    @Transactional
-    @Operation(summary = "Get list of all recipes") //TODO: add security
+    @Operation(summary = "Get list of all recipes")
     public List<RecipeDto> findAll() {
         LOGGER.info("GET /recipe");
         return recipeMapper.recipeToRecipeDto(recipeService.findAll());
@@ -61,34 +60,31 @@ public class RecipeEndpoint {
 
     @GetMapping("/findbyname")
     @Secured("ROLE_USER")
-    @Transactional
     @Operation(summary = "Get list of all recipes that contain the String name")
     public List<RecipeDto> findAllBySubstring(@RequestParam(name = "name") String name) {
         LOGGER.info("ENDPOINT: GET /recipe/findbyname");
         return recipeMapper.recipeToRecipeDto(recipeService.findRecipeBySubstring(name));
     }
 
+    @Secured("ROLE_USER")
     @GetMapping(value = "/{id}")
-    @PermitAll
-    @Transactional
-    @Operation(summary = "Get recipe by id") //TODO: add security
+    @Operation(summary = "Get recipe by id")
     public RecipeDto findRecipeById(@PathVariable("id") Long id) {
         LOGGER.info("GET /recipe by id");
         return recipeMapper.recipeToRecipeDto(recipeService.findRecipeById(id));
     }
 
+    @Secured("ROLE_USER")
     @PostMapping
-    @PermitAll
-    @Transactional
     @Operation(summary = "Add a new Recipe")
     public RecipeDto addRecipe(@RequestBody RecipeDto recipeDto) {
         LOGGER.info("Add recipe {}", recipeDto.getName());
         return recipeMapper.recipeToRecipeDto(recipeService.addRecipe(recipeMapper.recipeDtoToRecipe(recipeDto)));
     }
 
+    @Secured("ROLE_USER")
     @PutMapping(value = "/{id}")
-    @PermitAll
-    @Operation(summary = "Update an existing recipe") //TODO: add security
+    @Operation(summary = "Update an existing recipe")
     public RecipeDto updateRecipe(Authentication authentication, @Valid @RequestBody RecipeDto recipeDto) {
         LOGGER.info("PUT /recipe body: {}", recipeDto);
         try {
@@ -112,8 +108,7 @@ public class RecipeEndpoint {
 
     @Secured("ROLE_USER")
     @DeleteMapping(value = "/{id}")
-    @PermitAll
-    @ResponseStatus(HttpStatus.OK) //TODO: add security
+    @ResponseStatus(HttpStatus.OK)
     public boolean deleteRecipe(Authentication authentication, @PathVariable("id") Long id) {
         LOGGER.info("DELETE /delete recipe id: {}", id);
         if (authentication == null) {

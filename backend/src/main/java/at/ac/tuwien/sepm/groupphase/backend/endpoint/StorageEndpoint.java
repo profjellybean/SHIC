@@ -110,8 +110,8 @@ public class StorageEndpoint {
         }
     }
 
+    @Secured("ROLE_USER")
     @PutMapping
-    @PermitAll
     @Operation(summary = "Update an existing item of the storage") //TODO: add security
     public ItemStorageDto updateItem(Authentication authentication, @Valid @RequestBody ItemStorageDto itemStorageDto) {
         LOGGER.info("PUT /storage body: {}", itemStorageDto);
@@ -131,24 +131,24 @@ public class StorageEndpoint {
         }
     }
 
+    @Secured("ROLE_USER")
     @GetMapping
-    @PermitAll
     @Operation(summary = "Get all items from the storage") //TODO: add security
     public List<ItemStorageDto> getAll(@Param("id") Long id) {
         LOGGER.info("getAll, endpoint");
         return itemStorageMapper.itemsStorageToItemsStorageDto(storageService.getAll(id));
     }
 
+    @Secured("ROLE_USER")
     @GetMapping(value = "/searchName")
-    @PermitAll
     @Operation(summary = "Search for items from the storage by name") //TODO: add security
     public List<ItemStorageDto> searchItemName(@Param("id") Long id, @Param("name") String name) {
         LOGGER.info("searchItem, endpoint");
         return itemStorageMapper.itemsStorageToItemsStorageDto(storageService.searchItemName(id, name));
     }
 
+    @Secured("ROLE_USER")
     @GetMapping(value = "/search")
-    @PermitAll
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Search for items from storage by Dto")
     public List<ItemStorageDto> searchItem(@DateTimeFormat(pattern = "yyyy-MM-dd") ItemStorageDto itemStorageDto) {
@@ -158,8 +158,7 @@ public class StorageEndpoint {
 
     @Secured("ROLE_USER")
     @GetMapping(value = "/unitOfQuantity")
-    @PermitAll
-    @Operation(summary = "Get all units of quantity")
+    @Operation(summary = "Get all units of quantity") //TODO: add security
     public List<UnitOfQuantityDto> getAllUnitsOfQuantity(Authentication authentication) {
         LOGGER.info("Get units of quantity, endpoint");
         if (authentication == null) {
@@ -170,7 +169,7 @@ public class StorageEndpoint {
         return unitOfQuantityMapper.unitsOfQuantityToUnitsOfQuantityDto(storageService.getAllUnitOfQuantity(groupId));
     }
 
-    @PermitAll
+    @Secured("ROLE_USER")
     @DeleteMapping
     @ResponseStatus(HttpStatus.OK)
     public ItemStorageDto deleteItemFromStorage(Authentication authentication, @RequestParam Long itemId, boolean trash) {
@@ -235,9 +234,8 @@ public class StorageEndpoint {
 
     }
 
-
+    @Secured("ROLE_USER")
     @GetMapping(value = "/location")
-    @PermitAll
     @Operation(summary = "Get all locations") //TODO: add security
     public List<LocationDto> getAllLocations() {
         try {
@@ -250,8 +248,8 @@ public class StorageEndpoint {
         }
     }
 
+    @Secured("ROLE_USER")
     @GetMapping(value = "/locationWithStorageId")
-    @PermitAll
     @Operation(summary = "Get all locations and storageId") //TODO: add security
     public List<LocationDto> getAllLocationsByStorageId(@Param("storageId") Long storageId) {
         try {
@@ -264,8 +262,8 @@ public class StorageEndpoint {
         }
     }
 
+    @Secured("ROLE_USER")
     @GetMapping(value = "/locationWithNameandStorageId")
-    @PermitAll
     @Operation(summary = "Get all locations by name and storageId") //TODO: add security
     public List<LocationDto> getAllLocationsByNameAndStorageId(@Param("name") String name, @Param("storageId") Long storageId) {
         try {
@@ -278,8 +276,8 @@ public class StorageEndpoint {
         }
     }
 
+    @Secured("ROLE_USER")
     @PostMapping(value = "/location")
-    @PermitAll
     @Operation(summary = "save location") //TODO: add security
     public void saveLocation(@Valid @RequestBody LocationDto locationDto) {
         try {
@@ -295,8 +293,8 @@ public class StorageEndpoint {
         }
     }
 
+    @Secured("ROLE_USER")
     @DeleteMapping(value = "/location")
-    @PermitAll
     @Operation(summary = "delete location") //TODO: add security
     public void deleteLocation(@Valid @Param("id") Long id) {
         try {

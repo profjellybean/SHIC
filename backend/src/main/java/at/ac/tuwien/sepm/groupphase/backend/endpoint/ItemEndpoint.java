@@ -57,8 +57,8 @@ public class ItemEndpoint {
         this.userService = userService;
     }
 
+    @Secured("ROLE_USER")
     @PostMapping(value = "/unitOfQuantity")
-    @PermitAll
     @Operation(summary = "create new Unit of Quantity")
     public UnitOfQuantityDto createUnitOfQuantity(Authentication authentication, @Param("name") String name) {
         LOGGER.info("POST /unitOfQuantity: {}", name);
@@ -82,8 +82,8 @@ public class ItemEndpoint {
 
     }
 
+    @Secured("ROLE_USER")
     @PostMapping(value = "/unitsRelation")
-    @PermitAll
     @Operation(summary = "create new Relation of Units")
     public UnitsRelationDto createUnitsRelation(@Valid @RequestBody UnitsRelationDto unitsRelationDto) {
         LOGGER.info("POST /unitsRelation: {}", unitsRelationDto.toString());
@@ -91,33 +91,32 @@ public class ItemEndpoint {
 
     }
 
+    @Secured("ROLE_USER")
     @GetMapping(value = "/unitsRelation")
-    @PermitAll
     @Operation(summary = "Get all Units of quantity")
     public List<UnitsRelationDto> getAllUnitsRelations() {
         LOGGER.info("getAllunitsRelations, itemEndpoint");
         return unitsRelationMapper.unitsRelationsToUnitsRelationsDto(itemService.getAllUnitsRelations());
     }
 
+    @Secured("ROLE_USER")
     @GetMapping(value = "/unitsRelation/specificRelation")
-    @PermitAll
     @Operation(summary = "Get specific Relation between Units")
     public UnitsRelationDto getSpecificUnitsRelations(@Param("baseUnit") String baseUnit, @Param("calculatedUnit") String calculatedUnit) {
         LOGGER.info("getSpecificUnitsRelation, itemEndpoint");
         return unitsRelationMapper.unitsRelationToUnitsRelationDto(itemService.getSpecificRelation(baseUnit, calculatedUnit));
     }
 
-
+    @Secured("ROLE_USER")
     @GetMapping(value = "/unitOfQuantity")
-    @PermitAll
     @Operation(summary = "Get all Units of quantity")
     public List<UnitOfQuantityDto> getAll() {
         LOGGER.info("getAllunitOfQuantity, itemEndpoint");
         return unitOfQuantityMapper.unitsOfQuantityToUnitsOfQuantityDto(itemService.getAll());
     }
 
+    @Secured("ROLE_USER")
     @GetMapping(value = "/unitOfQuantity/forGroup")
-    @PermitAll
     @Operation(summary = "Get all Units of quantity")
     public List<UnitOfQuantityDto> getAllByGroupId(Authentication authentication) {
         LOGGER.info("getAllunitOfQuantity, itemEndpoint");
@@ -133,24 +132,24 @@ public class ItemEndpoint {
         }
     }
 
+    @Secured("ROLE_USER")
     @GetMapping(value = "/unitOfQuantity/byId")
-    @PermitAll
     @Operation(summary = "Get all Units of quantity")
     public String getOneUnitOfQuantity(@Param("id") Long id) {
         LOGGER.info("getOneUnitOfQuantity, itemEndpoint");
         return itemService.getUnitOfQuantityById(id);
     }
 
+    @Secured("ROLE_USER")
     @DeleteMapping
-    @PermitAll
     @Operation(summary = "Deletes the item")
     public boolean deleteItem(@Valid @RequestBody ItemDto itemDto) {
         LOGGER.info("Delete item {}", itemDto.getName());
         return itemService.delete(itemMapper.itemDtoToItem(itemDto));
     }
 
+    @Secured("ROLE_USER")
     @GetMapping //(value="/item")
-    @PermitAll // TODO add security
     @Operation(summary = "Get all Items")
     List<ItemDto> getAllItems() {
         LOGGER.info("Endpoint: getAllItems()");

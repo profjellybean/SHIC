@@ -58,6 +58,10 @@ public class ItemEndpointTest implements TestData {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
+    private JwtTokenizer jwtTokenizer;
+    @Autowired
+    private SecurityProperties securityProperties;
+    @Autowired
     private UnitsRelationRepository unitsRelationRepository;
     @Autowired
     private UnitOfQuantityRepository unitOfQuantityRepository;
@@ -146,6 +150,8 @@ public class ItemEndpointTest implements TestData {
     }
 
 
+
+
     @Test
     public void insertInvalidUnitRelation() throws Exception {
         UnitsRelationDto unitsRelationDto = new UnitsRelationDto();
@@ -179,11 +185,43 @@ public class ItemEndpointTest implements TestData {
     }
 
 
+     */
+
+    @Test
+    public void insertUnitsRelationsThenGetAll() throws Exception {
+        unitsRelationRepository.deleteAll();
+
+        UnitOfQuantity unitOfQuantity1 = new UnitOfQuantity("test1");
+        UnitOfQuantity unitOfQuantity2 = new UnitOfQuantity("test2");
+        UnitOfQuantity unitOfQuantity3 = new UnitOfQuantity("test3");
+        UnitOfQuantity unitOfQuantity4 = new UnitOfQuantity("test4");
+
+        unitOfQuantityRepository.save(unitOfQuantity1);
+        unitOfQuantityRepository.save(unitOfQuantity2);
+        unitOfQuantityRepository.save(unitOfQuantity3);
+        unitOfQuantityRepository.save(unitOfQuantity4);
+
+        unitsRelationRepository.save(new UnitsRelation("test1", "test2", 100.0));
+        unitsRelationRepository.save(new UnitsRelation("test4", "test3", 0.1));
+
+        MvcResult mvcResult = this.mockMvc.perform(get(ITEMENDPOINT_UNITRELATION_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(2, unitsRelationRepository.findAll().size());
+    }
+
+
+
     @Test
     public void GetNonExistingUnitOfQuantity() throws Exception {
 
         MvcResult mvcResult = this.mockMvc.perform(get(ITEMENDPOINT_UNITOFQUANTITY_URI)
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 

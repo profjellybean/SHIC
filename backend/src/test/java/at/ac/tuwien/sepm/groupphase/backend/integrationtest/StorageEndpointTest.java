@@ -109,7 +109,8 @@ public class StorageEndpointTest implements TestData {
 
         MvcResult mvcResult = this.mockMvc.perform(post(STORAGEENDPOINT_URI)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(itemStorageDto)))
+                .content(objectMapper.writeValueAsString(itemStorageDto))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
@@ -145,7 +146,8 @@ public class StorageEndpointTest implements TestData {
         itemStorageRepository.saveAndFlush(itemStorageDto2);
 
         MvcResult mvcResult = this.mockMvc.perform(get(STORAGEENDPOINT_URI + "?id=", -1)
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
@@ -160,7 +162,8 @@ public class StorageEndpointTest implements TestData {
         itemStorageRepository.saveAndFlush(itemStorageDto);
 
         MvcResult mvcResult = this.mockMvc.perform(get(STORAGEENDPOINT_URI + "?name=", "Test123")
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
@@ -171,7 +174,8 @@ public class StorageEndpointTest implements TestData {
     @Test
     public void tryToFindNonExistingItem() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(get(STORAGEENDPOINT_URI + "?name=", "Test1234567890")
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
@@ -187,7 +191,8 @@ public class StorageEndpointTest implements TestData {
 
         MvcResult mvcResult = this.mockMvc.perform(get(STORAGEENDPOINT_URI + "/search")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(itemStorageDto)))
+                .content(objectMapper.writeValueAsString(itemStorageDto))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 

@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
+import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.BillDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.BillMapper;
@@ -40,9 +41,13 @@ import java.time.LocalDate;
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class BillEndpointTest {
+public class BillEndpointTest implements TestData {
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private JwtTokenizer jwtTokenizer;
+    @Autowired
+    private SecurityProperties securityProperties;
     @Autowired
     private BillRepository billRepository;
     @Autowired
@@ -58,7 +63,8 @@ public class BillEndpointTest {
 
         MvcResult mvcResult = this.mockMvc.perform(post(BILLENDPOINT_URI)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(bill)))
+                .content(objectMapper.writeValueAsString(bill))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -75,7 +81,8 @@ public class BillEndpointTest {
 
         MvcResult mvcResult = this.mockMvc.perform(post(BILLENDPOINT_URI)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(bill)))
+                .content(objectMapper.writeValueAsString(bill))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -91,7 +98,8 @@ public class BillEndpointTest {
         billRepository.saveAndFlush(billMapper.billDtoToBill(bill));
 
         MvcResult mvcResult = this.mockMvc.perform(get(BILLENDPOINT_URI)
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andDo(print())
             .andReturn();
 
@@ -109,7 +117,8 @@ public class BillEndpointTest {
         billRepository.saveAndFlush(billMapper.billDtoToBill(bill));
 
         MvcResult mvcResult = this.mockMvc.perform(get(BILLENDPOINT_URI+ "/" +3)
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andDo(print())
             .andReturn();
 
@@ -127,7 +136,8 @@ public class BillEndpointTest {
         billRepository.saveAndFlush(billMapper.billDtoToBill(bill));
 
         MvcResult mvcResult = this.mockMvc.perform(delete(BILLENDPOINT_URI+ "/" +4)
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andDo(print())
             .andReturn();
 
