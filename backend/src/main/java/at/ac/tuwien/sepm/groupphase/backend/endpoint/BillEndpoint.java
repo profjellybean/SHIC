@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.BillDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemStorageDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.BillMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Bill;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.service.BillService;
@@ -65,11 +66,13 @@ public class BillEndpoint {
         return billMapper.billToBillDto(billService.findOne(id));
     }
 
+
+
     @PostMapping
     @PermitAll
     @Transactional
     @Operation(summary = "create a new bill")
-    public BillDto bill(@RequestBody @Valid BillDto billDto) {
+    public BillDto bill(@RequestBody @Valid BillDto billDto) {                          //TODO Dicke Sicherheitslücke
         LOGGER.info("POST /recipe new bill {}", billDto);
         return billMapper.billToBillDto(billService.bill(billMapper.billDtoToBill(billDto)));
     }
