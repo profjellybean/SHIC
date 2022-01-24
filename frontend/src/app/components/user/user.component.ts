@@ -8,7 +8,7 @@ import {User} from '../../dtos/user';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {HeaderComponent} from '../header/header.component';
 import {Group} from '../../dtos/group';
-import {Router} from "@angular/router";
+import {Router} from '@angular/router';
 
 
 @Component({
