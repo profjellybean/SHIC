@@ -2,11 +2,14 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemStorageDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.LocationDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NameSumDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TimeSumDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UnitOfQuantityDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ItemStorageMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.LocationMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UnitOfQuantityMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.entity.TrashOrUsedItem;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
@@ -39,6 +42,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -163,11 +167,11 @@ public class StorageEndpoint {
     @PermitAll
     @DeleteMapping
     @ResponseStatus(HttpStatus.OK)
-    public ItemStorageDto deleteItemFromStorage(Authentication authentication, @RequestParam Long itemId) {
+    public ItemStorageDto deleteItemFromStorage(Authentication authentication, @RequestParam Long itemId, boolean trash) {
         try {
             Long groupId = userService.getGroupIdByUsername(authentication.getName());
             UserGroup group = groupService.getOneById(groupId);
-            return itemStorageMapper.itemStorageToItemStorageDto(storageService.deleteItemInStorageById(itemId, group.getStorageId()));
+            return itemStorageMapper.itemStorageToItemStorageDto(storageService.deleteItemInStorageById(itemId, group.getStorageId(), trash));
 
         } catch (ValidationException e) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
@@ -177,6 +181,54 @@ public class StorageEndpoint {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
+
+    @Secured("ROLE_USER")
+    @GetMapping(value = "/thrownAwayInSpecificMonth")
+    @ResponseStatus(HttpStatus.OK)
+    public TimeSumDto sumOfArticlesOfSpecificMonth(Authentication authentication, @Param("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
+        LOGGER.info("Endpoint: GET /api/v1/storage/{}", authentication);
+        if (authentication == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You are not logged-in");
+        }
+        if (date == null) {
+            return null;
+        }
+        return new TimeSumDto(storageService.sumOfArticlesOfSpecificMonth(authentication.getName(), date), date);
+    }
+
+    @Secured("ROLE_USER")
+    @GetMapping(value = "/thrownAwayInSpecificYear")
+    @ResponseStatus(HttpStatus.OK)
+    public TimeSumDto sumOfArticlesOfSpecificYear(Authentication authentication, @Param("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
+        LOGGER.info("Endpoint: GET /api/v1/storage/{}", authentication);
+        if (authentication == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You are not logged-in");
+        }
+        if (date == null) {
+            return null;
+        }
+        return new TimeSumDto(storageService.sumOfArticlesOfSpecificYear(authentication.getName(), date), date);
+    }
+
+    @Secured("ROLE_USER")
+    @GetMapping(value = "/mostOftenThrownAwayArticles")
+    @ResponseStatus(HttpStatus.OK)
+    public NameSumDto[] mostOftenThrownAwayArticles(Authentication authentication) {
+        LOGGER.info("Endpoint: GET /api/v1/storage/{}", authentication);
+        if (authentication == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You are not logged-in");
+        }
+        List<TrashOrUsedItem> trashOrUsedItems = storageService.getMostThrownAwayArticles(authentication.getName());
+        NameSumDto[] nameSumDtos = new NameSumDto[10];
+        int sum = 0;
+        for (TrashOrUsedItem i : trashOrUsedItems) {
+            nameSumDtos[sum] = new NameSumDto(i.getItemName(), i.getAmount());
+            sum++;
+        }
+        return nameSumDtos;
+
+    }
+
 
     @GetMapping(value = "/location")
     @PermitAll

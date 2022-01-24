@@ -50,6 +50,10 @@ export class ShoppingListComponent implements OnInit {
   groupShoppingListId: number;
   unitsOfQuantity: UnitOfQuantity[];
   allUsers: User[] = null;
+  itemToDelete: Item;
+
+  checkboxValues: boolean[] = [];
+  toggleAllItems: boolean;
 
   user: User = {
     // @ts-ignore
@@ -61,6 +65,13 @@ export class ShoppingListComponent implements OnInit {
     image: null
   };
   groupId: number;
+  searchItemByName = null;
+
+  searchString = '';
+  searchItem: Item = {
+    image: null, id: null, storageId: null, name: null,
+    notes: null, expDate: null, amount: 0, locationTag: null, shoppingListId: null, quantity: null
+  };
 
   constructor(private shoppingListService: ShoppingListService,
               private storageService: StorageService,
@@ -78,11 +89,11 @@ export class ShoppingListComponent implements OnInit {
     this.getCurrentGroup();
     this.isInPublic = true;
     this.loadUnitsOfQuantity();
-    this.loadItemsToAdd();
     this.loadGroupStorageId();
     this.loadGroupShoppingListId();
     this.getPrivateShoppingList();
     this.getPublicShoppingList();
+    this.toggleAllItems = false;
 
   }
 
@@ -93,9 +104,14 @@ export class ShoppingListComponent implements OnInit {
         this.user = data;
         this.groupId = this.user.currGroup.id;
         this.getAllUsers(this.groupId);
+        if (this.searchItemByName == null) {
+          this.loadItemsToAdd();
+        } else {
+          this.searchItemsToAdd();
+        }
       },
       error: error => {
-        console.error(error.message);
+        this.notifications.pushFailure('Error during getting your group: ' + error.error.message);
       }
     });
   }
@@ -107,7 +123,7 @@ export class ShoppingListComponent implements OnInit {
         this.allUsers = data;
       },
       error: error => {
-        console.error(error.message);
+        this.notifications.pushFailure('Error during getting all users in this group: ' + error.error.message);
       }
     });
   }
@@ -117,10 +133,26 @@ export class ShoppingListComponent implements OnInit {
     this.isInPublic = publicMode;
     if (publicMode) {
       this.items = this.publicList.items;
+      this.searchItem.shoppingListId = this.publicList.id;
     } else {
       this.items = this.privateList.items;
+      this.searchItem.shoppingListId = this.privateList.id;
     }
   }
+
+  searchItems() {
+    this.searchString = this.createSearchString();
+    this.shoppingListService.searchItems(this.searchString).subscribe({
+      next: data => {
+        console.log('found data', data);
+        this.items = data;
+      },
+      error: error => {
+        this.notifications.pushFailure('Error during searching items: ' + error.error.message);
+      }
+    });
+  }
+
 
   /**
    * Error flag will be deactivated, which clears the error message
@@ -137,10 +169,11 @@ export class ShoppingListComponent implements OnInit {
           next: res => {
             console.log(res);
             this.removeItemFromShoppingList(item);
+            this.notifications.pushSuccess('Item has been successfully deleted');
           },
           error: err => {
-            console.error(err);
-            this.defaultServiceErrorHandling(err);
+            console.log(err);
+            this.notifications.pushFailure('Error during deleting item: ' + err.error.message);
           }
         }
       );
@@ -150,10 +183,11 @@ export class ShoppingListComponent implements OnInit {
           next: res => {
             console.log(res);
             this.removeItemFromShoppingList(item);
+            this.notifications.pushSuccess('Item has been successfully deleted');
           },
           error: err => {
             console.error(err);
-            this.defaultServiceErrorHandling(err);
+            this.notifications.pushFailure('Error during deleting item: ' + err.error.message);
           }
         }
       );
@@ -173,7 +207,7 @@ export class ShoppingListComponent implements OnInit {
         },
         error: err => {
           console.error(err);
-          this.defaultServiceErrorHandling(err);
+          this.notifications.pushFailure('Error during getting private shopping list: ' + err.error.message);
         }
       }
     );
@@ -192,7 +226,7 @@ export class ShoppingListComponent implements OnInit {
         },
         error: err => {
           console.error(err);
-          this.defaultServiceErrorHandling(err);
+          this.notifications.pushFailure('Error during getting public shopping list: ' + err.error.message);
         }
       }
     );
@@ -204,18 +238,51 @@ export class ShoppingListComponent implements OnInit {
           console.log(res);
           for (const item of this.itemsToBuy) {
             this.removeItemFromShoppingList(item);
+            this.toggleAllItems = false;
           }
         },
         error: err => {
           console.log(err);
-          this.defaultServiceErrorHandling(err);
+          this.notifications.pushFailure('Error during moving items to storage: ' + err.error.message);
         }
       }
     );
   }
 
+  toggleAll() {
+    if (this.toggleAllItems === true) {
+      console.log('select all: ' + this.toggleAllItems);
+      for (let i = 0; i < this.items.length; i++) {
+        this.decheckCheckbox(this.items[i]);
+        this.checkboxValues[i] = false;
+      }
+    } else {
+      console.log('unselect all: ' + this.toggleAllItems);
+      for (let i = 0; i < this.items.length; i++) {
+        this.checkCheckbox(this.items[i]);
+        this.checkboxValues[i] = true;
+      }
+    }
+  }
+
+  toggle(item: Item, i: number) {
+    if (this.checkboxValues[i] === true) {
+      this.decheckCheckbox(item);
+    } else {
+      this.checkCheckbox(item);
+    }
+  }
+
   checkCheckbox(item: Item) {
     this.itemsToBuy.push(item);
+  }
+
+  decheckCheckbox(item: Item) {
+    for (let i = 0; i < this.itemsToBuy.length; i++) {
+      if (this.itemsToBuy[i].name === item.name) {
+        this.itemsToBuy.splice(i, 1);
+      }
+    }
   }
 
   loadUnitsOfQuantity() {
@@ -232,6 +299,24 @@ export class ShoppingListComponent implements OnInit {
       next: data => {
         console.log('received items to add', data);
         this.itemsAdd = data;
+        if (this.itemsAdd.length > 5) {
+          this.itemsAdd = this.itemsAdd.splice(0, 5);
+        }
+      },
+      error: error => {
+        this.notifications.pushFailure('Error during loading items to add: ' + error.error.message);
+      }
+    });
+  }
+
+  searchItemsToAdd() {
+    this.itemService.searchItemsByName(this.searchItemByName).subscribe({
+      next: data => {
+        console.log('received items to add by ' + this.searchItemByName, data);
+        this.itemsAdd = data;
+        if (this.itemsAdd.length > 5) {
+          this.itemsAdd = this.itemsAdd.splice(0, 5);
+        }
       }
     });
   }
@@ -252,14 +337,14 @@ export class ShoppingListComponent implements OnInit {
             this.getPublicShoppingList();
           } else {
             this.items.push(data);
+            this.checkboxValues.push(false);
           }
-
-          // todo dont reload every time
           this.loadItemsToAdd();
+          this.notifications.pushSuccess('Added item successfully to public shopping list');
 
         },
         error: err => {
-          this.defaultServiceErrorHandling(err);
+          this.notifications.pushFailure('Error during adding item to shopping list: ' + err.error.message);
         }
       });
     } else {
@@ -270,14 +355,14 @@ export class ShoppingListComponent implements OnInit {
             this.getPrivateShoppingList();
           } else {
             this.items.push(data);
+            this.checkboxValues.push(false);
           }
-
-          // todo dont reload every time
           this.loadItemsToAdd();
+          this.notifications.pushSuccess('Added item successfully to private shopping list');
 
         },
         error: err => {
-          this.defaultServiceErrorHandling(err);
+          this.notifications.pushFailure('Error during adding item to shopping list: ' + err.error.message);
         }
       });
     }
@@ -287,8 +372,14 @@ export class ShoppingListComponent implements OnInit {
   changeAmountOfItemInShoppingList(item: Item) {
     this.setItemAmountChange(item);
     console.log('item amount change ', this.itemAmountChange);
-    this.removeItemFromShoppingList(item);
-    console.log('deleted old item ', item);
+    let index = -1;
+    let cbValue = false;
+    for (let i = 0; i < this.items.length; i++) {
+      if (this.items[i].id === item.id) {
+        index = i;
+        cbValue = this.checkboxValues[i];
+      }
+    }
 
     if (this.isInPublic) {
       console.log('change amount if item in public list', item);
@@ -297,13 +388,14 @@ export class ShoppingListComponent implements OnInit {
           if (data === null) {
             this.getPublicShoppingList();
           } else {
-            this.items.push(data);
+            this.items[index] = data;
+            this.checkboxValues[index] = cbValue;
           }
-          // todo dont reload every time
           this.loadItemsToAdd();
+          this.notifications.pushSuccess('Amount if this item has been successfully changed');
         },
         error: err => {
-          this.defaultServiceErrorHandling(err);
+          this.notifications.pushFailure('Error during changing amount of item: ' + err.error.message);
         }
       });
     } else {
@@ -314,14 +406,15 @@ export class ShoppingListComponent implements OnInit {
           if (data === null) {
             this.getPrivateShoppingList();
           } else {
-            this.items.push(data);
+            this.items.splice(index, 0, data);
+            this.checkboxValues.splice(index, 0, false);
           }
-          // todo dont reload every time
           this.loadItemsToAdd();
+          this.notifications.pushSuccess('Amount if this item has been successfully changed');
 
         },
         error: err => {
-          this.defaultServiceErrorHandling(err);
+          this.notifications.pushFailure('Error during changing amount of item: ' + err.error.message);
         }
       });
     }
@@ -342,7 +435,7 @@ export class ShoppingListComponent implements OnInit {
   }
 
   isValidDate(date: Date): boolean {
-    if(this.submitted) {
+    if (this.submitted) {
       console.log('Validate date');
       if (date === null) {
         return false;
@@ -396,10 +489,11 @@ export class ShoppingListComponent implements OnInit {
     this.billService.bill(bill).subscribe({
       next: data => {
         console.log(data);
+        this.notifications.pushSuccess('Bil has been created successfully');
       }
       ,
       error: err => {
-        this.defaultServiceErrorHandling(err);
+        this.notifications.pushFailure('Error during creating bill: ' + err.error.message);
       }
     });
   }
@@ -414,10 +508,66 @@ export class ShoppingListComponent implements OnInit {
     this.modalService.open(billModal, {ariaLabelledBy: 'modal-basic-title'});
   }
 
+  private createSearchString(): string {
+    this.searchString = '?id=';
+    if (this.searchItem.shoppingListId != null) {
+      this.searchString = this.searchString + '&shoppingListId=' + this.searchItem.shoppingListId;
+    } else {
+      this.searchString = this.searchString + '&shoppingListId=';
+    }
+    if (this.searchItem.shoppingListId != null) {
+      if (this.isInPublic) {
+        this.searchString = this.searchString + '&shoppingListId=' + this.publicList.id;
+      } else {
+        this.searchString = this.searchString + '&shoppingListId=' + this.privateList.id;
+      }
+    } else {
+      this.searchString = this.searchString + '&shoppingListId=';
+    }
+    if (this.searchItem.name != null) {
+      if (this.searchItem.name.trim() !== '') {
+        this.searchString = this.searchString + '&name=' + this.searchItem.name;
+      } else {
+        this.searchString = this.searchString + '&name=';
+      }
+    } else {
+      this.searchString = this.searchString + '&name=';
+    }
+    if (this.searchItem.notes != null) {
+      if (this.searchItem.notes.trim() !== '') {
+        this.searchString = this.searchString + '&notes=' + this.searchItem.notes;
+      } else {
+        this.searchString = this.searchString + '&notes=';
+      }
+    } else {
+      this.searchString = this.searchString + '&notes=';
+    }
+    if (this.searchItem.amount != null) {
+      this.searchString = this.searchString + '&amount=' + this.searchItem.amount;
+    } else {
+      this.searchString = this.searchString + '&amount=0';
+    }
+    if (this.searchItem.locationTag != null) {
+      this.searchString = this.searchString + '&locationTag=' + this.searchItem.locationTag;
+    } else {
+      this.searchString = this.searchString + '&locationTag=';
+    }
+    this.searchString = this.searchString + '&quantity=&image=';
+    if (this.searchItem.expDate != null) {
+      this.searchString = this.searchString + '&expDate=' + this.searchItem.expDate;
+    } else {
+      this.searchString = this.searchString + '&expDate=';
+    }
+
+
+    return this.searchString;
+  }
+
   private removeItemFromShoppingList(item: Item) {
     for (let i = 0; i < this.items.length; i++) {
       if (this.items[i].id === item.id) {
         this.items.splice(i, 1);
+        this.checkboxValues.splice(i, 1);
       }
     }
   }
@@ -433,7 +583,7 @@ export class ShoppingListComponent implements OnInit {
         this.groupStorageId = data;
       },
       error: err => {
-        this.defaultServiceErrorHandling(err);
+        this.notifications.pushFailure('Error during loading group storage: ' + err.error.message);
       }
     });
   }
@@ -442,9 +592,10 @@ export class ShoppingListComponent implements OnInit {
     this.shoppingListService.getGroupShoppingListForUser().subscribe({
       next: data => {
         this.groupShoppingListId = data;
+        this.searchItem.shoppingListId = data;
       },
       error: err => {
-        this.defaultServiceErrorHandling(err);
+        this.notifications.pushFailure('Error during loading group shopping list: ' + err.error.message);
       }
     });
   }
@@ -495,17 +646,6 @@ export class ShoppingListComponent implements OnInit {
       this.itemAmountChange.shoppingListId = null;
     } else {
       this.itemAmountChange.shoppingListId = item.shoppingListId;
-    }
-  }
-
-  private defaultServiceErrorHandling(error: any) {
-    console.log(error);
-    this.error = true;
-    if (typeof error.error === 'object') {
-
-      this.errorMessage = error.error.message;
-    } else {
-      this.errorMessage = error.error;
     }
   }
 }

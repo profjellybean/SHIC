@@ -1,10 +1,11 @@
+<br>
 <div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">
   <strong>Authentication problems!</strong> {{ errorMessage }}
-  <button type="button" (click)="vanishError()" class="btn btn-outline-info" data-dismiss="alert" aria-label="Close">
+  <button type="button" (click)="vanishError()" class="btn btn-info" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
   </button>
 
-    <button *ngIf="confirmEmailButton" type="button" style="margin-left: 1em" (click)="resendEmailConfirmation()" class="btn-outline-info" data-dismiss="alert" aria-label="Close">
+    <button *ngIf="confirmEmailButton" type="button" style="margin-left: 1em" (click)="resendEmailConfirmation()" class="btn btn-info" data-dismiss="alert" aria-label="Close">
       <span aria-hidden="true"> Resend </span>
     </button>
 
@@ -49,7 +50,7 @@
               </div>
             </div>
             <br>
-            <button type="button" (click)="loginUser()" class="btn btn-outline-info float-right">Login</button>
+            <button type="button" (click)="loginUser()" class="btn btn-info float-right">Login</button>
 
           </form>
         </div>

@@ -21,10 +21,10 @@ public class ItemDataGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final ItemRepository itemRepository;
-    private static final String[] ITEM_NAMES_FOR_PIECES = {"Apple", "Orange", "Mango"};
-    private static final String[] ITEM_NAMES_FOR_KG = {"Potato"};
-    private static final String[] ITEM_NAMES_FOR_G = {"Sugar", "Salt"};
-    private static final String[] ITEM_NAMES_FOR_L = {"Milk", "Cola"};
+    private static final String[] ITEM_NAMES_FOR_PIECES = {"Apple", "Orange", "Mango", "Mozzarella"};
+    private static final String[] ITEM_NAMES_FOR_KG = {"Potato", "Onion"};
+    private static final String[] ITEM_NAMES_FOR_G = {"Sugar", "Salt", "Pepper", "Cheese"};
+    private static final String[] ITEM_NAMES_FOR_L = {"Milk", "Cola", "Applejuice", "Lemonade"};
 
     private final UnitOfQuantityDataGenerator unitOfQuantityDataGenerator;
     private final UnitOfQuantityRepository unitOfQuantityRepository;

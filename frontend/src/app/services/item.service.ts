@@ -5,6 +5,7 @@ import {Globals} from '../global/globals';
 import {Observable} from 'rxjs';
 import {Item} from '../dtos/item';
 import {UnitOfQuantity} from '../dtos/unitOfQuantity';
+import {Params} from '@angular/router';
 
 
 @Injectable({
@@ -31,6 +32,11 @@ export class ItemService {
   findAllItemsByGroupId(): Observable<Item[]>{
     console.log('load all items for group by groupId');
     return this.httpClient.get<Item[]>(this.itemBaseUri + '/groupItemsByGroupId');
+  }
+
+  searchItemsByName(searchName: string): Observable<Item[]>{
+    console.log('load all items for group by groupId and name');
+    return this.httpClient.get<Item[]>(this.itemBaseUri + '/groupItemsByGroupIdAndName/'+searchName);
   }
 
   editCustomItem(item: Item): Observable<Item> {

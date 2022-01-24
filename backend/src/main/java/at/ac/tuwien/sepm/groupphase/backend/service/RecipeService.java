@@ -46,4 +46,13 @@ public interface RecipeService {
      *
      */
     void deleteRecipe(String userName, Long id);
+
+    /**
+     * find recipe by substring.
+     *
+     * @param name that has to occur in name of the recipe
+     *
+     * @return list of all recipes with names that contain specified String
+     */
+    List<Recipe> findRecipeBySubstring(String name);
 }

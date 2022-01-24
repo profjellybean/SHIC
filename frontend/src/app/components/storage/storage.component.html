@@ -1,4 +1,3 @@
-
 <br>
 <h1>Storage</h1><h4>{{this.user.currGroup.name}}</h4>
 <p></p>
@@ -12,38 +11,40 @@
     <input #name (keyup)="name.value= this.searchItem.name; this.searchItems()"
            (change)="searchItems()" id="new-name" [(ngModel)]="this.searchItem.name"/>
 
-  &nbsp;
+    &nbsp;
 
-    <label for="searchLocation">Location: &nbsp;</label>
+    <label for="searchLocation">Storage Location: &nbsp;</label>
     <select
       id="searchLocation"
       name="location"
       [(ngModel)]="this.searchItem.locationTag"
       (change)="searchItems()">
-      <option [ngValue]="null">none</option>
+      <option [ngValue]="null">All</option>
       <option *ngFor="let locationTag of $any(locationTags)" [ngValue]="locationTag.name">{{locationTag.name}}</option>
     </select>
 
-  &nbsp;
+    &nbsp;
 
     <label for="searchDate">Exp.Date: &nbsp; </label>
-    <input type="date" [(ngModel)]="this.searchItem.expDate" id="searchDate" (change)="searchItems()" />
+    <input type="date" [(ngModel)]="this.searchItem.expDate" id="searchDate" (change)="searchItems()"/>
   </div>
 
-<br>
+  <br>
 
 </div>
 <!--SEARCH END-->
 
 <!--TABLE START-->
 
-<button type="button" class="btn btn-outline-info" (click)="openAddModal(itemAddModal)">Add new Item</button>
+<button type="button" class="btn btn-info" (click)="openAddModal(itemAddModal)">Add new Item
+</button>
 
 <div class="row p-2 mb-4">
   <ng-template #itemAddModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Item</h5>
-      <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
+      <button type="button" class="btn btn-dark btn-sm mr-4"
+              (click)="modal.dismiss('X'); this.itemToAdd = nullItem" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -51,18 +52,33 @@
       <form (ngSubmit)="addItemForm(itemForm)" #itemForm="ngForm">
 
         <div class="form-group">
-          <label for="itemToAdd">Add item: </label>
-          <select
-            class="form-control"
-            id="itemToAdd"
-            name="itemToAdd"
-            [(ngModel)]="this.itemToAdd">
-            <option *ngFor="let myItem of itemsToAdd;" [ngValue]="myItem">{{myItem.name}}</option>
-            <option [ngValue]="null">none</option>
-          </select>
+          <label for="search-name"><h5>Search for Items: </h5></label>
+          <input type="text"
+                 autocomplete="off"
+                 name="name"
+                 class="form-control"
+                 id="search-name"
+                 aria-describedby="nameHelp"
+                 placeholder="Enter Name"
+                 [(ngModel)]="this.searchItemByName"
+                 (change)="this.itemsToAddMethod()"
+                 (keyup)=" this.itemsToAddMethod()"/>
         </div>
 
+        <div>
+          <ul
+            id="itemToAdd"
+            style="list-style-type: none; padding-left: 3pt;">
+            <li *ngFor="let myItem of itemsToAdd;" style="float: left; padding-left: 3pt;">
+              <button class="btn btn-dark" (click)="this.itemToAdd = myItem">{{myItem.name}}</button>
+            </li>
+          </ul>
+        </div>
+
+        <br>
+        <br>
         <div class="form-group">
+          <h5 class="modal-title">Enter Data: </h5>
           <label for="inputName">Name</label>
           <textarea rows="1" name="name" class="form-control" id="inputName" required
                     aria-describedby="nameHelp" placeholder="Enter Name" [(ngModel)]="itemToAdd.name"></textarea>
@@ -108,7 +124,7 @@
         </div>
 
         <div class="form-group">
-          <label for="inputLocation">Location</label>
+          <label for="inputLocation">Storage Location</label>
           <select
             class="form-control"
             id="inputLocation"
@@ -128,9 +144,11 @@
       </form>
     </div>
     <div class="modal-footer">
-      <button type="button" (click)="addItemForm(itemForm)" id="add-msg" class="btn btn-outline-info float-right">Add Item
+      <button type="button" (click)="addItemForm(itemForm)" id="add-msg" class="btn btn-info float-right">Add
+        Item
       </button>
-      <button type="button" class="btn btn-outline-dark" id="close-modal-btn" (click)="modal.dismiss('close')">Close
+      <button type="button" class="btn btn-dark" id="close-modal-btn"
+              (click)="modal.dismiss('close'); this.itemToAdd = nullItem">Close
       </button>
     </div>
   </ng-template>
@@ -142,8 +160,8 @@
     <th>Name</th>
     <th>Amount</th>
     <th>Quantity</th>
-    <th>ExpDate</th>
-    <th>LocationTag</th>
+    <th>Expiration Date</th>
+    <th>Storage Location</th>
     <th>Notes</th>
     <th></th>
     <th></th>
@@ -160,21 +178,21 @@
     <td>{{item.expDate}}</td>
     <td>{{item.locationTag}}</td>
     <td>{{item.notes}}</td>
-    <td>
-      <button type="button" class="btn btn-outline-dark btn-sm mr-4"
+    <td align="right">
+      <button type="button" class="btn btn-dark btn-sm mr-4"
               (click)="openAddModal(itemUpdateModal); setUpdateItem(item)">Edit
       </button>
     </td>
-    <td>
-      <button type="button" class="btn btn-outline-danger btn-sm mr-4" (click)="openAddModal(itemDeleteModal)">Remove
+    <td align="right">
+      <button type="button" class="btn btn-danger btn-sm mr-4" (click)="openAddModal(itemDeleteModal)"> Delete
       </button>
 
       <!-- popUp if deleted-->
       <div>
         <ng-template #itemDeleteModal let-modal>
           <div class="modal-header">
-            <h5 class="modal-title">Do you want to put {{item.name}} on the shoppinglist again?</h5>
-            <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
+            <h5 class="modal-title">Put {{item.name}} back on Shoppinglist</h5>
+            <button type="button" class="btn btn-dark btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -190,19 +208,36 @@
                         aria-describedby="notesHelp" placeholder="Enter Notes"
                         [(ngModel)]="this.shopAgainNotes"></textarea>
             </div>
+            <div class="modal-header">
+              <h5 class="modal-title">Did you use {{item.name}} or did you throw it away?</h5>
+            </div>
+            <div class="modal-body">
+
+              <form >
+                <fieldset >
+                  <input type="radio" id="mc" name="trashOrNot" [(ngModel)]="this.trash" value="false" checked>
+                  <label for="mc">  &nbsp;&nbsp;   Used  </label>
+                  &nbsp;
+                  <input type="radio" id="vi" name="trashOrNot" [(ngModel)]="this.trash" value="true" >
+
+                  <label for="vi">  &nbsp;&nbsp;   Thrown away     </label>
+
+                </fieldset>
+              </form>
+            </div>
           </div>
           <div class="modal-footer">
             <button type="button" id="shoppinglist-public-msg"
                     (click)="putOnPublicShoppinglist(item); modal.dismiss('close')"
-                    class="btn btn-outline-info float-right">Yes, on public Shoppinglist
+                    class="btn btn-info float-right"> On Public
             </button>
 
             <button type="button" id="shoppinglist-private-msg"
                     (click)="putOnPrivateShoppinglist(item); modal.dismiss('close')"
-                    class="btn btn-outline-info float-right">Yes, on private Shoppinglist
+                    class="btn btn-info float-right"> On Private
             </button>
-            <button type="button" (click)="deleteItem(item); modal.dismiss('close')" class="btn btn-outline-danger"
-                    id="delete-btn">No, just Delete it
+            <button type="button" (click)="deleteItem(item); modal.dismiss('close')" class="btn btn-danger"
+                    id="delete-btn"> Just Delete
             </button>
           </div>
         </ng-template>
@@ -212,11 +247,12 @@
   </tr>
   </tbody>
 </table>
+
 <div class="row p-2 mb-4">
   <ng-template #itemUpdateModal let-modal>
     <div class="modal-header">
-      <h5 class="modal-title">Edit {{item.name}}</h5>
-      <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
+      <h5 class="modal-title">Edit {{itemToUpdate.name}}</h5>
+      <button type="button" class="btn btn-dark btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -273,7 +309,7 @@
         </div>
 
         <div class="form-group">
-          <label for="inputLocation">Location</label>
+          <label for="inputLocation">Storage Location</label>
           <select
             class="form-control"
             id="updateLocation"
@@ -296,9 +332,9 @@
     <div class="modal-footer">
       <button type="button" (click)="updateItemForm(updateitemForm, item); modal.dismiss('close')"
               id="update-msg"
-              class="btn btn-outline-info float-right">Save Changes
+              class="btn btn-info float-right">Save Changes
       </button>
-      <button type="button" class="btn btn-outline-dark" id="close-update-modal-btn"
+      <button type="button" class="btn btn-dark" id="close-update-modal-btn"
               (click)="modal.dismiss('close')">
         Close
       </button>

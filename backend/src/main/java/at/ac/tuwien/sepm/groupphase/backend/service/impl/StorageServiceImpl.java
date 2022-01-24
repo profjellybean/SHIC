@@ -4,6 +4,8 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Item;
 import at.ac.tuwien.sepm.groupphase.backend.entity.LocationClass;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
+import at.ac.tuwien.sepm.groupphase.backend.entity.TrashOrUsed;
+import at.ac.tuwien.sepm.groupphase.backend.entity.TrashOrUsedItem;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Storage;
@@ -19,6 +21,8 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.LocationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.TrashOrUsedItemRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.TrashOrUsedRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitsRelationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserGroupRepository;
@@ -35,6 +39,8 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.util.HashSet;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -57,6 +63,8 @@ public class StorageServiceImpl implements StorageService {
     private final LocationRepository locationRepository;
     private final UserService userService;
     private final RecipeRepository recipeRepository;
+    private final TrashOrUsedRepository trashOrUsedRepository;
+    private final TrashOrUsedItemRepository trashOrUsedItemRepository;
 
     @Autowired
     public StorageServiceImpl(StorageRepository storageRepository,
@@ -68,7 +76,7 @@ public class StorageServiceImpl implements StorageService {
                               ItemService itemService,
                               LocationRepository locationRepository,
                               UserService userService,
-                              RecipeRepository recipeRepository) {
+                              RecipeRepository recipeRepository, TrashOrUsedRepository trashOrUsedRepository, TrashOrUsedItemRepository trashOrUsedItemRepository) {
         this.storageRepository = storageRepository;
         this.itemStorageRepository = itemStorageRepository;
         this.unitOfQuantityRepository = unitOfQuantityRepository;
@@ -78,6 +86,8 @@ public class StorageServiceImpl implements StorageService {
         this.itemService = itemService;
         this.locationRepository = locationRepository;
         this.userService = userService;
+        this.trashOrUsedRepository = trashOrUsedRepository;
+        this.trashOrUsedItemRepository = trashOrUsedItemRepository;
         this.recipeRepository = recipeRepository;
     }
 
@@ -139,7 +149,7 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public ItemStorage deleteItemInStorageById(Long itemId, Long storageId) {
+    public ItemStorage deleteItemInStorageById(Long itemId, Long storageId, boolean trash) {
         LOGGER.debug("Delete item from storage {} {}", itemId, storageId);
 
         Optional<Storage> storageOptional = storageRepository.findById(storageId);
@@ -155,6 +165,22 @@ public class StorageServiceImpl implements StorageService {
 
             if (Objects.equals(itemToDelete.getStorageId(), storage.getId())) {
                 itemStorageRepository.delete(itemToDelete);
+                if (trash) {
+                    TrashOrUsed trashOrUsed = new TrashOrUsed(new Date(), itemToDelete.getAmount(), itemToDelete.getStorageId(), itemToDelete.getQuantity(), itemToDelete.getName());
+                    trashOrUsedRepository.saveAndFlush(trashOrUsed);
+                    List<TrashOrUsedItem> trashOrUsedItems = trashOrUsedItemRepository.findAllByItemNameEqualsAndStorageIdEquals(itemToDelete.getName(), itemToDelete.getStorageId());
+                    if (trashOrUsedItems == null) {
+                        trashOrUsedItemRepository.saveAndFlush(new TrashOrUsedItem(1, itemToDelete.getName(), itemToDelete.getStorageId()));
+
+                    } else if (trashOrUsedItems.isEmpty()) {
+                        trashOrUsedItemRepository.saveAndFlush(new TrashOrUsedItem(1, itemToDelete.getName(), itemToDelete.getStorageId()));
+                    } else {
+                        trashOrUsedItems.get(0).setAmount(trashOrUsedItems.get(0).getAmount() + 1);
+                        trashOrUsedItemRepository.saveAndFlush(trashOrUsedItems.get(0));
+                    }
+                }
+
+
             } else {
                 throw new NotFoundException("No item in this storage with id: " + itemId);
             }
@@ -335,9 +361,38 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
+    public Double sumOfArticlesOfSpecificMonth(String user, LocalDate date) {
+        LOGGER.debug("Service: get sum of all articles thrown away in specific month");
+        Long registerId = userService.loadGroupStorageByUsername(user);
+        Double count = trashOrUsedRepository.sumOfArticlesOfSpecificMonth(registerId, date);
+        if (count == null) {
+            return 0.0;
+        }
+        return count;
+    }
+
+    @Override
+    public Double sumOfArticlesOfSpecificYear(String user, LocalDate date) {
+        LOGGER.debug("Service: get sum of all articles thrown away in specific year");
+        Long registerId = userService.loadGroupStorageByUsername(user);
+        Double count = trashOrUsedRepository.sumOfArticlesOfSpecificYear(registerId, date);
+        if (count == null) {
+            return 0.0;
+        }
+        return count;
+    }
+
+    @Override
+    public List<TrashOrUsedItem> getMostThrownAwayArticles(String user) {
+        LOGGER.debug("Get most thrown away articles");
+        Long storageId = userService.loadGroupStorageByUsername(user);
+        return trashOrUsedItemRepository.getTenMostOftenThrownAwayItem(storageId);
+    }
+
+    @Override
     public List<ItemStorage> getAll(Long id) {
         LOGGER.debug("Getting all items");
-        return itemStorageRepository.findAllByStorageId(id);
+        return itemStorageRepository.findAllByStorageIdOrderByNameAsc(id);
     }
 
     @Override

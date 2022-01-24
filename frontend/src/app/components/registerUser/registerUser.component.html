@@ -1,6 +1,7 @@
+<br>
 <div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">
   <strong>Registration problems!</strong> {{ errorMessage }}
-  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+  <button type="button" (click)="vanishError()" class="btn btn-info" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
@@ -76,7 +77,7 @@
 
 
             <br>
-            <button type="button" (click)="registerUser()" class="btn btn-outline-info float-right">Register</button>
+            <button type="button" (click)="registerUser()" class="btn btn-info float-right">Register</button>
 
 
           </form>
