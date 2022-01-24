@@ -73,10 +73,7 @@ public class ItemEndpointTest implements TestData {
     private ObjectMapper objectMapper;
     @Autowired
     private StorageRepository storageRepository;
-    @Autowired
-    private SecurityProperties securityProperties;
-    @Autowired
-    private JwtTokenizer jwtTokenizer;
+
 
     @Autowired
     PlatformTransactionManager txm;
@@ -122,7 +119,8 @@ public class ItemEndpointTest implements TestData {
 
         MvcResult mvcResult = this.mockMvc.perform(post(ITEMENDPOINT_UNITOFQUANTITY_URI + "?name=")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(unitOfQuantityDto)))
+                .content(objectMapper.writeValueAsString(unitOfQuantityDto))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
@@ -141,7 +139,8 @@ public class ItemEndpointTest implements TestData {
         unitOfQuantityRepository.save(unitOfQuantityMapper.unitOfQuantityDtoToUnitOfQuantity(unitOfQuantityDto));
         MvcResult mvcResult = this.mockMvc.perform(post(ITEMENDPOINT_UNITRELATION_URI)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(unitsRelationDto)))
+                .content(objectMapper.writeValueAsString(unitsRelationDto))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
@@ -185,7 +184,7 @@ public class ItemEndpointTest implements TestData {
     }
 
 
-     */
+
 
     @Test
     public void insertUnitsRelationsThenGetAll() throws Exception {
