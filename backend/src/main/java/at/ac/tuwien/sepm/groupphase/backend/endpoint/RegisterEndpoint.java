@@ -43,8 +43,7 @@ public class RegisterEndpoint {
         this.registerMapper = registerMapper;
     }
 
-    //@Secured("ROLE_USER")
-    @PermitAll
+    @Secured("ROLE_USER")
     @GetMapping(value = "/{id}")
     @Operation(summary = "Get detailed information about a specific register")
     public RegisterDto findById(@PathVariable Long id) {
@@ -52,8 +51,7 @@ public class RegisterEndpoint {
         return registerMapper.registerToRegisterDto(registerService.findOne(id));
     }
 
-    //@Secured("ROLE_USER")
-    @PermitAll
+    @Secured("ROLE_USER")
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get detailed information about a specific register")

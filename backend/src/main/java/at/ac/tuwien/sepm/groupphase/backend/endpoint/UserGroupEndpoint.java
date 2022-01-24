@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,8 +41,8 @@ public class UserGroupEndpoint {
         this.complexUserMapper = complexUserMapper;
     }
 
+    @Secured("ROLE_USER")
     @PostMapping
-    @PermitAll
     @Operation(summary = "Generate a new Group")
     public Long generateUserGroup(@Param("groupName") String groupName, @Param("userName") String userName) {
         LOGGER.info("POST group");
@@ -49,8 +50,8 @@ public class UserGroupEndpoint {
         return groupService.generateUserGroup(groupName, userName);
     }
 
+    @Secured("ROLE_USER")
     @PutMapping
-    @PermitAll
     @Operation(summary = "Add user to group")
     public void addUser(@Param("groupId") Long groupId, @Param("username") String username) {
         LOGGER.info("POST user {} to group {}", username, groupId);
@@ -63,9 +64,8 @@ public class UserGroupEndpoint {
         }
     }
 
-
+    @Secured("ROLE_USER")
     @GetMapping("/storage")
-    @PermitAll
     @Operation(summary = "Get the storageId of the currentgroup from user")
     public Long getGroupStorageForUser(Authentication authentication) {
         try {
@@ -78,8 +78,8 @@ public class UserGroupEndpoint {
         }
     }
 
+    @Secured("ROLE_USER")
     @GetMapping("/shoppinglist")
-    @PermitAll
     @Operation(summary = "Get the shoppinglistId of the currentgroup from user")
     public Long getGroupShoppinglistForUser(Authentication authentication) {
         try {
@@ -92,9 +92,8 @@ public class UserGroupEndpoint {
         }
     }
 
-
+    @Secured("ROLE_USER")
     @GetMapping
-    @PermitAll
     @Operation(summary = "Get all users from group")
     public Set<UserDto> getAllUsers(@Param("groupId") Long groupId) {
         LOGGER.info("Get all users from group {}", groupId);

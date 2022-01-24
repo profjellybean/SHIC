@@ -79,7 +79,7 @@ public class ShoppingListEndpoint {
         this.itemStorageValidator = itemStorageValidator;
     }
 
-    @PermitAll
+    @Secured("ROLE_USER")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Long createShoppingList(@RequestBody ShoppingListCreationDto shoppingListCreationDto) {
@@ -93,8 +93,8 @@ public class ShoppingListEndpoint {
 
     }
 
+    @Secured("ROLE_USER")
     @PostMapping("/newItem")
-    @PermitAll
     @Operation(summary = "Insert a new item into the ShoppingList") //TODO: add security
     public ItemStorageDto saveItem(Authentication authentication, @RequestBody ItemStorageDto itemStorageDto) {
         LOGGER.info("Endpoint: POST /item to shopping list with id: {}", itemStorageDto.getStorageId());
@@ -116,7 +116,7 @@ public class ShoppingListEndpoint {
 
     }
 
-    @PermitAll
+    @Secured("ROLE_USER")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ShoppingListDto getShoppingListByid(@PathVariable Long id) {
@@ -128,9 +128,8 @@ public class ShoppingListEndpoint {
         }
     }
 
-
+    @Secured("ROLE_USER")
     @GetMapping(value = "/availableItems")
-    @PermitAll
     @Operation(summary = "Get all items from the shopping list") //TODO: add security
     public List<ItemStorageDto> getAvailableItemsForUser(Authentication authentication) {
         LOGGER.info("findAllByShoppingListId, endpoint");
@@ -192,16 +191,16 @@ public class ShoppingListEndpoint {
         }
     }
 
+    @Secured("ROLE_USER")
     @GetMapping(value = "/items")
-    @PermitAll
     @Operation(summary = "Get list of all items") //TODO: add security
     public List<ItemDto> findAllItems() {
         LOGGER.info("GET /items");
         return itemMapper.itemsToItemDtos(shoppingListService.findAllItems());
     }
 
+    @Secured("ROLE_USER")
     @GetMapping(value = "/search")
-    @PermitAll
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Search for items from shopping list by Dto")
     public List<ItemStorageDto> searchItem(@DateTimeFormat(pattern = "yyyy-MM-dd") ItemStorageDto itemStorageDto) {
@@ -209,9 +208,7 @@ public class ShoppingListEndpoint {
         return itemStorageMapper.itemsStorageToItemsStorageDto(shoppingListService.searchItem(itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto)));
     }
 
-
-
-    @PermitAll
+    @Secured("ROLE_USER")
     @PostMapping("/private")
     @ResponseStatus(HttpStatus.OK)
     public ItemStorageDto addToPrivateShoppingListForUser(Authentication authentication, @RequestBody ItemStorageDto itemStorageDto) {
@@ -237,8 +234,7 @@ public class ShoppingListEndpoint {
 
     }
 
-
-    @PermitAll
+    @Secured("ROLE_USER")
     @PostMapping("/public")
     @ResponseStatus(HttpStatus.OK)
     public ItemStorageDto addToPublicShoppingListForUser(Authentication authentication, @RequestBody ItemStorageDto itemStorageDto) {
@@ -264,7 +260,7 @@ public class ShoppingListEndpoint {
 
     }
 
-    @PermitAll
+    @Secured("ROLE_USER")
     @PutMapping("/private/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ItemStorageDto changeAmountOfItemOnPrivateShoppingListForUser(Authentication authentication,
@@ -289,7 +285,7 @@ public class ShoppingListEndpoint {
 
     }
 
-    @PermitAll
+    @Secured("ROLE_USER")
     @PutMapping("/public/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ItemStorageDto changeAmountOfItemOnPublicShoppingListForUser(Authentication authentication,
@@ -313,7 +309,7 @@ public class ShoppingListEndpoint {
         }
     }
 
-    @PermitAll
+    @Secured("ROLE_USER")
     @DeleteMapping("/public/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteFromPublicShoppingListForUser(Authentication authentication, @PathVariable Long id) {
@@ -331,7 +327,7 @@ public class ShoppingListEndpoint {
         }
     }
 
-    @PermitAll
+    @Secured("ROLE_USER")
     @DeleteMapping("/private/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteFromPrivateShoppingListForUser(Authentication authentication, @PathVariable Long id) {
@@ -349,7 +345,7 @@ public class ShoppingListEndpoint {
         }
     }
 
-    @PermitAll
+    @Secured("ROLE_USER")
     @GetMapping("/private")
     @ResponseStatus(HttpStatus.OK)
     public ShoppingListDto getPrivateShoppingListForUser(Authentication authentication) {
@@ -370,7 +366,7 @@ public class ShoppingListEndpoint {
     }
 
 
-    @PermitAll
+    @Secured("ROLE_USER")
     @GetMapping("/public")
     @ResponseStatus(HttpStatus.OK)
     public ShoppingListDto getPublicShoppingListForUser(Authentication authentication) {
@@ -385,7 +381,7 @@ public class ShoppingListEndpoint {
     }
 
 
-    @PermitAll
+    @Secured("ROLE_USER")
     @PutMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
     public List<ItemStorageDto> workOffShoppingList(Authentication authentication,

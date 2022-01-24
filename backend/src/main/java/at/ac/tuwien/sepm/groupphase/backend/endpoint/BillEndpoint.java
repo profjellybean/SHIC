@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,9 +48,8 @@ public class BillEndpoint {
         this.billMapper = billMapper;
     }
 
-    //@Secured("ROLE_USER")
+    @Secured("ROLE_USER")
     @Transactional
-    @PermitAll
     @GetMapping
     @Operation(summary = "Get list of bills", security = @SecurityRequirement(name = "apiKey"))
     public List<BillDto> findAll() {
@@ -57,8 +57,7 @@ public class BillEndpoint {
         return billMapper.billListToBillDtoList(billService.findAll());
     }
 
-    //@Secured("ROLE_USER")
-    @PermitAll
+    @Secured("ROLE_USER")
     @GetMapping(value = "/{id}")
     @Operation(summary = "Publish a new message", security = @SecurityRequirement(name = "apiKey"))
     public BillDto findById(@PathVariable Long id) {
@@ -66,10 +65,8 @@ public class BillEndpoint {
         return billMapper.billToBillDto(billService.findOne(id));
     }
 
-
-
+    @Secured("ROLE_USER")
     @PostMapping
-    @PermitAll
     @Transactional
     @Operation(summary = "create a new bill")
     public BillDto bill(@RequestBody @Valid BillDto billDto) {                          //TODO Dicke Sicherheitslücke
@@ -77,8 +74,8 @@ public class BillEndpoint {
         return billMapper.billToBillDto(billService.bill(billMapper.billDtoToBill(billDto)));
     }
 
+    @Secured("ROLE_USER")
     @PutMapping
-    @PermitAll
     @Operation(summary = "Update a existing bill")
     public BillDto updateBill(Authentication authentication, @Valid @RequestBody BillDto billDto) {
         LOGGER.info("PUT /bill body: {}", billDto);
@@ -93,7 +90,7 @@ public class BillEndpoint {
         }
     }
 
-    @PermitAll
+    @Secured("ROLE_USER")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteBillById(Authentication authentication, @PathVariable Long id) {

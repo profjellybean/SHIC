@@ -1,5 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
+import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
+import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemStorageDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UnitOfQuantityDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UnitsRelationDto;
@@ -12,6 +14,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitOfQuantityRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitsRelationRepository;
+import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,9 +52,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class ItemEndpointTest {
+public class ItemEndpointTest implements TestData {
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private JwtTokenizer jwtTokenizer;
+    @Autowired
+    private SecurityProperties securityProperties;
     @Autowired
     private UnitsRelationRepository unitsRelationRepository;
     @Autowired
@@ -212,7 +219,8 @@ public class ItemEndpointTest {
         unitsRelationRepository.save(new UnitsRelation("test4", "test3", 0.1));
 
         MvcResult mvcResult = this.mockMvc.perform(get(ITEMENDPOINT_UNITRELATION_URI)
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
@@ -227,7 +235,8 @@ public class ItemEndpointTest {
         //unitOfQuantityRepository.deleteAll(); TODO
 
         MvcResult mvcResult = this.mockMvc.perform(get(ITEMENDPOINT_UNITOFQUANTITY_URI)
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 

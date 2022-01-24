@@ -1,8 +1,11 @@
 package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
+import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
+import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserGroupRepository;
+import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,9 +34,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class UserGroupEndpointTest {
+public class UserGroupEndpointTest implements TestData {
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private JwtTokenizer jwtTokenizer;
+    @Autowired
+    private SecurityProperties securityProperties;
     @Autowired
     private StorageRepository storageRepository;
     @Autowired
@@ -44,7 +51,9 @@ public class UserGroupEndpointTest {
 
     @Test
     public void generateNewGroup() throws Exception {
-        MvcResult mvcResult = this.mockMvc.perform(post(USERGROUPENDPOINT_URI)).andReturn();
+        MvcResult mvcResult = this.mockMvc.perform(post(USERGROUPENDPOINT_URI)
+            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
+        ).andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
         Long id = Long.valueOf(mvcResult.getResponse().getContentAsString());
 

@@ -44,6 +44,7 @@ public class RecipeServiceImpl implements RecipeService {
         return recipeRepository.findRecipeById(id);
     }
 
+    @Transactional
     @Override
     public Recipe addRecipe(Recipe recipe) {
         LOGGER.debug("Add one recipe");

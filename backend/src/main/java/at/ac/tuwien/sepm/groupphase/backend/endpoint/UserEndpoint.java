@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -63,7 +64,7 @@ public class UserEndpoint {
     }
 
 
-    @PermitAll
+    @Secured("ROLE_USER")
     @PutMapping("/picture")
     @ResponseStatus(HttpStatus.OK)
     ImageDto uploadImage(@RequestParam("file") MultipartFile multipartImage, Authentication authentication) {
@@ -79,7 +80,7 @@ public class UserEndpoint {
     }
 
 
-    @PermitAll
+    @Secured("ROLE_USER")
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
     public String editUsername(@RequestBody UsernameDto newUsernameDto, Authentication authentication) {
@@ -98,7 +99,7 @@ public class UserEndpoint {
 
     }
 
-    @PermitAll
+    @Secured("ROLE_USER")
     @PutMapping("/email")
     @ResponseStatus(HttpStatus.OK)
     public Long changeEmail(@RequestBody EmailDto emailDto, Authentication authentication) {
@@ -111,7 +112,7 @@ public class UserEndpoint {
         }
     }
 
-    @PermitAll
+    @Secured("ROLE_USER")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void createUser(@RequestBody UserRegistrationDto userRegistrationDto) {
@@ -133,7 +134,7 @@ public class UserEndpoint {
 
     }
 
-    @PermitAll
+    @Secured("ROLE_USER")
     @GetMapping("/confirm")
     @ResponseStatus(HttpStatus.OK)
     public void confirmUser(@RequestParam(value = "tkn") String confirmationTokenEncrypted) {
@@ -148,7 +149,7 @@ public class UserEndpoint {
 
     }
 
-    @PermitAll
+    @Secured("ROLE_USER")
     @GetMapping("/confirmNew")
     @ResponseStatus(HttpStatus.OK)
     public void confirmNewEmail(@RequestParam(value = "tkn") String confirmationTokenEncrypted) {
@@ -163,7 +164,7 @@ public class UserEndpoint {
 
     }
 
-    @PermitAll
+    @Secured("ROLE_USER")
     @PutMapping("/confirmation")
     @ResponseStatus(HttpStatus.OK)
     public void resendUserEmailConfirmation(@RequestBody UsernameDto usernameDto) {
@@ -181,8 +182,7 @@ public class UserEndpoint {
 
     }
 
-
-    @PermitAll
+    @Secured("ROLE_USER")
     @GetMapping("/confirmation")
     @ResponseStatus(HttpStatus.OK)
     public boolean isUserConfirmed(Authentication authentication) {
@@ -197,7 +197,7 @@ public class UserEndpoint {
     }
 
 
-    @PermitAll                   //TODO just for Tests
+    @Secured("ROLE_USER")
     @PatchMapping
     public void test(@RequestBody UserLoginDto userLoginDto) {
 
@@ -205,7 +205,7 @@ public class UserEndpoint {
 
     }
 
-    @PermitAll
+    @Secured("ROLE_USER")
     @GetMapping
     public UserDto getUser(Authentication authentication) {
         try {
@@ -221,7 +221,7 @@ public class UserEndpoint {
 
     }
 
-    @PermitAll
+    @Secured("ROLE_USER")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteUserById(Authentication authentication, @PathVariable Long id) {
