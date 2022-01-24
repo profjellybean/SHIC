@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -49,7 +50,7 @@ public class BillDataGenerator {
     }
 
     @PostConstruct
-    void generateBills() {
+    void generateBills() throws IOException {
         if (billRepository.findAll().size() > 0) {
             LOGGER.debug("bill already generated");
         } else {

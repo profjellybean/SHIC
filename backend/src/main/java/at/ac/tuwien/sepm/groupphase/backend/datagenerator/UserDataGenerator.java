@@ -16,12 +16,16 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitOfQuantityRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserGroupRepository;
+import org.h2.store.fs.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -65,7 +69,7 @@ public class UserDataGenerator {
     }
 
     @PostConstruct
-    void generateUser() { //TODO remove
+    void generateUser() throws IOException { //TODO remove
         LOGGER.debug("generating Data for User");
         storageDataGenerator.generateStorage();
 
@@ -89,6 +93,7 @@ public class UserDataGenerator {
             if (applicationUser.isEmpty()) {
                 ApplicationUser u = userLoginMapper.dtoToEntity(user, shoppingListId);
                 u.setCurrGroup(group);
+                u.setImage(Files.readAllBytes(Paths.get("heidi.png")));
                 userRepository.saveAndFlush(u);
                 users.add(u);
                 group.setUser(users);
@@ -100,19 +105,7 @@ public class UserDataGenerator {
             if (applicationUser.isEmpty()) {
                 ApplicationUser u = userLoginMapper.dtoToEntity(admin, shoppingListId);
                 u.setCurrGroup(group);
-                userRepository.saveAndFlush(u);
-                users = userGroupRepository.findAll().get(0).getUser();
-                users.add(u);
-                group.setUser(users);
-                userGroupRepository.saveAndFlush(group);
-            }
-
-            UserRegistrationDto admin1 = new UserRegistrationDto("Gudrun", "password", "admin@email.com");
-            shoppingListId = shoppingListRepository.saveAndFlush(ShoppingList.ShoppingListBuilder.aShoppingList().withName("Your private shopping list").build()).getId();
-            applicationUser = userRepository.findUserByUsername(admin.getUsername());
-            if (applicationUser.isEmpty()) {
-                ApplicationUser u = userLoginMapper.dtoToEntity(admin, shoppingListId);
-                u.setCurrGroup(group);
+                u.setImage(Files.readAllBytes(Paths.get("leopold.png")));
                 userRepository.saveAndFlush(u);
                 users = userGroupRepository.findAll().get(0).getUser();
                 users.add(u);
