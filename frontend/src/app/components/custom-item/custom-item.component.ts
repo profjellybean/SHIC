@@ -45,8 +45,6 @@ export class CustomItemComponent implements OnInit {
     this.itemService.editCustomItem(this.itemToEdit).subscribe({
         next: data => {
           console.log('successfully edited custom Items', data);
-          // TODO dont reload every time
-          // this.loadCustomItems();
         },
         error: err => {
           console.log(err);
@@ -59,8 +57,6 @@ export class CustomItemComponent implements OnInit {
     this.itemService.addCustomItem(this.itemToAdd).subscribe({
         next: data => {
           console.log('successfully added custom Item', data);
-          // TODO dont reload every time
-          //this.loadCustomItems();
           this.items.push(data);
         },
         error: err => {

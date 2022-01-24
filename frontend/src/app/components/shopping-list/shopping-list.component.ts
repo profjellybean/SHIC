@@ -339,8 +339,6 @@ export class ShoppingListComponent implements OnInit {
             this.items.push(data);
             this.checkboxValues.push(false);
           }
-
-          // todo dont reload every time
           this.loadItemsToAdd();
           this.notifications.pushSuccess('Added item successfully to public shopping list');
 
@@ -359,8 +357,6 @@ export class ShoppingListComponent implements OnInit {
             this.items.push(data);
             this.checkboxValues.push(false);
           }
-
-          // todo dont reload every time
           this.loadItemsToAdd();
           this.notifications.pushSuccess('Added item successfully to private shopping list');
 
@@ -395,7 +391,6 @@ export class ShoppingListComponent implements OnInit {
             this.items[index] = data;
             this.checkboxValues[index] = cbValue;
           }
-          // todo dont reload every time
           this.loadItemsToAdd();
           this.notifications.pushSuccess('Amount if this item has been successfully changed');
         },
@@ -414,7 +409,6 @@ export class ShoppingListComponent implements OnInit {
             this.items.splice(index, 0, data);
             this.checkboxValues.splice(index, 0, false);
           }
-          // todo dont reload every time
           this.loadItemsToAdd();
           this.notifications.pushSuccess('Amount if this item has been successfully changed');
 

@@ -8,6 +8,7 @@ import {User} from '../../dtos/user';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {HeaderComponent} from '../header/header.component';
 import {Group} from '../../dtos/group';
+import {Router} from "@angular/router";
 
 
 @Component({
@@ -49,7 +50,8 @@ export class UserComponent implements OnInit {
               public authService: AuthService,
               private userService: UserService,
               private modalService: NgbModal,
-              private notifications: NotificationsComponent) { }
+              private notifications: NotificationsComponent,
+              private router: Router) { }
 
   ngOnInit(): void {
     this.getCurrentGroup();
@@ -58,8 +60,10 @@ export class UserComponent implements OnInit {
   generateGroup(){
     this.groupService.generateGroup(this.newGroupName, this.user.username).subscribe({
       next: data => {
-        console.log('received items10', data);
+        console.log('received items', data);
         this.groupId = data;
+        localStorage.setItem('currGroup', 'true');
+        this.getCurrentGroup();
       },
       error: error => {
         console.error(error.message);
@@ -71,11 +75,11 @@ export class UserComponent implements OnInit {
   getCurrentGroup(){
     this.userService.getCurrentUser({username: this.user.username}).subscribe({
       next: data => {
-        console.log('received items11', data);
+        console.log('received items', data);
         this.user = data;
         this.groupId = this.user.currGroup.id;
         this.getAllUsers(this.groupId);
-        console.log(this.groupId);
+        this.editedUser.email = this.user.email;
       },
       error: error => {
         console.error(error.message);
@@ -97,7 +101,7 @@ export class UserComponent implements OnInit {
 
   addUser() {
     if(this.userToAdd === undefined || this.userToAdd === null){
-      this.notifications.pushFailure('Username cannot be null or empty');
+      this.notifications.pushFailure('Username cannot be empty');
       return;
     }
     if(this.userToAdd.length > 100){
@@ -120,6 +124,10 @@ export class UserComponent implements OnInit {
   changeEmail(){
     this.emailEditMode = false;
     console.log(this.user.email + ' ' + this.editedUser.email);
+    if(this.editedUser.email === '' || this.editedUser.email === null){
+      this.notifications.pushFailure('E-Mail cannot be empty');
+      return;
+    }
     if(this.editedUser.email !== this.user.email){
       this.userService.changeEmail(this.editedUser.email).subscribe({
         next: data =>{

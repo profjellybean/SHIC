@@ -31,7 +31,7 @@ export class RecipeDetailComponent implements OnInit {
   quantities: number[];
   unitOfQuantity: string;
   ingredients: Item[];
-  items; // = [];
+  items;
   deletedItems;
   ingredientsShow: ShowItem[];
   showItem: ShowItem;
@@ -114,7 +114,6 @@ export class RecipeDetailComponent implements OnInit {
       },
       error: error => {
         console.error(error.message);
-        //this.notifications.pushFailure('Error while cooking Recipe: ' + error.error.message);
         this.notifications.pushFailure('Cooking failed, insufficient items in storage!');
       }
     });
@@ -252,7 +251,6 @@ export class RecipeDetailComponent implements OnInit {
     if(this.recipeToUpdate.ingredients === undefined || this.recipeToUpdate.ingredients === null){
       this.error = 'Recipe needs ingredients';
     } else if (form.valid) {
-      //this.storageService.addItem(this.item);
       console.log('form item to add', this.recipeToUpdate);
       this.updateRecipe(this.recipeToUpdate);
       this.clearForm();

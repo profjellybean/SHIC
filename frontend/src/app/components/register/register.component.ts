@@ -13,6 +13,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {BillDto} from '../../dtos/billDto';
 import {GroupService} from '../../services/group.service';
 import {NotificationsComponent} from '../notifications/notifications.component';
+import {Item} from '../../dtos/item';
 
 @Component({
   selector: 'app-register',
@@ -54,6 +55,7 @@ export class RegisterComponent implements OnInit {
   billSumGroup: number;
   billSumUser: number;
   billToDelete: Bill;
+  billItems: Set<Item> = new Set();
 
   user: User = {
     // @ts-ignore
@@ -118,7 +120,6 @@ export class RegisterComponent implements OnInit {
     if (form.valid) {
       console.log('form edit monthly budget', this.newMonthlyBudget);
       this.editMonthlyBudget(this.newMonthlyBudget);
-      //this.clearForm();
     }
   }
 
@@ -195,8 +196,9 @@ export class RegisterComponent implements OnInit {
     this.modalService.open(billModal, {ariaLabelledBy: 'modal-basic-title'});
   }
 
-  openAddModal(billDeleteModal: TemplateRef<any>) {
+  openItemModal(billDeleteModal: TemplateRef<any>, bill: Bill) {
     this.modalService.open(billDeleteModal, {ariaLabelledBy: 'modal-basic-title'});
+    this.billItems = bill.groceries;
   }
 
   editBill(form) {
@@ -258,6 +260,16 @@ export class RegisterComponent implements OnInit {
       }
     });
     this.notifications.pushSuccess('All your bills have been payed');
+  }
+
+  openAddModal(billDeleteModal: TemplateRef<any>) {
+    this.modalService.open(billDeleteModal, {ariaLabelledBy: 'modal-basic-title'});
+  }
+
+  billNotEmpty(bill: Bill) {
+    const temp: Set<Item> = new Set();
+    bill.groceries.forEach(x => temp.add(x));
+    return temp.size > 0;
   }
 
   private getMonthlySum() {

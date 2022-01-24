@@ -14,7 +14,7 @@
     <button type="button" class="btn btn-info btn-sm mr-4" *ngIf="userEditMode" (click)="editUsername()">Accept</button><p></p>
 
     <div class="basicAttribute" *ngIf="!emailEditMode"> <strong>E-Mail: &nbsp;</strong> {{this.user.email}} </div>
-    <input class="basicAttributeEdit" *ngIf="emailEditMode" [(ngModel)]="editedUser.email" value="{{this.user.email}}"><br><br>
+    <input class="basicAttributeEd1it" *ngIf="emailEditMode" [(ngModel)]="editedUser.email"><br><br>
     <button type="button" class="btn btn-dark btn-sm mr-4" *ngIf="!emailEditMode" (click)="emailEditMode = true">Edit email</button>
     <button type="button" class="btn btn-info btn-sm mr-4" *ngIf="emailEditMode" (click)="changeEmail()">Accept</button><p></p>
 
@@ -30,7 +30,7 @@
   </div>
 
   <div class="profilePictureContainer">
-    <label style="width: 50%; height: 50%" for="file-input">
+    <label for="file-input">
       <img *ngIf="user.image" class="profilePicture" src="{{'data:image/jpg;base64,'+user.image}}">
 
       <img *ngIf="!user.image" class="profilePicture" src="/assets/woman-avatar.png">
