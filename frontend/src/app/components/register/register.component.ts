@@ -13,6 +13,8 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {BillDto} from '../../dtos/billDto';
 import {GroupService} from '../../services/group.service';
 
+import {NotificationsComponent} from '../notifications/notifications.component';
+
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -23,6 +25,8 @@ export class RegisterComponent implements OnInit {
   error = false;
   errorMessage = '';
   submitted = false;
+
+  billToCreate: BillDto = new BillDto();
 
   nullUser: User = {
     id: null,
@@ -67,7 +71,8 @@ export class RegisterComponent implements OnInit {
 
   constructor(private registerService: RegisterService, private billService: BillService, public route: ActivatedRoute,
               private authService: AuthService, private userService: UserService,
-              private modalService: NgbModal, private groupService: GroupService) {
+              private modalService: NgbModal, private groupService: GroupService,
+              private notifications: NotificationsComponent) {
   }
 
   ngOnInit(): void {
@@ -101,7 +106,7 @@ export class RegisterComponent implements OnInit {
   getAllUsers(id: number) {
     this.groupService.getAllUsers(id).subscribe({
       next: data => {
-        console.log('received items', data);
+        console.log('received users:', data);
         this.allUsers = data;
       },
       error: error => {
@@ -195,6 +200,93 @@ export class RegisterComponent implements OnInit {
   openAddModal(billDeleteModal: TemplateRef<any>) {
     this.modalService.open(billDeleteModal, {ariaLabelledBy: 'modal-basic-title'});
   }
+
+  addBillForm(form){
+
+
+    this.billToCreate.registerId = this.user.currGroup.registerId;
+    console.log(this.billToCreate);
+
+    if (this.billToCreate.names[0].id === null) {
+      console.log('Set allUsers {}', this.allUsers);
+      this.billToCreate.names = this.allUsers;
+
+    }
+    this.billToCreate.notPaidNames = this.billToCreate.names;
+
+    if (this.billToCreate.names.length > 0) {
+      this.billToCreate.sumPerPerson = this.billToCreate.sum / this.billToCreate.names.length;
+    } else {
+      this.billToCreate.sumPerPerson = this.billToCreate.sum;
+    }
+
+    for (const name of this.billToCreate.names) {
+      delete name.currGroup;
+    }
+    for (const name of this.billToCreate.notPaidNames) {
+      delete name.currGroup;
+    }
+
+    this.billService.bill(this.billToCreate).subscribe({
+      next: data => {
+
+
+        const newBill: Bill ={
+          id: data.id,
+          registerId: data.registerId,
+          // @ts-ignore
+          groceries: Array.from(data.groceries),
+          notes: data.notes,
+          // @ts-ignore
+          names:  Array.from(data.names),
+          // @ts-ignore
+          notPaidNames: Array.from(data.notPaidNames),
+          sum: data.sum,
+          sumPerPerson: data.sumPerPerson,
+          date: data.date,
+          nameList: '',
+          notPaidNameList: '',
+
+        };
+
+        for (const name of Array.from(data.names)) {
+          newBill.nameList = newBill.nameList.concat(name.username + ', ');
+        }
+        for (const name of  Array.from(data.notPaidNames)) {
+          newBill.notPaidNameList = newBill.notPaidNameList.concat(name.username + ', ');
+        }
+
+        this.billArray.push(newBill);
+
+      },
+      error: error => {
+        console.error(error.message);
+        this.defaultServiceErrorHandling(error);
+      }
+
+
+    });
+  }
+
+  isThisNumber(number: any): boolean {
+    return !isNaN(parseFloat(number)) && !isNaN(number - 0);
+  }
+
+  isValidDate(date: Date): boolean {
+    if(this.submitted) {
+      console.log('Validate date');
+      if (date === null) {
+        return false;
+      }
+      const datee = new Date();
+      datee.setFullYear(Number(date.toString().substring(0, 4)), Number(date.toString().substring(6, 7)),
+        Number(date.toString().substring(9, 10)));
+      const now = new Date();
+      console.log(datee <= now);
+      return datee <= now;
+    }
+  }
+
 
   editBill(form) {
     this.submitted = true;
@@ -317,6 +409,7 @@ export class RegisterComponent implements OnInit {
     console.log(error);
     this.error = true;
     if (typeof error.error === 'object') {
+      this.notifications.pushFailure(error.error.error);
       this.errorMessage = error.error.error;
     } else {
       this.errorMessage = error.error;
