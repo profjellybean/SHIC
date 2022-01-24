@@ -13,6 +13,8 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {BillDto} from '../../dtos/billDto';
 import {GroupService} from '../../services/group.service';
 import {NotificationsComponent} from '../notifications/notifications.component';
+import {Item} from '../../dtos/item';
+
 
 @Component({
   selector: 'app-register',
@@ -24,6 +26,8 @@ export class RegisterComponent implements OnInit {
   error = false;
   errorMessage = '';
   submitted = false;
+
+  billToCreate: BillDto = new BillDto();
 
   nullUser: User = {
     id: null,
@@ -54,6 +58,7 @@ export class RegisterComponent implements OnInit {
   billSumGroup: number;
   billSumUser: number;
   billToDelete: Bill;
+  billItems: Set<Item> = new Set();
 
   user: User = {
     // @ts-ignore
@@ -103,7 +108,7 @@ export class RegisterComponent implements OnInit {
   getAllUsers(id: number) {
     this.groupService.getAllUsers(id).subscribe({
       next: data => {
-        console.log('received items', data);
+        console.log('received users:', data);
         this.allUsers = data;
       },
       error: error => {
@@ -118,7 +123,6 @@ export class RegisterComponent implements OnInit {
     if (form.valid) {
       console.log('form edit monthly budget', this.newMonthlyBudget);
       this.editMonthlyBudget(this.newMonthlyBudget);
-      //this.clearForm();
     }
   }
 
@@ -195,9 +199,97 @@ export class RegisterComponent implements OnInit {
     this.modalService.open(billModal, {ariaLabelledBy: 'modal-basic-title'});
   }
 
-  openAddModal(billDeleteModal: TemplateRef<any>) {
+  openItemModal(billDeleteModal: TemplateRef<any>, bill: Bill) {
     this.modalService.open(billDeleteModal, {ariaLabelledBy: 'modal-basic-title'});
+    this.billItems = bill.groceries;
   }
+
+  addBillForm(form){
+
+
+    this.billToCreate.registerId = this.user.currGroup.registerId;
+    console.log(this.billToCreate);
+
+    if (this.billToCreate.names[0].id === null) {
+      console.log('Set allUsers {}', this.allUsers);
+      this.billToCreate.names = this.allUsers;
+
+    }
+    this.billToCreate.notPaidNames = this.billToCreate.names;
+
+    if (this.billToCreate.names.length > 0) {
+      this.billToCreate.sumPerPerson = this.billToCreate.sum / this.billToCreate.names.length;
+    } else {
+      this.billToCreate.sumPerPerson = this.billToCreate.sum;
+    }
+
+    for (const name of this.billToCreate.names) {
+      delete name.currGroup;
+    }
+    for (const name of this.billToCreate.notPaidNames) {
+      delete name.currGroup;
+    }
+
+    this.billService.bill(this.billToCreate).subscribe({
+      next: data => {
+
+
+        const newBill: Bill ={
+          id: data.id,
+          registerId: data.registerId,
+          // @ts-ignore
+          groceries: Array.from(data.groceries),
+          notes: data.notes,
+          // @ts-ignore
+          names:  Array.from(data.names),
+          // @ts-ignore
+          notPaidNames: Array.from(data.notPaidNames),
+          sum: data.sum,
+          sumPerPerson: data.sumPerPerson,
+          date: data.date,
+          nameList: '',
+          notPaidNameList: '',
+
+        };
+
+        for (const name of Array.from(data.names)) {
+          newBill.nameList = newBill.nameList.concat(name.username + ', ');
+        }
+        for (const name of  Array.from(data.notPaidNames)) {
+          newBill.notPaidNameList = newBill.notPaidNameList.concat(name.username + ', ');
+        }
+
+        this.billArray.push(newBill);
+
+      },
+      error: error => {
+        console.error(error.message);
+        this.defaultServiceErrorHandling(error);
+      }
+
+
+    });
+  }
+
+  isThisNumber(number: any): boolean {
+    return !isNaN(parseFloat(number)) && !isNaN(number - 0);
+  }
+
+  isValidDate(date: Date): boolean {
+    if(this.submitted) {
+      console.log('Validate date');
+      if (date === null) {
+        return false;
+      }
+      const datee = new Date();
+      datee.setFullYear(Number(date.toString().substring(0, 4)), Number(date.toString().substring(6, 7)),
+        Number(date.toString().substring(9, 10)));
+      const now = new Date();
+      console.log(datee <= now);
+      return datee <= now;
+    }
+  }
+
 
   editBill(form) {
     this.submitted = true;
@@ -260,6 +352,16 @@ export class RegisterComponent implements OnInit {
     this.notifications.pushSuccess('All your bills have been payed');
   }
 
+  openAddModal(billDeleteModal: TemplateRef<any>) {
+    this.modalService.open(billDeleteModal, {ariaLabelledBy: 'modal-basic-title'});
+  }
+
+  billNotEmpty(bill: Bill) {
+    const temp: Set<Item> = new Set();
+    bill.groceries.forEach(x => temp.add(x));
+    return temp.size > 0;
+  }
+
   private getMonthlySum() {
     console.log('getting sum of all Bills this month');
     this.registerService.getMonthlySum().subscribe({
@@ -318,6 +420,7 @@ export class RegisterComponent implements OnInit {
     console.log(error);
     this.error = true;
     if (typeof error.error === 'object') {
+      this.notifications.pushFailure(error.error.error);
       this.errorMessage = error.error.error;
     } else {
       this.errorMessage = error.error;

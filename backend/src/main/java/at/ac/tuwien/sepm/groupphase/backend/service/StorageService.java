@@ -29,6 +29,7 @@ public interface StorageService {
      *
      * @param itemId the id of the item to delete
      * @param storageId the id of the storage which the item is in
+     * @param trash true if item was thrown away
      * @return a Spring Security user
      */
     ItemStorage deleteItemInStorageById(Long itemId, Long storageId, boolean trash);

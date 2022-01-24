@@ -12,11 +12,15 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserLoginMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Storage;
+import at.ac.tuwien.sepm.groupphase.backend.entity.TrashOrUsed;
+import at.ac.tuwien.sepm.groupphase.backend.entity.TrashOrUsedItem;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.TrashOrUsedItemRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.TrashOrUsedRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserGroupRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
@@ -87,6 +91,10 @@ public class StorageEndpointTest implements TestData {
     TestDataGenerator testDataGenerator;
     @Autowired
     private StorageService storageService;
+    @Autowired
+    private TrashOrUsedItemRepository trashOrUsedItemRepository;
+    @Autowired
+    private TrashOrUsedRepository trashOrUsedRepository;
 
 
     @AfterEach
@@ -186,14 +194,15 @@ public class StorageEndpointTest implements TestData {
         assertEquals(HttpStatus.OK.value(), response.getStatus());
 
     }
-/*
+
     @Test
-    public void deleteExistingItemShouldReturnDeletedItem() throws Exception {
+    public void deleteExistingItemAsTrashShouldReturnDeletedItemAndCreateTrashOrUsedObjects() throws Exception {
         Storage storage = new Storage();
         storage = storageRepository.saveAndFlush(storage);
         UserRegistrationDto testUser = new UserRegistrationDto("test", "password", "test.user@email.com");
         UserGroup testGroup = new UserGroup(storage.getId(), null, null, new HashSet<ApplicationUser>(), null);
         testGroup = userGroupRepository.saveAndFlush(testGroup);
+
 
         ApplicationUser testApplicationUser = userLoginMapper.dtoToEntity(testUser, null);
         testApplicationUser.setCurrGroup(testGroup);
@@ -204,7 +213,8 @@ public class StorageEndpointTest implements TestData {
         itemStorageRepository.saveAndFlush(item);
         itemStorageDto.setId(item.getId());
 
-        MvcResult mvcResult = this.mockMvc.perform(delete(STORAGEENDPOINT_URI + "?itemId=" + itemStorageDto.getId())
+
+        MvcResult mvcResult = this.mockMvc.perform(delete(STORAGEENDPOINT_URI + "?itemId=" + itemStorageDto.getId()+ "&trash="+ true)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken("test", ADMIN_ROLES)))
             .andReturn();
@@ -212,6 +222,8 @@ public class StorageEndpointTest implements TestData {
 
         ItemStorageDto deletedItemStorageDto = objectMapper.readValue(response.getContentAsString(),
             ItemStorageDto.class);
+        List<TrashOrUsedItem> trashOrUsedItems = trashOrUsedItemRepository.findAllByItemNameEqualsAndStorageIdEquals(deletedItemStorageDto.getName(), deletedItemStorageDto.getStorageId());
+        List<TrashOrUsed> trashOrUseds = trashOrUsedRepository.findAllByItemNameEqualsAndStorageIdEquals(deletedItemStorageDto.getName(), deletedItemStorageDto.getStorageId());
 
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         Storage finalStorage = storage;
@@ -223,7 +235,56 @@ public class StorageEndpointTest implements TestData {
             () -> assertNull(deletedItemStorageDto.getNotes()),
             () -> assertNull(deletedItemStorageDto.getImage()),
             () -> assertEquals(0, deletedItemStorageDto.getAmount()),
-            () -> assertNull(deletedItemStorageDto.getLocationTag())
+            () -> assertNull(deletedItemStorageDto.getLocationTag()),
+            () -> assertEquals(trashOrUsedItems.get(0).getItemName(), deletedItemStorageDto.getName()),
+            () -> assertEquals(trashOrUseds.get(0).getItemName(), deletedItemStorageDto.getName())
+        );
+        userRepository.delete(testApplicationUser);
+    }
+
+    @Test
+    public void deleteExistingItemAsAsUsedShouldReturnDeletedItemAndNotCreateTrashOrUsedObjects() throws Exception {
+        Storage storage = new Storage();
+        storage = storageRepository.saveAndFlush(storage);
+        UserRegistrationDto testUser = new UserRegistrationDto("test", "password", "test.user@email.com");
+        UserGroup testGroup = new UserGroup(storage.getId(), null, null, new HashSet<ApplicationUser>(), null);
+        testGroup = userGroupRepository.saveAndFlush(testGroup);
+
+
+        ApplicationUser testApplicationUser = userLoginMapper.dtoToEntity(testUser, null);
+        testApplicationUser.setCurrGroup(testGroup);
+        userRepository.saveAndFlush(testApplicationUser);
+
+        ItemStorageDto itemStorageDto = new ItemStorageDto(storage.getId(), "test123");
+        ItemStorage item = itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto);
+        itemStorageRepository.saveAndFlush(item);
+        itemStorageDto.setId(item.getId());
+
+
+        MvcResult mvcResult = this.mockMvc.perform(delete(STORAGEENDPOINT_URI + "?itemId=" + itemStorageDto.getId()+ "&trash="+ false)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken("test", ADMIN_ROLES)))
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        ItemStorageDto deletedItemStorageDto = objectMapper.readValue(response.getContentAsString(),
+            ItemStorageDto.class);
+        List<TrashOrUsedItem> trashOrUsedItems = trashOrUsedItemRepository.findAllByItemNameEqualsAndStorageIdEquals(deletedItemStorageDto.getName(), deletedItemStorageDto.getStorageId());
+        List<TrashOrUsed> trashOrUseds = trashOrUsedRepository.findAllByItemNameEqualsAndStorageIdEquals(deletedItemStorageDto.getName(), deletedItemStorageDto.getStorageId());
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        Storage finalStorage = storage;
+        assertAll(
+            () -> assertEquals(finalStorage.getId(), deletedItemStorageDto.getStorageId()),
+            () -> assertNull(deletedItemStorageDto.getShoppingListId()),
+            () -> assertEquals("test123", deletedItemStorageDto.getName()),
+            () -> assertNull(deletedItemStorageDto.getQuantity()),
+            () -> assertNull(deletedItemStorageDto.getNotes()),
+            () -> assertNull(deletedItemStorageDto.getImage()),
+            () -> assertEquals(0, deletedItemStorageDto.getAmount()),
+            () -> assertNull(deletedItemStorageDto.getLocationTag()),
+            () -> assertTrue(trashOrUsedItems.isEmpty()),
+            () -> assertTrue(trashOrUseds.isEmpty())
         );
         userRepository.delete(testApplicationUser);
     }
@@ -241,7 +302,7 @@ public class StorageEndpointTest implements TestData {
         testApplicationUser.setCurrGroup(testGroup);
         userRepository.saveAndFlush(testApplicationUser);
 
-        ItemStorageDto itemStorageDto = new ItemStorageDto(null, "test");
+        ItemStorageDto itemStorageDto = new ItemStorageDto(null, "test3");
         ItemStorage item = itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto);
         itemStorageRepository.saveAndFlush(item);
         itemStorageDto.setId(item.getId());
@@ -254,7 +315,7 @@ public class StorageEndpointTest implements TestData {
 
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
         Storage finalStorage = storage;
-        assertThrows(NotFoundException.class, () -> storageService.deleteItemInStorageById(itemStorageDto.getId(), finalStorage.getId()));
+        assertThrows(NotFoundException.class, () -> storageService.deleteItemInStorageById(itemStorageDto.getId(), finalStorage.getId(), true));
         userRepository.delete(testApplicationUser);
     }
 
@@ -280,11 +341,11 @@ public class StorageEndpointTest implements TestData {
         MockHttpServletResponse response = mvcResult.getResponse();
 
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
-        assertThrows(NotFoundException.class, () -> storageService.deleteItemInStorageById(itemStorageDto.getId(), -2L));
+        assertThrows(NotFoundException.class, () -> storageService.deleteItemInStorageById(itemStorageDto.getId(), -2L, true));
         userRepository.delete(testApplicationUser);
     }
 
-     */
+
 
     @Test
     public void updateValidItemShouldReturnUpdatedItem() throws Exception {
@@ -331,7 +392,7 @@ public class StorageEndpointTest implements TestData {
         );
         userRepository.delete(testApplicationUser);
     }
-/*
+
     @Test
     public void updateNotExistingItemShouldThrow400() throws Exception {
         Storage storage = new Storage();
@@ -363,7 +424,7 @@ public class StorageEndpointTest implements TestData {
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
     }
 
- */
+
 
     @Test
     public void updateItemFromNotExistingStorageShouldThrowNotFoundException() throws Exception {

@@ -36,14 +36,14 @@
 
 <!--TABLE START-->
 
-<button type="button" class="btn btn-outline-info" (click)="openAddModal(itemAddModal)">Add new Item
+<button type="button" class="btn btn-info" (click)="openAddModal(itemAddModal)">Add new Item
 </button>
 
 <div class="row p-2 mb-4">
   <ng-template #itemAddModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Item</h5>
-      <button type="button" class="btn btn-outline-dark btn-sm mr-4"
+      <button type="button" class="btn btn-dark btn-sm mr-4"
               (click)="modal.dismiss('X'); this.itemToAdd = nullItem" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -70,7 +70,7 @@
             id="itemToAdd"
             style="list-style-type: none; padding-left: 3pt;">
             <li *ngFor="let myItem of itemsToAdd;" style="float: left; padding-left: 3pt;">
-              <button class="btn btn-outline-dark" (click)="this.itemToAdd = myItem">{{myItem.name}}</button>
+              <button class="btn btn-dark" (click)="this.itemToAdd = myItem">{{myItem.name}}</button>
             </li>
           </ul>
         </div>
@@ -144,10 +144,10 @@
       </form>
     </div>
     <div class="modal-footer">
-      <button type="button" (click)="addItemForm(itemForm)" id="add-msg" class="btn btn-outline-info float-right">Add
+      <button type="button" (click)="addItemForm(itemForm)" id="add-msg" class="btn btn-info float-right">Add
         Item
       </button>
-      <button type="button" class="btn btn-outline-dark" id="close-modal-btn"
+      <button type="button" class="btn btn-dark" id="close-modal-btn"
               (click)="modal.dismiss('close'); this.itemToAdd = nullItem">Close
       </button>
     </div>
@@ -179,12 +179,12 @@
     <td>{{item.locationTag}}</td>
     <td>{{item.notes}}</td>
     <td align="right">
-      <button type="button" class="btn btn-outline-dark btn-sm mr-4"
+      <button type="button" class="btn btn-dark btn-sm mr-4"
               (click)="openAddModal(itemUpdateModal); setUpdateItem(item)">Edit
       </button>
     </td>
     <td align="right">
-      <button type="button" class="btn btn-outline-danger btn-sm mr-4" (click)="openAddModal(itemDeleteModal)"> Delete
+      <button type="button" class="btn btn-danger btn-sm mr-4" (click)="openAddModal(itemDeleteModal)"> Delete
       </button>
 
       <!-- popUp if deleted-->
@@ -192,7 +192,7 @@
         <ng-template #itemDeleteModal let-modal>
           <div class="modal-header">
             <h5 class="modal-title">Put {{item.name}} back on Shoppinglist</h5>
-            <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
+            <button type="button" class="btn btn-dark btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -229,14 +229,14 @@
           <div class="modal-footer">
             <button type="button" id="shoppinglist-public-msg"
                     (click)="putOnPublicShoppinglist(item); modal.dismiss('close')"
-                    class="btn btn-outline-info float-right"> On Public
+                    class="btn btn-info float-right"> On Public
             </button>
 
             <button type="button" id="shoppinglist-private-msg"
                     (click)="putOnPrivateShoppinglist(item); modal.dismiss('close')"
-                    class="btn btn-outline-info float-right"> On Private
+                    class="btn btn-info float-right"> On Private
             </button>
-            <button type="button" (click)="deleteItem(item); modal.dismiss('close')" class="btn btn-outline-danger"
+            <button type="button" (click)="deleteItem(item); modal.dismiss('close')" class="btn btn-danger"
                     id="delete-btn"> Just Delete
             </button>
           </div>
@@ -252,7 +252,7 @@
   <ng-template #itemUpdateModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Edit {{itemToUpdate.name}}</h5>
-      <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
+      <button type="button" class="btn btn-dark btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -332,9 +332,9 @@
     <div class="modal-footer">
       <button type="button" (click)="updateItemForm(updateitemForm, item); modal.dismiss('close')"
               id="update-msg"
-              class="btn btn-outline-info float-right">Save Changes
+              class="btn btn-info float-right">Save Changes
       </button>
-      <button type="button" class="btn btn-outline-dark" id="close-update-modal-btn"
+      <button type="button" class="btn btn-dark" id="close-update-modal-btn"
               (click)="modal.dismiss('close')">
         Close
       </button>

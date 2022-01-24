@@ -99,7 +99,6 @@ export class RecipeComponent implements OnInit {
     if(this.recipeToAdd.ingredients === undefined || this.recipeToAdd.ingredients === null){
       this.error = 'Recipe needs ingredients';
     } else if (form.valid) {
-      //this.storageService.addItem(this.item);
       console.log('form item to add', this.recipeToAdd);
       this.addRecipe(this.recipeToAdd);
       this.clearForm();
