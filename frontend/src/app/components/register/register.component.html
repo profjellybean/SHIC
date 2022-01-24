@@ -14,7 +14,7 @@
     <td><strong>Group Budget</strong></td>
     <td>{{register.monthlyBudget}}  €
       &nbsp;&nbsp;&nbsp;
-      <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="openEditBudgetModal(budgetEditModal)">Edit
+      <button type="button" class="btn btn-dark btn-sm mr-4" (click)="openEditBudgetModal(budgetEditModal)">Edit
       </button>
     </td>
   </tr>
@@ -58,16 +58,16 @@
     <td>{{bill.notes}}</td>
     <td align="right">
       <button *ngIf="bill.notPaidNameList.includes(this.user.username)" type="button"
-              class="btn btn-outline-info btn-sm mr-4" (click)="confirmPayment(bill.id);">Confirm Payment
+              class="btn btn-info btn-sm mr-4" (click)="confirmPayment(bill.id);">Confirm Payment
       </button>
     </td>
     <td align="right">
-      <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="openBillModal(billEditModal, bill);">
+      <button type="button" class="btn btn-dark btn-sm mr-4" (click)="openBillModal(billEditModal, bill);">
         Edit
       </button>
     </td>
     <td align="right">
-      <button type="button" class="btn btn-outline-danger btn-sm mr-4"
+      <button type="button" class="btn btn-danger btn-sm mr-4"
               (click)="openAddModal(billDeleteModal); this.billToDelete=bill">Delete
       </button>
     </td>
@@ -86,7 +86,7 @@
 
     <th></th>
     <th>
-      <button class=" btn btn-outline-info btn-sm mr-4" (click)="payAll()">Pay all Bills</button>
+      <button class=" btn btn-info btn-sm mr-4" (click)="payAll()">Pay all Bills</button>
     </th>
   </tr>
   </tfoot>
@@ -98,7 +98,7 @@
   <ng-template #budgetEditModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Budget</h5>
-      <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
+      <button type="button" class="btn btn-dark btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -119,9 +119,9 @@
       </form>
     </div>
     <div class="modal-footer">
-      <button type="button" (click)="editBudgetForm(budgetForm)" id="add-msg" class="btn btn-outline-info">Save Changes
+      <button type="button" (click)="editBudgetForm(budgetForm)" id="add-msg" class="btn btn-info">Save Changes
       </button>
-      <button type="button" class="btn btn-outline-dark" id="close-modal-btn" (click)="modal.dismiss('close')">Close
+      <button type="button" class="btn btn-dark" id="close-modal-btn" (click)="modal.dismiss('close')">Close
       </button>
     </div>
   </ng-template>
@@ -131,7 +131,7 @@
   <ng-template #billEditModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Bill</h5>
-      <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('X')" aria-label="Close">
+      <button type="button" class="btn btn-dark" (click)="modal.dismiss('X')" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -158,10 +158,10 @@
                     aria-describedby="notesHelp" placeholder="Enter Notes" [(ngModel)]="billToEdit.notes"></textarea>
         </div>
         <div class="modal-footer">
-          <button type="button" (click)="editBill(billForm)" id="add-msg1" class="btn btn-outline-info float-right">Save
+          <button type="button" (click)="editBill(billForm)" id="add-msg1" class="btn btn-info float-right">Save
             Changes
           </button>
-          <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('X')" aria-label="Close">Close
+          <button type="button" class="btn btn-dark" (click)="modal.dismiss('X')" aria-label="Close">Close
           </button>
         </div>
       </form>
@@ -173,7 +173,7 @@
 <ng-template #billDeleteModal let-modal>
   <div class="modal-header">
     <h5 class="modal-title">Alert</h5>
-    <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('X')" aria-label="Close">
+    <button type="button" class="btn btn-dark" (click)="modal.dismiss('X')" aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
@@ -182,7 +182,7 @@
     <div>
       <p>Do you really want to delete this bill?</p>
       <div class="modal-footer">
-        <button type="button" class="btn btn-outline-danger" (click)="deleteBillById(); modal.dismiss('X')">Delete
+        <button type="button" class="btn btn-danger" (click)="deleteBillById(); modal.dismiss('X')">Delete
           Bill
         </button>
       </div>

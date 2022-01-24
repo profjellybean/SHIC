@@ -8,25 +8,25 @@
     <div class="basicAttribute big" *ngIf="!userEditMode"> <h1>{{this.user.username}}</h1></div>
     <hr>
     <input class="basicAttributeEdit big" *ngIf="userEditMode" [(ngModel)]="editedUser.username" value="{{this.user.username}}">
-    <button type="button" class="btn btn-outline-dark btn-sm mr-4" *ngIf="!userEditMode" (click)="userEditMode = true">Edit username</button>
+    <button type="button" class="btn btn-dark btn-sm mr-4" *ngIf="!userEditMode" (click)="userEditMode = true">Edit username</button>
     <br>
     <br>
-    <button type="button" class="btn btn-outline-info btn-sm mr-4" *ngIf="userEditMode" (click)="editUsername()">Accept</button><p></p>
+    <button type="button" class="btn btn-info btn-sm mr-4" *ngIf="userEditMode" (click)="editUsername()">Accept</button><p></p>
 
     <div class="basicAttribute" *ngIf="!emailEditMode"> <strong>E-Mail: &nbsp;</strong> {{this.user.email}} </div>
     <input class="basicAttributeEdit" *ngIf="emailEditMode" [(ngModel)]="editedUser.email" value="{{this.user.email}}"><br><br>
-    <button type="button" class="btn btn-outline-dark btn-sm mr-4" *ngIf="!emailEditMode" (click)="emailEditMode = true">Edit email</button>
-    <button type="button" class="btn btn-outline-info btn-sm mr-4" *ngIf="emailEditMode" (click)="changeEmail()">Accept</button><p></p>
+    <button type="button" class="btn btn-dark btn-sm mr-4" *ngIf="!emailEditMode" (click)="emailEditMode = true">Edit email</button>
+    <button type="button" class="btn btn-info btn-sm mr-4" *ngIf="emailEditMode" (click)="changeEmail()">Accept</button><p></p>
 
 
 
-    <button type="button" class="btn btn-outline-info btn-sm mr-4 button" routerLink="/custom-item">Custom Items</button>
+    <button type="button" class="btn btn-info btn-sm mr-4 button" routerLink="/custom-item">Custom Items</button>
     &nbsp;
-    <button type="button" class="btn btn-outline-info btn-sm mr-4 button" routerLink="/unitOfQuantity">Custom Units of Quantity</button>
+    <button type="button" class="btn btn-info btn-sm mr-4 button" routerLink="/unitOfQuantity">Custom Units of Quantity</button>
     &nbsp;
-    <button type="button" class="btn btn-outline-info btn-sm mr-4 button" routerLink="/locationTag">Custom Storage Location Tags</button>
+    <button type="button" class="btn btn-info btn-sm mr-4 button" routerLink="/locationTag">Custom Storage Location Tags</button>
     <br><br><br>
-    <button type="button" class="btn btn-outline-danger btn-sm mr-4 button" (click)="openAddModal(userDeleteModal)">Delete Profile</button>
+    <button type="button" class="btn btn-danger btn-sm mr-4 button" (click)="openAddModal(userDeleteModal)">Delete Profile</button>
   </div>
 
   <div class="profilePictureContainer">
@@ -46,7 +46,7 @@
 <ng-template #userDeleteModal let-modal>
   <div class="modal-header">
     <h5 class="modal-title">Alert</h5>
-    <button type="button" class="close btn btn-outline-dark btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
+    <button type="button" class="close btn btn-dark btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
@@ -54,7 +54,7 @@
   <div class="modal-body">
     <div>
       <p>Do you really want to delete your profile?</p>
-      <button type="button" class="btn btn-outline-danger btn-sm mr-4" (click)="deleteUserById(); modal.dismiss('X')" routerLink="/">Delete Profile</button>
+      <button type="button" class="btn btn-danger btn-sm mr-4" (click)="deleteUserById(); modal.dismiss('X')" routerLink="/">Delete Profile</button>
     </div>
   </div>
 </ng-template>
@@ -75,7 +75,7 @@
   <div>
 
   <input *ngIf="groupId!==null && groupId !== undefined" [(ngModel)]="userToAdd" placeholder="Enter username">&nbsp;
-  <button type="button" class="btn btn-outline-info btn-sm mr-4" *ngIf="groupId!==null && groupId !== undefined" (click)="addUser()">Add User</button>
+  <button type="button" class="btn btn-info btn-sm mr-4" *ngIf="groupId!==null && groupId !== undefined" (click)="addUser()">Add User</button>
   </div>
 </div>
 <p></p>

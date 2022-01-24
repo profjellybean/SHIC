@@ -30,7 +30,7 @@
     <ng-template #itemAddModal let-modal>
       <div class="modal-header">
         <h5 class="modal-title">Item</h5>
-        <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('X')" aria-label="Close">
+        <button type="button" class="btn btn-dark" (click)="modal.dismiss('X')" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -57,7 +57,7 @@
               name="itemToAdd"
               style="list-style-type: none; padding-left: 3pt;">
               <li *ngFor="let myItem of itemsAdd;" style="float: left; padding-left: 3pt;">
-                <button class="btn btn-outline-dark" (click)="this.itemToAdd = myItem">{{myItem.name}}</button>
+                <button class="btn btn-dark" (click)="this.itemToAdd = myItem">{{myItem.name}}</button>
               </li>
             </ul>
           </div>
@@ -114,10 +114,10 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" (click)="addItemForm(itemForm)" id="add-msg" class="btn btn-outline-info float-right">Add
+        <button type="button" (click)="addItemForm(itemForm)" id="add-msg" class="btn btn-info float-right">Add
           Item
         </button>
-        <button type="button" class="btn btn-outline-dark" id="close-modal-btn" (click)="modal.dismiss('close')">Close
+        <button type="button" class="btn btn-dark" id="close-modal-btn" (click)="modal.dismiss('close')">Close
         </button>
       </div>
     </ng-template>
@@ -126,11 +126,11 @@
   </div>
 
   <div>
-    <button type="button" class="btn btn-outline-info" (click)="openAddModal(itemAddModal)">Add new Item</button> &nbsp;
+    <button type="button" class="btn btn-info" (click)="openAddModal(itemAddModal)">Add new Item</button> &nbsp;
     <input *ngIf="items !== null && items.length !== 0" type="checkbox" class="btn-check" id="select-all"
            (click)="toggleAll()" [(ngModel)]="toggleAllItems" autocomplete="off">
-    <label class="btn btn-outline-info" for="select-all">Select all Items</label> &nbsp;
-    <button *ngIf="items !== null && items.length !== 0" type="button" class="btn btn-outline-info" id="buy-item"
+    <label class="btn btn-info" for="select-all">Select all Items</label> &nbsp;
+    <button *ngIf="items !== null && items.length !== 0" type="button" class="btn btn-info" id="buy-item"
             (click)="openBillModal(confirmationModal)" data-toggle="modal">Buy these Items
     </button>
   </div>
@@ -162,7 +162,7 @@
         <td>{{item.notes}}</td>
 
           <td align="right">
-            <button type="button" class="btn btn-outline-danger btn-sm mr-4"
+            <button type="button" class="btn btn-danger btn-sm mr-4"
                     (click)="openAddModal(itemDeleteModal); this.itemToDelete=item"> Delete
             </button>
           </td>
@@ -175,7 +175,7 @@
   <ng-template #itemDeleteModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Alert</h5>
-      <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('X')" aria-label="Close">
+      <button type="button" class="btn btn-dark" (click)="modal.dismiss('X')" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -187,7 +187,7 @@
           <strong>{{this.itemToDelete.name}}</strong>
         </p>
         <div class="modal-footer">
-          <button type="button" class="btn btn-outline-danger" (click)="deleteItem(itemToDelete); modal.dismiss('X')">
+          <button type="button" class="btn btn-danger" (click)="deleteItem(itemToDelete); modal.dismiss('X')">
             Delete
           </button>
         </div>
@@ -200,16 +200,16 @@
     <ng-template #confirmationModal let-modal>
       <div class="modal-header">
         <h5 class="modal-title">Your options</h5>
-        <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('X')" aria-label="Close">
+        <button type="button" class="btn btn-dark" (click)="modal.dismiss('X')" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="openBillModal(billAddModal)">Move and
+        <button type="button" class="btn btn-dark btn-sm mr-4" (click)="openBillModal(billAddModal)">Move and
           Generate Bill
         </button>
         <p></p>
-        <button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="workOffShoppingList()">Move to Storage
+        <button type="button" class="btn btn-dark btn-sm mr-4" (click)="workOffShoppingList()">Move to Storage
         </button>
       </div>
     </ng-template>
@@ -219,7 +219,7 @@
     <ng-template #billAddModal let-modal>
       <div class="modal-header">
         <h5 class="modal-title">Bill</h5>
-        <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('X')" aria-label="Close">
+        <button type="button" class="btn btn-dark" (click)="modal.dismiss('X')" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -275,7 +275,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" (click)="addBillForm(billForm)" id="add-msg1"
-                    class="btn btn-outline-info float-right">Add bill and buy
+                    class="btn btn-info float-right">Add bill and buy
             </button>
           </div>
           <div *ngIf="submitted && this.billToAdd.groceries.length === 0" class="error">
