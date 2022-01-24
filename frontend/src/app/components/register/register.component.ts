@@ -15,7 +15,6 @@ import {GroupService} from '../../services/group.service';
 import {NotificationsComponent} from '../notifications/notifications.component';
 import {Item} from '../../dtos/item';
 
-import {NotificationsComponent} from '../notifications/notifications.component';
 
 @Component({
   selector: 'app-register',

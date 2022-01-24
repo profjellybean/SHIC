@@ -224,7 +224,7 @@
 
         <div class="form-group">
           <label for="price">Bill sum:</label>
-          <input name="price" type="text" pattern="[0-9]*" class="form-control" id="price" required
+          <input name="price" type="text" pattern="[0-9]*" class="form-control" id="addprice" required
                  placeholder="Enter price" [(ngModel)]="billToCreate.sum">
         </div>
         <div *ngIf="submitted && !this.isThisNumber(this.billToCreate.sum)" class="error">
@@ -234,7 +234,7 @@
 
         <div class="form-group">
           <label for="date">Bill date:</label>
-          <input type="date" name="date" class="form-control" id="date" required
+          <input type="date" name="date" class="form-control" id="adddate" required
                  aria-describedby="expDateHelp" [(ngModel)]="billToCreate.date">
         </div>
         <div *ngIf="submitted && !this.isValidDate(this.billToCreate.date)" class="error">
@@ -246,11 +246,11 @@
 
         <div class="form-group">
           <label for="billNotes">Notes</label>
-          <textarea rows="3" name="notes" class="form-control" id="billNotes"
+          <textarea rows="3" name="notes" class="form-control" id="addbillNotes"
                     aria-describedby="notesHelp" placeholder="Enter Notes" [(ngModel)]="billToCreate.notes"></textarea>
         </div>
         <div class="modal-footer">
-          <button type="button" (click)="addBillForm(billForm)" id="add-msg1" class="btn btn-outline-info float-right">
+          <button type="button" (click)="addBillForm(billForm)" id="addadd-msg1" class="btn btn-outline-info float-right">
             Add bill and buy
           </button>
         </div>
@@ -258,9 +258,6 @@
           <small class="form-text text-warning" *ngIf="this.billToCreate.groceries.length === 0">You must add items to your
             bill!
           </small>
-        </div>
-
-
         </div>
       </form>
     </div>
