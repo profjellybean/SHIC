@@ -36,6 +36,8 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
+import java.util.List;
+
 import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.ITEMENDPOINT_UNITOFQUANTITY_URI;
 import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.ITEMENDPOINT_UNITRELATION_URI;
 import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.STORAGEENDPOINT_URI;
@@ -69,27 +71,9 @@ public class ItemEndpointTest implements TestData {
     private UnitOfQuantityMapper unitOfQuantityMapper;
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private StorageRepository storageRepository;
 
-/*
-    @Test
-    @Disabled
-    public void insertUnitOfQuantityWithEmptyOrNullNameShouldThrowException() throws Exception {
-        UnitOfQuantityDto unitOfQuantityDto = new UnitOfQuantityDto();
-
-        MvcResult mvcResult = this.mockMvc.perform(post(ITEMENDPOINT_UNITOFQUANTITY_URI + "?name=")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(unitOfQuantityDto)))
-            .andReturn();
-        MockHttpServletResponse response = mvcResult.getResponse();
-
-
-
-
-    // @BeforeEach
-    // public void beforeEach() {
-    //     unitsRelationRepository.deleteAll();
-    //     unitOfQuantityRepository.deleteAll();
-    // }
 
     @Autowired
     PlatformTransactionManager txm;
@@ -109,35 +93,39 @@ public class ItemEndpointTest implements TestData {
     public void tearDownDBData() {
         txm.rollback(txstatus);
     }
+    @Test
+    public void insertUnitOfQuantitysThenGetAll() throws Exception {
+        UnitOfQuantity unitOfQuantity= new UnitOfQuantity(-1L,"test1");
+        UnitOfQuantity unitOfQuantity2= new UnitOfQuantity(-1L, "test2");
+        UnitOfQuantity unitOfQuantity3= new UnitOfQuantity(-1L, "test3");
+        storageRepository.saveAndFlush(new Storage(-1L));
+        unitOfQuantityRepository.saveAndFlush(unitOfQuantity);
+        unitOfQuantityRepository.saveAndFlush(unitOfQuantity2);
+        unitOfQuantityRepository.saveAndFlush(unitOfQuantity3);
+
+        MvcResult mvcResult = this.mockMvc.perform(get(ITEMENDPOINT_UNITOFQUANTITY_URI)
+            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
+            .andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
 
     @Test
     public void insertUnitOfQuantityWithEmptyOrNullNameShouldThrowException() throws Exception {
         UnitOfQuantityDto unitOfQuantityDto = new UnitOfQuantityDto();
 
-        MvcResult mvcResult = this.mockMvc.perform(post(ITEMENDPOINT_UNITOFQUANTITY_URI+"?name=")
+        MvcResult mvcResult = this.mockMvc.perform(post(ITEMENDPOINT_UNITOFQUANTITY_URI + "?name=")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(unitOfQuantityDto)))
+                .content(objectMapper.writeValueAsString(unitOfQuantityDto))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
     }
-
-    @Test
-    public void insertValidUnitOfQuantity() throws Exception {
-        UnitOfQuantityDto unitOfQuantityDto = new UnitOfQuantityDto("test");
-
-        MvcResult mvcResult = this.mockMvc.perform(post(ITEMENDPOINT_UNITOFQUANTITY_URI+"?name=test")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(unitOfQuantityDto)))
-            .andReturn();
-        MockHttpServletResponse response = mvcResult.getResponse();
-
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertTrue(unitOfQuantityRepository.findByName("test").isPresent());
-    }
-
-
 
 
     @Test
@@ -151,7 +139,8 @@ public class ItemEndpointTest implements TestData {
         unitOfQuantityRepository.save(unitOfQuantityMapper.unitOfQuantityDtoToUnitOfQuantity(unitOfQuantityDto));
         MvcResult mvcResult = this.mockMvc.perform(post(ITEMENDPOINT_UNITRELATION_URI)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(unitsRelationDto)))
+                .content(objectMapper.writeValueAsString(unitsRelationDto))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
@@ -175,31 +164,27 @@ public class ItemEndpointTest implements TestData {
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
     }
 
-    /*
+
     @Test
-    public void insertUnitsOfQuantitiesThenGetAll() throws Exception {
-        unitOfQuantityRepository.deleteAll();
+    public void insertValidUnitOfQuantitiesShouldReturnUnitOfQuantity() throws Exception {
+        UnitOfQuantityDto unitOfQuantity1 = new UnitOfQuantityDto("test1", -1L);
+        storageRepository.saveAndFlush(new Storage(-1L));
 
-        UnitOfQuantity unitOfQuantity1 = new UnitOfQuantity("test1");
-        UnitOfQuantity unitOfQuantity2 = new UnitOfQuantity("test2");
-        UnitOfQuantity unitOfQuantity3 = new UnitOfQuantity("test3");
-
-        unitOfQuantityRepository.save(unitOfQuantity1);
-        unitOfQuantityRepository.save(unitOfQuantity2);
-        unitOfQuantityRepository.save(unitOfQuantity3);
-
-        MvcResult mvcResult = this.mockMvc.perform(get(ITEMENDPOINT_UNITOFQUANTITY_URI)
-                .contentType(MediaType.APPLICATION_JSON))
+        MvcResult mvcResult = this.mockMvc.perform(post(ITEMENDPOINT_UNITOFQUANTITY_URI + "?name=test1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(unitOfQuantity1))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
-
+        UnitOfQuantityDto addedUnitOfQuantity = objectMapper.readValue(response.getContentAsString(),
+            UnitOfQuantityDto.class);
 
         assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals(3,unitOfQuantityRepository.findAll().size());
+        assertEquals(addedUnitOfQuantity.getName(), unitOfQuantity1.getName());
     }
 
 
-     */
+
 
     @Test
     public void insertUnitsRelationsThenGetAll() throws Exception {
@@ -232,7 +217,6 @@ public class ItemEndpointTest implements TestData {
 
     @Test
     public void GetNonExistingUnitOfQuantity() throws Exception {
-        //unitOfQuantityRepository.deleteAll(); TODO
 
         MvcResult mvcResult = this.mockMvc.perform(get(ITEMENDPOINT_UNITOFQUANTITY_URI)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -245,6 +229,6 @@ public class ItemEndpointTest implements TestData {
     }
 
 
-
-
 }
+
+

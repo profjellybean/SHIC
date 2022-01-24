@@ -303,9 +303,9 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public List<UnitOfQuantity> getAllUnitOfQuantity() {
+    public List<UnitOfQuantity> getAllUnitOfQuantity(Long groupId) {
         LOGGER.debug("Getting all units of quantity");
-        return unitOfQuantityRepository.findAll();
+        return unitOfQuantityRepository.findAllByGroupIdOrGroupIdIsNull(groupId);
     }
 
     @Override
