@@ -325,7 +325,6 @@ export class StorageComponent implements OnInit {
     this.shoppingListService.addToPublicShoppingList(item).subscribe(
       {
         next: data => {
-          this.deleteItem(item);
           this.getCurrUser();
           this.notifications.pushSuccess('Item has been successfully added to shopping list');
         },
@@ -346,7 +345,6 @@ export class StorageComponent implements OnInit {
     this.shoppingListService.addToPrivateShoppingList(item).subscribe(
       {
         next: data => {
-          this.deleteItem(item);
           this.getCurrUser();
           this.notifications.pushSuccess('Item has been successfully added to shopping list');
         },

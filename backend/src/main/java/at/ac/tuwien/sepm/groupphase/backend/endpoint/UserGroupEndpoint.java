@@ -92,7 +92,8 @@ public class UserGroupEndpoint {
         }
     }
 
-    @Secured("ROLE_USER")
+    //@Secured("ROLE_USER")
+    @PermitAll
     @GetMapping
     @Operation(summary = "Get all users from group")
     public Set<UserDto> getAllUsers(@Param("groupId") Long groupId) {

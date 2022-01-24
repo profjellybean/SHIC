@@ -52,8 +52,7 @@ public class RecipeEndpoint {
 
     @Secured("ROLE_USER")
     @GetMapping
-    @Transactional
-    @Operation(summary = "Get list of all recipes") //TODO: add security
+    @Operation(summary = "Get list of all recipes")
     public List<RecipeDto> findAll() {
         LOGGER.info("GET /recipe");
         return recipeMapper.recipeToRecipeDto(recipeService.findAll());
@@ -61,7 +60,6 @@ public class RecipeEndpoint {
 
     @GetMapping("/findbyname")
     @Secured("ROLE_USER")
-    @Transactional
     @Operation(summary = "Get list of all recipes that contain the String name")
     public List<RecipeDto> findAllBySubstring(@RequestParam(name = "name") String name) {
         LOGGER.info("ENDPOINT: GET /recipe/findbyname");
@@ -70,8 +68,7 @@ public class RecipeEndpoint {
 
     @Secured("ROLE_USER")
     @GetMapping(value = "/{id}")
-    @Transactional
-    @Operation(summary = "Get recipe by id") //TODO: add security
+    @Operation(summary = "Get recipe by id")
     public RecipeDto findRecipeById(@PathVariable("id") Long id) {
         LOGGER.info("GET /recipe by id");
         return recipeMapper.recipeToRecipeDto(recipeService.findRecipeById(id));
@@ -87,7 +84,7 @@ public class RecipeEndpoint {
 
     @Secured("ROLE_USER")
     @PutMapping(value = "/{id}")
-    @Operation(summary = "Update an existing recipe") //TODO: add security
+    @Operation(summary = "Update an existing recipe")
     public RecipeDto updateRecipe(Authentication authentication, @Valid @RequestBody RecipeDto recipeDto) {
         LOGGER.info("PUT /recipe body: {}", recipeDto);
         try {
@@ -111,7 +108,7 @@ public class RecipeEndpoint {
 
     @Secured("ROLE_USER")
     @DeleteMapping(value = "/{id}")
-    @ResponseStatus(HttpStatus.OK) //TODO: add security
+    @ResponseStatus(HttpStatus.OK)
     public boolean deleteRecipe(Authentication authentication, @PathVariable("id") Long id) {
         LOGGER.info("DELETE /delete recipe id: {}", id);
         if (authentication == null) {

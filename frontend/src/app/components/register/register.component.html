@@ -27,26 +27,6 @@
   </tbody>
 </table>
 
-<th>Spending this month:</th>
-<br>
-{{monthlySum}}  €
-<br>
-<th>Group Budget:</th>
-<br>
-{{register.monthlyBudget}}  €
-&nbsp;<button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="openEditBudgetModal(budgetEditModal)">Edit</button>
-<br>
-
-<button type="button" class="btn btn-outline-dark btn-sm mr-4" (click)="openEditBudgetModal(billAddModal)">Add
-</button>
-
-<th>Rest Group Budget for this month:</th>
-<br>
-{{monthlyDifference}}  €
-<br>
-<br>
-
-
 <table class="table table-striped">
   <thead class="thead-dark">
   <tr>
@@ -67,14 +47,10 @@
     <td>{{bill.date}}</td>
     <td>{{bill.nameList}}</td>
     <td>{{bill.notPaidNameList}}</td>
-    <td><div *ngFor="let grocery of bill.groceries">{{grocery.name}}</div></td>
     <td>{{bill.sum}} €</td>
     <td>{{bill.sumPerPerson}} €</td>
-    <td>{{bill.notes}}</td>
-    <td>
-      <button *ngIf="billNotEmpty(bill)" type="button" class="btn btn-info  btn-sm mr-4" (click)="openItemModal(showAllItemsModal, bill)">Show all
-      </button>
-    </td>
+    <td><button *ngIf="billNotEmpty(bill)" type="button" class="btn btn-info  btn-sm mr-4" (click)="openItemModal(showAllItemsModal, bill)">Show all
+    </button></td>
     <td>{{bill.notes}}</td>
     <td align="right">
       <button *ngIf="bill.notPaidNameList.includes(this.user.username)" type="button"
