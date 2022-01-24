@@ -53,7 +53,8 @@
     <td>{{bill.sum}} €</td>
     <td>{{bill.sumPerPerson}} €</td>
     <td>
-      <div *ngFor="let grocery of bill.groceries">{{grocery.name}}</div>
+      <button *ngIf="billNotEmpty(bill)" type="button" class="btn btn-info  btn-sm mr-4" (click)="openItemModal(showAllItemsModal, bill)">Show all
+      </button>
     </td>
     <td>{{bill.notes}}</td>
     <td align="right">
@@ -190,3 +191,23 @@
   </div>
 </ng-template>
 
+<div class="row p-2 mb-4">
+  <ng-template #showAllItemsModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Items</h5>
+      <button type="button" class="btn btn-dark btn-sm mr-4" (click)="modal.dismiss('X')" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form #showAllItemsModal="ngForm">
+        <div class="form-group">
+          <ul>
+            <div *ngFor="let grocery of this.billItems"><li>{{grocery.name}}</li></div>
+          </ul>
+        </div>
+
+      </form>
+    </div>
+  </ng-template>
+</div>
