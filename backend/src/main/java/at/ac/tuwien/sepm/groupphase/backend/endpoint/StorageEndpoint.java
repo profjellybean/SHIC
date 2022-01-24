@@ -156,12 +156,18 @@ public class StorageEndpoint {
         return itemStorageMapper.itemsStorageToItemsStorageDto(storageService.searchItem(itemStorageMapper.itemStorageDtoToItemStorage(itemStorageDto)));
     }
 
+    @Secured("ROLE_USER")
     @GetMapping(value = "/unitOfQuantity")
     @PermitAll
-    @Operation(summary = "Get all units of quantity") //TODO: add security
-    public List<UnitOfQuantityDto> getAllUnitsOfQuantity() {
+    @Operation(summary = "Get all units of quantity")
+    public List<UnitOfQuantityDto> getAllUnitsOfQuantity(Authentication authentication) {
         LOGGER.info("Get units of quantity, endpoint");
-        return unitOfQuantityMapper.unitsOfQuantityToUnitsOfQuantityDto(storageService.getAllUnitOfQuantity());
+        if (authentication == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You are not logged-in");
+        }
+        Long groupId = userService.getGroupIdByUsername(authentication.getName());
+
+        return unitOfQuantityMapper.unitsOfQuantityToUnitsOfQuantityDto(storageService.getAllUnitOfQuantity(groupId));
     }
 
     @PermitAll

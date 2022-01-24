@@ -127,7 +127,7 @@ public interface StorageService {
     /**
      * Gets all units of quantity.
      */
-    List<UnitOfQuantity> getAllUnitOfQuantity();
+    List<UnitOfQuantity> getAllUnitOfQuantity(Long storageId);
 
     /**
      * Gets all locations.
