@@ -1,7 +1,7 @@
 <ng-template #recipeDeleteModal let-modal>
   <div class="modal-header">
     <h5 class="modal-title">Alert</h5>
-    <button type="button" class="btn btn-dark btn-sm mr-4" class="close" (click)="modal.dismiss('X')"
+    <button type="button" class="btn btn-dark btn-sm mr-4" (click)="modal.dismiss('X')"
             aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -115,8 +115,6 @@
     <div class="modal-footer">
       <button type="button" (click)="addRecipeForm(recipeForm)" id="add-msg" class="btn btn-info float-right">
         Add Recipe
-      </button>
-      <button type="button" class="btn btn-dark" id="close-modal-btn" (click)="modal.dismiss('close')">Close
       </button>
     </div>
   </ng-template>

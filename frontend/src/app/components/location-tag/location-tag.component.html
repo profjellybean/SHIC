@@ -19,7 +19,7 @@
   <tr *ngFor="let locationTag of $any(locationTags)">
     <td>{{locationTag.name}}</td>
     <td>
-      <button *ngIf="this.locationTagDefaultCheck(locationTag)" type="button" class="btn btn-info btn-sm mr-4"
+      <button *ngIf="this.locationTagDefaultCheck(locationTag)" type="button" class="btn btn-danger btn-sm mr-4"
               (click)="this.locationTagToDelete = locationTag; openDeleteModal(locationTagDeleteModal)">delete
       </button>
     </td>
@@ -57,9 +57,6 @@
       <button type="button" (click)="addLocationTagForm(locationTagForm)" (click)="modal.dismiss('close')" id="add-msg2"
               class="btn btn-info float-right">Add Location Tag
       </button>
-
-      <button type="button" class="btn btn-info" id="close-modal-btn2" (click)="modal.dismiss('close')">Close</button>
-
     </div>
   </ng-template>
 </div>

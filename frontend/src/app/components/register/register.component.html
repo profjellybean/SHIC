@@ -121,8 +121,7 @@
     <div class="modal-footer">
       <button type="button" (click)="editBudgetForm(budgetForm)" id="add-msg" class="btn btn-info">Save Changes
       </button>
-      <button type="button" class="btn btn-dark" id="close-modal-btn" (click)="modal.dismiss('close')">Close
-      </button>
+
     </div>
   </ng-template>
 </div>
@@ -161,8 +160,7 @@
           <button type="button" (click)="editBill(billForm)" id="add-msg1" class="btn btn-info float-right">Save
             Changes
           </button>
-          <button type="button" class="btn btn-dark" (click)="modal.dismiss('X')" aria-label="Close">Close
-          </button>
+
         </div>
       </form>
     </div>
@@ -174,7 +172,7 @@
   <ng-template #billAddModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Bill</h5>
-      <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('X')" aria-label="Close">
+      <button type="button" class="btn btn-dark" (click)="modal.dismiss('X')" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -230,7 +228,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" (click)="addBillForm(billForm)" id="addadd-msg1"
-                  class="btn btn-outline-info float-right">
+                  class="btn btn-info float-right">
             Add bill and buy
           </button>
         </div>
