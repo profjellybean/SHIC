@@ -37,7 +37,7 @@ public class BillServiceTest {
     public void findBillShouldWork() {
         Bill bill = new Bill(null, null, null, "TestBill", null, null, 10000, 0, LocalDate.now());
         billRepository.saveAndFlush(bill);
-        assertNotNull(billService.findAll());
+        assertNotNull(billService.findAll(null));
 
     }
 }

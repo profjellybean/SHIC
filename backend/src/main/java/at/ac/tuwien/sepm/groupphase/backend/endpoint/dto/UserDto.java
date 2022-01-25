@@ -68,4 +68,15 @@ public class UserDto {
     public void setPrivList(Long privList) {
         this.privList = privList;
     }
+
+    @Override
+    public String toString() {
+        return "UserDto{"
+            +
+            "id=" + id
+            +
+            ", username='" + username + '\''
+            +
+            '}';
+    }
 }
