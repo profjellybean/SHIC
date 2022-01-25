@@ -10,6 +10,7 @@ import {TimeSumBill} from '../../dtos/time-sum-bill';
 import {formatDate} from '@angular/common';
 import {StorageService} from '../../services/storage.service';
 import {NameSum} from '../../dtos/name-sum';
+import {before} from "lodash";
 
 @Component({
   selector: 'app-statistic',

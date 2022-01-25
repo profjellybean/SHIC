@@ -23,14 +23,14 @@ public interface TrashOrUsedRepository extends JpaRepository<TrashOrUsed, Long> 
      * count how many items have been thrown away in a specific month.
      * return number of thrown away items.
      */
-    @Query(value = "SELECT COUNT(T.ITEM_NAME) from TRASH_OR_USED AS T WHERE (YEAR(T.DATE) = YEAR(:day)) AND (MONTH(T.DATE) = MONTH(:day)) AND (T.STORAGE_ID= :storageId)", nativeQuery = true)
+    @Query(value = "SELECT COUNT(T.ITEM_NAME) from TRASH_OR_USED AS T WHERE (YEAR(T.DATE) = YEAR(:day)) AND (MONTH(T.DATE) = MONTH(:day)) AND (T.STORAGE_ID= :storageId) ORDER BY YEAR(T.DATE), MONTH (T.DATE) DESC ", nativeQuery = true)
     Double sumOfArticlesOfSpecificMonth(@Param("storageId") Long storageId, @Param("day") LocalDate day);
 
     /**
      * count how many items have been thrown away in a specific year.
      * return number of thrown away items.
      */
-    @Query(value = "SELECT COUNT(T.ITEM_NAME) from TRASH_OR_USED AS T WHERE (YEAR(T.DATE) = YEAR(:day)) AND (T.STORAGE_ID= :storageId)", nativeQuery = true)
+    @Query(value = "SELECT COUNT(T.ITEM_NAME) from TRASH_OR_USED AS T WHERE (YEAR(T.DATE) = YEAR(:day)) AND (T.STORAGE_ID= :storageId) GROUP BY YEAR(T.DATE) ORDER BY YEAR(T.DATE) DESC ", nativeQuery = true)
     Double sumOfArticlesOfSpecificYear(@Param("storageId") Long storageId, @Param("day") LocalDate day);
 
     /**
