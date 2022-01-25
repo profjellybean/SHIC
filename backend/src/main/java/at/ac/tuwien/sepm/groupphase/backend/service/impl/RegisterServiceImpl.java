@@ -99,6 +99,7 @@ public class RegisterServiceImpl implements RegisterService {
             throw new NotFoundException("No register found for User " + userName);
         }
         Double sumBillsGroup = billRepository.billSumOfBillsInRegister(registerId);
+        sumBillsGroup = (double) Math.round(sumBillsGroup * 100.0) / 100.0;
 
         return sumBillsGroup;
     }
@@ -142,6 +143,7 @@ public class RegisterServiceImpl implements RegisterService {
         if (registerId == null) {
             throw new NotFoundException("No register found for User " + userName);
         }
+        newBudget = Math.floor(newBudget * 100.0) / 100.0;
         Optional<Register> registerOptional = registerRepository.findRegisterById(registerId);
         if (registerOptional.isPresent()) {
             Register register = registerOptional.get();
@@ -161,6 +163,7 @@ public class RegisterServiceImpl implements RegisterService {
         if (sum == null) {
             return 0.0;
         }
+        sum = (double) Math.round(sum * 100.0) / 100.0;
         return sum;
     }
 
@@ -173,6 +176,7 @@ public class RegisterServiceImpl implements RegisterService {
         if (sum == null) {
             return 0.0;
         }
+        sum = (double) Math.round(sum * 100.0) / 100.0;
         return sum;
     }
 
