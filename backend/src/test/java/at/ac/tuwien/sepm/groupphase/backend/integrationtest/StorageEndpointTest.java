@@ -9,12 +9,14 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegistrationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ItemStorageMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserLoginMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Item;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Storage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrashOrUsed;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrashOrUsedItem;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ItemRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TrashOrUsedItemRepository;
@@ -85,12 +87,16 @@ public class StorageEndpointTest implements TestData {
     private TrashOrUsedItemRepository trashOrUsedItemRepository;
     @Autowired
     private TrashOrUsedRepository trashOrUsedRepository;
+    @Autowired
+    private ItemRepository itemRepository;
 
 
     @AfterEach
     public void afterEach() {
         storageRepository.deleteAll();
         itemStorageRepository.deleteAll();
+        itemRepository.deleteAll();
+
     }
 
     @Test
@@ -191,6 +197,53 @@ public class StorageEndpointTest implements TestData {
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertEquals(response.getContentLength(), 0);
 
+    }
+
+
+    @Test
+    public void saveItemBySearch() {
+        long id = storageService.createNewStorage();
+        UserRegistrationDto testUserA = new UserRegistrationDto("testa", "password", "test.user@email.com");
+        UserGroup testGroup = new UserGroup(id, null, null, new HashSet<ApplicationUser>(), null);
+        testGroup = userGroupRepository.saveAndFlush(testGroup);
+
+        ApplicationUser testApplicationUser = userLoginMapper.dtoToEntity(testUserA, null);
+        testApplicationUser.setCurrGroup(testGroup);
+        userRepository.saveAndFlush(testApplicationUser);
+        Item item = new Item(1L, "Test1", null);
+        Item item2 = new Item(2L, "Test2", null);
+        Item item3 = new Item(3L, "Test3", null);
+        itemRepository.saveAndFlush(item);
+        itemRepository.saveAndFlush(item2);
+        itemRepository.saveAndFlush(item3);
+
+        Item itemToAdd = itemRepository.findItemsByNameForGroup("Test1", testGroup.getId()).get(0);
+        ItemStorage itemStorageToAdd = new ItemStorage(itemToAdd.getName(), "", null, null, 3, null, itemToAdd.getQuantity(), id, null);
+        ItemStorage itemStorageAdded = storageService.saveItem(itemStorageToAdd, null);
+        assertEquals(item.getName(), itemStorageAdded.getName());
+    }
+
+    @Test
+    public void saveItemByPartSearch() {
+        long id = storageService.createNewStorage();
+        UserRegistrationDto testUserB = new UserRegistrationDto("testb", "password", "test.user@email.com");
+        UserGroup testGroup = new UserGroup(id, null, null, new HashSet<ApplicationUser>(), null);
+        testGroup = userGroupRepository.saveAndFlush(testGroup);
+
+        ApplicationUser testApplicationUser = userLoginMapper.dtoToEntity(testUserB, null);
+        testApplicationUser.setCurrGroup(testGroup);
+        userRepository.saveAndFlush(testApplicationUser);
+        Item item4 = new Item(4L, "Test1", null);
+        Item item5 = new Item(5L, "Test2", null);
+        Item item6 = new Item(36L, "Test3", null);
+        itemRepository.saveAndFlush(item4);
+        itemRepository.saveAndFlush(item5);
+        itemRepository.saveAndFlush(item6);
+
+        Item itemToAdd = itemRepository.findAllItemsByNameForGroup("%T%", testGroup.getId()).get(1);
+        ItemStorage itemStorageToAdd = new ItemStorage(itemToAdd.getName(), "", null, null, 3, null, itemToAdd.getQuantity(), id, null);
+        ItemStorage itemStorageAdded = storageService.saveItem(itemStorageToAdd, null);
+        assertEquals("T", itemStorageAdded.getName().substring(0, 1));
     }
 
     @Test

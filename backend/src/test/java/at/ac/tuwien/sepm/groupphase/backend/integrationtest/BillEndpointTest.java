@@ -85,6 +85,7 @@ public class BillEndpointTest implements TestData {
         assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
 
+
     //@Test
     public void gettingAllBillsShouldWork() throws Exception {
         Register register = new Register();

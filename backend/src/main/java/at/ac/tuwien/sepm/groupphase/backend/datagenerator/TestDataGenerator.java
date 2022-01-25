@@ -82,6 +82,7 @@ public class TestDataGenerator {
     @Autowired
     TrashOrUsedItemRepository trashOrUsedItemRepository;
 
+
     public TestDataGenerator(RecipeDataGenerator recipeDataGenerator,
                              ShoppingListDataGenerator shoppingListDataGenerator,
                              StorageDataGenerator storageDataGenerator,
@@ -200,6 +201,48 @@ public class TestDataGenerator {
         users.add(testApplicationUser);
         testGroup.setUser(users);
         userGroupRepository.saveAndFlush(testGroup);
+
+    }
+
+    /**
+     * generates Data used in Tests for methods in RegisterEndpointTest.
+     */
+    public void generateData_billSum() {
+        LOGGER.debug("Generating Data for sum of Bills in current month");
+
+        UserGroup testGroup = new UserGroup(null, null, -1L, new HashSet<ApplicationUser>(), null);
+        testGroup = userGroupRepository.saveAndFlush(testGroup);
+
+        UserRegistrationDto testUser = new UserRegistrationDto("testUser", "password", "test.user@email.com");
+
+
+        ApplicationUser testApplicationUser = userLoginMapper.dtoToEntity(testUser, null);
+        HashSet<ApplicationUser> names = new HashSet<ApplicationUser>();
+        names.add(testApplicationUser);
+        testApplicationUser.setCurrGroup(testGroup);
+        userRepository.saveAndFlush(testApplicationUser);
+
+        Set<ApplicationUser> users = testGroup.getUser();
+        users.add(testApplicationUser);
+        testGroup.setUser(users);
+        userGroupRepository.saveAndFlush(testGroup);
+
+        Bill bill1 = Bill.BillBuilder.aBill()
+            .withRegisterId(-1L)
+            .withDate(LocalDate.now())
+            .withSum(10)
+            .withNames(names)
+            .withNotPaidNames(names)
+            .build();
+        Bill bill2 = Bill.BillBuilder.aBill()
+            .withRegisterId(-1L)
+            .withDate(LocalDate.now())
+            .withSum(20)
+            .withNames(names)
+            .withNotPaidNames(names)
+            .build();
+        billRepository.saveAndFlush(bill1);
+        billRepository.saveAndFlush(bill2);
 
     }
 
@@ -507,6 +550,4 @@ public class TestDataGenerator {
             }
         }
     }
-
-
 }
