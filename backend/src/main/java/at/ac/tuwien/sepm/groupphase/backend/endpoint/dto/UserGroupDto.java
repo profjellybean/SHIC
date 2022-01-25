@@ -71,4 +71,15 @@ public class UserGroupDto {
     public void setPublicShoppingListId(Long publicShoppingListId) {
         this.publicShoppingListId = publicShoppingListId;
     }
+
+    @Override
+    public String toString() {
+        return "UserGroupDto{"
+            +
+            "id=" + id
+            +
+            ", name='" + name + '\''
+            +
+            '}';
+    }
 }

@@ -192,5 +192,28 @@ public class ApplicationUser {
     public int hashCode() {
         return Objects.hash(id, username, password, currGroup, privList);
     }
+
+    @Override
+    public String toString() {
+        return "ApplicationUser{"
+            +
+            "id=" + id
+            +
+            ", username='" + username + '\''
+            +
+            ", password='" + password + '\''
+            +
+            ", email='" + email + '\''
+            +
+            ", confirmationToken=" + confirmationToken
+            +
+            ", currGroup=" + currGroup
+            +
+            ", privList=" + privList
+            +
+            ", bills=" + bills
+            +
+            '}';
+    }
 }
 
