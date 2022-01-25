@@ -99,6 +99,9 @@ public class RegisterServiceImpl implements RegisterService {
             throw new NotFoundException("No register found for User " + userName);
         }
         Double sumBillsGroup = billRepository.billSumOfBillsInRegister(registerId);
+        if (sumBillsGroup == null) {
+            return 0.0;
+        }
         sumBillsGroup = (double) Math.round(sumBillsGroup * 100.0) / 100.0;
 
         return sumBillsGroup;

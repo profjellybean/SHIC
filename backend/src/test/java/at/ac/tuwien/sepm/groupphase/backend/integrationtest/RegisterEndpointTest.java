@@ -330,7 +330,7 @@ public class RegisterEndpointTest implements TestData {
         MockHttpServletResponse response = mvcResult.getResponse();
 
         assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals("", response.getContentAsString());
+        assertEquals("0.0", response.getContentAsString());
 
     }
 
