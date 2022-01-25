@@ -4,28 +4,32 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemStorageDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegistrationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ItemStorageMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserLoginMapper;
-import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Bill;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Item;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Recipe;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Register;
-import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Storage;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
+import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
+import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Bill;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrashOrUsed;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrashOrUsedItem;
-import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
-import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
-import at.ac.tuwien.sepm.groupphase.backend.repository.BillRepository;
+
+import at.ac.tuwien.sepm.groupphase.backend.repository.ItemRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.RecipeRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.RegisterRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.TrashOrUsedItemRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.RecipeRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.BillRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TrashOrUsedRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.UnitOfQuantityRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.TrashOrUsedItemRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserGroupRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.RegisterRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UnitOfQuantityRepository;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,6 +87,7 @@ public class TestDataGenerator {
     TrashOrUsedRepository trashOrUsedRepository;
     @Autowired
     TrashOrUsedItemRepository trashOrUsedItemRepository;
+
 
     public TestDataGenerator(RecipeDataGenerator recipeDataGenerator,
                              ShoppingListDataGenerator shoppingListDataGenerator,
@@ -202,6 +207,48 @@ public class TestDataGenerator {
         users.add(testApplicationUser);
         testGroup.setUser(users);
         userGroupRepository.saveAndFlush(testGroup);
+
+    }
+
+    /**
+     * generates Data used in Tests for methods in RegisterEndpointTest.
+     */
+    public void generateData_billSum() {
+        LOGGER.debug("Generating Data for sum of Bills in current month");
+
+        UserGroup testGroup = new UserGroup(null, null, -1L, new HashSet<ApplicationUser>(), null);
+        testGroup = userGroupRepository.saveAndFlush(testGroup);
+
+        UserRegistrationDto testUser = new UserRegistrationDto("testUser", "password", "test.user@email.com");
+
+
+        ApplicationUser testApplicationUser = userLoginMapper.dtoToEntity(testUser, null);
+        HashSet<ApplicationUser> names = new HashSet<ApplicationUser>();
+        names.add(testApplicationUser);
+        testApplicationUser.setCurrGroup(testGroup);
+        userRepository.saveAndFlush(testApplicationUser);
+
+        Set<ApplicationUser> users = testGroup.getUser();
+        users.add(testApplicationUser);
+        testGroup.setUser(users);
+        userGroupRepository.saveAndFlush(testGroup);
+
+        Bill bill1 = Bill.BillBuilder.aBill()
+            .withRegisterId(-1L)
+            .withDate(LocalDate.now())
+            .withSum(10)
+            .withNames(names)
+            .withNotPaidNames(names)
+            .build();
+        Bill bill2 = Bill.BillBuilder.aBill()
+            .withRegisterId(-1L)
+            .withDate(LocalDate.now())
+            .withSum(20)
+            .withNames(names)
+            .withNotPaidNames(names)
+            .build();
+        billRepository.saveAndFlush(bill1);
+        billRepository.saveAndFlush(bill2);
 
     }
 
@@ -509,6 +556,4 @@ public class TestDataGenerator {
             }
         }
     }
-
-
 }

@@ -297,4 +297,60 @@ public class RegisterEndpointTest implements TestData {
 
     }
 
+
+    @Test
+    public void calculateBillSumShouldWork() throws Exception {
+        testDataGenerator.generateData_billSumOfCurrentMonth();
+
+        MvcResult mvcResult = this.mockMvc.perform(get(REGISTERENDPOINT_URI + "/billSumGroup")
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, USER_ROLES)))
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals("30.0", response.getContentAsString());
+
+    }
+
+    @Test
+    public void calculateBillSumUserShouldWork() throws Exception {
+        testDataGenerator.generateData_billSum();
+
+        MvcResult mvcResult = this.mockMvc.perform(get(REGISTERENDPOINT_URI + "/billSumUser")
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, USER_ROLES)))
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals("0.0", response.getContentAsString());
+
+    }
+
+    @Test
+    public void calculateBillSumShouldWorkNoBills() throws Exception {
+        testDataGenerator.generateData_billSumOfCurrentMonth_noBills();
+
+        MvcResult mvcResult = this.mockMvc.perform(get(REGISTERENDPOINT_URI + "/billSumGroup")
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, USER_ROLES)))
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals("", response.getContentAsString());
+
+    }
+
+    @Test
+    public void calculateBillSumUserShouldWorkNoBills() throws Exception {
+        testDataGenerator.generateData_billSumOfCurrentMonth_noBills();
+
+        MvcResult mvcResult = this.mockMvc.perform(get(REGISTERENDPOINT_URI + "/billSumUser")
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, USER_ROLES)))
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals("0.0", response.getContentAsString());
+
+    }
 }
