@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpBackend, HttpClient, HttpParams} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {Observable} from 'rxjs';
@@ -15,7 +15,7 @@ export class ShoppingListService {
   private nakedHttpClient: HttpClient;
   private authHttpClient: HttpClient;
 
-  constructor(private globals: Globals, handler: HttpBackend, private httpClient: HttpClient ) {
+  constructor(private globals: Globals, handler: HttpBackend, private httpClient: HttpClient) {
     this.nakedHttpClient = new HttpClient(handler);
     this.authHttpClient = httpClient;
   }
@@ -67,7 +67,7 @@ export class ShoppingListService {
       .set('recipeId', id)
       .set('numberOfPeople', numOfPeople);
     return this.httpClient.put<Item[]>(
-      this.shoppingListBaseUri+'/putAllIngredientsOfRecipe', httpParams.toString(), {params: httpParams});
+      this.shoppingListBaseUri + '/putAllIngredientsOfRecipe', httpParams.toString(), {params: httpParams});
   }
 
   /**
@@ -76,21 +76,21 @@ export class ShoppingListService {
   searchItems(params: string): Observable<Item[]> {
     console.log('Search for items');
     return this.httpClient.get<Item[]>(
-      this.shoppingListBaseUri+'/search'+params);
+      this.shoppingListBaseUri + '/search' + params);
   }
 
-  addItemToShoppingList(item: Item): Observable<Item>{
+  addItemToShoppingList(item: Item): Observable<Item> {
     console.log('service: add item to shoppinglist: ', item);
     console.log(this.shoppingListBaseUri + '/newItem');
     return this.httpClient.post<Item>(this.shoppingListBaseUri + '/newItem', item);
   }
 
-  findAll(): Observable<Item[]>{
+  findAll(): Observable<Item[]> {
     console.log('service: load all items of shoppinglist');
     return this.httpClient.get<Item[]>(this.shoppingListBaseUri + '/availableItems');
   }
 
-  findAllItems(): Observable<Item[]>{
+  findAllItems(): Observable<Item[]> {
     console.log('load items');
     return this.httpClient.get<Item[]>(this.shoppingListBaseUri + '/items');
   }
@@ -100,23 +100,23 @@ export class ShoppingListService {
     return this.httpClient.put<Item[]>(this.shoppingListBaseUri + '/' + shoppinglistId, boughtItems);
   }
 
-  getGroupStorageForUser(): Observable<number>{
+  getGroupStorageForUser(): Observable<number> {
     console.log('service: get group storage for user');
-    return this.httpClient.get<number>(this.globals.backendUri+ '/group/storage');
+    return this.httpClient.get<number>(this.globals.backendUri + '/group/storage');
   }
 
-  getGroupShoppingListForUser(): Observable<number>{
+  getGroupShoppingListForUser(): Observable<number> {
     console.log('service: get group shoppinglist for user');
-    return this.httpClient.get<number>(this.globals.backendUri+ '/group/shoppinglist');
+    return this.httpClient.get<number>(this.globals.backendUri + '/group/shoppinglist');
   }
 
-  deleteItemFromPrivate(id: number): Observable<object>{
+  deleteItemFromPrivate(id: number): Observable<object> {
     console.log('service: delete item of shoppinglist');
-    return this.httpClient.delete<object>(this.shoppingListBaseUri + '/private/'+id);
+    return this.httpClient.delete<object>(this.shoppingListBaseUri + '/private/' + id);
   }
 
-  deleteItemFromPublic(id: number): Observable<object>{
+  deleteItemFromPublic(id: number): Observable<object> {
     console.log('service: delete item of shoppinglist');
-    return this.httpClient.delete<object>(this.shoppingListBaseUri + '/public/'+id);
+    return this.httpClient.delete<object>(this.shoppingListBaseUri + '/public/' + id);
   }
 }

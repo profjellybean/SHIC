@@ -1,16 +1,16 @@
-import {Component, Injectable, OnInit} from '@angular/core';
-import { trigger, transition, style, animate, query, stagger } from '@angular/animations';
+import {Component, Injectable} from '@angular/core';
+import {animate, query, stagger, style, transition, trigger} from '@angular/animations';
 
 
 const listAnimation = trigger('listAnimation', [
   transition('* <=> *', [
     query(':enter',
-      [style({ opacity: 0 }), stagger('60ms', animate('600ms ease-out', style({ opacity: 1 })))],
-      { optional: true }
+      [style({opacity: 0}), stagger('60ms', animate('600ms ease-out', style({opacity: 1})))],
+      {optional: true}
     ),
     query(':leave',
-      animate('200ms', style({ opacity: 0 })),
-      { optional: true }
+      animate('200ms', style({opacity: 0})),
+      {optional: true}
     )
   ])
 ]);
@@ -26,27 +26,28 @@ const listAnimation = trigger('listAnimation', [
   animations: [listAnimation]
 })
 
-export class NotificationsComponent{
+export class NotificationsComponent {
 
   static notificatiions: NotificationMessage[] = [];
   error: string;
   collectorStarted: boolean;
 
-  constructor() { }
+  constructor() {
+  }
 
 
   public pushSuccess(msgString: string) {
-    NotificationsComponent.notificatiions.push({msg:msgString,type:true});
-    if(!this.collectorStarted){
-      setTimeout( () => this.collectOld(), 5000);
+    NotificationsComponent.notificatiions.push({msg: msgString, type: true});
+    if (!this.collectorStarted) {
+      setTimeout(() => this.collectOld(), 5000);
       this.collectorStarted = true;
     }
   }
 
   public pushFailure(msgString: string) {
-    NotificationsComponent.notificatiions.push({msg:msgString,type:false});
-    if(!this.collectorStarted){
-      setTimeout( () => this.collectOld(), 5000);
+    NotificationsComponent.notificatiions.push({msg: msgString, type: false});
+    if (!this.collectorStarted) {
+      setTimeout(() => this.collectOld(), 5000);
       this.collectorStarted = true;
     }
   }
@@ -55,23 +56,23 @@ export class NotificationsComponent{
     this.error = null;
   }
 
-  public  getNotifications(): NotificationMessage[]{
+  public getNotifications(): NotificationMessage[] {
     return NotificationsComponent.notificatiions;
   }
 
   public vanishSuccess(i: number): void {
     console.log(NotificationsComponent.notificatiions.length);
-    if(NotificationsComponent.notificatiions.length > i){
+    if (NotificationsComponent.notificatiions.length > i) {
       NotificationsComponent.notificatiions.splice(0, 1);
     }
   }
 
-  private collectOld(){
+  private collectOld() {
 
-    if(NotificationsComponent.notificatiions.length > 0){
+    if (NotificationsComponent.notificatiions.length > 0) {
       this.vanishSuccess(0);
-      setTimeout( ()=> this.collectOld(), 5000);
-    }else{
+      setTimeout(() => this.collectOld(), 5000);
+    } else {
       this.collectorStarted = false;
     }
 
@@ -80,7 +81,7 @@ export class NotificationsComponent{
 }
 
 
-export interface NotificationMessage{
+export interface NotificationMessage {
   msg: string;
   type: boolean;
 }

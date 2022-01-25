@@ -32,7 +32,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-//@Profile("generateData")
 @Component
 public class UserDataGenerator {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -67,24 +66,19 @@ public class UserDataGenerator {
     }
 
     @PostConstruct
-    void generateUser() throws IOException { //TODO remove
+    void generateUser() throws IOException {
         LOGGER.debug("generating Data for User");
         storageDataGenerator.generateStorage();
 
-        UserGroup group = null;
-        //Item item = new Item(null, "Döner", null);
-        //Long itemId = itemRepository.saveAndFlush(new Item(null, "Döner", null)).getId();
+        UserGroup group;
         UserRegistrationDto user = new UserRegistrationDto("Heidi", "password", "user@email.com");
 
         Set<Item> items = new HashSet<>();
-        //items.add(itemRepository.getById(itemId));
-        // Long shoppingListId = shoppingListRepository.saveAndFlush(   ShoppingList.ShoppingListBuilder.aShoppingList().withName("Your private shopping list").withItems(items).build()  ).getId();
         Long shoppingListId = shoppingListRepository.saveAndFlush(ShoppingList.ShoppingListBuilder.aShoppingList().withName("Your private shopping list").build()).getId();
         Optional<ApplicationUser> applicationUser = userRepository.findUserByUsername(user.getUsername());
         if (userGroupRepository.findAll().isEmpty()) {
             Long publicShoppingListId = shoppingListRepository.saveAndFlush(new ShoppingList()).getId();
             Long publicStorageId = storageRepository.saveAndFlush(new Storage()).getId();
-            //Long registerId = registerRepository.saveAndFlush(new Register()).getId();
             group = new UserGroup(publicStorageId, publicShoppingListId, 1L, new HashSet<ApplicationUser>(), "WG-Wipplingerstraße");
             group = userGroupRepository.saveAndFlush(group);
             Set<ApplicationUser> users = group.getUser();

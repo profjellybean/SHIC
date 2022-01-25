@@ -15,7 +15,6 @@ public class ShoppingListDto {
 
     private Set<ItemStorageDto> items;
 
-    // TODO: change to UserDto
     private ApplicationUser owner;
 
     public ShoppingListDto() {

@@ -68,31 +68,31 @@ export class AuthService {
   }
 
   hasCurrentGroup() {
-      if (this.isLoggedIn()) {
-        if (this.user === undefined) {
-          // @ts-ignore
-          this.userService.getCurrentUser({username: jwt_decode(this.getToken()).sub.trim()}).subscribe({
-            next: data => {
-              console.log('received items', data);
-              this.user = data;
-              if(this.user.currGroup !== null){
-                localStorage.setItem('currGroup', 'true');
-              } else{
-                localStorage.setItem('currGroup', 'false');
-              }
-              return this.user.currGroup !== null;
-            },
-            error: error => {
-              console.error(error.message);
+    if (this.isLoggedIn()) {
+      if (this.user === undefined) {
+        // @ts-ignore
+        this.userService.getCurrentUser({username: jwt_decode(this.getToken()).sub.trim()}).subscribe({
+          next: data => {
+            console.log('received items', data);
+            this.user = data;
+            if (this.user.currGroup !== null) {
+              localStorage.setItem('currGroup', 'true');
+            } else {
+              localStorage.setItem('currGroup', 'false');
             }
-          });
-        } else {
-          return this.user.currGroup !== null;
-        }
+            return this.user.currGroup !== null;
+          },
+          error: error => {
+            console.error(error.message);
+          }
+        });
       } else {
-        return false;
+        return this.user.currGroup !== null;
       }
+    } else {
+      return false;
     }
+  }
 
   public setToken(authResponse: string) {
     localStorage.setItem('authToken', authResponse);

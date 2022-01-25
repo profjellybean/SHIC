@@ -33,8 +33,8 @@ export class UnitOfQuantityComponent implements OnInit {
   submitted = false;
   unitsOfQuantity: UnitOfQuantity[];
   helpUnityOfQuantity: string;
-  unitOfQuantity: UnitOfQuantity= {id: null, name: null};
-  nullUnitOfQuantity: UnitOfQuantity ={id: null, name: ''};
+  unitOfQuantity: UnitOfQuantity = {id: null, name: null};
+  nullUnitOfQuantity: UnitOfQuantity = {id: null, name: ''};
   unitOfQuantityToAdd: UnitOfQuantity = this.nullUnitOfQuantity;
 
   constructor(private modalService: NgbModal,
@@ -42,7 +42,8 @@ export class UnitOfQuantityComponent implements OnInit {
               private userService: UserService,
               private authService: AuthService,
               private itemService: ItemService,
-              private storageService: StorageService) { }
+              private storageService: StorageService) {
+  }
 
   ngOnInit(): void {
     this.loadUnitsOfQuantity();
@@ -52,6 +53,7 @@ export class UnitOfQuantityComponent implements OnInit {
   openAddModal(unitOfQuantityAddModal: TemplateRef<any>) {
     this.modalService.open(unitOfQuantityAddModal, {ariaLabelledBy: 'modal-basic-title'});
   }
+
   loadUnitsOfQuantity() {
     this.storageService.findAllUnitsOfQuantity().subscribe({
       next: data => {
@@ -60,6 +62,7 @@ export class UnitOfQuantityComponent implements OnInit {
       }
     });
   }
+
   getCurrUser() {
     this.userService.getCurrentUser({username: this.user.username}).subscribe({
       next: data => {
@@ -72,10 +75,11 @@ export class UnitOfQuantityComponent implements OnInit {
       }
     });
   }
-  addUnityOfQuantity(){
+
+  addUnityOfQuantity() {
     this.itemService.createUnitOfQuantity(this.unitOfQuantityToAdd.name).subscribe({
       next: data => {
-        this.unitOfQuantity.name=this.unitOfQuantityToAdd.name;
+        this.unitOfQuantity.name = this.unitOfQuantityToAdd.name;
         this.unitsOfQuantity.push(this.unitOfQuantity);
         this.clearForm();
       },
@@ -87,31 +91,31 @@ export class UnitOfQuantityComponent implements OnInit {
   }
 
   locationTagDefaultCheck(unitOfQuantity: UnitOfQuantity) {
-    if(unitOfQuantity.name.trim() === 'kg') {
+    if (unitOfQuantity.name.trim() === 'kg') {
       return false;
     }
-    if(unitOfQuantity.name.trim() === 'g') {
+    if (unitOfQuantity.name.trim() === 'g') {
       return false;
     }
-    if(unitOfQuantity.name.trim() === 'L') {
+    if (unitOfQuantity.name.trim() === 'L') {
       return false;
     }
-    if(unitOfQuantity.name.trim() === 'ml') {
+    if (unitOfQuantity.name.trim() === 'ml') {
       return false;
     }
-    if(unitOfQuantity.name.trim() === 'pieces') {
+    if (unitOfQuantity.name.trim() === 'pieces') {
       return false;
     }
-    if(unitOfQuantity.name.trim() === 'can') {
+    if (unitOfQuantity.name.trim() === 'can') {
       return false;
     }
-    if(unitOfQuantity.name.trim() === 'cup') {
+    if (unitOfQuantity.name.trim() === 'cup') {
       return false;
     }
-    if(unitOfQuantity.name.trim() === 'jar') {
+    if (unitOfQuantity.name.trim() === 'jar') {
       return false;
     }
-    if(unitOfQuantity.name.trim() === 'dag') {
+    if (unitOfQuantity.name.trim() === 'dag') {
       return false;
     }
     return true;

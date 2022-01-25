@@ -17,7 +17,7 @@ export class StorageService {
   private nakedHttpClient: HttpClient;
   private authHttpClient: HttpClient;
 
-  constructor(private globals: Globals, handler: HttpBackend, private httpClient: HttpClient ) {
+  constructor(private globals: Globals, handler: HttpBackend, private httpClient: HttpClient) {
     this.nakedHttpClient = new HttpClient(handler);
     this.authHttpClient = httpClient;
   }
@@ -28,7 +28,7 @@ export class StorageService {
   searchItems(params: string): Observable<Item[]> {
     console.log('Search for items');
     return this.httpClient.get<Item[]>(
-      this.storageBaseUri+'/search'+params);
+      this.storageBaseUri + '/search' + params);
   }
 
 
@@ -39,6 +39,7 @@ export class StorageService {
     console.log('Get all items');
     return this.httpClient.get<Item[]>(this.storageBaseUri, {params});
   }
+
   /**
    * Persists message to the backend
    *
@@ -53,19 +54,19 @@ export class StorageService {
     return this.httpClient.post<Item>(this.storageBaseUri, item);
   }
 
-  cookRecipe(id: number, numOfPeople: number){
+  cookRecipe(id: number, numOfPeople: number) {
     console.log('service: cook recipe with id: ' + id + 'for number of people: ' + numOfPeople);
     const httpParams = new HttpParams()
       .set('recipeId', id)
       .set('numberOfPeople', numOfPeople);
-    return this.httpClient.put<Item[]>(this.storageBaseUri+'/recipe', httpParams.toString(), {params: httpParams});
+    return this.httpClient.put<Item[]>(this.storageBaseUri + '/recipe', httpParams.toString(), {params: httpParams});
   }
 
   updateItem(item: Item): Observable<Item> {
     return this.httpClient.put<Item>(this.storageBaseUri, item);
   }
 
-  findAllUnitsOfQuantity(): Observable<UnitOfQuantity[]>{
+  findAllUnitsOfQuantity(): Observable<UnitOfQuantity[]> {
     console.log('load UnitOfQuantity');
     return this.httpClient.get<UnitOfQuantity[]>(this.storageBaseUri + '/unitOfQuantity');
   }
@@ -74,16 +75,19 @@ export class StorageService {
     console.log('service: delete item from storage');
     return this.httpClient.delete<Item>(this.storageBaseUri, {params});
   }
-  getSumOfArticlesOfSpecificYear(date: string): Observable<TimeSumBill>{
+
+  getSumOfArticlesOfSpecificYear(date: string): Observable<TimeSumBill> {
     console.log('Load sum of articles of specific year');
-    return this.httpClient.get<TimeSumBill>(this.storageBaseUri + '/thrownAwayInSpecificYear'+'?date='+date);
+    return this.httpClient.get<TimeSumBill>(this.storageBaseUri + '/thrownAwayInSpecificYear' + '?date=' + date);
   }
-  getSumOfArticlesOfSpecificMonth(date: string): Observable<TimeSumBill>{
+
+  getSumOfArticlesOfSpecificMonth(date: string): Observable<TimeSumBill> {
     console.log('Load sum of articles of specific month');
-    return this.httpClient.get<TimeSumBill>(this.storageBaseUri + '/thrownAwayInSpecificMonth'+'?date='+date);
+    return this.httpClient.get<TimeSumBill>(this.storageBaseUri + '/thrownAwayInSpecificMonth' + '?date=' + date);
   }
-  getMostThrownAwayArticles(): Observable<NameSum[]>{
+
+  getMostThrownAwayArticles(): Observable<NameSum[]> {
     console.log('get most often thrown away articles');
-    return this.httpClient.get<NameSum[]>(this.storageBaseUri+ '/mostOftenThrownAwayArticles');
+    return this.httpClient.get<NameSum[]>(this.storageBaseUri + '/mostOftenThrownAwayArticles');
   }
 }

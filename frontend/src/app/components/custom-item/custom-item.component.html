@@ -1,5 +1,6 @@
 <br>
-<h1>Custom Items</h1> <button type="button" class="btn btn-info btn-sm mr-4" (click)="openAddModal(itemAddModal)">Add new item</button>
+<h1>Custom Items</h1>
+<button type="button" class="btn btn-info btn-sm mr-4" (click)="openAddModal(itemAddModal)">Add new item</button>
 <p></p>
 <table class="table table-striped">
   <thead class="thead-dark">
@@ -14,7 +15,8 @@
   <tr *ngFor="let item of $any(items)">
     <td>{{item.name}}</td>
     <td>
-      <div *ngIf="item.quantity !== null">{{item.quantity.name}}</div></td>
+      <div *ngIf="item.quantity !== null">{{item.quantity.name}}</div>
+    </td>
     <td>
       <button type="button" class="btn btn-info btn-sm mr-4" (click)="openEditModal(itemEditModal, item)">Edit</button>
     </td>
@@ -82,7 +84,9 @@
       </form>
     </div>
     <div class="modal-footer">
-      <button type="button" (click)="editItemForm(itemForm)" (click)="modal.dismiss('close')" id="add-msg" class="btn btn-info float-right">Save Changes</button>
+      <button type="button" (click)="editItemForm(itemForm)" (click)="modal.dismiss('close')" id="add-msg"
+              class="btn btn-info float-right">Save Changes
+      </button>
 
       <button type="button" class="btn btn-info" id="close-modal-btn" (click)="modal.dismiss('close')">Close</button>
     </div>
@@ -133,7 +137,9 @@
       </form>
     </div>
     <div class="modal-footer">
-      <button type="button" (click)="addItemForm(itemForm)" (click)="modal.dismiss('close')" id="add-msg2" class="btn btn-info float-right">Add Item</button>
+      <button type="button" (click)="addItemForm(itemForm)" (click)="modal.dismiss('close')" id="add-msg2"
+              class="btn btn-info float-right">Add Item
+      </button>
       <button type="button" class="btn btn-info" id="close-modal-btn2" (click)="modal.dismiss('close')">Close</button>
     </div>
   </ng-template>

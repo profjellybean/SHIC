@@ -1,10 +1,10 @@
-.message{
+.message {
   margin-top: 0.5em;
   margin-bottom: 0.1em;
 
 }
 
-.notification{
+.notification {
   display: inline-flex;
   flex-direction: row;
 
@@ -12,23 +12,23 @@
   width: 100%;
 }
 
-.positive{
+.positive {
   color: #0f5132;
   background-color: #d1e7dd;
   border-color: #badbcc;
 }
 
-.negative{
+.negative {
   color: #842029;
   background-color: #ff979e;
   border-color: #f5c2c7;
 }
 
-strong{
+strong {
   padding: 0.6em 1em 0.6em 1em;
 }
 
-.close{
+.close {
   width: 15%;
   outline: 0;
   margin-right: 0;
@@ -39,28 +39,33 @@ strong{
   min-height: 100%;
 }
 
-ul{
+ul {
   padding-left: 0;
 }
-.pclose{
+
+.pclose {
   background-color: #d1e7dd;
 }
-.pclose:hover{
+
+.pclose:hover {
   background-color: #c0e0d1;
 }
-.pclose:active,.pclose:focus {
+
+.pclose:active, .pclose:focus {
   background-color: #add5c2;
   outline: none !important;
   box-shadow: none;
 }
 
-.nclose{
+.nclose {
   background-color: #ff979e;
 }
-.nclose:hover{
+
+.nclose:hover {
   background-color: #fc6c79;
 }
-.nclose:active,.nclose:focus {
+
+.nclose:active, .nclose:focus {
   background-color: #c2484e;
   outline: none !important;
   box-shadow: none;

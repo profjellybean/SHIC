@@ -11,8 +11,7 @@
 </div>
 
 
-
-<div class="pt-5" >
+<div class="pt-5">
   <div class="row">
     <div class="col-md-6 mx-auto">
       <span class="anchor" id="formLogin"></span>
@@ -30,7 +29,8 @@
               <input type="text" name="username" formControlName="username" class="form-control" id="inputUsername"
                      aria-describedby="usernameHelp" placeholder="Enter username">
               <div *ngIf="submitted && registerForm.controls.username.errors" class="error">
-                <small class="form-text text-warning" *ngIf="registerForm.controls.username.errors.required">Your Email is
+                <small class="form-text text-warning" *ngIf="registerForm.controls.username.errors.required">Your Email
+                  is
                   required!
                 </small>
               </div>
@@ -41,7 +41,8 @@
               <input type="text" name="email" formControlName="email" class="form-control" id="inputEmail"
                      aria-describedby="usernameHelp" placeholder="Enter email">
               <div *ngIf="submitted && registerForm.controls.username.errors" class="error">
-                <small class="form-text text-warning" *ngIf="registerForm.controls.username.errors.required">Your username is
+                <small class="form-text text-warning" *ngIf="registerForm.controls.username.errors.required">Your
+                  username is
                   required!
                 </small>
               </div>
@@ -53,27 +54,30 @@
               <input type="password" name="password" formControlName="password" class="form-control" id="password"
                      placeholder="Password">
               <div *ngIf="submitted && registerForm.controls.password.errors" class="error">
-                <small class="form-text text-warning" *ngIf="registerForm.controls.password.errors.required">Your password
+                <small class="form-text text-warning" *ngIf="registerForm.controls.password.errors.required">Your
+                  password
                   is
                   required!
                 </small>
 
-                <small class="form-text text-warning" *ngIf="registerForm.controls.password.errors.minlength">Your password
+                <small class="form-text text-warning" *ngIf="registerForm.controls.password.errors.minlength">Your
+                  password
                   must be at least 8 characters long!
                 </small>
               </div>
 
               <label for="password1">Repeat Password</label>
-              <input type="password" name="password1" formControlName="confirmPassword" class="form-control" id="password1"
+              <input type="password" name="password1" formControlName="confirmPassword" class="form-control"
+                     id="password1"
                      placeholder="Password">
 
 
               <div *ngIf="submitted && registerForm.controls.confirmPassword.errors" class="error">
-                <small class="form-text text-warning" *ngIf="registerForm.controls.confirmPassword.errors.mustMatch"> Passwords do not match
-              </small>
+                <small class="form-text text-warning" *ngIf="registerForm.controls.confirmPassword.errors.mustMatch">
+                  Passwords do not match
+                </small>
               </div>
             </div>
-
 
 
             <br>

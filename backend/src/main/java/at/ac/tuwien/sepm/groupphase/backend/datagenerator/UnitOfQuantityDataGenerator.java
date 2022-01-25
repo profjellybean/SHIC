@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
 
-//@Profile("generateData")
 @Component
 public class UnitOfQuantityDataGenerator {
 
@@ -32,7 +31,6 @@ public class UnitOfQuantityDataGenerator {
         this.itemService = itemService;
     }
 
-    //@PostConstruct
     void generateUnitOfQuantity() {
         if (unitOfQuantityRepository.findAll().size() > 0) {
             LOGGER.debug("UnitOfQuantity already generated");
@@ -45,7 +43,6 @@ public class UnitOfQuantityDataGenerator {
         }
     }
 
-    //@PostConstruct
     void generateUnitsRelations() {
         if (unitsRelationRepository.findAll().size() > 0) {
             LOGGER.debug("UnitRelations already generated");

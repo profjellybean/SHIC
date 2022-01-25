@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { LocationTagComponent } from './location-tag.component';
+import {LocationTagComponent} from './location-tag.component';
 
 describe('LocationTagComponent', () => {
   let component: LocationTagComponent;
@@ -8,9 +8,9 @@ describe('LocationTagComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LocationTagComponent ]
+      declarations: [LocationTagComponent]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

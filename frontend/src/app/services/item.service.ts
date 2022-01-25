@@ -1,11 +1,10 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 
 import {HttpBackend, HttpClient} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {Observable} from 'rxjs';
 import {Item} from '../dtos/item';
 import {UnitOfQuantity} from '../dtos/unitOfQuantity';
-import {Params} from '@angular/router';
 
 
 @Injectable({
@@ -17,29 +16,29 @@ export class ItemService {
   private nakedHttpClient: HttpClient;
   private authHttpClient: HttpClient;
 
-  constructor(private globals: Globals, handler: HttpBackend, private httpClient: HttpClient ) {
+  constructor(private globals: Globals, handler: HttpBackend, private httpClient: HttpClient) {
     this.nakedHttpClient = new HttpClient(handler);
     this.authHttpClient = httpClient;
   }
 
-  findAll(): Observable<Item[]>{
+  findAll(): Observable<Item[]> {
     console.log('load all items');
     return this.httpClient.get<Item[]>(this.itemBaseUri);
   }
 
-  findAllItemsForGroup(): Observable<Item[]>{
+  findAllItemsForGroup(): Observable<Item[]> {
     console.log('load all items for group');
     return this.httpClient.get<Item[]>(this.itemBaseUri + '/groupItems');
   }
 
-  findAllItemsByGroupId(): Observable<Item[]>{
+  findAllItemsByGroupId(): Observable<Item[]> {
     console.log('load all items for group by groupId');
     return this.httpClient.get<Item[]>(this.itemBaseUri + '/groupItemsByGroupId');
   }
 
-  searchItemsByName(searchName: string): Observable<Item[]>{
+  searchItemsByName(searchName: string): Observable<Item[]> {
     console.log('load all items for group by groupId and name');
-    return this.httpClient.get<Item[]>(this.itemBaseUri + '/groupItemsByGroupIdAndName/'+searchName);
+    return this.httpClient.get<Item[]>(this.itemBaseUri + '/groupItemsByGroupIdAndName/' + searchName);
   }
 
   editCustomItem(item: Item): Observable<Item> {
@@ -59,8 +58,8 @@ export class ItemService {
   }
 
   createUnitOfQuantity(unityOfQuantity: string): Observable<UnitOfQuantity> {
-    console.log('add unity of quantity: '+unityOfQuantity);
-    return this.httpClient.post<UnitOfQuantity>(this.itemBaseUri+'/unitOfQuantity?name='+ unityOfQuantity, unityOfQuantity);
+    console.log('add unity of quantity: ' + unityOfQuantity);
+    return this.httpClient.post<UnitOfQuantity>(this.itemBaseUri + '/unitOfQuantity?name=' + unityOfQuantity, unityOfQuantity);
   }
 
 }

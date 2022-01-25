@@ -63,7 +63,7 @@ public class RegisterEndpoint {
     @Operation(summary = "Get sum of all Bills in this month")
     public Double billSumOfCurrentMonth(Authentication authentication) {
         LOGGER.info("Endpoint: GET /register/monthlysum/{}", authentication);
-        if (authentication == null) { // TODO can auth be null?
+        if (authentication == null) {
             LOGGER.error("You are not logged-in");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You are not logged-in");
         }
@@ -80,7 +80,7 @@ public class RegisterEndpoint {
     @Operation(summary = "Edit Monthly Budget")
     public Double editMonthlyBudget(Authentication authentication, @Param("budget") Double budget) {
         LOGGER.info("Endpoint: Edit /register/monthlybudget/{}{}", authentication, budget);
-        if (authentication == null) { // TODO can auth be null?
+        if (authentication == null) {
             LOGGER.error("You are not logged-in");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You are not logged-in");
         }

@@ -54,7 +54,7 @@ export class RegisterComponent implements OnInit {
   billId: number;
   monthlySum: number;
   newMonthlyBudget: number;
-  monthlyDifference: number;
+  monthlyDifference = 0;
   billSumGroup: number;
   billSumUser: number;
   billToDelete: Bill;
@@ -67,7 +67,6 @@ export class RegisterComponent implements OnInit {
     currGroup: null,
     privList: null,
     email: null,
-
     image: null
   };
 
@@ -173,13 +172,11 @@ export class RegisterComponent implements OnInit {
           }
           bill.notPaidNameList = bill.notPaidNameList.substring(0, bill.notPaidNameList.length - 2);
           bill.nameList = bill.nameList.substring(0, bill.nameList.length - 2);
-          console.log(bill.notPaidNameList);
           this.billArray[this.counter] = bill;
           this.counter++;
         }
-        console.log(this.billArray);
         this.newMonthlyBudget = register.monthlyBudget;
-        this.billArray.sort((a,b) => +new Date(b.date) - +new Date(a.date));
+        this.billArray.sort((a, b) => +new Date(b.date) - +new Date(a.date));
       }, error: err => {
         this.notifications.pushFailure('Error during loading register: ' + err.error.message);
       }
@@ -205,9 +202,7 @@ export class RegisterComponent implements OnInit {
     this.billItems = bill.groceries;
   }
 
-  addBillForm(form){
-
-
+  addBillForm(form) {
     this.billToCreate.registerId = this.user.currGroup.registerId;
     console.log(this.billToCreate);
 
@@ -233,35 +228,7 @@ export class RegisterComponent implements OnInit {
 
     this.billService.bill(this.billToCreate).subscribe({
       next: data => {
-
-
-        const newBill: Bill ={
-          id: data.id,
-          registerId: data.registerId,
-          // @ts-ignore
-          groceries: Array.from(data.groceries),
-          notes: data.notes,
-          // @ts-ignore
-          names:  Array.from(data.names),
-          // @ts-ignore
-          notPaidNames: Array.from(data.notPaidNames),
-          sum: data.sum,
-          sumPerPerson: data.sumPerPerson,
-          date: data.date,
-          nameList: '',
-          notPaidNameList: '',
-
-        };
-
-        for (const name of Array.from(data.names)) {
-          newBill.nameList = newBill.nameList.concat(name.username + ', ');
-        }
-        for (const name of  Array.from(data.notPaidNames)) {
-          newBill.notPaidNameList = newBill.notPaidNameList.concat(name.username + ', ');
-        }
-
-        this.billArray.push(newBill);
-
+        this.getCurrentGroup();
       },
       error: error => {
         console.error(error.message);
@@ -277,7 +244,7 @@ export class RegisterComponent implements OnInit {
   }
 
   isValidDate(date: Date): boolean {
-    if(this.submitted) {
+    if (this.submitted) {
       console.log('Validate date');
       if (date === null) {
         return false;
@@ -363,6 +330,12 @@ export class RegisterComponent implements OnInit {
     bill.groceries.forEach(x => temp.add(x));
     return temp.size > 0;
   }
+
+
+  isNotNaN(monthlyDifference: number) {
+    return !isNaN(monthlyDifference);
+  }
+
 
   private getMonthlySum() {
     console.log('getting sum of all Bills this month');

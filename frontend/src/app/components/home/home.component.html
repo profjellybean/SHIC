@@ -1,12 +1,12 @@
-
 <div class="jumbotron mt-5">
-  <h1 class="display-4"><strong>SHIC</strong> - <strong>S</strong>hopping <strong>H</strong>ome <strong>I</strong>nventory <strong>C</strong>ash</h1>
+  <h1 class="display-4"><strong>SHIC</strong> - <strong>S</strong>hopping <strong>H</strong>ome <strong>I</strong>nventory
+    <strong>C</strong>ash</h1>
   <hr class="my-4">
   <a *ngIf="!authService.isLoggedIn()" class="btn btn-info btn-lg" routerLink="/login" role="button">Login</a>
   <br>
   <br>
   <a *ngIf="!authService.isLoggedIn()" class="btn btn-info btn-lg" routerLink="/registerUser" role="button">Register</a>
-  <div *ngIf="authService.isLoggedIn()" >
+  <div *ngIf="authService.isLoggedIn()">
 
   </div>
 </div>

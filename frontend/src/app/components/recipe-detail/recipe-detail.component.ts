@@ -74,7 +74,7 @@ export class RecipeDetailComponent implements OnInit {
     this.getAllItems();
   }
 
-  getCurrentGroup(){
+  getCurrentGroup() {
     this.userService.getCurrentUser({username: this.user.username}).subscribe({
       next: data => {
         this.user = data;
@@ -101,7 +101,7 @@ export class RecipeDetailComponent implements OnInit {
       return this.showItem;
     }
   */
-  cookRecipe(){
+  cookRecipe() {
     if (!Number.isInteger(this.numberOfPeople)) {
       this.notifications.pushFailure('Number of people has to be a whole number');
       return;
@@ -217,14 +217,14 @@ export class RecipeDetailComponent implements OnInit {
     this.recipeToUpdate.id = recipe.id;
     this.recipeToUpdate.name = recipe.name;
     this.recipeToUpdate.description = recipe.description;
-    if(recipe.ingredients != null) {
+    if (recipe.ingredients != null) {
       for (const ingredient of recipe.ingredients) {
         this.recipeToUpdate.ingredients.push(ingredient);
       }
     } else {
       this.recipeToUpdate.ingredients = null;
     }
-    if(recipe.categories != null) {
+    if (recipe.categories != null) {
       for (const categorie of recipe.categories) {
         this.recipeToUpdate.categories.push(categorie);
       }
@@ -236,7 +236,7 @@ export class RecipeDetailComponent implements OnInit {
 
   removeItem(item: Item) {
     for (let i = 0; i < this.recipeToUpdate.ingredients.length; i++) {
-      if(this.recipeToUpdate.ingredients[i].id === item.id) {
+      if (this.recipeToUpdate.ingredients[i].id === item.id) {
         this.recipeToUpdate.ingredients.splice(i, 1);
       }
     }
@@ -248,7 +248,7 @@ export class RecipeDetailComponent implements OnInit {
 
   updateRecipeForm(form) {
     this.submitted = true;
-    if(this.recipeToUpdate.ingredients === undefined || this.recipeToUpdate.ingredients === null){
+    if (this.recipeToUpdate.ingredients === undefined || this.recipeToUpdate.ingredients === null) {
       this.error = 'Recipe needs ingredients';
     } else if (form.valid) {
       console.log('form item to add', this.recipeToUpdate);

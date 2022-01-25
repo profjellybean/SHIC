@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
+import at.ac.tuwien.sepm.groupphase.backend.datagenerator.TestDataGenerator;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.BillDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.BillMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Bill;
@@ -51,6 +52,8 @@ public class BillEndpointTest implements TestData {
     private RegisterRepository registerRepository;
     @Autowired
     private BillMapper billMapper;
+    @Autowired
+    private TestDataGenerator testDataGenerator;
 
     @Test
     public void insertInValidBillShouldNotWork() throws Exception {
@@ -85,25 +88,6 @@ public class BillEndpointTest implements TestData {
         assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
 
-
-    //@Test
-    public void gettingAllBillsShouldWork() throws Exception {
-        Register register = new Register();
-        register = registerRepository.saveAndFlush(register);
-        BillDto bill = new BillDto(null, null, "TestBill", null, null, 10000, 0, LocalDate.now(), register.getId());
-        billRepository.saveAndFlush(billMapper.billDtoToBill(bill));
-
-        MvcResult mvcResult = this.mockMvc.perform(get(BILLENDPOINT_URI)
-                .contentType(MediaType.APPLICATION_JSON)
-                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
-            .andDo(print())
-            .andReturn();
-
-        MockHttpServletResponse response = mvcResult.getResponse();
-
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertNotNull(billRepository.findAll());
-    }
 
     @Test
     public void gettingBillByIdShouldWork() throws Exception {

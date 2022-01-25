@@ -2,7 +2,6 @@ import {Item} from './item';
 import {User} from './user';
 
 
-
 export class BillDto {
   id: number;
   registerId: number;

@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-//@Profile("generateData")
 @Component
 public class ShoppingListDataGenerator {
 
@@ -51,7 +50,6 @@ public class ShoppingListDataGenerator {
         this.shoppingListItemRepository = shoppingListItemRepository;
     }
 
-    //@PostConstruct
     void generateShoppingList() {
 
         this.unitOfQuantityDataGenerator.generateUnitOfQuantity();

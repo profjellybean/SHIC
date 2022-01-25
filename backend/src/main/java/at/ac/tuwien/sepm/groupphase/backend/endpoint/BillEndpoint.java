@@ -71,7 +71,7 @@ public class BillEndpoint {
     @PostMapping
     @Transactional
     @Operation(summary = "create a new bill")
-    public BillDto bill(@RequestBody @Valid BillDto billDto) {                          //TODO Dicke Sicherheitslücke
+    public BillDto bill(@RequestBody @Valid BillDto billDto) {
         LOGGER.info("POST /recipe new bill {}", billDto);
         return billMapper.billToBillDto(billService.bill(billMapper.billDtoToBill(billDto)));
     }

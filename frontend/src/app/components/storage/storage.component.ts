@@ -68,7 +68,6 @@ export class StorageComponent implements OnInit {
   searchItemByName = null;
 
 
-
   constructor(private storageService: StorageService,
               private modalService: NgbModal,
               private shoppingListService: ShoppingListService,
@@ -82,7 +81,7 @@ export class StorageComponent implements OnInit {
   ngOnInit(): void {
     this.getCurrUser();
     this.loadUnitsOfQuantity();
-    this.trash='false';
+    this.trash = 'false';
 
   }
 
@@ -132,14 +131,11 @@ export class StorageComponent implements OnInit {
     console.log('item to add', this.itemToAdd);
     this.storageService.addItem(item).subscribe({
       next: data => {
-        //this.items.push(item);
         this.getAllItemsByStorageId({id: this.user.currGroup.storageId});
         this.itemToAdd = this.nullItem;
         this.searchItemByName = null;
         this.itemsToAddMethod();
         console.log('added Item', data);
-
-        // todo dont reload every time
         this.itemsToAddMethod();
         this.notifications.pushSuccess('Item has been successfully added to your storage');
       },
@@ -217,8 +213,6 @@ export class StorageComponent implements OnInit {
         this.getAllItemsByStorageId({id: this.user.currGroup.storageId});
         this.itemToUpdate = this.absolutNullItem;
         console.log('updated Item', data);
-
-        // todo dont reload every time
         this.itemsToAddMethod();
         this.notifications.pushSuccess('The Item has been successfully updated');
       },
@@ -242,8 +236,8 @@ export class StorageComponent implements OnInit {
       next: data => {
         console.log('received items to add', data);
         this.itemsToAdd = data;
-        if(this.itemsToAdd.length > 5) {
-          this.itemsToAdd = this.itemsToAdd.splice(0,5);
+        if (this.itemsToAdd.length > 5) {
+          this.itemsToAdd = this.itemsToAdd.splice(0, 5);
         }
       },
       error: error => {
@@ -257,8 +251,8 @@ export class StorageComponent implements OnInit {
       next: data => {
         console.log('received items to add by ' + this.searchItemByName, data);
         this.itemsToAdd = data;
-        if(this.itemsToAdd.length > 5) {
-          this.itemsToAdd = this.itemsToAdd.splice(0,5);
+        if (this.itemsToAdd.length > 5) {
+          this.itemsToAdd = this.itemsToAdd.splice(0, 5);
         }
       }
     });
@@ -295,11 +289,11 @@ export class StorageComponent implements OnInit {
   }
 
   deleteItem(item: Item) {
-    if (this.trash==='true'){
-      this.trashBoolean= true;
+    if (this.trash === 'true') {
+      this.trashBoolean = true;
     }
-    if(this.trash==='false'){
-      this.trashBoolean=false;
+    if (this.trash === 'false') {
+      this.trashBoolean = false;
     }
     this.storageService.deleteItemFromStorage({itemId: item.id, trash: this.trash}).subscribe(
       {
@@ -357,7 +351,7 @@ export class StorageComponent implements OnInit {
 
   private removeItemFromStorage(item: Item) {
     for (let i = 0; i < this.items.length; i++) {
-      if(this.items[i].id === item.id) {
+      if (this.items[i].id === item.id) {
         this.items.splice(i, 1);
       }
     }

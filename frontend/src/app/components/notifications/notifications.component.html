@@ -1,17 +1,14 @@
-
 <ul [@listAnimation]=" getNotifications().length">
 
 
   <li *ngFor="let s of getNotifications(); index as i; first as isFirst" style="list-style-type: none;" class="message">
 
 
-
-
     <div *ngIf="this.s.type" class="notification positive" role="alert">
 
       <strong class="alert-heading"> {{this.s.msg}} </strong>
       <button class="pclose close btn" type="button" (click)="vanishSuccess(i)" aria-label="Close">
-        <div  aria-hidden="true">&times;</div>
+        <div aria-hidden="true">&times;</div>
       </button>
 
     </div>
@@ -20,7 +17,7 @@
 
       <strong class="alert-heading"> {{this.s.msg}} </strong>
       <button class="nclose close btn" type="button" (click)="vanishSuccess(i)" aria-label="Close">
-        <div  aria-hidden="true">&times;</div>
+        <div aria-hidden="true">&times;</div>
       </button>
 
     </div>

@@ -116,7 +116,7 @@ public class ItemEndpoint {
         LOGGER.info("getAllunitOfQuantity, itemEndpoint");
         Long groupId = null;
         if (authentication != null) {
-            groupId = userService.getGroupIdByUsername(authentication.getName()); // TODO legal?
+            groupId = userService.getGroupIdByUsername(authentication.getName());
         }
         try {
             return unitOfQuantityMapper.unitsOfQuantityToUnitsOfQuantityDto(itemService.getAllForGroup(groupId));
@@ -143,7 +143,7 @@ public class ItemEndpoint {
     }
 
     @Secured("ROLE_USER")
-    @GetMapping //(value="/item")
+    @GetMapping
     @Operation(summary = "Get all Items")
     List<ItemDto> getAllItems() {
         LOGGER.info("Endpoint: getAllItems()");

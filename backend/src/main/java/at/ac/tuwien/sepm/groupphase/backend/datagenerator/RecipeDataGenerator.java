@@ -80,11 +80,9 @@ public class RecipeDataGenerator {
             LOGGER.debug("saving recipe {}", fetaCheeseRecipe);
 
             // generate ingredients
-            //ItemStorage noodles = new ItemStorage("Noodles", "preferably small noodle and not spaghetti", null, null, 300, null, UnitOfQuantity.g, null);
             ItemStorage noodles = new ItemStorage("Noodles", "preferably small noodle and not spaghetti", null, null, 150, null, mappedUnits.get("g"), null, null);
             LOGGER.debug("saving ingredient {}", noodles);
             noodles = itemStorageRepository.save(noodles);
-            //ItemStorage feta = new ItemStorage("Feta", "any kind will do", null, null, 2, null, UnitOfQuantity.pieces, null);
             ItemStorage feta = new ItemStorage("Feta", "any kind will do", null, null, 1, null, mappedUnits.get("pieces"), null, null);
             LOGGER.debug("saving ingredient {}", feta);
             feta = itemStorageRepository.save(feta);
@@ -104,7 +102,6 @@ public class RecipeDataGenerator {
             LOGGER.debug("saving recipe {}", potatoWedgesRecipe);
             Recipe storedPotatoWedgesRecipe = recipeRepository.save(potatoWedgesRecipe);
             // generate ingredients
-            //ItemStorage potato = new ItemStorage("Potatoes", "any kind", null, null, 400, null, UnitOfQuantity.g, null);
             ItemStorage potato = new ItemStorage("Potatoes", "any kind", null, null, 200, null, mappedUnits.get("g"), null, null);
             LOGGER.debug("saving ingredient {}", potato);
             potato = itemStorageRepository.save(potato);
@@ -122,11 +119,9 @@ public class RecipeDataGenerator {
             LOGGER.debug("saving recipe {}", noodlesWithPesto);
 
             // generate ingredients
-            //ItemStorage pesto = new ItemStorage("Pesto", "any kind", null, null, 100, null, UnitOfQuantity.g, null);
             ItemStorage pesto = new ItemStorage("Pesto", "any kind", null, null, 150, null, mappedUnits.get("g"), null, null);
             LOGGER.debug("saving ingredient {}", pesto);
             pesto = itemStorageRepository.save(pesto);
-            //ItemStorage noodlesForPesto = new ItemStorage("Noodles", "any kind", null, null, 100, null, UnitOfQuantity.g, null);
             ItemStorage noodlesForPesto = new ItemStorage("Noodles", "any kind", null, null, 50, null, mappedUnits.get("g"), null, null);
             LOGGER.debug("saving ingredient {}", noodlesForPesto);
             noodlesForPesto = itemStorageRepository.save(noodlesForPesto);
