@@ -116,7 +116,7 @@ public class BillDataGenerator {
             fuser2.ifPresent(fnotPaid2::add);
             fadmin2.ifPresent(fnotPaid2::add);
             fsavedBill2.setNotPaidNames(fnotPaid2);
-            fsavedBill2 = billRepository.saveAndFlush(fsavedBill2);
+            billRepository.saveAndFlush(fsavedBill2);
 
             Bill fbill3 = Bill.BillBuilder.aBill()
                 .withId(2L)
@@ -145,7 +145,7 @@ public class BillDataGenerator {
             fuser3.ifPresent(fnotPaid3::add);
             fadmin3.ifPresent(fnotPaid3::add);
             fsavedBill3.setNotPaidNames(fnotPaid3);
-            fsavedBill3 = billRepository.saveAndFlush(fsavedBill3);
+            billRepository.saveAndFlush(fsavedBill3);
 
             Bill fbill4 = Bill.BillBuilder.aBill()
                 .withId(5L)
@@ -174,7 +174,7 @@ public class BillDataGenerator {
             fuser4.ifPresent(fnotPaid4::add);
             fadmin4.ifPresent(fnotPaid4::add);
             fsavedBill4.setNotPaidNames(fnotPaid4);
-            fsavedBill4 = billRepository.saveAndFlush(fsavedBill4);
+            billRepository.saveAndFlush(fsavedBill4);
 
             Bill bill1 = Bill.BillBuilder.aBill()
                 .withId(6L)
@@ -183,8 +183,8 @@ public class BillDataGenerator {
                 .withNotes("bought at Billa")
                 .withNames(NAMES)
                 .withNotPaidNames(NOT_PAID_NAMES)
-                .withSum(4830)
-                .withSumPerPerson(15)
+                .withSum(48.3)
+                .withSumPerPerson(24.15)
                 .withDate(LocalDate.of(2019, 11, 15))
                 .build();
             Bill savedBill1 = billRepository.saveAndFlush(bill1);
@@ -196,22 +196,24 @@ public class BillDataGenerator {
 
             HashSet<ApplicationUser> notPaid1 = new HashSet<>();
             savedBill1.setNotPaidNames(notPaid1);
-            savedBill1 = billRepository.saveAndFlush(savedBill1);
+            billRepository.saveAndFlush(savedBill1);
 
             Bill bill2 = Bill.BillBuilder.aBill()
                 .withId(7L)
                 .withRegisterId(1L)
-                .withSum(3085)
+                .withSum(30)
+                .withSumPerPerson(15)
                 .withDate(LocalDate.of(2020, 11, 15))
                 .build();
             Bill savedBill2 = billRepository.saveAndFlush(bill2);
             savedBill2.setNames(names1);
-            savedBill2 = billRepository.saveAndFlush(savedBill2);
+            billRepository.saveAndFlush(savedBill2);
 
             Bill bill3 = Bill.BillBuilder.aBill()
                 .withId(8L)
                 .withRegisterId(1L)
-                .withSum(485)
+                .withSum(48.4)
+                .withSumPerPerson(24.2)
                 .withDate(LocalDate.of(2021, 2, 15))
                 .build();
             Bill savedBill3 = billRepository.saveAndFlush(bill3);
@@ -221,7 +223,8 @@ public class BillDataGenerator {
             Bill bill4 = Bill.BillBuilder.aBill()
                 .withId(9L)
                 .withRegisterId(1L)
-                .withSum(512)
+                .withSum(51.2)
+                .withSumPerPerson(25.6)
                 .withDate(LocalDate.of(2021, 3, 15))
                 .build();
             Bill savedBill4 = billRepository.saveAndFlush(bill4);
@@ -231,7 +234,8 @@ public class BillDataGenerator {
             Bill bill5 = Bill.BillBuilder.aBill()
                 .withId(10L)
                 .withRegisterId(1L)
-                .withSum(308)
+                .withSum(38)
+                .withSumPerPerson(19)
                 .withDate(LocalDate.of(2021, 4, 15))
                 .build();
             Bill savedBill5 = billRepository.saveAndFlush(bill5);
@@ -241,7 +245,8 @@ public class BillDataGenerator {
             Bill bill6 = Bill.BillBuilder.aBill()
                 .withId(11L)
                 .withRegisterId(1L)
-                .withSum(223)
+                .withSum(22)
+                .withSumPerPerson(11)
                 .withDate(LocalDate.of(2021, 5, 15))
                 .build();
             Bill savedBill6 = billRepository.saveAndFlush(bill6);
@@ -251,7 +256,8 @@ public class BillDataGenerator {
             Bill bill7 = Bill.BillBuilder.aBill()
                 .withId(12L)
                 .withRegisterId(1L)
-                .withSum(423)
+                .withSum(24)
+                .withSumPerPerson(12)
                 .withDate(LocalDate.of(2021, 6, 15))
                 .build();
             Bill savedBill7 = billRepository.saveAndFlush(bill7);
@@ -261,7 +267,8 @@ public class BillDataGenerator {
             Bill bill8 = Bill.BillBuilder.aBill()
                 .withId(13L)
                 .withRegisterId(1L)
-                .withSum(423)
+                .withSum(23)
+                .withSumPerPerson(12.5)
                 .withDate(LocalDate.of(2021, 7, 15))
                 .build();
             Bill savedBill8 = billRepository.saveAndFlush(bill8);
@@ -271,7 +278,8 @@ public class BillDataGenerator {
             Bill bill9 = Bill.BillBuilder.aBill()
                 .withId(14L)
                 .withRegisterId(1L)
-                .withSum(178)
+                .withSum(17)
+                .withSumPerPerson(8.5)
                 .withDate(LocalDate.of(2021, 8, 15))
                 .build();
             Bill savedBill9 = billRepository.saveAndFlush(bill9);
@@ -281,7 +289,8 @@ public class BillDataGenerator {
             Bill bill10 = Bill.BillBuilder.aBill()
                 .withId(15L)
                 .withRegisterId(1L)
-                .withSum(423)
+                .withSum(42)
+                .withSumPerPerson(21)
                 .withDate(LocalDate.of(2021, 9, 15))
                 .build();
             Bill savedBill10 = billRepository.saveAndFlush(bill10);
@@ -291,7 +300,8 @@ public class BillDataGenerator {
             Bill bill11 = Bill.BillBuilder.aBill()
                 .withId(16L)
                 .withRegisterId(1L)
-                .withSum(423)
+                .withSum(12)
+                .withSumPerPerson(6)
                 .withDate(LocalDate.of(2021, 10, 15))
                 .build();
             Bill savedBill11 = billRepository.saveAndFlush(bill11);
@@ -301,31 +311,40 @@ public class BillDataGenerator {
             Bill bill12 = Bill.BillBuilder.aBill()
                 .withId(17L)
                 .withRegisterId(1L)
-                .withSum(152)
+                .withSum(15.2)
+                .withSumPerPerson(6.6)
                 .withDate(LocalDate.of(2021, 11, 14))
                 .build();
             Bill savedBill12 = billRepository.saveAndFlush(bill12);
             savedBill12.setNames(names1);
             savedBill12 = billRepository.saveAndFlush(savedBill12);
+            savedBill12.setNotPaidNames(notPaid1);
+            savedBill12 = billRepository.saveAndFlush(savedBill12);
 
             Bill bill13 = Bill.BillBuilder.aBill()
                 .withId(18L)
                 .withRegisterId(1L)
-                .withSum(314)
+                .withSum(31.4)
+                .withSumPerPerson(15.9)
                 .withDate(LocalDate.of(2021, 12, 15))
                 .build();
             Bill savedBill13 = billRepository.saveAndFlush(bill13);
             savedBill13.setNames(names1);
+            savedBill13 = billRepository.saveAndFlush(savedBill13);
+            savedBill13.setNotPaidNames(notPaid1);
             savedBill13 = billRepository.saveAndFlush(savedBill13);
 
             Bill bill14 = Bill.BillBuilder.aBill()
                 .withId(19L)
                 .withRegisterId(1L)
                 .withSum(40)
+                .withSumPerPerson(20)
                 .withDate(LocalDate.of(2022, 1, 1))
                 .build();
             Bill savedBill14 = billRepository.saveAndFlush(bill14);
             savedBill14.setNames(names1);
+            savedBill14 = billRepository.saveAndFlush(savedBill14);
+            savedBill14.setNotPaidNames(notPaid1);
             savedBill14 = billRepository.saveAndFlush(savedBill14);
 
         }
