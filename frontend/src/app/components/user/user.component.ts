@@ -152,7 +152,7 @@ export class UserComponent implements OnInit {
       },
       error: error => {
         console.error(error.message);
-        this.notifications.pushFailure(error.message);
+        this.notifications.pushFailure(error.error.message);
       }
     });
   }
