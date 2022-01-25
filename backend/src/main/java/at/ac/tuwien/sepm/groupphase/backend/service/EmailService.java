@@ -4,7 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.Email;
 
 public interface EmailService {
 
-    public void sendEmailConfirmation(String to, String username, Long confirmationToken);
+    void sendEmailConfirmation(String to, String username, Long confirmationToken);
 
-    public void sendEmailChangeConfirmation(String to, String username, Long confirmationToken);
+    void sendEmailChangeConfirmation(String to, String username, Long confirmationToken);
 }

@@ -4,22 +4,22 @@
 <hr>
 <div style="text-align: center">
 <button class="btn btn-info" *ngIf="authService.isLoggedIn() && authService.hasCurrentGroup()" routerLink="/storage" routerLinkActive="active">
-  <p style="font-size: 20pt">Storage</p>
+  <div style="font-size: 20pt;text-align: center">Storage</div>
 </button>
+  <button class="btn btn-info" *ngIf="authService.isLoggedIn() && authService.hasCurrentGroup()" routerLink="/shopping-list" routerLinkActive="active">
+    <div style="font-size: 20pt;text-align: center">Shoppinglist</div>
+  </button>
 <button class="btn btn-info" *ngIf="authService.isLoggedIn() && authService.hasCurrentGroup()" routerLink="/recipe" routerLinkActive="active">
-  <p style="font-size: 20pt">Recipe</p>
+  <div style="font-size: 20pt;text-align: center">Recipe</div>
 </button>
 <button class="btn btn-info" *ngIf="authService.isLoggedIn() && authService.hasCurrentGroup()" routerLink="/register" routerLinkActive="active">
-  <p style="font-size: 20pt">Bills</p>
-</button>
-<button class="btn btn-info" *ngIf="authService.isLoggedIn() && authService.hasCurrentGroup()" routerLink="/shopping-list" routerLinkActive="active">
-  <p style="font-size: 20pt">Shopping List</p>
+  <div style="font-size: 20pt;text-align: center">Bills</div>
 </button>
 <button class="btn btn-info" *ngIf="authService.isLoggedIn() && authService.hasCurrentGroup()" routerLink="/statistic" routerLinkActive="active">
-  <p style="font-size: 20pt">Statistic</p>
+  <div style="font-size: 20pt;text-align: center">Statistic</div>
 </button>
 <button class="btn btn-info" *ngIf="authService.isLoggedIn()" routerLink="/user" routerLinkActive="active">
-  <p style="font-size: 20pt">Profile</p>
+  <div style="font-size: 20pt;text-align: center">Profile</div>
 </button>
 </div>
 
