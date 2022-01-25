@@ -149,11 +149,7 @@ public class RecipeEndpointTest implements TestData {
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
-        //RecipeDto recipe = objectMapper.readValue(response.getContentAsString(), RecipeDto.class);
-
         assertEquals(HttpStatus.OK.value(), response.getStatus());
-        //assertNull(recipe);
-
     }
 
     @Test
@@ -250,29 +246,6 @@ public class RecipeEndpointTest implements TestData {
         );
     }
 
-    @Test
-    @Disabled("Wirft die falsche Exception")
-    public void addInvalidRecipe_ShouldValidationException() throws Exception {
-        UnitOfQuantity unit = new UnitOfQuantity("gramm");
-        unitOfQuantityRepository.saveAndFlush(unit);
-        HashSet<ItemStorageDto> ingredients = new HashSet<ItemStorageDto>();
-        ingredients.add(new ItemStorageDto(null, null, null, "testItem",
-            unitOfQuantityMapper.unitOfQuantityToUnitOfQuantityDto(unit), "item for tests",
-            null, null, 10, null));
-        RecipeDto recipeDto = new RecipeDto(-1L, null, "recipe for food", ingredients, null, -1L);
-
-        MvcResult mvcResult = this.mockMvc.perform(post(RECIPEENPOINT_URI)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(recipeDto))
-                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
-            .andReturn();
-        MockHttpServletResponse response = mvcResult.getResponse();
-
-        RecipeDto updatedRecipe = objectMapper.readValue(response.getContentAsString(), RecipeDto.class);
-
-        assertEquals(HttpStatus.CONFLICT.value(), response.getStatus());
-        assertThrows(ValidationException.class, () -> recipeService.addRecipe(recipeMapper.recipeDtoToRecipe(recipeDto)));
-    }
 
     @Test
     public void updatedExistingValidRecipe_thenReturnUpdatedRecipe() throws Exception {

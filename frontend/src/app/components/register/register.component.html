@@ -1,4 +1,3 @@
-
 <br>
 <h1 class="alert-heading">Bills</h1>
 <p></p>
@@ -22,9 +21,9 @@
     </td>
   </tr>
 
-  <tr>
+  <tr *ngIf="register.monthlyBudget !== 0 && isNotNaN(monthlyDifference)">
     <td><strong>Rest Group Budget for this month</strong></td>
-    <td *ngIf="monthlyDifference !== undefined || monthlyDifference !== null">{{monthlyDifference}}  €</td>
+    <td>{{monthlyDifference}}  €</td>
   </tr>
   </tbody>
 </table>
@@ -51,8 +50,11 @@
     <td>{{bill.notPaidNameList}}</td>
     <td>{{bill.sum}} €</td>
     <td>{{bill.sumPerPerson}} €</td>
-    <td><button *ngIf="billNotEmpty(bill)" type="button" class="btn btn-info  btn-sm mr-4" (click)="openItemModal(showAllItemsModal, bill)">Show all
-    </button></td>
+    <td>
+      <button *ngIf="billNotEmpty(bill)" type="button" class="btn btn-info  btn-sm mr-4"
+              (click)="openItemModal(showAllItemsModal, bill)">Show all
+      </button>
+    </td>
     <td>{{bill.notes}}</td>
     <td align="right">
       <button *ngIf="bill.notPaidNameList.includes(this.user.username)" type="button"
@@ -168,7 +170,6 @@
 </div>
 
 
-
 <div class="row p-2 mb-4">
   <ng-template #billAddModal let-modal>
     <div class="modal-header">
@@ -228,12 +229,14 @@
                     aria-describedby="notesHelp" placeholder="Enter Notes" [(ngModel)]="billToCreate.notes"></textarea>
         </div>
         <div class="modal-footer">
-          <button type="button" (click)="addBillForm(billForm)" id="addadd-msg1" class="btn btn-outline-info float-right">
+          <button type="button" (click)="addBillForm(billForm)" id="addadd-msg1"
+                  class="btn btn-outline-info float-right">
             Add bill and buy
           </button>
         </div>
         <div *ngIf="submitted && this.billToCreate.groceries.length === 0" class="error">
-          <small class="form-text text-warning" *ngIf="this.billToCreate.groceries.length === 0">You must add items to your
+          <small class="form-text text-warning" *ngIf="this.billToCreate.groceries.length === 0">You must add items to
+            your
             bill!
           </small>
         </div>
@@ -275,7 +278,9 @@
       <form #showAllItemsModal="ngForm">
         <div class="form-group">
           <ul>
-            <div *ngFor="let grocery of this.billItems"><li>{{grocery.name}}</li></div>
+            <div *ngFor="let grocery of this.billItems">
+              <li>{{grocery.name}}</li>
+            </div>
           </ul>
         </div>
 

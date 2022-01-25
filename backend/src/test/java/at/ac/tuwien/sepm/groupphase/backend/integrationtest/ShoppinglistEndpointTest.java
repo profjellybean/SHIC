@@ -111,22 +111,6 @@ public class ShoppinglistEndpointTest implements TestData {
         txm.rollback(txstatus);
     }
 
-    /* Rezept fehlt
-    @Test
-    public void insertValidItemToShoppingList() throws Exception {
-        ItemStorageDto itemStorageDto = new ItemStorageDto(TEST_ITEMSTORAGE_NAME, 2L);
-        shoppingListRepository.saveAndFlush(new ShoppingList(2L,TEST_SHOPPINGLIST_NAME));
-
-        MvcResult mvcResult = this.mockMvc.perform(post(SHOPPINGLIST_ENDPOINT_URI + "/newItem")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(itemStorageDto)))
-            .andReturn();
-        MockHttpServletResponse response = mvcResult.getResponse();
-
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-    }
-*/
-
 
     @Test
     public void givenNoRecipe_whenPlanRecipe_then400() throws Exception {
@@ -508,7 +492,6 @@ public class ShoppinglistEndpointTest implements TestData {
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
-        //assertEquals(HttpStatus.OK.value(), response.getStatus());
         Set emptySet = new HashSet<ItemStorage>();
         ShoppingList workedOffList = shoppingListRepository.getById(shoppingList.getId());
 

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Globals} from '../global/globals';
 import {HttpBackend, HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
@@ -14,7 +14,7 @@ export class RegisterService {
   private nakedHttpClient: HttpClient;
   private authHttpClient: HttpClient;
 
-  constructor(private globals: Globals, handler: HttpBackend, private httpClient: HttpClient ) {
+  constructor(private globals: Globals, handler: HttpBackend, private httpClient: HttpClient) {
     this.nakedHttpClient = new HttpClient(handler);
     this.authHttpClient = httpClient;
   }
@@ -50,13 +50,15 @@ export class RegisterService {
     console.log('Loading monthly sum of Bills');
     return this.httpClient.put<number>(this.registerBaseUri + '/monthlybudget?budget=' + budget, budget);
   }
-  getSumOfMonthAndYear(date: string): Observable<TimeSumBill>{
+
+  getSumOfMonthAndYear(date: string): Observable<TimeSumBill> {
     console.log('Load sum of specific month and year');
-    return this.httpClient.get<TimeSumBill>(this.registerBaseUri + '/sumOfMonthAndYear'+'?date='+date);
+    return this.httpClient.get<TimeSumBill>(this.registerBaseUri + '/sumOfMonthAndYear' + '?date=' + date);
   }
-  getSumOfYear(date: string): Observable<TimeSumBill>{
+
+  getSumOfYear(date: string): Observable<TimeSumBill> {
     console.log('Load sum of specific month and year');
-    return this.httpClient.get<TimeSumBill>(this.registerBaseUri + '/sumOfYear'+'?date='+date);
+    return this.httpClient.get<TimeSumBill>(this.registerBaseUri + '/sumOfYear' + '?date=' + date);
   }
 
 }

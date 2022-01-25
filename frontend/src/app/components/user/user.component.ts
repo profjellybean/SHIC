@@ -37,7 +37,7 @@ export class UserComponent implements OnInit {
     image: null
   };
 
-  editedUser: User ={
+  editedUser: User = {
     username: this.user.username,
     email: null,
     id: null,
@@ -51,13 +51,14 @@ export class UserComponent implements OnInit {
               private userService: UserService,
               private modalService: NgbModal,
               private notifications: NotificationsComponent,
-              private router: Router) { }
+              private router: Router) {
+  }
 
   ngOnInit(): void {
     this.getCurrentGroup();
   }
 
-  generateGroup(){
+  generateGroup() {
     this.groupService.generateGroup(this.newGroupName, this.user.username).subscribe({
       next: data => {
         console.log('received items', data);
@@ -72,7 +73,7 @@ export class UserComponent implements OnInit {
   }
 
 
-  getCurrentGroup(){
+  getCurrentGroup() {
     this.userService.getCurrentUser({username: this.user.username}).subscribe({
       next: data => {
         console.log('received items', data);
@@ -87,7 +88,7 @@ export class UserComponent implements OnInit {
     });
   }
 
-  getAllUsers(id: number){
+  getAllUsers(id: number) {
     this.groupService.getAllUsers(id).subscribe({
       next: data => {
         console.log('received items', data);
@@ -100,11 +101,11 @@ export class UserComponent implements OnInit {
   }
 
   addUser() {
-    if(this.userToAdd === undefined || this.userToAdd === null){
+    if (this.userToAdd === undefined || this.userToAdd === null) {
       this.notifications.pushFailure('Username cannot be empty');
       return;
     }
-    if(this.userToAdd.length > 100){
+    if (this.userToAdd.length > 100) {
       this.notifications.pushFailure('Username must be < 100 characters');
       return;
     }
@@ -121,26 +122,26 @@ export class UserComponent implements OnInit {
     });
   }
 
-  changeEmail(){
+  changeEmail() {
     this.emailEditMode = false;
     console.log(this.user.email + ' ' + this.editedUser.email);
-    if(this.editedUser.email === '' || this.editedUser.email === null){
+    if (this.editedUser.email === '' || this.editedUser.email === null) {
       this.notifications.pushFailure('E-Mail cannot be empty');
       return;
     }
-    if(this.editedUser.email !== this.user.email){
+    if (this.editedUser.email !== this.user.email) {
       this.userService.changeEmail(this.editedUser.email).subscribe({
-        next: data =>{
+        next: data => {
           this.notifications.pushSuccess('Check your Email!');
         },
-        error: error =>{
+        error: error => {
           this.notifications.pushFailure(error.error.message);
         }
       });
     }
   }
 
-  onFileChange(event){
+  onFileChange(event) {
     this.editedUser.image = event.target.files[0];
     console.log(event);
     console.log(this.editedUser);
@@ -157,9 +158,9 @@ export class UserComponent implements OnInit {
     });
   }
 
-  editUsername(){
+  editUsername() {
     this.userEditMode = false;
-    if(this.editedUser.username !== this.user.username && this.editedUser.username != null){
+    if (this.editedUser.username !== this.user.username && this.editedUser.username != null) {
       this.userService.editUsername(this.editedUser.username).subscribe({
         next: data => {
 
@@ -168,7 +169,7 @@ export class UserComponent implements OnInit {
           this.authService.setToken(data.token);
           HeaderComponent.username = this.editedUser.username;
           for (const user of this.users) {
-            if(user.username === this.user.username ){
+            if (user.username === this.user.username) {
               user.username = this.editedUser.username;
             }
           }

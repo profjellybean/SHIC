@@ -5,9 +5,10 @@
     <span aria-hidden="true">&times;</span>
   </button>
 
-    <button *ngIf="confirmEmailButton" type="button" style="margin-left: 1em" (click)="resendEmailConfirmation()" class="btn btn-info" data-dismiss="alert" aria-label="Close">
-      <span aria-hidden="true"> Resend </span>
-    </button>
+  <button *ngIf="confirmEmailButton" type="button" style="margin-left: 1em" (click)="resendEmailConfirmation()"
+          class="btn btn-info" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true"> Resend </span>
+  </button>
 
 </div>
 
@@ -29,7 +30,8 @@
               <input type="text" name="username" formControlName="username" class="form-control" id="inputUsername"
                      aria-describedby="usernameHelp" placeholder="Enter username">
               <div *ngIf="submitted && loginForm.controls.username.errors" class="error">
-                <small class="form-text text-warning" *ngIf="loginForm.controls.username.errors.required">Your username is
+                <small class="form-text text-warning" *ngIf="loginForm.controls.username.errors.required">Your username
+                  is
                   required!
                 </small>
               </div>

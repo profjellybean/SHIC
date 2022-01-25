@@ -5,5 +5,4 @@ export class ShoppingList {
   name: string;
   notes: string;
   items: Item[];
-  // TODO add Set as items and User as owner
 }

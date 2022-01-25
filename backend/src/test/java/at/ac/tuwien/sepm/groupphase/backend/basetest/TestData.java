@@ -33,7 +33,6 @@ public interface TestData {
     String USERGROUPENDPOINT_URI = BASE_URI + "/group";
     String REGISTERENDPOINT_URI = BASE_URI + "/register";
     String SHOPPINGLIST_ENDPOINT_URI = BASE_URI + "/shoppinglist";
-    //String ADMIN_USER = "admin@email.com";
     List<String> ADMIN_ROLES = new ArrayList<>() {
         {
             add("ROLE_ADMIN");

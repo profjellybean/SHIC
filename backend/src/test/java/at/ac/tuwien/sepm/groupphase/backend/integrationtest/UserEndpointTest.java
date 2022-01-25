@@ -87,7 +87,7 @@ public class UserEndpointTest implements TestData {
 
     }
 
-    //@Test
+    @Test
     void registerDuplicateUser() throws Exception {
         UserRegistrationDto testUser1 = new UserRegistrationDto("Polo_G", "correctPassword", "Polo_g@email.com");
         UserRegistrationDto testUser2 = new UserRegistrationDto("Polo_G", "letMeIn2000", "Polo_g@email.com");

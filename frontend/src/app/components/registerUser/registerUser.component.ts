@@ -21,16 +21,14 @@ export class RegisterUserComponent implements OnInit {
   successMessage = '';
 
 
-
-
   constructor(private formBuilder: FormBuilder, private userService: UserService, private router: Router) {
     this.registerForm = new FormGroup(
       {
-              username: new FormControl('', [Validators.required]),
-              email: new FormControl('',[Validators.required]),
-              password: new FormControl('', [Validators.required, Validators.minLength(8)]),
-              confirmPassword: new FormControl('', [Validators.required])
-              }, RegisterUserComponent.mustMatch('password', 'confirmPassword')
+        username: new FormControl('', [Validators.required]),
+        email: new FormControl('', [Validators.required]),
+        password: new FormControl('', [Validators.required, Validators.minLength(8)]),
+        confirmPassword: new FormControl('', [Validators.required])
+      }, RegisterUserComponent.mustMatch('password', 'confirmPassword')
     );
   }
 
@@ -45,7 +43,7 @@ export class RegisterUserComponent implements OnInit {
 
       // set error on matchingControl if validation fails
       if (control.value !== matchingControl.value) {
-        matchingControl.setErrors({ mustMatch: true });
+        matchingControl.setErrors({mustMatch: true});
       } else {
         matchingControl.setErrors(null);
       }
@@ -53,13 +51,14 @@ export class RegisterUserComponent implements OnInit {
     };
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
 
   registerUser() {
     this.submitted = true;
     if (this.registerForm.valid) {
-      const registerRequest: RegisterRequest = new RegisterRequest( this.registerForm.controls.username.value,
+      const registerRequest: RegisterRequest = new RegisterRequest(this.registerForm.controls.username.value,
         this.registerForm.controls.password.value,
         this.registerForm.controls.email.value);
       this.sendUserRegistration(registerRequest);
@@ -80,7 +79,7 @@ export class RegisterUserComponent implements OnInit {
         console.log('Successfully registered user: ' + registerRequest.username);
         this.success = true;
         this.successMessage = 'User registrated successfully! Redirect to login...';
-        setTimeout(()=> this.router.navigate(['/login']),1000);
+        setTimeout(() => this.router.navigate(['/login']), 1000);
       },
       error => {
         console.log('Could not register due to:');
@@ -94,6 +93,7 @@ export class RegisterUserComponent implements OnInit {
       }
     );
   }
+
   /**
    * Error flag will be deactivated, which clears the error message
    */

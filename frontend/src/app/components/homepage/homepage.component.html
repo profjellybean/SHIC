@@ -3,23 +3,28 @@
 <p></p>
 <hr>
 <div style="text-align: center">
-<button class="btn btn-info" *ngIf="authService.isLoggedIn() && authService.hasCurrentGroup()" routerLink="/storage" routerLinkActive="active">
-  <div style="font-size: 20pt;text-align: center">Storage</div>
-</button>
-  <button class="btn btn-info" *ngIf="authService.isLoggedIn() && authService.hasCurrentGroup()" routerLink="/shopping-list" routerLinkActive="active">
+  <button class="btn btn-info" *ngIf="authService.isLoggedIn() && authService.hasCurrentGroup()" routerLink="/storage"
+          routerLinkActive="active">
+    <div style="font-size: 20pt;text-align: center">Storage</div>
+  </button>
+  <button class="btn btn-info" *ngIf="authService.isLoggedIn() && authService.hasCurrentGroup()"
+          routerLink="/shopping-list" routerLinkActive="active">
     <div style="font-size: 20pt;text-align: center">Shoppinglist</div>
   </button>
-<button class="btn btn-info" *ngIf="authService.isLoggedIn() && authService.hasCurrentGroup()" routerLink="/recipe" routerLinkActive="active">
-  <div style="font-size: 20pt;text-align: center">Recipe</div>
-</button>
-<button class="btn btn-info" *ngIf="authService.isLoggedIn() && authService.hasCurrentGroup()" routerLink="/register" routerLinkActive="active">
-  <div style="font-size: 20pt;text-align: center">Bills</div>
-</button>
-<button class="btn btn-info" *ngIf="authService.isLoggedIn() && authService.hasCurrentGroup()" routerLink="/statistic" routerLinkActive="active">
-  <div style="font-size: 20pt;text-align: center">Statistic</div>
-</button>
-<button class="btn btn-info" *ngIf="authService.isLoggedIn()" routerLink="/user" routerLinkActive="active">
-  <div style="font-size: 20pt;text-align: center">Profile</div>
-</button>
+  <button class="btn btn-info" *ngIf="authService.isLoggedIn() && authService.hasCurrentGroup()" routerLink="/recipe"
+          routerLinkActive="active">
+    <div style="font-size: 20pt;text-align: center">Recipe</div>
+  </button>
+  <button class="btn btn-info" *ngIf="authService.isLoggedIn() && authService.hasCurrentGroup()" routerLink="/register"
+          routerLinkActive="active">
+    <div style="font-size: 20pt;text-align: center">Bills</div>
+  </button>
+  <button class="btn btn-info" *ngIf="authService.isLoggedIn() && authService.hasCurrentGroup()" routerLink="/statistic"
+          routerLinkActive="active">
+    <div style="font-size: 20pt;text-align: center">Statistic</div>
+  </button>
+  <button class="btn btn-info" *ngIf="authService.isLoggedIn()" routerLink="/user" routerLinkActive="active">
+    <div style="font-size: 20pt;text-align: center">Profile</div>
+  </button>
 </div>
 

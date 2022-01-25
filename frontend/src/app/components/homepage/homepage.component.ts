@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AuthService} from '../../services/auth.service';
 
 @Component({
@@ -12,12 +12,14 @@ export class HomepageComponent implements OnInit {
   private hasCurrentGroupBool: boolean;
   private hasCurrentGroupChecked: boolean;
 
-  constructor(public authService: AuthService) { }
+  constructor(public authService: AuthService) {
+  }
 
   ngOnInit(): void {
   }
+
   public hasCurrentGroup(): boolean {
-    if(!this.hasCurrentGroupChecked){
+    if (!this.hasCurrentGroupChecked) {
       this.hasCurrentGroupBool = this.authService.hasCurrentGroup();
       this.hasCurrentGroupChecked = true;
     }
@@ -25,11 +27,11 @@ export class HomepageComponent implements OnInit {
 
   }
 
-  setUsername(username: string){
+  setUsername(username: string) {
     HomepageComponent.username = username;
   }
 
-  getUsername(): string{
+  getUsername(): string {
     return HomepageComponent.username;
   }
 }

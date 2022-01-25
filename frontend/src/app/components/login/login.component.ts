@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit {
   errorMessage = '';
   confirmEmailButton = false;
 
-  resendConfirmationUsernameDto: Username = {username:null};
+  resendConfirmationUsernameDto: Username = {username: null};
 
   constructor(private formBuilder: FormBuilder, private authService: AuthService,
               private userService: UserService, private router: Router) {
@@ -46,7 +46,8 @@ export class LoginComponent implements OnInit {
       console.log('Invalid input');
     }
   }
-  resendEmailConfirmation(){
+
+  resendEmailConfirmation() {
     this.confirmEmailButton = false;
     this.userService.resendConfirmation(this.resendConfirmationUsernameDto).subscribe(
       () => {
@@ -62,6 +63,7 @@ export class LoginComponent implements OnInit {
     );
 
   }
+
   /**
    * Send authentication data to the authService. If the authentication was successfully, the user will be forwarded to the message page
    *
@@ -78,7 +80,7 @@ export class LoginComponent implements OnInit {
       error => {
         console.log('Could not log in due to:');
         console.log(error.error);
-        if(error.error === 'Email confirmation needed'){
+        if (error.error === 'Email confirmation needed') {
           this.confirmEmailButton = true;
           this.resendConfirmationUsernameDto.username = authRequest.username;
         }

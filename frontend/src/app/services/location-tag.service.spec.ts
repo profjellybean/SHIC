@@ -1,6 +1,6 @@
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import { LocationTagService } from './location-tag.service';
+import {LocationTagService} from './location-tag.service';
 
 describe('LocationTagService', () => {
   let service: LocationTagService;

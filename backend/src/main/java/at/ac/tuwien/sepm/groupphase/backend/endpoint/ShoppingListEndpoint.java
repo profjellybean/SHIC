@@ -71,14 +71,14 @@ public class ShoppingListEndpoint {
             return shoppingListService.createNewShoppingList(shoppingListCreationDto);
 
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()); // Todo
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
 
     }
 
     @Secured("ROLE_USER")
     @PostMapping("/newItem")
-    @Operation(summary = "Insert a new item into the ShoppingList") //TODO: add security
+    @Operation(summary = "Insert a new item into the ShoppingList")
     public ItemStorageDto saveItem(Authentication authentication, @RequestBody ItemStorageDto itemStorageDto) {
         LOGGER.info("Endpoint: POST /item to shopping list with id: {}", itemStorageDto.getStorageId());
         try {
@@ -113,7 +113,7 @@ public class ShoppingListEndpoint {
 
     @Secured("ROLE_USER")
     @GetMapping(value = "/availableItems")
-    @Operation(summary = "Get all items from the shopping list") //TODO: add security
+    @Operation(summary = "Get all items from the shopping list")
     public List<ItemStorageDto> getAvailableItemsForUser(Authentication authentication) {
         LOGGER.info("findAllByShoppingListId, endpoint");
 
@@ -176,7 +176,7 @@ public class ShoppingListEndpoint {
 
     @Secured("ROLE_USER")
     @GetMapping(value = "/items")
-    @Operation(summary = "Get list of all items") //TODO: add security
+    @Operation(summary = "Get list of all items")
     public List<ItemDto> findAllItems() {
         LOGGER.info("GET /items");
         return itemMapper.itemsToItemDtos(shoppingListService.findAllItems());
@@ -212,7 +212,7 @@ public class ShoppingListEndpoint {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()); // Todo
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
 
     }
@@ -238,7 +238,7 @@ public class ShoppingListEndpoint {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()); // Todo
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
 
     }
@@ -263,7 +263,7 @@ public class ShoppingListEndpoint {
         } catch (ServiceException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()); // Todo
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
 
     }
@@ -288,7 +288,7 @@ public class ShoppingListEndpoint {
         } catch (ServiceException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()); // Todo
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 
@@ -306,7 +306,7 @@ public class ShoppingListEndpoint {
         } catch (NotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()); // Todo
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 
@@ -343,7 +343,7 @@ public class ShoppingListEndpoint {
         } catch (NotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()); // Todo
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
 
     }
@@ -358,7 +358,7 @@ public class ShoppingListEndpoint {
         } catch (NotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()); // Todo
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
 
     }

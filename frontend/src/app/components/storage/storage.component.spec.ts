@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { StorageComponent } from './storage.component';
+import {StorageComponent} from './storage.component';
 
 describe('StorageComponent', () => {
   let component: StorageComponent;
@@ -8,9 +8,9 @@ describe('StorageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ StorageComponent ]
+      declarations: [StorageComponent]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

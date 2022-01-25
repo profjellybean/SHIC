@@ -21,10 +21,12 @@ export class RecipeComponent implements OnInit {
 
   recipes: Recipe[] = null;
   ingredientsToAdd: Item[] = null;
-  nullRecipe: Recipe = {name: null, id: null, categories: null, description: null, ingredients: this.ingredientsToAdd,
-  groupId: null};
+  nullRecipe: Recipe = {
+    name: null, id: null, categories: null, description: null, ingredients: this.ingredientsToAdd,
+    groupId: null
+  };
 
-  popup= false;
+  popup = false;
   deleteRecipe: Recipe;
   recipeToAdd = this.nullRecipe;
   searchName = '';
@@ -96,7 +98,7 @@ export class RecipeComponent implements OnInit {
 
   addRecipeForm(form) {
     this.submitted = true;
-    if(this.recipeToAdd.ingredients === undefined || this.recipeToAdd.ingredients === null){
+    if (this.recipeToAdd.ingredients === undefined || this.recipeToAdd.ingredients === null) {
       this.error = 'Recipe needs ingredients';
     } else if (form.valid) {
       console.log('form item to add', this.recipeToAdd);
@@ -154,7 +156,7 @@ export class RecipeComponent implements OnInit {
     });
   }
 
-  getCurrentGroup(){
+  getCurrentGroup() {
     this.userService.getCurrentUser({username: this.user.username}).subscribe({
       next: data => {
         this.user = data;

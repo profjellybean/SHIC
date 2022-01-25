@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import java.lang.invoke.MethodHandles;
 import java.util.Set;
 
-//@Profile("generateData")
 @Component
 public class StorageDataGenerator {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -30,7 +29,6 @@ public class StorageDataGenerator {
         this.locationRepository = locationRepository;
     }
 
-    //@PostConstruct
     void generateStorage() {
         if (storageRepository.findAll().size() > 0) {
             LOGGER.debug("storage already generated");

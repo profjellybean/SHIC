@@ -48,7 +48,6 @@ public class ApplicationUser {
     @JsonBackReference
     private UserGroup currGroup;
 
-    //@Column(nullable = false, name = "PRIVLIST") // TODO Loading
     private Long privList;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -181,7 +180,6 @@ public class ApplicationUser {
         return Objects.equals(id, that.id)
             && Objects.equals(username, that.username)
             && Objects.equals(password, that.password)
-            //&& Objects.equals(currGroup, that.currGroup)
             && Objects.equals(privList, that.privList);
     }
 

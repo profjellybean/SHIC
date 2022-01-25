@@ -17,24 +17,29 @@ export class CustomItemComponent implements OnInit {
   submitted = false;
 
   nullQuantity: UnitOfQuantity = {id: null, name: null};
-  nullItem: Item = {image:null, id: null, storageId: null, name: null,
-    notes: null, expDate: null, amount: 0, locationTag: null, shoppingListId: null, quantity: this.nullQuantity};
+  nullItem: Item = {
+    image: null, id: null, storageId: null, name: null,
+    notes: null, expDate: null, amount: 0, locationTag: null, shoppingListId: null, quantity: this.nullQuantity
+  };
 
   itemToEdit: Item = null;
   itemToAdd: Item = this.nullItem;
   items: Item[] = null;
   unitsOfQuantity: UnitOfQuantity[];
   helpUnityOfQuantity: string;
-  unitOfQuantity: UnitOfQuantity= {id: null, name: null};
+  unitOfQuantity: UnitOfQuantity = {id: null, name: null};
 
   testQuantity: UnitOfQuantity = {id: 5, name: 'pieces'};
-  testItemToEdit: Item = {image:null, id: 1, storageId: null, name: 'Edited Avocado 2',
-    notes: null, expDate: null, amount: 0, locationTag: null, shoppingListId: null, quantity: this.testQuantity};
+  testItemToEdit: Item = {
+    image: null, id: 1, storageId: null, name: 'Edited Avocado 2',
+    notes: null, expDate: null, amount: 0, locationTag: null, shoppingListId: null, quantity: this.testQuantity
+  };
 
 
   constructor(private itemService: ItemService,
               private modalService: NgbModal,
-              private storageService: StorageService) { }
+              private storageService: StorageService) {
+  }
 
   ngOnInit(): void {
     this.loadCustomItems();
@@ -43,35 +48,35 @@ export class CustomItemComponent implements OnInit {
 
   editCustomItem() {
     this.itemService.editCustomItem(this.itemToEdit).subscribe({
-        next: data => {
-          console.log('successfully edited custom Items', data);
-        },
-        error: err => {
-          console.log(err);
-          this.defaultServiceErrorHandling(err);
-        }
+      next: data => {
+        console.log('successfully edited custom Items', data);
+      },
+      error: err => {
+        console.log(err);
+        this.defaultServiceErrorHandling(err);
+      }
     });
   }
 
   addCustomItem() {
     this.itemService.addCustomItem(this.itemToAdd).subscribe({
-        next: data => {
-          console.log('successfully added custom Item', data);
-          this.items.push(data);
-        },
-        error: err => {
-          console.log(err);
-          this.defaultServiceErrorHandling(err);
-        }
+      next: data => {
+        console.log('successfully added custom Item', data);
+        this.items.push(data);
+      },
+      error: err => {
+        console.log(err);
+        this.defaultServiceErrorHandling(err);
+      }
     });
   }
 
-  addUnityOfQuantity(){
+  addUnityOfQuantity() {
     this.itemService.createUnitOfQuantity(this.helpUnityOfQuantity).subscribe({
       next: data => {
-        this.unitOfQuantity.name=this.helpUnityOfQuantity;
+        this.unitOfQuantity.name = this.helpUnityOfQuantity;
         this.unitsOfQuantity.push(this.unitOfQuantity);
-        this.helpUnityOfQuantity='';
+        this.helpUnityOfQuantity = '';
       },
       error: err => {
         console.log(err);
@@ -106,7 +111,7 @@ export class CustomItemComponent implements OnInit {
   editItemForm(form) {
     this.submitted = true;
 
-    if(form.valid) {
+    if (form.valid) {
       console.log('form item to edit', this.itemToEdit);
       this.editCustomItem();
       this.clearForm();
@@ -116,7 +121,7 @@ export class CustomItemComponent implements OnInit {
   addItemForm(form) {
     this.submitted = true;
 
-    if(form.valid) {
+    if (form.valid) {
       console.log('form item to add', this.itemToAdd);
       this.addCustomItem();
       this.clearForm();

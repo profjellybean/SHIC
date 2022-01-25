@@ -1,7 +1,9 @@
 <br>
 <h1>Units Of Quantity</h1>
 <p></p>
-<button type="button" class="btn btn-info btn-sm mr-4" (click)="openAddModal(unitOfQuantityAddModal)">Add New Unit of Quantity</button>
+<button type="button" class="btn btn-info btn-sm mr-4" (click)="openAddModal(unitOfQuantityAddModal)">Add New Unit of
+  Quantity
+</button>
 
 <table class="table table-striped">
   <thead class="thead-dark">
@@ -14,10 +16,9 @@
 
   <tr *ngFor="let item of unitsOfQuantity">
     <td>{{item.name}}</td>
-    </tr>
+  </tr>
   </tbody>
 </table>
-
 
 
 <span></span>
@@ -27,7 +28,8 @@
   <ng-template #unitOfQuantityAddModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Add Unit of Quantity</h5>
-      <button type="button" class="btn btn-dark" (click)="modal.dismiss('X'); this.unitOfQuantityToAdd.name=''" aria-label="Close">
+      <button type="button" class="btn btn-dark" (click)="modal.dismiss('X'); this.unitOfQuantityToAdd.name=''"
+              aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -37,7 +39,8 @@
         <div class="form-group">
           <label for="inputName2">Name</label>
           <textarea rows="1" name="name" class="form-control" id="inputName2" required
-                    aria-describedby="nameHelp" placeholder="Enter Name" [(ngModel)]="unitOfQuantityToAdd.name"></textarea>
+                    aria-describedby="nameHelp" placeholder="Enter Name"
+                    [(ngModel)]="unitOfQuantityToAdd.name"></textarea>
           <div *ngIf="submitted && unitOfQuantityForm.controls.name.errors" class="error">
             <small class="form-text text-warning" *ngIf="unitOfQuantityForm.controls.name.errors.required"> Name is
               required!
@@ -47,8 +50,12 @@
       </form>
     </div>
     <div class="modal-footer">
-      <button type="button" (click)="addUnityOfQuantity(); modal.dismiss('close')" id="add-msg2" class="btn btn-info float-right">Add Unit of Quantity</button>
-      <button type="button" class="btn btn-dark" id="close-modal-btn2" (click)="modal.dismiss('close'); this.unitOfQuantityToAdd.name=''">Close</button>
+      <button type="button" (click)="addUnityOfQuantity(); modal.dismiss('close')" id="add-msg2"
+              class="btn btn-info float-right">Add Unit of Quantity
+      </button>
+      <button type="button" class="btn btn-dark" id="close-modal-btn2"
+              (click)="modal.dismiss('close'); this.unitOfQuantityToAdd.name=''">Close
+      </button>
 
     </div>
   </ng-template>

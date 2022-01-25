@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
 import {Bill} from '../dtos/bill';
@@ -38,7 +38,7 @@ export class BillService {
 
   deleteBillById(id: number) {
     console.log('delete bill', id);
-    return this.httpClient.delete(this.billBaseUri  + '/' + id);
+    return this.httpClient.delete(this.billBaseUri + '/' + id);
   }
 
   bill(bill: BillDto): Observable<BillDto> {

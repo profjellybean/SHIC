@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Globals} from '../global/globals';
 import {HttpBackend, HttpClient} from '@angular/common/http';
 import {Params} from '@angular/router';
@@ -14,7 +14,7 @@ export class LocationTagService {
   private nakedHttpClient: HttpClient;
   private authHttpClient: HttpClient;
 
-  constructor(private globals: Globals, handler: HttpBackend, private httpClient: HttpClient ) {
+  constructor(private globals: Globals, handler: HttpBackend, private httpClient: HttpClient) {
     this.nakedHttpClient = new HttpClient(handler);
     this.authHttpClient = httpClient;
   }

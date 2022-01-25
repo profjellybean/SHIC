@@ -38,7 +38,8 @@ export class LocationTagComponent implements OnInit {
   constructor(private modalService: NgbModal,
               private locationTagService: LocationTagService,
               private userService: UserService,
-              private authService: AuthService) { }
+              private authService: AuthService) {
+  }
 
   ngOnInit(): void {
     this.getCurrUser();
@@ -60,13 +61,13 @@ export class LocationTagComponent implements OnInit {
   }
 
   locationTagDefaultCheck(locationTag: LocationTag) {
-    if(locationTag.name.trim() === 'shelf') {
+    if (locationTag.name.trim() === 'shelf') {
       return false;
     }
-    if(locationTag.name.trim() === 'freezer') {
+    if (locationTag.name.trim() === 'freezer') {
       return false;
     }
-    if(locationTag.name.trim() === 'fridge') {
+    if (locationTag.name.trim() === 'fridge') {
       return false;
     }
     return true;
@@ -118,7 +119,7 @@ export class LocationTagComponent implements OnInit {
   addLocationTagForm(form) {
     this.submitted = true;
 
-    if(form.valid) {
+    if (form.valid) {
       console.log('form locationTag to add', this.locationTagToAdd);
       this.addLocationTag();
       this.clearForm();

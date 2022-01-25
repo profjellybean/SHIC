@@ -17,7 +17,6 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-//@Transactional
 public class Recipe {
 
     @Id
@@ -30,14 +29,13 @@ public class Recipe {
     @Column(nullable = false, name = "description")
     private String description;
 
-    @OneToMany(cascade = CascadeType.MERGE)//(fetch=FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.MERGE)
     @Column(nullable = true, name = "ingredients")
     private Set<ItemStorage> ingredients;
 
     @Column(name = "groupId")
     private Long groupId;
 
-    //@OneToMany
     @Column(name = "categories")
     @ElementCollection(targetClass = RecipeCategory.class)
     @CollectionTable

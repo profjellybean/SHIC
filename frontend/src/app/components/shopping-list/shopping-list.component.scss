@@ -1,6 +1,8 @@
 @import "~@ng-select/ng-select/themes/default.theme.css";
 
-.tabbutton { display: none; }
+.tabbutton {
+  display: none;
+}
 
 .tabbutton + label {
   width: 6em;
@@ -12,10 +14,12 @@
   top: 1px;
   margin-top: 1em;
 }
+
 .tabbutton:checked + label {
   background: #FFF;
   border-bottom: 1px solid transparent;
 }
+
 .tabbutton ~ .tab {
   border-top: 1px solid #999;
   padding: 12px;
@@ -26,7 +30,7 @@
   height: 17px;
 }
 
-.tabs{
+.tabs {
   background-color: #EEE;
 }
 
