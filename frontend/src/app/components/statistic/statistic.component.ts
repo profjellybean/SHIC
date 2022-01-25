@@ -50,7 +50,7 @@ export class StatisticComponent implements OnInit {
     this.date = new Date();
     this.date.setDate(1);
     console.log(this.date);
-    for (let i = 0; i < 11; i++) {
+    for (let i = 0; i < 12; i++) {
       this.getSumOfMonthAndYear(this.date);
       this.date.setMonth(this.date.getMonth()-1);
     }
@@ -122,7 +122,7 @@ export class StatisticComponent implements OnInit {
     this.dateThrownAway = new Date();
     this.dateThrownAway.setDate(1);
     console.log(this.dateThrownAway);
-    for (let i = 0; i < 11; i++) {
+    for (let i = 0; i < 12; i++) {
       this.getSumOfMonthAndYearThrownAway(this.dateThrownAway);
       this.dateThrownAway.setMonth(this.dateThrownAway.getMonth()-1);
     }
