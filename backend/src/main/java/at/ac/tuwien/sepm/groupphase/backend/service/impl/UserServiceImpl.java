@@ -26,6 +26,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.EmailService;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserGroupRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
+import at.ac.tuwien.sepm.groupphase.backend.util.ImageValidator;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,19 +55,18 @@ public class UserServiceImpl implements UserService {
     private final UserGroupRepository userGroupRepository;
     private final CustomUserRepository customUserRepository;
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
     private final ComplexUserMapper userMapperImpl;
     private final BillRepository billRepository;
     private final PendingEmailRespository pendingEmailRespository;
+    private final ImageValidator imageValidator;
 
     @Autowired
     public UserServiceImpl(CustomUserRepository userRepository,
                            ShoppingListRepository shoppingListRepository,
-                           UserMapper userMapper, EntityManager entityManager, UserLoginMapper userLoginMapper,
+                           EntityManager entityManager, UserLoginMapper userLoginMapper,
                            EmailService emailService, UserGroupRepository userGroupRepository, UserRepository userRepository1,
-                           ComplexUserMapper userMapperImpl, BillRepository billRepository, PendingEmailRespository pendingEmailRespository) {
+                           ComplexUserMapper userMapperImpl, BillRepository billRepository, PendingEmailRespository pendingEmailRespository, ImageValidator imageValidator) {
         this.customUserRepository = userRepository;
-        this.userMapper = userMapper;
         this.userRepository = userRepository1;
         this.userMapperImpl = userMapperImpl;
         this.entityManager = entityManager;
@@ -75,6 +75,7 @@ public class UserServiceImpl implements UserService {
         this.userGroupRepository = userGroupRepository;
         this.pendingEmailRespository = pendingEmailRespository;
         this.billRepository = billRepository;
+        this.imageValidator = imageValidator;
     }
 
     @Override
@@ -231,6 +232,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void editPicture(byte[] picture, String username) {
+        imageValidator.validateImage(picture);
+
         Optional<ApplicationUser> u = customUserRepository.findUserByUsername(username);
         if (u.isEmpty()) {
             throw new NotFoundException("Username not found");
