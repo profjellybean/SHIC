@@ -1,18 +1,16 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.BillDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemStorageDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.BillMapper;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Bill;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.service.BillService;
+import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
@@ -28,7 +26,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 
-import javax.annotation.security.PermitAll;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.lang.invoke.MethodHandles;
@@ -41,20 +38,26 @@ public class BillEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final BillService billService;
     private final BillMapper billMapper;
+    private final UserService userService;
 
     @Autowired
-    public BillEndpoint(BillService billService, BillMapper billMapper) {
+    public BillEndpoint(BillService billService, BillMapper billMapper, UserService userService) {
         this.billService = billService;
         this.billMapper = billMapper;
+        this.userService = userService;
     }
 
     @Secured("ROLE_USER")
     @Transactional
     @GetMapping
     @Operation(summary = "Get list of bills", security = @SecurityRequirement(name = "apiKey"))
-    public List<BillDto> findAll() {
+    public List<BillDto> findAll(Authentication authentication) {
         LOGGER.info("GET /api/v1/bill");
-        return billMapper.billListToBillDtoList(billService.findAll());
+        Long registerId = userService.findApplicationUserByUsername(authentication.getName()).getCurrGroup().getRegisterId();
+        if (registerId == null) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+        return billMapper.billListToBillDtoList(billService.findAll(registerId));
     }
 
     @Secured("ROLE_USER")
