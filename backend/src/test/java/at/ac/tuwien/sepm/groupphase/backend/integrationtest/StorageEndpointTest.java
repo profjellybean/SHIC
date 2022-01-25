@@ -186,8 +186,10 @@ public class StorageEndpointTest implements TestData {
 
     @Test
     public void searchForExistingItem() throws Exception {
+        ItemStorage itemStorage = new ItemStorage(-1L, "test2");
         ItemStorageDto itemStorageDto = new ItemStorageDto(-1L, "test2");
         storageRepository.saveAndFlush(new Storage(-1L));
+        itemStorageRepository.saveAndFlush(itemStorage);
 
         MvcResult mvcResult = this.mockMvc.perform(get(STORAGEENDPOINT_URI + "/search")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -197,6 +199,7 @@ public class StorageEndpointTest implements TestData {
         MockHttpServletResponse response = mvcResult.getResponse();
 
         assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(response.getContentLength(), 0);
 
     }
 
