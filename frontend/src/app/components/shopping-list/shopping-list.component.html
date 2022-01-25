@@ -155,7 +155,7 @@
           </div>
         </td>
         <td>{{item.name}}</td>
-        <td><input (change)="this.changeAmountOfItemInShoppingList(item)" [(ngModel)]="item.amount"/></td>
+        <td><input type="number" (change)="this.changeAmountOfItemInShoppingList(item)" [(ngModel)]="item.amount"/></td>
         <td>
           <div *ngIf="item.quantity !== null">{{item.quantity.name}}</div>
         </td>
@@ -205,11 +205,11 @@
         </button>
       </div>
       <div class="modal-body">
-        <button type="button" class="btn btn-dark btn-sm mr-4" (click)="openBillModal(billAddModal)">Move and
+        <button type="button" class="btn btn-info btn-sm mr-4" (click)="openBillModal(billAddModal)">Move and
           Generate Bill
         </button>
         <p></p>
-        <button type="button" class="btn btn-dark btn-sm mr-4" (click)="workOffShoppingList()">Move to Storage
+        <button type="button" class="btn btn-info btn-sm mr-4" (click)="workOffShoppingList()">Move to Storage
         </button>
       </div>
     </ng-template>

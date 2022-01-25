@@ -92,6 +92,13 @@ public class BillServiceImpl implements BillService {
             }
             bill.setGroceries(newItems);
         }
+        double sumPerPerson = bill.getSumPerPerson();
+        sumPerPerson = (double) Math.round(sumPerPerson * 100) / 100.00;
+        bill.setSumPerPerson(sumPerPerson);
+
+        double sum = bill.getSum();
+        sum = (double) Math.round(sum * 100) / 100.00;
+        bill.setSum(sum);
 
 
         Bill savedBill = billRepository.saveAndFlush(bill);

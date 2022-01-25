@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpBackend, HttpClient, HttpHeaders} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {Observable} from 'rxjs';
 import {Recipe} from '../dtos/recipe';
@@ -9,10 +9,12 @@ import {Recipe} from '../dtos/recipe';
 })
 export class RecipeService {
   private recipeBaseUri: string = this.globals.backendUri + '/recipe';
+  private nakedHttpClient: HttpClient;
+  private authHttpClient: HttpClient;
 
-  constructor(private httpClient: HttpClient,
-              private globals: Globals) {
-
+  constructor(private globals: Globals, handler: HttpBackend, private httpClient: HttpClient ) {
+    this.nakedHttpClient = new HttpClient(handler);
+    this.authHttpClient = httpClient;
   }
 
   findAll(): Observable<Recipe[]>{

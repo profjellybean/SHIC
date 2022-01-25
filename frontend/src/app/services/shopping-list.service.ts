@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpBackend, HttpClient, HttpParams} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {Observable} from 'rxjs';
 import {ShoppingList} from '../dtos/shopping-list';
@@ -12,8 +12,12 @@ import {Item} from '../dtos/item';
 export class ShoppingListService {
 
   private shoppingListBaseUri: string = this.globals.backendUri + '/shoppinglist';
+  private nakedHttpClient: HttpClient;
+  private authHttpClient: HttpClient;
 
-  constructor(private httpClient: HttpClient, private globals: Globals) {
+  constructor(private globals: Globals, handler: HttpBackend, private httpClient: HttpClient ) {
+    this.nakedHttpClient = new HttpClient(handler);
+    this.authHttpClient = httpClient;
   }
 
   getPrivateShoppingList(): Observable<ShoppingList> {

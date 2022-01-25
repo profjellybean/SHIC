@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {Globals} from '../global/globals';
-import {HttpClient} from '@angular/common/http';
+import {HttpBackend, HttpClient} from '@angular/common/http';
 import {Params} from '@angular/router';
 import {Observable} from 'rxjs';
 import {LocationTag} from '../dtos/locationTag';
@@ -11,10 +11,12 @@ import {LocationTag} from '../dtos/locationTag';
 export class LocationTagService {
 
   private locationTagBaseUri: string = this.globals.backendUri + '/storage';
+  private nakedHttpClient: HttpClient;
+  private authHttpClient: HttpClient;
 
-  constructor(private httpClient: HttpClient,
-              private globals: Globals) {
-
+  constructor(private globals: Globals, handler: HttpBackend, private httpClient: HttpClient ) {
+    this.nakedHttpClient = new HttpClient(handler);
+    this.authHttpClient = httpClient;
   }
 
   /**

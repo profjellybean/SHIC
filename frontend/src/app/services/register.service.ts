@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {Globals} from '../global/globals';
-import {HttpClient} from '@angular/common/http';
+import {HttpBackend, HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Register} from '../dtos/register';
 import {TimeSumBill} from '../dtos/time-sum-bill';
@@ -11,8 +11,13 @@ import {TimeSumBill} from '../dtos/time-sum-bill';
 export class RegisterService {
 
   private registerBaseUri: string = this.globals.backendUri + '/register';
+  private nakedHttpClient: HttpClient;
+  private authHttpClient: HttpClient;
 
-  constructor(private httpClient: HttpClient, private globals: Globals) { }
+  constructor(private globals: Globals, handler: HttpBackend, private httpClient: HttpClient ) {
+    this.nakedHttpClient = new HttpClient(handler);
+    this.authHttpClient = httpClient;
+  }
 
   getRegisterById(id: number): Observable<Register> {
     console.log('Load register details for ' + id);

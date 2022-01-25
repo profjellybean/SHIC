@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpBackend, HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
 import {Item} from '../dtos/item';
@@ -14,8 +14,12 @@ import {NameSum} from '../dtos/name-sum';
 export class StorageService {
 
   private storageBaseUri: string = this.globals.backendUri + '/storage';
+  private nakedHttpClient: HttpClient;
+  private authHttpClient: HttpClient;
 
-  constructor(private httpClient: HttpClient, private globals: Globals) {
+  constructor(private globals: Globals, handler: HttpBackend, private httpClient: HttpClient ) {
+    this.nakedHttpClient = new HttpClient(handler);
+    this.authHttpClient = httpClient;
   }
 
   /**

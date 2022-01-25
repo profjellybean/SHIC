@@ -335,6 +335,7 @@ export class RegisterComponent implements OnInit {
           this.billArray.splice(deleteIndex, 1);
         }
         this.notifications.pushSuccess('Bill has been successfully deleted');
+        this.getCurrentGroup();
       },
       error: error => {
         this.notifications.pushFailure('Error during deleting bill: ' + error.error.message);

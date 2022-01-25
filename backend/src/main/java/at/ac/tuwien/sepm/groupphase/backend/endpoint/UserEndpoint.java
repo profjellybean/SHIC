@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.annotation.security.PermitAll;
 import java.lang.invoke.MethodHandles;
 import java.util.LinkedList;
 import java.util.List;
@@ -108,7 +109,7 @@ public class UserEndpoint {
         }
     }
 
-    @Secured("ROLE_USER")
+    @PermitAll
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void createUser(@RequestBody UserRegistrationDto userRegistrationDto) {
@@ -130,7 +131,7 @@ public class UserEndpoint {
 
     }
 
-    @Secured("ROLE_USER")
+    @PermitAll
     @GetMapping("/confirm")
     @ResponseStatus(HttpStatus.OK)
     public void confirmUser(@RequestParam(value = "tkn") String confirmationTokenEncrypted) {
@@ -145,7 +146,7 @@ public class UserEndpoint {
 
     }
 
-    @Secured("ROLE_USER")
+    @PermitAll
     @GetMapping("/confirmNew")
     @ResponseStatus(HttpStatus.OK)
     public void confirmNewEmail(@RequestParam(value = "tkn") String confirmationTokenEncrypted) {
@@ -160,7 +161,7 @@ public class UserEndpoint {
 
     }
 
-    @Secured("ROLE_USER")
+    @PermitAll
     @PutMapping("/confirmation")
     @ResponseStatus(HttpStatus.OK)
     public void resendUserEmailConfirmation(@RequestBody UsernameDto usernameDto) {

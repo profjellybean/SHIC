@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import {HttpClient} from '@angular/common/http';
+import {HttpBackend, HttpClient} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {Observable} from 'rxjs';
 import {Item} from '../dtos/item';
@@ -14,9 +14,12 @@ import {Params} from '@angular/router';
 export class ItemService {
 
   private itemBaseUri: string = this.globals.backendUri + '/item';
+  private nakedHttpClient: HttpClient;
+  private authHttpClient: HttpClient;
 
-  constructor(private httpClient: HttpClient,
-              private globals: Globals) {
+  constructor(private globals: Globals, handler: HttpBackend, private httpClient: HttpClient ) {
+    this.nakedHttpClient = new HttpClient(handler);
+    this.authHttpClient = httpClient;
   }
 
   findAll(): Observable<Item[]>{
