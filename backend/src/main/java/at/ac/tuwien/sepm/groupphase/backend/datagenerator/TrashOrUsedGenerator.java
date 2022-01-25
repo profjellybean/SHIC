@@ -54,7 +54,7 @@ public class TrashOrUsedGenerator {
         this.unitOfQuantityDataGenerator.generateUnitOfQuantity();
         List<UnitOfQuantity> unitList = unitOfQuantityRepository.findAll();
 
-        if (trashOrUsedRepository.findAll().size() > 0) {
+        if (trashOrUsedRepository.findAll().size() > 0 && trashOrUsedItemRepository.findAll().size() > 0) {
             LOGGER.debug("trash or used already generated");
         } else {
 

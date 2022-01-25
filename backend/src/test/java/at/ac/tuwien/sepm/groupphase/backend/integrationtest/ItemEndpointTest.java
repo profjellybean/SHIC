@@ -95,6 +95,7 @@ public class ItemEndpointTest implements TestData {
     }
     @Test
     public void insertUnitOfQuantitysThenGetAll() throws Exception {
+        int help =unitOfQuantityRepository.findAll().size();
         UnitOfQuantity unitOfQuantity= new UnitOfQuantity(-1L,"test1");
         UnitOfQuantity unitOfQuantity2= new UnitOfQuantity(-1L, "test2");
         UnitOfQuantity unitOfQuantity3= new UnitOfQuantity(-1L, "test3");
@@ -104,13 +105,19 @@ public class ItemEndpointTest implements TestData {
         unitOfQuantityRepository.saveAndFlush(unitOfQuantity3);
 
         MvcResult mvcResult = this.mockMvc.perform(get(ITEMENDPOINT_UNITOFQUANTITY_URI)
+                .contentType(MediaType.APPLICATION_JSON)
             .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
             .andReturn();
 
         MockHttpServletResponse response = mvcResult.getResponse();
 
 
+        UnitOfQuantityDto[] addedUnitOfQuantity = objectMapper.readValue(response.getContentAsString(),
+            UnitOfQuantityDto[].class);
+
+
         assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(3+help, addedUnitOfQuantity.length);
     }
 
     @Test
@@ -144,8 +151,13 @@ public class ItemEndpointTest implements TestData {
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
+        UnitsRelationDto addedUnitRelation = objectMapper.readValue(response.getContentAsString(),
+            UnitsRelationDto.class);
+
         assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertNotNull(unitsRelationRepository.findUnitsRelationByBaseUnitAndCalculatedUnit(unitOfQuantityDto.getName(), unitOfQuantityDto2.getName()));
+        assertEquals(addedUnitRelation.getBaseUnit(), unitsRelationDto.getCalculatedUnit());
+        assertEquals(addedUnitRelation.getCalculatedUnit(), unitsRelationDto.getBaseUnit());
+        assertEquals(addedUnitRelation.getRelation(), 1/unitsRelationDto.getRelation());
     }
 
 
@@ -188,7 +200,7 @@ public class ItemEndpointTest implements TestData {
 
     @Test
     public void insertUnitsRelationsThenGetAll() throws Exception {
-        unitsRelationRepository.deleteAll();
+        int help = unitsRelationRepository.findAll().size();
 
         UnitOfQuantity unitOfQuantity1 = new UnitOfQuantity("test1");
         UnitOfQuantity unitOfQuantity2 = new UnitOfQuantity("test2");
@@ -209,8 +221,11 @@ public class ItemEndpointTest implements TestData {
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
+        UnitsRelationDto[] addedUnitOfQuantity = objectMapper.readValue(response.getContentAsString(),
+            UnitsRelationDto[].class);
+
         assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals(2, unitsRelationRepository.findAll().size());
+        assertEquals(2 + help, addedUnitOfQuantity.length );
     }
 
 

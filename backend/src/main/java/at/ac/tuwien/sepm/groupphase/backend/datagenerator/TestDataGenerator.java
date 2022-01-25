@@ -11,6 +11,8 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Register;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Storage;
+import at.ac.tuwien.sepm.groupphase.backend.entity.TrashOrUsed;
+import at.ac.tuwien.sepm.groupphase.backend.entity.TrashOrUsedItem;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 import at.ac.tuwien.sepm.groupphase.backend.repository.BillRepository;
@@ -19,6 +21,8 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.RegisterRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ShoppingListRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.TrashOrUsedItemRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.TrashOrUsedRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitOfQuantityRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserGroupRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
@@ -28,7 +32,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -72,6 +79,10 @@ public class TestDataGenerator {
     ShoppingListRepository shoppingListRepository;
     @Autowired
     StorageRepository storageRepository;
+    @Autowired
+    TrashOrUsedRepository trashOrUsedRepository;
+    @Autowired
+    TrashOrUsedItemRepository trashOrUsedItemRepository;
 
     public TestDataGenerator(RecipeDataGenerator recipeDataGenerator,
                              ShoppingListDataGenerator shoppingListDataGenerator,
@@ -469,6 +480,34 @@ public class TestDataGenerator {
         recipeRepository.saveAndFlush(recipe2);
         Recipe recipe3 = new Recipe(-3L, "testRecipe3", "recipe for tests", ingredients, null, null);
         recipeRepository.saveAndFlush(recipe3);
+    }
+
+    public void generateTrashOrUsedItem() {
+        if (trashOrUsedItemRepository.findAll().size() > 0) {
+            LOGGER.debug("trash or used already generated");
+        } else {
+            storageRepository.saveAndFlush(new Storage(-1L));
+            TrashOrUsedItem item = new TrashOrUsedItem(11, "Feta", -1L);
+            trashOrUsedItemRepository.saveAndFlush(item);
+            TrashOrUsedItem item1 = new TrashOrUsedItem(9, "Mango", -1L);
+            trashOrUsedItemRepository.saveAndFlush(item1);
+        }
+    }
+
+    public void generateTrashOrUsed() throws ParseException {
+        if (trashOrUsedRepository.findAll().size() > 0) {
+            LOGGER.debug("trash or used already generated");
+        } else {
+            storageRepository.saveAndFlush(new Storage(-1L));
+            SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+            this.unitOfQuantityDataGenerator.generateUnitOfQuantity();
+            List<UnitOfQuantity> unitList = unitOfQuantityRepository.findAll();
+            Date date = format.parse("01-01-2019");
+            for (int i = 0; i < 44; i++) {
+                TrashOrUsed trashOrUsed = new TrashOrUsed(date, 4, null, unitList.get(0), "test" + i + "2019");
+                trashOrUsedRepository.saveAndFlush(trashOrUsed);
+            }
+        }
     }
 
 

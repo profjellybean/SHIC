@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties
 import at.ac.tuwien.sepm.groupphase.backend.datagenerator.TestDataGenerator;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemStorageDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.RegisterDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TimeSumDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegistrationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ItemStorageMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserLoginMapper;
@@ -46,6 +47,10 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
@@ -95,6 +100,7 @@ public class StorageEndpointTest implements TestData {
     private TrashOrUsedItemRepository trashOrUsedItemRepository;
     @Autowired
     private TrashOrUsedRepository trashOrUsedRepository;
+
 
 
     @AfterEach
@@ -222,7 +228,7 @@ public class StorageEndpointTest implements TestData {
         itemStorageDto.setId(item.getId());
 
 
-        MvcResult mvcResult = this.mockMvc.perform(delete(STORAGEENDPOINT_URI + "?itemId=" + itemStorageDto.getId()+ "&trash="+ true)
+        MvcResult mvcResult = this.mockMvc.perform(delete(STORAGEENDPOINT_URI + "?itemId=" + itemStorageDto.getId() + "&trash=" + true)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken("test", ADMIN_ROLES)))
             .andReturn();
@@ -269,7 +275,7 @@ public class StorageEndpointTest implements TestData {
         itemStorageDto.setId(item.getId());
 
 
-        MvcResult mvcResult = this.mockMvc.perform(delete(STORAGEENDPOINT_URI + "?itemId=" + itemStorageDto.getId()+ "&trash="+ false)
+        MvcResult mvcResult = this.mockMvc.perform(delete(STORAGEENDPOINT_URI + "?itemId=" + itemStorageDto.getId() + "&trash=" + false)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken("test", ADMIN_ROLES)))
             .andReturn();
@@ -354,7 +360,6 @@ public class StorageEndpointTest implements TestData {
     }
 
 
-
     @Test
     public void updateValidItemShouldReturnUpdatedItem() throws Exception {
         Storage storage = new Storage();
@@ -433,7 +438,6 @@ public class StorageEndpointTest implements TestData {
     }
 
 
-
     @Test
     public void updateItemFromNotExistingStorageShouldThrowNotFoundException() throws Exception {
         UserRegistrationDto testUser = new UserRegistrationDto("test", "password", "test.user@email.com");
@@ -465,6 +469,38 @@ public class StorageEndpointTest implements TestData {
         assertThrows(NotFoundException.class, () -> storageService.updateItem(itemStorageMapper.itemStorageDtoToItemStorage(updatedItem), finalTestGroup.getId()));
         userRepository.delete(testApplicationUser);
     }
+/*
+    @Test
+    public void insertAndDeleteItemAndGetSumOFThrownAwayArticles() throws Exception {
+        UserRegistrationDto testUser = new UserRegistrationDto("test", "password", "test.user@email.com");
+        UserGroup testGroup = new UserGroup(1L, null, null, new HashSet<ApplicationUser>(), null);
+        testGroup = userGroupRepository.saveAndFlush(testGroup);
+
+        ApplicationUser testApplicationUser = userLoginMapper.dtoToEntity(testUser, null);
+        testApplicationUser.setCurrGroup(testGroup);
+        userRepository.saveAndFlush(testApplicationUser);
+
+        testDataGenerator.generateTrashOrUsed();
+
+        LocalDate DATE1 = LocalDate.of(2019, 1, 1);
+
+
+        MvcResult mvcResult = this.mockMvc.perform(get(STORAGEENDPOINT_URI + "/thrownAwayInSpecificMonth?date=" + DATE1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        TimeSumDto timeSumDto1 = objectMapper.readValue(response.getContentAsString(),
+            TimeSumDto.class);
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(1, timeSumDto1.getSum());
+
+    }
+
+ */
+
+
 
 
 }
