@@ -32,7 +32,9 @@ public class BillDataGenerator {
     private static Set<ApplicationUser> NOT_PAID_NAMES;
     private static final double SUM = 48.0;
     private static final double SUM_PER_PERSON = 16.0;
-    private static final LocalDate DATE = LocalDate.of(2021, 11, 3);
+    private static final LocalDate DATE1 = LocalDate.of(2021, 11, 3);
+    private static final LocalDate DATE2 = LocalDate.of(2021, 11, 4);
+    private static final LocalDate DATE3 = LocalDate.of(2021, 12, 17);
 
     private final ItemStorageRepository itemStorageRepository;
     private final UserRepository userRepository;
@@ -57,40 +59,94 @@ public class BillDataGenerator {
             userDataGenerator.generateUser();
 
             //bills
-            for (int i = 0; i < 3; i++) {
-                Bill bill = Bill.BillBuilder.aBill()
-                    .withId(1L + i)
-                    .withRegisterId(1L)
-                    .withGroceries(GROCERIES)
-                    .withNotes("bought at Lidl")
-                    .withNames(NAMES)
-                    .withNotPaidNames(NOT_PAID_NAMES)
-                    .withSum(10 * (i + 1))
-                    .withSumPerPerson((10 * (i + 1)) / 2)
-                    .withDate(DATE)
-                    .build();
-                if (i == 2) {
-                    bill.setDate(LocalDate.now());
-                }
-                Bill savedBill = billRepository.saveAndFlush(bill);
+            Bill fbill = Bill.BillBuilder.aBill()
+                .withId(1L)
+                .withRegisterId(1L)
+                .withGroceries(GROCERIES)
+                .withNotes("bought at Lidl")
+                .withNames(NAMES)
+                .withNotPaidNames(NOT_PAID_NAMES)
+                .withSum(10)
+                .withSumPerPerson(5)
+                .withDate(DATE1)
+                .build();
+            Bill fsavedBill = billRepository.saveAndFlush(fbill);
 
-                //user
-                Optional<ApplicationUser> user = userRepository.findUserByUsername("Leopold");
-                Optional<ApplicationUser> admin = userRepository.findUserByUsername("Heidi");
+            //user
+            Optional<ApplicationUser> fuser = userRepository.findUserByUsername("Leopold");
+            Optional<ApplicationUser> fadmin = userRepository.findUserByUsername("Heidi");
 
-                HashSet<ApplicationUser> names = new HashSet<>();
-                user.ifPresent(names::add);
-                admin.ifPresent(names::add);
-                savedBill.setNames(names);
-                savedBill = billRepository.saveAndFlush(savedBill);
+            HashSet<ApplicationUser> fnames = new HashSet<>();
+            fuser.ifPresent(fnames::add);
+            fadmin.ifPresent(fnames::add);
+            fsavedBill.setNames(fnames);
+            fsavedBill = billRepository.saveAndFlush(fsavedBill);
 
-                HashSet<ApplicationUser> notPaid = new HashSet<>();
-                user.ifPresent(notPaid::add);
-                admin.ifPresent(notPaid::add);
-                savedBill.setNotPaidNames(notPaid);
-                savedBill = billRepository.saveAndFlush(savedBill);
-            }
-            Bill bill = Bill.BillBuilder.aBill()
+            HashSet<ApplicationUser> fnotPaid = new HashSet<>();
+            fuser.ifPresent(fnotPaid::add);
+            fadmin.ifPresent(fnotPaid::add);
+            fsavedBill.setNotPaidNames(fnotPaid);
+            fsavedBill = billRepository.saveAndFlush(fsavedBill);
+
+            Bill fbill2 = Bill.BillBuilder.aBill()
+                .withId(2L)
+                .withRegisterId(1L)
+                .withGroceries(GROCERIES)
+                .withNotes("bought at Spar")
+                .withNames(NAMES)
+                .withNotPaidNames(NOT_PAID_NAMES)
+                .withSum(20)
+                .withSumPerPerson(10)
+                .withDate(DATE2)
+                .build();
+            Bill fsavedBill2 = billRepository.saveAndFlush(fbill2);
+
+            //user
+            Optional<ApplicationUser> fuser2 = userRepository.findUserByUsername("Leopold");
+            Optional<ApplicationUser> fadmin2 = userRepository.findUserByUsername("Heidi");
+
+            HashSet<ApplicationUser> fnames2 = new HashSet<>();
+            fuser2.ifPresent(fnames2::add);
+            fadmin2.ifPresent(fnames2::add);
+            fsavedBill2.setNames(fnames2);
+            fsavedBill2 = billRepository.saveAndFlush(fsavedBill2);
+
+            HashSet<ApplicationUser> fnotPaid2 = new HashSet<>();
+            fuser2.ifPresent(fnotPaid2::add);
+            fadmin2.ifPresent(fnotPaid2::add);
+            fsavedBill2.setNotPaidNames(fnotPaid2);
+            fsavedBill2 = billRepository.saveAndFlush(fsavedBill2);
+
+            Bill fbill3 = Bill.BillBuilder.aBill()
+                .withId(2L)
+                .withRegisterId(1L)
+                .withGroceries(GROCERIES)
+                .withNotes("bought at Hofer")
+                .withNames(NAMES)
+                .withNotPaidNames(NOT_PAID_NAMES)
+                .withSum(30)
+                .withSumPerPerson(15)
+                .withDate(DATE3)
+                .build();
+            Bill fsavedBill3 = billRepository.saveAndFlush(fbill3);
+
+            //user
+            Optional<ApplicationUser> fuser3 = userRepository.findUserByUsername("Leopold");
+            Optional<ApplicationUser> fadmin3 = userRepository.findUserByUsername("Heidi");
+
+            HashSet<ApplicationUser> fnames3 = new HashSet<>();
+            fuser3.ifPresent(fnames3::add);
+            fadmin3.ifPresent(fnames3::add);
+            fsavedBill3.setNames(fnames3);
+            fsavedBill3 = billRepository.saveAndFlush(fsavedBill3);
+
+            HashSet<ApplicationUser> fnotPaid3 = new HashSet<>();
+            fuser3.ifPresent(fnotPaid3::add);
+            fadmin3.ifPresent(fnotPaid3::add);
+            fsavedBill3.setNotPaidNames(fnotPaid3);
+            fsavedBill3 = billRepository.saveAndFlush(fsavedBill3);
+
+            Bill fbill4 = Bill.BillBuilder.aBill()
                 .withId(5L)
                 .withRegisterId(1L)
                 .withGroceries(GROCERIES)
@@ -99,132 +155,26 @@ public class BillDataGenerator {
                 .withNotPaidNames(NOT_PAID_NAMES)
                 .withSum(30)
                 .withSumPerPerson(15)
-                .withDate(LocalDate.of(2021, 11, 15))
+                .withDate(LocalDate.of(2022, 1, 25))
                 .build();
-            Bill savedBill = billRepository.saveAndFlush(bill);
+            Bill fsavedBill4 = billRepository.saveAndFlush(fbill4);
 
             //user
-            Optional<ApplicationUser> user = userRepository.findUserByUsername("Leopold");
-            Optional<ApplicationUser> admin = userRepository.findUserByUsername("Heidi");
+            Optional<ApplicationUser> fuser4 = userRepository.findUserByUsername("Leopold");
+            Optional<ApplicationUser> fadmin4 = userRepository.findUserByUsername("Heidi");
 
-            HashSet<ApplicationUser> names = new HashSet<>();
-            user.ifPresent(names::add);
-            admin.ifPresent(names::add);
-            savedBill.setNames(names);
-            savedBill = billRepository.saveAndFlush(savedBill);
+            HashSet<ApplicationUser> fnames4 = new HashSet<>();
+            fuser4.ifPresent(fnames4::add);
+            fadmin4.ifPresent(fnames4::add);
+            fsavedBill4.setNames(fnames4);
+            fsavedBill4 = billRepository.saveAndFlush(fsavedBill4);
 
-            HashSet<ApplicationUser> notPaid = new HashSet<>();
-            user.ifPresent(notPaid::add);
-            admin.ifPresent(notPaid::add);
-            savedBill.setNotPaidNames(notPaid);
-            savedBill = billRepository.saveAndFlush(savedBill);
-
-            /*
-            //items
-            ItemStorage itemStorage1 = new ItemStorage("name 1", "notes for itemStorage 1", null,
-                null, 10, Location.fridge.toString(), null, null, null);
-            ItemStorage item1 = itemStorageRepository.saveAndFlush(itemStorage1);
-
-            savedBill.setGroceries(new HashSet<ItemStorage>() {
-                {
-                    add(item1);
-                }
-            });
-            savedBill = billRepository.saveAndFlush(savedBill);
-
-
-            HashSet<Bill> bills = new HashSet<>();
-            bills.add(savedBill);
-
-
-            // bill 2
-            Bill bill2 = Bill.BillBuilder.aBill()
-                .withRegisterId(1L)
-                .withNotes("bought at Hofer")
-                .withSum(24)
-                .withSumPerPerson(12)
-                .withDate(LocalDate.of(2021, 12, 17))
-                .build();
-            Bill savedBill2 = billRepository.saveAndFlush(bill2);
-
-            HashSet<ApplicationUser> names2 = new HashSet<>();
-            user.ifPresent(names2::add);
-            admin.ifPresent(names2::add);
-            savedBill2.setNames(names2);
-            savedBill2 = billRepository.saveAndFlush(savedBill2);
-
-            HashSet<ApplicationUser> notPaid2 = new HashSet<>();
-            user.ifPresent(notPaid2::add);
-            admin.ifPresent(notPaid2::add);
-            savedBill2.setNotPaidNames(notPaid2);
-            savedBill2 = billRepository.saveAndFlush(savedBill2);
-
-
-            ItemStorage itemStorage2 = new ItemStorage("name 2", "notes for itemStorage 2", null,
-                null, 10, Location.fridge.toString(), null, null, null);
-            ItemStorage item2 = itemStorageRepository.saveAndFlush(itemStorage2);
-            savedBill2.setGroceries(new HashSet<ItemStorage>() {
-                {
-                    add(item2);
-                }
-            });
-            savedBill2 = billRepository.saveAndFlush(savedBill2);
-
-
-            bills.add(savedBill2);
-
-            // bill 3
-            Bill bill3 = Bill.BillBuilder.aBill()
-                .withRegisterId(1L)
-                .withNotes("bought at Spar")
-                .withSum(32)
-                .withSumPerPerson(16)
-                .withDate(LocalDate.of(2021, 12, 10))
-                .build();
-            Bill savedBill3 = billRepository.saveAndFlush(bill3);
-
-            HashSet<ApplicationUser> names3 = new HashSet<>();
-            user.ifPresent(names3::add);
-            admin.ifPresent(names3::add);
-            savedBill3.setNames(names3);
-            savedBill3 = billRepository.saveAndFlush(savedBill3);
-
-            HashSet<ApplicationUser> notPaid3 = new HashSet<>();
-            user.ifPresent(notPaid3::add);
-            admin.ifPresent(notPaid3::add);
-            savedBill3.setNotPaidNames(notPaid3);
-            savedBill3 = billRepository.saveAndFlush(savedBill3);
-
-            /*
-            ItemStorage itemStorage3 = new ItemStorage("name 3", "notes for itemStorage 3", null,
-                null, 10, Location.fridge.toString(), null, null, null);
-            ItemStorage item3 = itemStorageRepository.saveAndFlush(itemStorage3);
-            savedBill3.setGroceries(new HashSet<ItemStorage>() {
-                {
-                    add(item3);
-                }
-            });
-            savedBill3 = billRepository.saveAndFlush(savedBill3);
-
-
-            bills.add(savedBill3);
-            /*
-            if (admin.isPresent()) {
-                ApplicationUser applicationAdmin = admin.get();
-                applicationAdmin.setBills(bills);
-                userRepository.saveAndFlush(applicationAdmin);
-            }
-
-            if (user.isPresent()) {
-                ApplicationUser applicationUser = user.get();
-                applicationUser.setBills(bills);
-                userRepository.saveAndFlush(applicationUser);
-            }
-
-            */
-
+            HashSet<ApplicationUser> fnotPaid4 = new HashSet<>();
+            fuser4.ifPresent(fnotPaid4::add);
+            fadmin4.ifPresent(fnotPaid4::add);
+            fsavedBill4.setNotPaidNames(fnotPaid4);
+            fsavedBill4 = billRepository.saveAndFlush(fsavedBill4);
 
         }
     }
-
 }
