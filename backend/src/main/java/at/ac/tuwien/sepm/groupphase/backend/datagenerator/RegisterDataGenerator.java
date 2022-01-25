@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -60,7 +61,7 @@ public class RegisterDataGenerator {
     }
 
     @PostConstruct
-    public void generateRegister() {
+    public void generateRegister() throws IOException {
         if (registerRepository.findAll().size() > 0) {
             LOGGER.debug("register already generated");
         } else {
@@ -81,10 +82,10 @@ public class RegisterDataGenerator {
                 register.setMonthlyBudget(TEST_MONTHLY_BUDGET);
             } else {
                 register = Register.RegisterBuilder.aRegister()
-                .withBills(TEST_BILLS)
-                .withMonthlyPayment(TEST_MONTHLY_PAYMENT)
-                .withMonthlyBudget(TEST_MONTHLY_BUDGET)
-                .build();
+                    .withBills(TEST_BILLS)
+                    .withMonthlyPayment(TEST_MONTHLY_PAYMENT)
+                    .withMonthlyBudget(TEST_MONTHLY_BUDGET)
+                    .build();
             }
             Register savedRegister = registerRepository.saveAndFlush(register);
 
@@ -183,7 +184,6 @@ public class RegisterDataGenerator {
             registerRepository.saveAndFlush(savedRegister);
 
              */
-
 
 
         }

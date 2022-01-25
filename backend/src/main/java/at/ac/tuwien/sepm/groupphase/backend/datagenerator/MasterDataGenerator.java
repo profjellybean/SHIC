@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 
 @Profile("generateData")
@@ -43,7 +44,7 @@ public class MasterDataGenerator {
     }
 
     @PostConstruct
-    public void generateData() {
+    public void generateData() throws IOException {
         LOGGER.debug("Generating Data");
         storageDataGenerator.generateStorage();
         unitOfQuantityDataGenerator.generateUnitOfQuantity();
@@ -57,7 +58,7 @@ public class MasterDataGenerator {
         billDataGenerator.generateBills();
     }
 
-    public void generateData_planRecipe() {
+    public void generateData_planRecipe() throws IOException {
         LOGGER.debug("Generating Data for planning Recipe");
         recipeDataGenerator.generateRecipes(); // includes UnitOfQuantity
         userDataGenerator.generateUser(); // includes ShoppingList and Storage

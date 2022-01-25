@@ -196,15 +196,6 @@ public class UserEndpoint {
 
     }
 
-
-    @Secured("ROLE_USER")
-    @PatchMapping
-    public void test(@RequestBody UserLoginDto userLoginDto) {
-
-        LOGGER.info("Endpoint: Test /user");
-
-    }
-
     @Secured("ROLE_USER")
     @GetMapping
     public UserDto getUser(Authentication authentication) {

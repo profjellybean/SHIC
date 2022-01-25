@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.List;
@@ -53,7 +54,7 @@ public class ItemStorageDataGenerator {
     }
 
     //@PostConstruct
-    void generateItemStorage() {
+    void generateItemStorage() throws IOException {
         if (itemStorageRepository.findAll().size() > 15) {
             LOGGER.debug("ItemStorage already generated");
         } else if (CREATE_REAL_ITEMSTORAGES) {

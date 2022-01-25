@@ -10,11 +10,8 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitOfQuantityRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.lang.invoke.MethodHandles;
 import java.sql.Date;
 import java.time.LocalDate;
@@ -206,6 +203,28 @@ public class RecipeDataGenerator {
             Recipe storedPorkBelly = recipeRepository.save(porkBelly);
             storedPorkBelly.setIngredients(new HashSet<>(Arrays.asList(pork, garlic, carrots)));
             recipeRepository.save(storedPorkBelly);
+
+
+            // Crepes
+            // generate recipe
+            Recipe crepes = Recipe.RecipeBuilder.aRecipe()
+                .withName("Crepes")
+                .withDescription("Mix it all together and bake on high heat with butter until golden brown. Put on apricose jam and roll it.")
+                .withCategories(new HashSet<>(Arrays.asList(RecipeCategory.dinner)))
+                .withGroupId(1L)
+                .build();
+            LOGGER.debug("saving recipe {}", crepes);
+
+            // generate ingredients
+            ItemStorage milk = new ItemStorage("Milk", "organic", null, Date.valueOf(LocalDate.now().plusDays(10).toString()), 200, Location.fridge.toString(), mappedUnits.get("ml"), null, null);
+            LOGGER.debug("saving ingredient {}", milk);
+            milk = itemStorageRepository.save(milk);
+            ItemStorage flour = new ItemStorage("Flour", null, null, null, 250, null, mappedUnits.get("g"), null, null);
+            LOGGER.debug("saving ingredient {}", flour);
+            flour = itemStorageRepository.save(flour);
+            Recipe storedCrepes = recipeRepository.save(crepes);
+            storedCrepes.setIngredients(new HashSet<>(Arrays.asList(milk, flour)));
+            recipeRepository.save(storedCrepes);
 
         } else {
             LOGGER.debug("generating {} recipes", NUMBER_OF_RECIPES_TO_GENERATE);
