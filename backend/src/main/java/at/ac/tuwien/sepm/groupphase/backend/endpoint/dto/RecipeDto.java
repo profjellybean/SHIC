@@ -19,7 +19,8 @@ public class RecipeDto {
 
     private Long groupId;
 
-    public RecipeDto() { }
+    public RecipeDto() {
+    }
 
     public RecipeDto(Long id, String name, String description, Set<ItemStorageDto> ingredients, Set<RecipeCategory> categories, Long groupId) {
         this.id = id;

@@ -1,15 +1,13 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.LocationClass;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrashOrUsedItem;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
-import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 public interface StorageService {
@@ -27,9 +25,9 @@ public interface StorageService {
     /**
      * Delete an item in a specific storage based on the id of the item and the storage.
      *
-     * @param itemId the id of the item to delete
+     * @param itemId    the id of the item to delete
      * @param storageId the id of the storage which the item is in
-     * @param trash true if item was thrown away
+     * @param trash     true if item was thrown away
      * @return a Spring Security user
      */
     ItemStorage deleteItemInStorageById(Long itemId, Long storageId, boolean trash);
@@ -39,12 +37,10 @@ public interface StorageService {
      * if there is already an Item with the same name, the Items are summed up
      *
      * @param itemStorage item to save
-     * @param groupId is used to check, if blueprint for this item exists in this group
-     *
+     * @param groupId     is used to check, if blueprint for this item exists in this group
      * @return the item
-     *
      * @throws ValidationException if invalid value exists in Item
-     * @throws ServiceException if UnitOfQuantity of an ingredient and the stored Item are not compatible
+     * @throws ServiceException    if UnitOfQuantity of an ingredient and the stored Item are not compatible
      */
     ItemStorage saveItem(ItemStorage itemStorage, Long groupId);
 
@@ -53,12 +49,10 @@ public interface StorageService {
      * if there is already an Item with the same name, the Items are summed up
      *
      * @param itemStorage item to save
-     * @param userName is used to get id of the users current group
-     *
+     * @param userName    is used to get id of the users current group
      * @return the item
-     *
      * @throws ValidationException if invalid value exists in Item
-     * @throws ServiceException if UnitOfQuantity of an ingredient and the stored Item are not compatible
+     * @throws ServiceException    if UnitOfQuantity of an ingredient and the stored Item are not compatible
      */
     ItemStorage saveItemByUsername(ItemStorage itemStorage, String userName);
 
@@ -66,8 +60,7 @@ public interface StorageService {
      * Saves updated existing item in the storage (specified in the item itself).
      *
      * @param itemStorage the item to update
-     * @param groupId is used to check if the item to update is in the groups storage
-     *
+     * @param groupId     is used to check if the item to update is in the groups storage
      * @return the updated item
      */
     ItemStorage updateItem(ItemStorage itemStorage, Long groupId);
@@ -116,7 +109,7 @@ public interface StorageService {
     /**
      * Filters itemStorages of itemStoragesAll which are not in item itemStoragesFilter.
      *
-     * @param itemStoragesAll the id of the storage
+     * @param itemStoragesAll    the id of the storage
      * @param itemStoragesFilter the name of the search
      * @return a list of the items or none
      */
@@ -159,13 +152,11 @@ public interface StorageService {
 
     /**
      * saves a location.
-     *
      */
     void saveLocation(LocationClass locationClass);
 
     /**
      * deletes a location.
-     *
      */
     void deleteLocation(Long id);
 

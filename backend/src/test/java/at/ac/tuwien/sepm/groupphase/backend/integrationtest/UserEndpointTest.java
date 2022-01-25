@@ -55,7 +55,7 @@ public class UserEndpointTest implements TestData {
     @Test
     void registerUser() throws Exception {
 
-        UserRegistrationDto testUser= new UserRegistrationDto("TestUser1", "passwort1245","TestUser1@email.com");
+        UserRegistrationDto testUser = new UserRegistrationDto("TestUser1", "passwort1245", "TestUser1@email.com");
 
         MvcResult mvcResult = this.mockMvc.perform(post(USERENDPOINT_URI)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -73,7 +73,7 @@ public class UserEndpointTest implements TestData {
 
     @Test
     void registerUnprocessableUser() throws Exception {
-        UserRegistrationDto unprocessableUser = new UserRegistrationDto("UnprocessableUser1", "shortpw","UnprocessableUser1@email.com");
+        UserRegistrationDto unprocessableUser = new UserRegistrationDto("UnprocessableUser1", "shortpw", "UnprocessableUser1@email.com");
 
         MvcResult mvcResult = this.mockMvc.perform(post(USERENDPOINT_URI)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -89,8 +89,8 @@ public class UserEndpointTest implements TestData {
 
     //@Test
     void registerDuplicateUser() throws Exception {
-        UserRegistrationDto testUser1= new UserRegistrationDto("Polo_G", "correctPassword","Polo_g@email.com");
-        UserRegistrationDto testUser2= new UserRegistrationDto("Polo_G", "letMeIn2000","Polo_g@email.com");
+        UserRegistrationDto testUser1 = new UserRegistrationDto("Polo_G", "correctPassword", "Polo_g@email.com");
+        UserRegistrationDto testUser2 = new UserRegistrationDto("Polo_G", "letMeIn2000", "Polo_g@email.com");
 
         MvcResult mvcResult1 = this.mockMvc.perform(post(USERENDPOINT_URI)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -121,15 +121,17 @@ public class UserEndpointTest implements TestData {
         assertTrue(userRepository.findUserByUsername("SomeUserNeverAdded").isEmpty());
 
     }
-    void checkExistenceOfUsers(List<UserRegistrationDto> users){
-        for(UserRegistrationDto user: users){
+
+    void checkExistenceOfUsers(List<UserRegistrationDto> users) {
+        for (UserRegistrationDto user : users) {
             assertTrue(userRepository.findUserByUsername(user.getUsername()).isPresent());
         }
 
     }
+
     void registerAllValidUsers(List<UserRegistrationDto> users) throws Exception {
 
-        for(UserRegistrationDto user: users){
+        for (UserRegistrationDto user : users) {
             MvcResult mvcResult1 = this.mockMvc.perform(post(USERENDPOINT_URI)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(user))
@@ -141,7 +143,7 @@ public class UserEndpointTest implements TestData {
 
     }
 
-    void generateUsers(List<UserRegistrationDto> list,int count){
+    void generateUsers(List<UserRegistrationDto> list, int count) {
         Random random = new Random();
         String[] gods = {
             "Jupiter",
@@ -165,12 +167,11 @@ public class UserEndpointTest implements TestData {
         int x;
         for (int c = 0; c < count; c++) {
             x = random.nextInt(gods.length);
-            list.add(new UserRegistrationDto(gods[x] + c, "password" + c,gods[x] + c + "@email.com"));
+            list.add(new UserRegistrationDto(gods[x] + c, "password" + c, gods[x] + c + "@email.com"));
         }
 
 
     }
-
 
 
 }

@@ -7,8 +7,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Date;
 
 @Entity
@@ -57,7 +55,6 @@ public class TrashOrUsed {
         this.unitOfQuantity = unitOfQuantity;
         this.itemName = itemName;
     }
-
 
 
     public Long getStorageId() {

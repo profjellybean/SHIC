@@ -3,7 +3,6 @@ package at.ac.tuwien.sepm.groupphase.backend.unittests;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.RegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.RegisterMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Register;
-import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ActiveProfiles("test")
 public class RegisterMappingTest {
 
-    private final Register register = new Register(null,null, 400, 450);
+    private final Register register = new Register(null, null, 400, 450);
     private final RegisterDto registerDto = new RegisterDto(null, null, 400, 450);
 
     @Autowired

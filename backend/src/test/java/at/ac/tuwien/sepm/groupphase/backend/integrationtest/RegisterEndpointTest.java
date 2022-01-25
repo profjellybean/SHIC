@@ -2,15 +2,12 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
-import at.ac.tuwien.sepm.groupphase.backend.datagenerator.RegisterDataGenerator;
 import at.ac.tuwien.sepm.groupphase.backend.datagenerator.TestDataGenerator;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.DetailedMessageDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.RegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.RegisterMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Bill;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Register;
-import at.ac.tuwien.sepm.groupphase.backend.entity.ShoppingList;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.BillRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
@@ -20,7 +17,6 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepm.groupphase.backend.service.RegisterService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,7 +36,6 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
-import java.time.LocalDate;
 import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -50,7 +45,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -183,7 +177,7 @@ public class RegisterEndpointTest implements TestData {
 
         MvcResult mvcResult = this.mockMvc.perform(put(body)
                 .contentType(MediaType.APPLICATION_JSON)
-            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andReturn();
 
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -199,12 +193,12 @@ public class RegisterEndpointTest implements TestData {
 
         MvcResult mvcResult = this.mockMvc.perform(put(body)
                 .contentType(MediaType.APPLICATION_JSON)
-            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andReturn();
 
         MockHttpServletResponse response = mvcResult.getResponse();
 
-        assertThrows(NotFoundException.class, () -> registerService.confirmPayment(savedRegister.getId(),-10L, userRepository.getById(2L).getUsername()));
+        assertThrows(NotFoundException.class, () -> registerService.confirmPayment(savedRegister.getId(), -10L, userRepository.getById(2L).getUsername()));
     }
 
     @Test
@@ -214,12 +208,12 @@ public class RegisterEndpointTest implements TestData {
 
         MvcResult mvcResult = this.mockMvc.perform(put(body)
                 .contentType(MediaType.APPLICATION_JSON)
-            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andReturn();
 
         MockHttpServletResponse response = mvcResult.getResponse();
 
-        assertThrows(NotFoundException.class, () -> registerService.confirmPayment(-10L,savedBill.getId(), userRepository.getById(2L).getUsername()));
+        assertThrows(NotFoundException.class, () -> registerService.confirmPayment(-10L, savedBill.getId(), userRepository.getById(2L).getUsername()));
     }
 
     @Test
@@ -234,7 +228,7 @@ public class RegisterEndpointTest implements TestData {
 
         MockHttpServletResponse response = mvcResult.getResponse();
 
-        assertThrows(NotFoundException.class, () -> registerService.confirmPayment(savedRegister.getId(),savedBill.getId(), "timothy"));
+        assertThrows(NotFoundException.class, () -> registerService.confirmPayment(savedRegister.getId(), savedBill.getId(), "timothy"));
     }
 
     @Test

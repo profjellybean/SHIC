@@ -1,12 +1,11 @@
 package at.ac.tuwien.sepm.groupphase.backend.config;
 
 import org.springframework.context.annotation.Bean;
-
-import java.util.Properties;
-
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+
+import java.util.Properties;
 
 @Configuration
 public class EmailConfig {

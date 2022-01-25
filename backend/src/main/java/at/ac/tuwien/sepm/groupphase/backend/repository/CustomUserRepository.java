@@ -26,22 +26,22 @@ public interface CustomUserRepository extends JpaRepository<ApplicationUser, Lon
     @Query("SELECT s FROM ShoppingList s WHERE s.id = (SELECT u.currGroup.publicShoppingListId FROM ApplicationUser u WHERE u.username = ?1)")
     ShoppingList getPublicShoppingListByName(String username);
 
-    @Query ("SELECT s from ShoppingList s WHERE s.id = (SELECT u.privList FROM ApplicationUser u WHERE u.username = ?1)")
+    @Query("SELECT s from ShoppingList s WHERE s.id = (SELECT u.privList FROM ApplicationUser u WHERE u.username = ?1)")
     ShoppingList getPrivateShoppingListByName(String username);
 
-    @Query ("SELECT s.items from ShoppingList s WHERE s.id = (SELECT u.privList FROM ApplicationUser u WHERE u.username = ?1) OR s.id = (SELECT u.currGroup.publicShoppingListId FROM ApplicationUser u WHERE u.username = ?1) ")
+    @Query("SELECT s.items from ShoppingList s WHERE s.id = (SELECT u.privList FROM ApplicationUser u WHERE u.username = ?1) OR s.id = (SELECT u.currGroup.publicShoppingListId FROM ApplicationUser u WHERE u.username = ?1) ")
     List<ItemStorage> getAvailableItems(String username);
 
-    @Query ("SELECT u.currGroup.storageId FROM ApplicationUser u WHERE u.username = ?1")
+    @Query("SELECT u.currGroup.storageId FROM ApplicationUser u WHERE u.username = ?1")
     Long loadGroupStorageByUsername(String username);
 
-    @Query ("SELECT u.currGroup.publicShoppingListId FROM ApplicationUser u WHERE u.username = ?1")
+    @Query("SELECT u.currGroup.publicShoppingListId FROM ApplicationUser u WHERE u.username = ?1")
     Long loadGroupShoppinglistByUsername(String username);
 
-    @Query ("SELECT u.currGroup.registerId FROM ApplicationUser u WHERE u.username = ?1")
+    @Query("SELECT u.currGroup.registerId FROM ApplicationUser u WHERE u.username = ?1")
     Long loadGroupRegisterIdByUsername(String username);
 
-    @Query ("SELECT u.currGroup.id FROM ApplicationUser u WHERE u.username = ?1")
+    @Query("SELECT u.currGroup.id FROM ApplicationUser u WHERE u.username = ?1")
     Long loadGroupIdByUsername(String username);
 
     void deleteById(Long id);

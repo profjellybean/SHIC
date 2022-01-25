@@ -1,7 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
-
 import java.util.Set;
 
 public class UserGroupDto {

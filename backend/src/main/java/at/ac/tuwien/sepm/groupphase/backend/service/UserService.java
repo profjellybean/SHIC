@@ -70,11 +70,11 @@ public interface UserService extends UserDetailsService {
     ShoppingList getPrivateShoppingListByUsername(String username);
 
     void resendUserEmailConfirmation(String username);
+
     /**
      * Find an application user based on the username.
      *
      * @param userRegistrationDto the DTO of the user to be created
-     *
      */
 
     void createUserWithEmailVerification(UserRegistrationDto userRegistrationDto);
@@ -100,7 +100,6 @@ public interface UserService extends UserDetailsService {
      * Find an application user based on the username.
      *
      * @param userRegistrationDto the DTO of the user to be created
-     *
      */
 
 

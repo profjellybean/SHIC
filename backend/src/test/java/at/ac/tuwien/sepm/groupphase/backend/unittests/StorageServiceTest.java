@@ -27,7 +27,7 @@ public class StorageServiceTest implements TestData {
         assertThrows(NotFoundException.class, () -> storageService.findStorageById(-100L));
     }
 
-   @Test
+    @Test
     public void saveItem() {
         long id = storageService.createNewStorage();
         ItemStorage item = new ItemStorage(id, "Test");

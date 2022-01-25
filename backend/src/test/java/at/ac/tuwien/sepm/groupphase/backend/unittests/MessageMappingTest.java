@@ -64,6 +64,4 @@ public class MessageMappingTest implements TestData {
     }
 
 
-
-
 }

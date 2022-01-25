@@ -21,9 +21,9 @@ public class ImageValidator {
         }
 
         if (image[0] == (byte) 0x89 && image[1] == (byte) 0x50                                                              //Looks like PNG
-            &&  image[2] == (byte) 0x4E && image[3] == (byte) 0x47
-            &&  image[4] == (byte) 0x0D && image[5] == (byte) 0x0A
-            &&  image[6] == (byte) 0x1A && image[7] == (byte) 0x0A) {
+            && image[2] == (byte) 0x4E && image[3] == (byte) 0x47
+            && image[4] == (byte) 0x0D && image[5] == (byte) 0x0A
+            && image[6] == (byte) 0x1A && image[7] == (byte) 0x0A) {
             return;
         }
 

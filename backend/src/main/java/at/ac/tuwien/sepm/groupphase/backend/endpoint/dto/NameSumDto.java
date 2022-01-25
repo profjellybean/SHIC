@@ -1,7 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
-import java.time.LocalDate;
-
 public class NameSumDto {
     private String name;
     private double sum;

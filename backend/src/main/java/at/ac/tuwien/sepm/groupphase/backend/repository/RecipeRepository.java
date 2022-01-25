@@ -20,7 +20,6 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
      * Find all recipes where name contains parameter name.
      *
      * @param name String that should be in the recipes name
-     *
      * @return list of all recipes with names that contain specified String
      */
     List<Recipe> findAllByNameContainingIgnoreCaseOrderByNameAsc(String name);
@@ -43,7 +42,6 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
      * find one recipe by its name.
      *
      * @param name of the recipe
-     *
      * @return recipe with given name
      */
     Recipe findByName(String name);
@@ -52,7 +50,6 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
      * delete recipe by id.
      *
      * @param id of the recipe
-     *
      * @return recipe with given id
      */
     Recipe deleteRecipeById(Long id);

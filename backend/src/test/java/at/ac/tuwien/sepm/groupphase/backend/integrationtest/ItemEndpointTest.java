@@ -2,11 +2,9 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ItemStorageDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UnitOfQuantityDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UnitsRelationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UnitOfQuantityMapper;
-import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Storage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitsRelation;
@@ -18,7 +16,6 @@ import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,19 +33,11 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
-import java.util.List;
-
-import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.ITEMENDPOINT_UNITOFQUANTITY_URI;
-import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.ITEMENDPOINT_UNITRELATION_URI;
-import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.STORAGEENDPOINT_URI;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -93,12 +82,13 @@ public class ItemEndpointTest implements TestData {
     public void tearDownDBData() {
         txm.rollback(txstatus);
     }
+
     @Test
     public void insertUnitOfQuantitysThenGetAll() throws Exception {
-        int help =unitOfQuantityRepository.findAll().size();
-        UnitOfQuantity unitOfQuantity= new UnitOfQuantity(-1L,"test1");
-        UnitOfQuantity unitOfQuantity2= new UnitOfQuantity(-1L, "test2");
-        UnitOfQuantity unitOfQuantity3= new UnitOfQuantity(-1L, "test3");
+        int help = unitOfQuantityRepository.findAll().size();
+        UnitOfQuantity unitOfQuantity = new UnitOfQuantity(-1L, "test1");
+        UnitOfQuantity unitOfQuantity2 = new UnitOfQuantity(-1L, "test2");
+        UnitOfQuantity unitOfQuantity3 = new UnitOfQuantity(-1L, "test3");
         storageRepository.saveAndFlush(new Storage(-1L));
         unitOfQuantityRepository.saveAndFlush(unitOfQuantity);
         unitOfQuantityRepository.saveAndFlush(unitOfQuantity2);
@@ -106,7 +96,7 @@ public class ItemEndpointTest implements TestData {
 
         MvcResult mvcResult = this.mockMvc.perform(get(ITEMENDPOINT_UNITOFQUANTITY_URI)
                 .contentType(MediaType.APPLICATION_JSON)
-            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TEST_USER, ADMIN_ROLES)))
             .andReturn();
 
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -117,7 +107,7 @@ public class ItemEndpointTest implements TestData {
 
 
         assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals(3+help, addedUnitOfQuantity.length);
+        assertEquals(3 + help, addedUnitOfQuantity.length);
     }
 
     @Test
@@ -157,10 +147,8 @@ public class ItemEndpointTest implements TestData {
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertEquals(addedUnitRelation.getBaseUnit(), unitsRelationDto.getCalculatedUnit());
         assertEquals(addedUnitRelation.getCalculatedUnit(), unitsRelationDto.getBaseUnit());
-        assertEquals(addedUnitRelation.getRelation(), 1/unitsRelationDto.getRelation());
+        assertEquals(addedUnitRelation.getRelation(), 1 / unitsRelationDto.getRelation());
     }
-
-
 
 
     @Test
@@ -196,8 +184,6 @@ public class ItemEndpointTest implements TestData {
     }
 
 
-
-
     @Test
     public void insertUnitsRelationsThenGetAll() throws Exception {
         int help = unitsRelationRepository.findAll().size();
@@ -225,9 +211,8 @@ public class ItemEndpointTest implements TestData {
             UnitsRelationDto[].class);
 
         assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals(2 + help, addedUnitOfQuantity.length );
+        assertEquals(2 + help, addedUnitOfQuantity.length);
     }
-
 
 
     @Test

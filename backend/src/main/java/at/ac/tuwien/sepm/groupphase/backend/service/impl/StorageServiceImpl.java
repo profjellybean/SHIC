@@ -1,18 +1,15 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Item;
-import at.ac.tuwien.sepm.groupphase.backend.entity.LocationClass;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
+import at.ac.tuwien.sepm.groupphase.backend.entity.LocationClass;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Recipe;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Storage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrashOrUsed;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TrashOrUsedItem;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Storage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitsRelation;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UserGroup;
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.Location;
-
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ServiceException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.TooFewIngredientsException;
@@ -20,14 +17,13 @@ import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.LocationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.RecipeRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.StorageItemStorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StorageRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TrashOrUsedItemRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TrashOrUsedRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.UnitsRelationRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.StorageItemStorageRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.UserGroupRepository;
-
 import at.ac.tuwien.sepm.groupphase.backend.repository.UnitOfQuantityRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UnitsRelationRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UserGroupRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.ItemService;
 import at.ac.tuwien.sepm.groupphase.backend.service.StorageService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
@@ -38,9 +34,9 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
-import java.util.HashSet;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -112,7 +108,7 @@ public class StorageServiceImpl implements StorageService {
         Long storageId = userService.loadGroupStorageByUsername(userName);
 
         for (ItemStorage ingredient : calculatedIngredients) {
-            LOGGER.info("::: " + storageId + "  " + ingredient.getId() + "  " + ingredient.getAmount() + "  " +  ingredient.getQuantity());
+            LOGGER.info("::: " + storageId + "  " + ingredient.getId() + "  " + ingredient.getAmount() + "  " + ingredient.getQuantity());
             Optional<ItemStorage> availableItem = itemStorageRepository.itemExistsInStorage(storageId, ingredient.getName(), ingredient.getAmount(), ingredient.getQuantity());
             if (availableItem.isEmpty()) {
                 throw new TooFewIngredientsException("Not enough of {" + ingredient.getName() + "} in storage");
@@ -128,8 +124,6 @@ public class StorageServiceImpl implements StorageService {
 
 
         }
-
-
 
 
         return calculatedIngredients.stream().toList();

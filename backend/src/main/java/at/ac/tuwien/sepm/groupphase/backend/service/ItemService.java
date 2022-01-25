@@ -5,7 +5,6 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.ItemStorage;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitOfQuantity;
 import at.ac.tuwien.sepm.groupphase.backend.entity.UnitsRelation;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
-import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 
 import java.util.List;
 
@@ -31,9 +30,7 @@ public interface ItemService {
     /**
      * search all items for a group, specified by name, where groupId is either null or the id of the group.
      *
-     *
      * @return list of said items
-     *
      */
     List<Item> searchByName(String name, String userName);
 
@@ -41,9 +38,7 @@ public interface ItemService {
      * gets all items for a group, specified by userName, where groupId is either null or the id of the group.
      *
      * @param userName of a member of the group
-     *
      * @return list of said items
-     *
      * @throws ValidationException if userName or groupId of user is null
      */
     List<Item> getAllItemsForGroupByUsername(String userName);
@@ -52,9 +47,7 @@ public interface ItemService {
      * find all custom items for a group, specified by the username.
      *
      * @param userName of a member of the group
-     *
      * @return all items with specified groupId
-     *
      * @throws ValidationException if userName groupId is null
      */
     List<Item> findAllByGroupIdByUsername(String userName);
@@ -102,11 +95,9 @@ public interface ItemService {
      * checks if a blueprint of this Item already exists for the group in table ITEM.
      * If not it adds a blueprint to the table for the group.
      *
-     * @param groupId id of the group
+     * @param groupId     id of the group
      * @param itemStorage item to check
-     *
      * @return item that was checked
-     *
      * @throws ValidationException if invalid value exists in item
      */
     ItemStorage checkForBluePrintForGroup(ItemStorage itemStorage, Long groupId);
@@ -114,11 +105,9 @@ public interface ItemService {
     /**
      * edits a custom item of a group.
      *
-     * @param item that replaces stored item.
+     * @param item     that replaces stored item.
      * @param userName used to specify the group of which the item is edited
-     *
      * @return edited item.
-     *
      * @throws ValidationException if invalid value exists in item
      */
     Item editCustomItem(Item item, String userName);
@@ -126,11 +115,9 @@ public interface ItemService {
     /**
      * saves a custom item of a group.
      *
-     * @param item that is saved.
+     * @param item     that is saved.
      * @param userName used to specify the group of which the item is edited
-     *
      * @return saved item.
-     *
      * @throws ValidationException if invalid value exists in item
      */
     Item addCustomItem(Item item, String userName);
@@ -139,7 +126,6 @@ public interface ItemService {
      * Finds all UnitsOfQuantity in database for specific Group with those without group.
      *
      * @param groupId that is saved.
-     *
      * @return unitsOfQuantities
      */
     List<UnitOfQuantity> getAllForGroup(Long groupId);
