@@ -53,8 +53,8 @@ public class BillServiceImpl implements BillService {
 
     @Transactional
     @Override
-    public List<Bill> findAll() {
-        return billRepository.findAll();
+    public List<Bill> findAll(Long registerId) {
+        return billRepository.findAllByRegisterId(registerId);
     }
 
     @Override
