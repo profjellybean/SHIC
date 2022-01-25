@@ -56,6 +56,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -236,7 +237,11 @@ public class ShoppinglistEndpointTest implements TestData {
             () -> assertEquals("testItem", itemStorageDto.getName()),
             () -> assertEquals("Ingredient for recipe: testRecipe", itemStorageDto.getNotes()),
             () -> assertEquals(9, itemStorageDto.getAmount()),
-            () -> assertEquals("g", itemStorageDto.getQuantity().getName())
+            () -> assertEquals("testQuantity", itemStorageDto.getQuantity().getName()),
+            () -> assertNull(itemStorageDto.getExpDate()),
+            () -> assertNull(itemStorageDto.getLocationTag()),
+            () -> assertNull(itemStorageDto.getStorageId()),
+            () -> assertNotNull((itemStorageDto.getShoppingListId()))
         );
 
     }
@@ -265,7 +270,11 @@ public class ShoppinglistEndpointTest implements TestData {
             () -> assertEquals("testItem", itemStorageDto.getName()),
             () -> assertEquals("Ingredient for recipe: testRecipe", itemStorageDto.getNotes()),
             () -> assertEquals(10, itemStorageDto.getAmount()),
-            () -> assertEquals("g", itemStorageDto.getQuantity().getName())
+            () -> assertEquals("testQuantity", itemStorageDto.getQuantity().getName()),
+            () -> assertNull(itemStorageDto.getExpDate()),
+            () -> assertNull(itemStorageDto.getLocationTag()),
+            () -> assertNull(itemStorageDto.getStorageId()),
+            () -> assertNotNull((itemStorageDto.getShoppingListId()))
         );
     }
 
@@ -294,7 +303,11 @@ public class ShoppinglistEndpointTest implements TestData {
             () -> assertEquals("testItem", itemStorageDto.getName()),
             () -> assertEquals("Ingredient for recipe: testRecipe", itemStorageDto.getNotes()),
             () -> assertEquals(10 * numberOfPeople, itemStorageDto.getAmount()),
-            () -> assertEquals("g", itemStorageDto.getQuantity().getName())
+            () -> assertEquals("testQuantity", itemStorageDto.getQuantity().getName()),
+            () -> assertNull(itemStorageDto.getExpDate()),
+            () -> assertNull(itemStorageDto.getLocationTag()),
+            () -> assertNull(itemStorageDto.getStorageId()),
+            () -> assertNotNull((itemStorageDto.getShoppingListId()))
         );
     }
 
@@ -411,7 +424,11 @@ public class ShoppinglistEndpointTest implements TestData {
             () -> assertEquals("testItem", itemStorageDto.getName()),
             () -> assertEquals("Ingredient for recipe: testRecipe", itemStorageDto.getNotes()),
             () -> assertEquals(10, itemStorageDto.getAmount()),
-            () -> assertEquals("g", itemStorageDto.getQuantity().getName())
+            () -> assertEquals("testQuantity", itemStorageDto.getQuantity().getName()),
+            () -> assertNull(itemStorageDto.getExpDate()),
+            () -> assertNull(itemStorageDto.getLocationTag()),
+            () -> assertNull(itemStorageDto.getStorageId()),
+            () -> assertNotNull((itemStorageDto.getShoppingListId()))
         );
     }
 
@@ -439,7 +456,11 @@ public class ShoppinglistEndpointTest implements TestData {
             () -> assertEquals("testItem", itemStorageDto.getName()),
             () -> assertEquals("Ingredient for recipe: testRecipe", itemStorageDto.getNotes()),
             () -> assertEquals(10 * numberOfPeople, itemStorageDto.getAmount()),
-            () -> assertEquals("g", itemStorageDto.getQuantity().getName())
+            () -> assertEquals("testQuantity", itemStorageDto.getQuantity().getName()),
+            () -> assertNull(itemStorageDto.getExpDate()),
+            () -> assertNull(itemStorageDto.getLocationTag()),
+            () -> assertNull(itemStorageDto.getStorageId()),
+            () -> assertNotNull((itemStorageDto.getShoppingListId()))
         );
     }
 

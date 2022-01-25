@@ -67,7 +67,6 @@ public class RegisterDataGenerator {
         } else {
             billDataGenerator.generateBills();
 
-
             List<Bill> billList = billRepository.findAll();
 
             TEST_BILLS = new HashSet<>(billList);

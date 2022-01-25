@@ -19,16 +19,16 @@ public interface BillService {
 
     /**
      * delete bill by given id.
-     *
      */
     void deleteById(Long id);
 
     /**
-     * Find all bills.
+     * Find all bills with the register id.
      *
+     * @param registerId the id of the regsiter
      * @return a list of all bills
      */
-    List<Bill> findAll();
+    List<Bill> findAll(Long registerId);
 
     /**
      * Creates a bill.

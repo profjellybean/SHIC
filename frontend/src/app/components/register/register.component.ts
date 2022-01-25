@@ -179,6 +179,7 @@ export class RegisterComponent implements OnInit {
         }
         console.log(this.billArray);
         this.newMonthlyBudget = register.monthlyBudget;
+        this.billArray.sort((a,b) => +new Date(b.date) - +new Date(a.date));
       }, error: err => {
         this.notifications.pushFailure('Error during loading register: ' + err.error.message);
       }
