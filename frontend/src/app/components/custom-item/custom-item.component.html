@@ -38,19 +38,6 @@
     <div class="modal-body">
       <form (ngSubmit)="editItemForm(itemForm)" #itemForm="ngForm">
 
-        <!--
-        <div class="form-group">
-          <label for="itemToAdd">Add item: </label>
-          <select
-            class="form-control"
-            id="itemToAdd"
-            name="itemToAdd"
-            [(ngModel)]="this.itemToEdit">
-            <option *ngFor="let myItem of itemToEdit;" [ngValue]="myItem">{{myItem.name}}</option>
-            <option [ngValue]="null">none</option>
-          </select>
-        </div>
-        -->
 
         <div class="form-group">
           <label for="inputName">Name</label>
@@ -87,8 +74,6 @@
       <button type="button" (click)="editItemForm(itemForm)" (click)="modal.dismiss('close')" id="add-msg"
               class="btn btn-info float-right">Save Changes
       </button>
-
-      <button type="button" class="btn btn-info" id="close-modal-btn" (click)="modal.dismiss('close')">Close</button>
     </div>
   </ng-template>
 </div>
@@ -140,7 +125,6 @@
       <button type="button" (click)="addItemForm(itemForm)" (click)="modal.dismiss('close')" id="add-msg2"
               class="btn btn-info float-right">Add Item
       </button>
-      <button type="button" class="btn btn-info" id="close-modal-btn2" (click)="modal.dismiss('close')">Close</button>
     </div>
   </ng-template>
 </div>
