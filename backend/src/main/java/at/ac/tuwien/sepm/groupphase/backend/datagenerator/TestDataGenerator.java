@@ -108,16 +108,12 @@ public class TestDataGenerator {
         testApplicationUser.setCurrGroup(testGroup);
         userRepository.saveAndFlush(testApplicationUser);
 
-        unitOfQuantityDataGenerator.generateUnitOfQuantity();
-        List<UnitOfQuantity> quantities = unitOfQuantityRepository.findAll();
-        Map<String, UnitOfQuantity> mappedUnits = new HashMap<>();
-        for (UnitOfQuantity unit :
-            quantities) {
-            mappedUnits.put(unit.getName(), unit);
-        }
+        UnitOfQuantity testQuantity = new UnitOfQuantity("testQuantity");
+        testQuantity = unitOfQuantityRepository.saveAndFlush(testQuantity);
+
         HashSet<ItemStorage> ingredients = new HashSet<ItemStorage>();
         ingredients.add(new ItemStorage("testItem", "item for tests", null, null,
-            10, null, mappedUnits.get("g"), null, null));
+            10, null, testQuantity, null, null));
         Recipe recipe = new Recipe(-1L, "testRecipe", "recipe for tests", ingredients, null, null);
         recipeRepository.saveAndFlush(recipe);
     }
@@ -138,7 +134,7 @@ public class TestDataGenerator {
             mappedUnits.put(unit.getName(), unit);
         }
         itemStorageRepository.saveAndFlush(new ItemStorage("testItem", "item for tests", null, null,
-            10, null, mappedUnits.get("g"), -1L, null));
+            10, null, mappedUnits.get("testQuantity"), -1L, null));
     }
 
     /**
@@ -157,7 +153,7 @@ public class TestDataGenerator {
             mappedUnits.put(unit.getName(), unit);
         }
         itemStorageRepository.saveAndFlush(new ItemStorage("testItem", "item for tests", null, null,
-            1, null, mappedUnits.get("g"), -1L, null));
+            1, null, mappedUnits.get("testQuantity"), -1L, null));
     }
 
 
